@@ -1,5 +1,5 @@
 <h1 id="asdf">This is where the game will go</h1>
-<p> Use the arrow keys to move the player.</p>
+<p id="additional" style="font-size: 20px; color: red; text-align: center">  </p>
 
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
 <div id="Game">
@@ -156,6 +156,9 @@
         var overworldState = {
             
             create: function() {
+                
+                //misc instructions, ignore
+                document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Space to enter battle";
         		
                 //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
                 //this means that objects created first will be drawn underneath objects created last
@@ -213,7 +216,10 @@
                 //polling a key means you check if a key is pressed, or released
                 this.cursors = game.input.keyboard.createCursorKeys();
                 
-                game.state.start('battle');
+                //create a space key to handle misc action
+                //you can ignore this section for now
+                this.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+                this.space.onDown.add(function(){game.state.start('battle')}, this);
             },
             
             //update function is where the game world is updated
@@ -328,6 +334,9 @@
             
             create: function() {
                 
+                //misc instructions, ignore
+                document.getElementById("additional").innerHTML = "Press Space to run away. Action selection is set to run for now.";
+                
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
         		this.text = game.add.text(0, 0, "BATTLe", style);
         		
@@ -368,7 +377,8 @@
                 
                 //we also have to reposition the player since we are starting a battle
                 //when we exit the battle, the player will be at a different position than when he started, so we need to save the players old position and orientation
-                this.playerPosition = player.sprite.position;
+                this.playerPositionX = player.sprite.x;
+                this.playerPositionY = player.sprite.y;
                 this.playerAnimation = player.sprite.animations.name;
                 
                 //set player to battle position, and orientation
@@ -391,7 +401,7 @@
                 var i = 0;
                 for(i = 0; i < choices.length; ++i) {
                     
-                    this.text.push(game.add.text(horizontalPosition, baseVerticalPosition - i * 30, choices[i], {fill: '#fff'} ));
+                    this.text.push(game.add.text(horizontalPosition, baseVerticalPosition + i * 30, choices[i], {fill: '#fff'} ));
                 }
                 
                 //now i'll create a rectangle that will circle the option the player selects
@@ -399,22 +409,32 @@
                 //any draw positions will be relative to this origin, so set it to 0, 0
                 this.selectionBox = game.add.graphics(0, 0);
                 this.selectionBoxWidth = 80;
-                this.selectionBox.lineStyle(2, 0x0000FF, 1);
-                this.selectionBox.drawRect(horizontalPosition, baseVerticalPosition, this.selectionBoxWidth, 30);
+                this.selectionBox.lineStyle(4, 0x0000FF, 1);
+                this.selectionBox.drawRect(horizontalPosition, baseVerticalPosition + 30, this.selectionBoxWidth, 30);
                 this.currentSelection = 0;
                 
                 //generate controls for the player to use
                 this.cursors = game.input.keyboard.createCursorKeys();
+                this.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
                 
                 //we want to move the player's selection up or down when he presses the up/down button, but we can't use keystates anymore
                 //otherewise the selection would move non stop
                 //so now we set a function to call when the user presses the up or down key
-                this.cursors.down.onDown.add(this.onDown, this);
+                this.cursors.down.onDown.add(this.pressDown, this);
+                this.space.onDown.add(this.pressSpace);
+                
             },
             
-            onDown: function() {
+            pressDown: function() {
                 
-                this.selectionBox.drawRect(300, 300, 30, 30);
+                
+                //empty for now
+            },
+            
+            pressSpace: function() {
+                
+                //we would like to return to the main map now
+                game.state.start('overworld');
             },
             
             update: function() {
@@ -436,14 +456,14 @@
             
             shutdown: function() {
                 
-                //once again we don't want the game to destroy the player
-                game.world.remove(player.sprite);
-                
                 //now we also want the player ot return to whatever he was doing, so set him back to his original position
-                player.sprite.x = this.playerPosition.x;
-                player.sprite.y = this.playerPosition.y;
+                player.sprite.x = this.playerPositionX;
+                player.sprite.y = this.playerPositionY;
                 player.sprite.animations.play(this.playerAnimation);
                 player.sprite.animations.stop(null, true);
+                
+                //once again we don't want the game to destroy the player
+                game.world.remove(player.sprite);
             },
         };
         
