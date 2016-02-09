@@ -1,0 +1,320 @@
+<h1 id="asdf">This is where the game will go</h1>
+
+<!-- Style the game display canvas however you wish by syling the 'Game' id -->
+<div id="Game">
+    
+    <script>
+        
+        //create instance of the game engine.
+        //This creates the canvas for the game to display, and allows you to use the Phaser engine
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Game');
+        
+        //define a global player variable
+        //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
+        //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
+        var player = {
+            
+            //players will have various stats, these will be loaded from the rails data base
+            //for now all we have is the player's sprite, which is a phaser game object that handles drawing/movement, and other great stuff
+            //we don't actually need to put this since we can add it later
+            //sprite: 0,
+            
+            //we will also have other stats about the player, read for the data base. uncomment later as needed
+            /*
+            anything with @player should be embeded ruby, right now leave it unembed
+            
+            this.level = @player.level
+            this.health = ...
+            ...
+            ...
+            */
+        };
+        
+        //create all of the required game states
+        //A game state is basically a collection of all of the objects that are currently on screen
+        //It also includes all the available functionality at any given time
+        //for example, games can have a menu state, here the users can click on different buttons to go to different screens
+        //it can have a gameplay state, where the actual gameplay happens
+        
+        //Game states will progress as follows:
+        //start with the boot state, when the game first runs, we need to configure the screen size, and all other display information
+        //this state handles screen set up, and nothing else
+        var bootState = {
+            
+            //phaser allows users to specify special functiosn which are called during the game loop
+            //for more information, check out: http://www.html5gamedevs.com/topic/1372-phaser-function-order-reserved-names-and-special-uses/
+            create: function() {
+                
+                //define how the system should behave
+                //use the arcade physics engine for collisin handling
+                //I think p2 physics might be better because it offers pixel perfect collision detection, but we might not even need that so for now lets stick to somethign simple
+                game.physics.startSystem(Phaser.Physics.ARCADE);
+                
+                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
+        		this.text = game.add.text(0, 0, "asdf", style);
+                
+                //we're done with this state, so let's go onto the loading state to load the game resources
+                game.state.start('load');
+            },
+        };
+        
+        //loading state should load ALL of the game's resources
+        //this will cache (store in memory) all of the required pictures, sounds, level data for later use
+        //this state is also where we generate the game world based on the players location
+        //cached data will be saved to the global game object, so we can use it in later states
+        var loadState = {
+            
+            //place to load files
+            preload: function() {
+                
+                //loading is done using the following function
+                //game.load.*   where * represents an object type to load
+                //IMPORTANT: LOOK AT HOW WE GET THE PATH TO RESOURCE FILES, WE HAVE TO USE EMBED RUBY TO GENERATE THE PATH TO IT
+                
+                //load test player sprite sheet
+                //remeber that the first parameter is always a hash key to refer to this object later
+                //look at the documentation for all the parameters
+                game.load.spritesheet('player', '<%= asset_path("roshan.png") %>', 32, 48);
+                
+                //since a player's game map is dependent on thier real world location, the map we load will depend on their location
+                //so here is where we specify what map to load
+                //we will assume mapWorldToGame will take a real world coordinate, and return an ingame map ID
+                //we will also assume that all of our maps will be named mapI, where I is the map's id as a number
+                
+                //var mapId = mapWorldToGame(@player.realWorldLocation.x, @player.realWorldLocation.y);
+                //var mapName = 'map' + mapId.toString();
+                
+                //now we load the tile set
+                //tile maps will be created in the Tiled Level editor, which will give us a JSON file
+                //we should use mapName instead of map.json, but we haven't created the map funcitonality so for now just use a preset level
+                game.load.tilemap('level', '<%= asset_path("map.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                
+                //the above just loads the json file, but doens't load the tileSheet (the images used to draw every single tile)
+                //here we load the tile image
+                //again we would be using the mapName variable if it was set up
+                game.load.image('tileset', '<%= asset_path("TileSet.png") %>');
+            },
+            
+            //create function creats the required object for this game state
+            create: function() {
+                
+                //create a text that says loading
+                //very simple loading screen
+                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
+        		this.text = game.add.text(0, 0, "loading", style);
+                
+                //HERE IS WHERE WE WILL LOAD THE PLAYER
+                //the player is created here and used in all later states
+                player.sprite = game.add.sprite(0, 0, 'player', 0);
+                
+                //we want player to actually collide with stuff, so add a physcis body
+                game.physics.arcade.enable(player.sprite);
+                
+                //modify the player's hitbox so it doesn't look like he is collidig with thin air
+                player.sprite.body.setSize(26, 18, 3, 30);
+                
+                //prevent the player from leaving the world bounds, this means that player's can't walk off the edge of teh screen
+                player.sprite.body.collideWorldBounds = true;
+                
+                //add all of the player's animations
+        		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
+        		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
+        		player.sprite.animations.add('up', [12, 13, 14, 15], 10, true);
+        		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
+        		
+        		//right now the player will draw onto the screen since phaser automatically draws all new sprites
+        		//we want to not draw the player to the screen, so we remove him from phaser's rendering list
+        		//also once the Load state finishes, the player's sprite will automatically be destoryed by phaser, 
+        		//but we want to keep the sprite for the actual gameplay state
+        		//by removing player from the object list, we prevent him from being drawn, as well as being destoryed.
+        		game.world.remove(player.sprite);
+        		
+        		//all obejcts have been loaded and created, so now we can start the game
+        		game.state.start('overworld');
+            },
+        };
+        
+        //the gameplay state
+        //this is where the player will move around on the map
+        //the technical term is overworld, so thats the name i will use for this state
+        var overworldState = {
+            
+            create: function() {
+                
+                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
+        		this.text = game.add.text(0, 0, "GAME", style);
+        		
+                //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
+                //this means that objects created first will be drawn underneath objects created last
+                //so we need to create background objects first
+                
+                //first we will create the tile map
+                //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
+                this.map = game.add.tilemap('level');
+                
+                //we have loaded the tile data, but we haven't given it an image to use
+                //here we set an image for each tileset in the tilemap (a tileset is an image containing all of the tiles for a given level)
+                //every map has different tile sets, and each of these tilesets have their own names, the names are set using Tiled level editor,
+                //and they can be viewd in the map.json file, under tilesets: name:
+                //here we match the name of the tileset, to the name of a preloaded tileset image
+                //since i named the tileset and the image the same thing, you won't be able to tell which name refers to what
+                //the first argument is the name of the tileset that was set in the Tiled level editor
+                //the second argument is the key to an image that was loaded by in the load state
+                this.map.addTilesetImage('TileSet', 'tileset');
+                
+                //the tilemaps have been created, but they won't draw until we turn them into viewable layers
+                //create a layer for EVERY SINGLE layer in the actual tile map
+                //i created two tile layers, the background layer and the solid layer
+                //background layer is just the background, the solid layer are tiles that the player collides with
+                //its important to have them seperate
+                //though its not required
+                
+                //backround layer
+                //the argument to the createLayer function is the name of the layer set by the Tiled level editor
+                //the data for this layer can be viewed in the levle editor, or you can look at the map.json file
+                this.background = this.map.createLayer('Background');
+                this.solid = this.map.createLayer('solid');
+                
+                //the default game world size is the same as the canvas size
+                //however we want the plaeyr ot be able to move around the entire world
+                //so we must set the size of the gameworld to the size of the tilemap, that way the game world isn't too big or small
+                this.background.resizeWorld();
+                
+                //phaser doesn't actually know anything about tile layers and collision, it just creates drawable tiles
+                //now we need to specify that the tiles in the solid layer should actually collide with stuff
+                //the first two arguments give a range of tile IDs that you want to set collision info to
+                //the third argument sets whether or not the tile should collide
+                //the last argument is the layer that you want to get tiles from
+                this.map.setCollisionBetween(1, 10000, true, 'solid');
+                
+                //now we create the player
+                //we already created a player sprite, but we told phaser not to draw him
+                //we need to add him back to the game world for drawing
+                game.add.existing(player.sprite);
+                
+                //we also want he camera to follow the player
+                game.camera.follow(player.sprite);
+                
+                //this function makes phaser use arrow keys for movement
+                //it creates a collection of keys that you can poll for events (look at update function for polling code)
+                //polling a key means you check if a key is pressed, or released
+                this.cursors = game.input.keyboard.createCursorKeys();
+            },
+            
+            //update function is where the game world is updated
+            //here we need to handle input, update physics, and handle collision
+            //phaser does the physics and collision for us, we jst need to specify what collides
+            update: function() {
+                
+                //NORMALLY we do input handling before all physics and collision
+                //but phaser saves some data in the collision handling that we sometimes need in the input handling
+                //so when working with phaser, we will do collision handling first
+                
+                //this funciton tells phaser to collide two objects, or two groups of objects
+                //i haven't created a group of objects explicitly, but the tile map layer is a group of objects generated by phaser
+                //this is why we need a seperate layer for background and solid, i only want my player to collide with fenses or houses
+                //not the grass
+                game.physics.arcade.collide(player.sprite, this.solid);
+                
+                //next we make player move and animate according to where he is moving
+                //isDown is a bool value, that is true if the key is pressed down, and false otherwise
+                //Checking if a key is pressed down or not is called checking a key state
+                //Keystates only tell you if a button is pressed or not, 
+                //it DOESN'T LET YOU HANDLE KEY PRESS EVENTS
+                //this means if you want the player to attack when they press the attack button
+                //if you check for keystate the game will make the player attack non stop, because you're not checking if the player pressed the attack button
+                //you're only checking if the button is presed down
+                //this might be confusing, but it'll make more sense with practice
+                
+                //for now disable diagnoal movement since i have no animation for diagnoal movement
+                if(  !((this.cursors.left.isDown || this.cursors.right.isDown) && (this.cursors.up.isDown || this.cursors.down.isDown))  ) {
+                    
+                    if(this.cursors.left.isDown) {
+                    
+                        //move left, the sprite has a variable called body
+                        //this variable is a physics object that represents the object in the physics engine
+                        //by setting its velocity we can make it move
+                        player.sprite.body.velocity.x = -200;
+                        
+                        //run an animation, we created this animation already
+                        player.sprite.animations.play('left');
+                        
+                    } else if(this.cursors.right.isDown) {
+                        
+                        player.sprite.body.velocity.x = 200;
+                        player.sprite.animations.play('right');
+                        
+                    } else {
+                        
+                        //player isn't moving left or right, we have to set his velocity to 0 since the physcis engine isn't going to know when to stop moving
+                        player.sprite.body.velocity.x = 0;
+                        
+                        //only stop animation if the player is moving left or right
+                        //this is important because we don't want to stop animation when the player is moving up or down
+                        //because the player will never animate then
+                        if(player.sprite.animations.name == 'left' || player.sprite.animations.name == 'right') {
+                            
+                            //we stop the animation
+                            //the first argument is the name of the animtion yo uwant to stop
+                            //by setting to null, we stop the current animation
+                            //second argument tells phaser we want to stop the animation and start drawing the first frame of the animation
+                            //this way if player is standing still, he will face left or right, adn we won't have to determine which way he is facing
+                            player.sprite.animations.stop(null, true);
+                        }
+                    }
+                    
+                    if(this.cursors.up.isDown) {
+                        
+                        //IMPORTANT: IN COMPUTER GRAPHICS, THE POSTIIVE Y AXIS GOES DOWN, THE NEGATIVE Y AXIS GOES UP
+                        //THIS MEANS THAT UPWARDS IS NEGATIVE
+                        player.sprite.body.velocity.y = -200;
+                        player.sprite.animations.play('up');
+                        
+                    } else if(this.cursors.down.isDown) {
+                        
+                        player.sprite.body.velocity.y = 200;
+                        player.sprite.animations.play('down');
+                        
+                    } else {
+                        
+                        player.sprite.body.velocity.y = 0;
+                        
+                        if(player.sprite.animations.name == "up" || player.sprite.animations.name == 'down') {
+                            
+                            player.sprite.animations.stop(null, true);
+                        }
+                    }
+                }
+                
+                //now we want to see if the player randomly encountered an enemy, this will send us to the battle state
+                //we only want to check if player encounterd an enemy if he moved
+                //for now its commentd out since I didn't create the battle state
+                //basically if hte player travels a certain distance, we check if he should battle an enemy
+                /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
+                    
+                    game.state.start('battle');
+                }*/
+            },
+            
+            
+            //this function is called when we leave the currents tate
+            //the battle state is a seperate state, and when we enter the battle state, this state will be destoryed
+            //when this state is destoryed, all objects in this state will also be destoryed, hence the player is destoryed
+            //we want to prevent that
+            shutdown: function() {
+                
+                game.world.remove(player.sprite);
+            },
+        };
+        
+        //register all of the gameplay states
+        game.state.add('boot', bootState);
+        game.state.add('load', loadState);
+        game.state.add('overworld', overworldState);
+        
+        //now run the boot state, which will call load and overworld as needed
+        game.state.start('boot');
+        
+        
+    </script>
+</div>
