@@ -158,7 +158,7 @@
             create: function() {
                 
                 //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Space to enter battle";
+                document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Enter to enter battle";
         		
                 //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
                 //this means that objects created first will be drawn underneath objects created last
@@ -218,8 +218,8 @@
                 
                 //create a space key to handle misc action
                 //you can ignore this section for now
-                this.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-                this.space.onDown.add(function(){game.state.start('battle')}, this);
+                this.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+                this.enter.onDown.add(function(){game.state.start('battle')}, this);
             },
             
             //update function is where the game world is updated
@@ -335,7 +335,7 @@
             create: function() {
                 
                 //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Press Space to run away. Action selection is set to run for now.";
+                document.getElementById("additional").innerHTML = "Press Enter to run away. Action selection is set to run for now.";
                 
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
         		this.text = game.add.text(0, 0, "BATTLe", style);
@@ -415,13 +415,13 @@
                 
                 //generate controls for the player to use
                 this.cursors = game.input.keyboard.createCursorKeys();
-                this.space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+                this.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
                 
                 //we want to move the player's selection up or down when he presses the up/down button, but we can't use keystates anymore
                 //otherewise the selection would move non stop
                 //so now we set a function to call when the user presses the up or down key
                 this.cursors.down.onDown.add(this.pressDown, this);
-                this.space.onDown.add(this.pressSpace);
+                this.enter.onDown.add(this.pressEnter);
                 
             },
             
@@ -431,7 +431,7 @@
                 //empty for now
             },
             
-            pressSpace: function() {
+            pressEnter: function() {
                 
                 //we would like to return to the main map now
                 game.state.start('overworld');
