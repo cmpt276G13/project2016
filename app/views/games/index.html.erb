@@ -433,7 +433,7 @@
                 //all monsters have a key that can be used to get the name of the sprite for the monster
                 //lets get this monsters image to draw
                 //we can position the mosnter for battle as well
-                this.monster.sprite = game.add.sprite(200, 300, this.monster.imageKey);
+                return game.add.sprite(200, 300, this.monster.imageKey);
             },
             
             savePlayerOverworldOrientation: function() {
@@ -461,9 +461,36 @@
                 player.sprite.animations.stop(null, true);
             },
             
-            generateUIContainer: function() {
+            createActionsBox: function(width, height) {
                 
+                var actionBoxWidth = game.scale.width;
+                var actionBoxHeight = 130;
+                var actionBoxX = 0;
+                var actionBoxY = game.scale.height - height;
                 
+                return createTextBox(actionBoxX, actionBoxY, width, height);
+            },
+            
+            createActionTexts: function(choices) {
+                
+                var textMargins = 10;
+                var textSize = 28;
+                this.heightLargestText = 0;
+                
+                var actionTexts = [];
+                
+                var i = 0;
+                for(i = 0; i < choices.length; ++i) {
+                    
+                    actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
+                
+                    this.heightLargestText = actionTexts[i].height > this.heightLargestText ? actionTexts[i].height : this.heightLargestText;
+                    
+                    //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
+                    this.playerActionsBox.addChild(actionTexts[i]);
+                }
+                
+                return actionTexts;
             },
             
             highlightSelectedAction: function() {
@@ -477,6 +504,7 @@
                 //now draw a new rectangle around the current selection
                 var xPosition = this.actionTexts[this.selectedAction].x;
                 var yPosition = this.actionTexts[this.selectedAction].y;
+                var height = this.heightLargetText;
                 
                 this.selectionBox.drawRect(xPosition, yPosition, 80, 30);
             },
@@ -484,7 +512,7 @@
             create: function() {
                 
                 //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Press Enter to run away. Action selection is set to run for now.";
+                document.getElementById("additional").innerHTML = "Only the run option works for now.";
                 
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
         		this.text = game.add.text(0, 0, "BATTLe", style);
@@ -498,7 +526,7 @@
                 this.monster = this.loadMonsters();
                 
                 //we've only loaded the data for the mosnter, we now need to create an image so we can see them
-                this.generateMonsterSprites();
+                this.monster.sprite = this.generateMonsterSprites();
                 
                 //now we want to reload the player
                 game.add.existing(player.sprite);
@@ -511,31 +539,21 @@
                 this.orientPlayerForBattle();
                 
                 //now we want to have some UI to display all the battle options
+                
                 //first we have to create the box where the UI is displayed
                 //if you look at final fantasy battles, there are blue rectangles that contain all the text
                 //first is the rectangle that contains all the actions the player can take
                 
                 var actionBoxWidth = game.scale.width;
                 var actionBoxHeight = 130;
-                var actionBoxX = 0;
-                var actionBoxY = game.scale.height - actionBoxHeight;
                 
-                this.playerActionsBox = createTextBox(actionBoxX, actionBoxY, actionBoxWidth, actionBoxHeight);
+                //this.playerActionsBox = createTextBox(actionBoxX, actionBoxY, actionBoxWidth, actionBoxHeight);
+                this.playerActionsBox = this.createActionsBox(actionBoxWidth, actionBoxHeight);
                 
                 //for now i'll only have run and fight, but only run will work
                 //we will generate all the text in an array that way we can position them easily
-                var choices = ['fight', 'run'];
-                this.actionTexts = [];
-                
-                var textMargins = 10;
-                var textSize = 25;
-                
-                var i = 0;
-                for(i = 0; i < choices.length; ++i) {
-                    
-                    this.actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
-                    this.playerActionsBox.addChild(this.actionTexts[i]);
-                }
+                var choices = ['fight', 'items', 'run'];
+                this.actionTexts = this.createActionTexts(choices);
                 
                 //players selected action
                 this.selectedAction = 0;
