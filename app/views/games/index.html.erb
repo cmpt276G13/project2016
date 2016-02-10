@@ -215,6 +215,7 @@
                 //it creates a collection of keys that you can poll for events (look at update function for polling code)
                 //polling a key means you check if a key is pressed, or released
                 this.cursors = game.input.keyboard.createCursorKeys();
+                player.cursors = this.cursors;
                 
                 //create a space key to handle misc action
                 //you can ignore this section for now
@@ -237,7 +238,35 @@
                 //not the grass
                 game.physics.arcade.collide(player.sprite, this.solid);
                 
-                //next we make player move and animate according to where he is moving
+                //next handle all the game's inputs
+                //start with keystate inputs, explained in the keystate function
+                this.handleStateInputs();
+                
+                //now we want to see if the player randomly encountered an enemy, this will send us to the battle state
+                //we only want to check if player encounterd an enemy if he moved
+                //for now its commentd out since I didn't create the battle state
+                //basically if hte player travels a certain distance, we check if he should battle an enemy
+                /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
+                    
+                    game.state.start('battle');
+                }*/
+            },
+            
+            handleStateInputs: function() {
+                
+                //input handling for player is done in this function
+                //it might seem weird to have a function that jus calls another function
+                //but this is a good way to organize your code for each section of the game.
+                //we need to have a seperate section for input handling, so this function will contain all the code for input handling
+                //but input handling can be broken down into different components, so each component will have its own input handling function
+                this.handlePlayerKeystates();
+                
+                //after we can handle other key states, if there are any
+            },
+            
+            handlePlayerKeystates: function() {
+                
+                //first we make player move and animate according to where he is moving
                 //isDown is a bool value, that is true if the key is pressed down, and false otherwise
                 //Checking if a key is pressed down or not is called checking a key state
                 //Keystates only tell you if a button is pressed or not, 
@@ -248,73 +277,66 @@
                 //this might be confusing, but it'll make more sense with practice
                 
                 //for now disable diagnoal movement since i have no animation for diagnoal movement
-                if(  !((this.cursors.left.isDown || this.cursors.right.isDown) && (this.cursors.up.isDown || this.cursors.down.isDown))  ) {
+                if((this.cursors.left.isDown || this.cursors.right.isDown) && (this.cursors.up.isDown || this.cursors.down.isDown)) {
                     
-                    if(this.cursors.left.isDown) {
+                    return;
+                }
+                
+                if(this.cursors.left.isDown) {
+                
+                    //move left, the sprite has a variable called body
+                    //this variable is a physics object that represents the object in the physics engine
+                    //by setting its velocity we can make it move
+                    player.sprite.body.velocity.x = -200;
                     
-                        //move left, the sprite has a variable called body
-                        //this variable is a physics object that represents the object in the physics engine
-                        //by setting its velocity we can make it move
-                        player.sprite.body.velocity.x = -200;
-                        
-                        //run an animation, we created this animation already
-                        player.sprite.animations.play('left');
-                        
-                    } else if(this.cursors.right.isDown) {
-                        
-                        player.sprite.body.velocity.x = 200;
-                        player.sprite.animations.play('right');
-                        
-                    } else {
-                        
-                        //player isn't moving left or right, we have to set his velocity to 0 since the physcis engine isn't going to know when to stop moving
-                        player.sprite.body.velocity.x = 0;
-                        
-                        //only stop animation if the player is moving left or right
-                        //this is important because we don't want to stop animation when the player is moving up or down
-                        //because the player will never animate then
-                        if(player.sprite.animations.name == 'left' || player.sprite.animations.name == 'right') {
-                            
-                            //we stop the animation
-                            //the first argument is the name of the animtion yo uwant to stop
-                            //by setting to null, we stop the current animation
-                            //second argument tells phaser we want to stop the animation and start drawing the first frame of the animation
-                            //this way if player is standing still, he will face left or right, adn we won't have to determine which way he is facing
-                            player.sprite.animations.stop(null, true);
-                        }
-                    }
+                    //run an animation, we created this animation already
+                    player.sprite.animations.play('left');
                     
-                    if(this.cursors.up.isDown) {
+                } else if(this.cursors.right.isDown) {
+                    
+                    player.sprite.body.velocity.x = 200;
+                    player.sprite.animations.play('right');
+                    
+                } else {
+                    
+                    //player isn't moving left or right, we have to set his velocity to 0 since the physcis engine isn't going to know when to stop moving
+                    player.sprite.body.velocity.x = 0;
+                    
+                    //only stop animation if the player is moving left or right
+                    //this is important because we don't want to stop animation when the player is moving up or down
+                    //because the player will never animate then
+                    if(player.sprite.animations.name == 'left' || player.sprite.animations.name == 'right') {
                         
-                        //IMPORTANT: IN COMPUTER GRAPHICS, THE POSTIIVE Y AXIS GOES DOWN, THE NEGATIVE Y AXIS GOES UP
-                        //THIS MEANS THAT UPWARDS IS NEGATIVE
-                        player.sprite.body.velocity.y = -200;
-                        player.sprite.animations.play('up');
-                        
-                    } else if(this.cursors.down.isDown) {
-                        
-                        player.sprite.body.velocity.y = 200;
-                        player.sprite.animations.play('down');
-                        
-                    } else {
-                        
-                        player.sprite.body.velocity.y = 0;
-                        
-                        if(player.sprite.animations.name == "up" || player.sprite.animations.name == 'down') {
-                            
-                            player.sprite.animations.stop(null, true);
-                        }
+                        //we stop the animation
+                        //the first argument is the name of the animtion yo uwant to stop
+                        //by setting to null, we stop the current animation
+                        //second argument tells phaser we want to stop the animation and start drawing the first frame of the animation
+                        //this way if player is standing still, he will face left or right, adn we won't have to determine which way he is facing
+                        player.sprite.animations.stop(null, true);
                     }
                 }
                 
-                //now we want to see if the player randomly encountered an enemy, this will send us to the battle state
-                //we only want to check if player encounterd an enemy if he moved
-                //for now its commentd out since I didn't create the battle state
-                //basically if hte player travels a certain distance, we check if he should battle an enemy
-                /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
+                if(this.cursors.up.isDown) {
                     
-                    game.state.start('battle');
-                }*/
+                    //IMPORTANT: IN COMPUTER GRAPHICS, THE POSTIIVE Y AXIS GOES DOWN, THE NEGATIVE Y AXIS GOES UP
+                    //THIS MEANS THAT UPWARDS IS NEGATIVE
+                    player.sprite.body.velocity.y = -200;
+                    player.sprite.animations.play('up');
+                    
+                } else if(this.cursors.down.isDown) {
+                    
+                    player.sprite.body.velocity.y = 200;
+                    player.sprite.animations.play('down');
+                    
+                } else {
+                    
+                    player.sprite.body.velocity.y = 0;
+                    
+                    if(player.sprite.animations.name == "up" || player.sprite.animations.name == 'down') {
+                        
+                        player.sprite.animations.stop(null, true);
+                    }
+                }
             },
             
             
