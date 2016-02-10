@@ -155,16 +155,8 @@
         //the technical term is overworld, so thats the name i will use for this state
         var overworldState = {
             
-            create: function() {
+            generateTilemap: function() {
                 
-                //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Enter to enter battle";
-        		
-                //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
-                //this means that objects created first will be drawn underneath objects created last
-                //so we need to create background objects first
-                
-                //first we will create the tile map
                 //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
                 this.map = game.add.tilemap('level');
                 
@@ -202,6 +194,19 @@
                 //the third argument sets whether or not the tile should collide
                 //the last argument is the layer that you want to get tiles from
                 this.map.setCollisionBetween(1, 10000, true, 'solid');
+            },
+            
+            create: function() {
+                
+                //misc instructions, ignore
+                document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Enter to enter battle";
+        		
+                //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
+                //this means that objects created first will be drawn underneath objects created last
+                //so we need to create background objects first
+                
+                //first we will create the tile map
+                this.generateTilemap();
                 
                 //now we create the player
                 //we already created a player sprite, but we told phaser not to draw him
@@ -370,18 +375,9 @@
         //here players will battle some number of monsters
         var battleState = {
             
-            create: function() {
+            //load the data of the monsters the player has to fight
+            loadMonsters: function() {
                 
-                //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Press Enter to run away. Action selection is set to run for now.";
-                
-                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
-        		this.text = game.add.text(0, 0, "BATTLe", style);
-        		
-                //first we have to create a background to display
-                //i haven't put in any background yet but just know that it has to be created first
-                
-                //next we will create a monster
                 //here is where the monsters list we loaded previously, and the mosnter database come into play
                 //we want to randomly generate a mosnter, so we will randomly select the name of a mosnter that can spawn in this map
                 //generate the array of mosnter names
@@ -403,38 +399,99 @@
                 
                 //now get the monster with the above key
                 //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
-                this.monster = monsterDatabase[monsterName];
+                return monsterDatabase[monsterName];
+            },
+            
+            generateMonsterSprites: function() {
                 
                 //all monsters have a key that can be used to get the name of the sprite for the monster
                 //lets get this monsters image to draw
                 //we can position the mosnter for battle as well
                 this.monster.sprite = game.add.sprite(200, 300, this.monster.imageKey);
+            },
+            
+            savePlayerOverworldOrientation: function() {
                 
-                //now we want to reload the player
-                game.add.existing(player.sprite);
-                
-                //we also have to reposition the player since we are starting a battle
-                //when we exit the battle, the player will be at a different position than when he started, so we need to save the players old position and orientation
                 this.playerPositionX = player.sprite.x;
                 this.playerPositionY = player.sprite.y;
                 this.playerAnimation = player.sprite.animations.name;
+            },
+            
+            loadPlayerOverworldOrientation: function() {
                 
-                //set player to battle position, and orientation
+                player.sprite.x = this.playerPositionX;
+                player.sprite.y = this.playerPositionY;
+                player.sprite.animations.play(this.playerAnimation);
+                player.sprite.animations.stop(null, true);
+            },
+            
+            orientPlayerForBattle: function() {
+                
                 player.sprite.x = 500;
                 player.sprite.y = 300;
                 
                 //player face left
                 player.sprite.animations.play('left');
                 player.sprite.animations.stop(null, true);
+            },
+            
+            generateUIContainer: function() {
+                
+                
+            },
+            
+            create: function() {
+                
+                //misc instructions, ignore
+                document.getElementById("additional").innerHTML = "Press Enter to run away. Action selection is set to run for now.";
+                
+                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
+        		this.text = game.add.text(0, 0, "BATTLe", style);
+        		
+                //first we have to create a background to display
+                //i haven't put in any background yet but just know that it has to be created first
+                
+                //next we will create a monster
+                //we might have a battle with multiple monsters, so the name is plural
+                //although right now it generates a single monster, later it might create an array of monsters
+                this.monster = this.loadMonsters();
+                
+                //we've only loaded the data for the mosnter, we now need to create an image so we can see them
+                this.generateMonsterSprites();
+                
+                //now we want to reload the player
+                game.add.existing(player.sprite);
+                
+                //we also have to reposition the player since we are starting a battle
+                //when we exit the battle, the player will be at a different position than when he started, so we need to save the players old position and orientation
+                this.savePlayerOverworldOrientation();
+                
+                //set player to battle position, and orientation
+                this.orientPlayerForBattle();
                 
                 //now we want to have some UI to display all the battle options
+                //first we have to create the box where the UI is displayed
+                //if you look at final fantasy battles, there are blue rectangles that contain all the text
+                //first is the rectangle that contains all the actions the player can take
+                this.playerActionsBox = game.add.graphics(0, 500);
+                this.playerActionsBox.beginFill(0x0000aa, 0.3);
+                this.playerActionsBox.drawRect(0, 0, 500, 90);
+                this.playerActionsBox.endFill();
+                
+                //draw a border around the box
+                this.playerActionsBox.lineStyle(5, 0x0000ff, 1);
+                this.playerActionsBox.lineTo(500, 0);
+                this.playerActionsBox.lineTo(500, 90);
+                this.playerActionsBox.lineTo(0, 90);
+                this.playerActionsBox.lineTo(0, 0);
+                
                 //for now i'll only have run and fight, but only run will work
                 //we will generate all the text in an array that way we can position them easily
                 var choices = ['fight', 'run'];
                 this.text = [];
                 
                 var horizontalPosition = 10;
-                var baseVerticalPosition = 600 - choices.length * 30;
+                var baseVerticalPosition = 570 - choices.length * 30;
                 
                 var i = 0;
                 for(i = 0; i < choices.length; ++i) {
@@ -450,29 +507,25 @@
                 this.selectionBox.lineStyle(4, 0x0000FF, 1);
                 this.selectionBox.drawRect(horizontalPosition, baseVerticalPosition + 30, this.selectionBoxWidth, 30);
                 this.currentSelection = 0;
+                this.selectionBox.clear();
                 
                 //again we want to add a listener for when the player presses on keys
-                game.input.keyboard.onDownCallback = this.pressEnter;
+                game.input.keyboard.callbackContext = this;
+                game.input.keyboard.onDownCallback = this.onKeyDown;
             },
             
-            pressDown: function() {
+            update: function() {
                 
                 
-                //empty for now
             },
             
-            pressEnter: function(key) {
+            onKeyDown: function(key) {
                 
                 if(key.keyCode == Phaser.Keyboard.ENTER) {
                     
                     //we would like to return to the main map now
                     game.state.start('overworld');
                 }
-            },
-            
-            update: function() {
-                
-                
             },
             
             //this is a render (drawing) function
@@ -484,17 +537,12 @@
                 
                 //i want to draw the selection box as a rectangle, since phaser doesn't do it automatically
                 //we need to postiion the rectangle around the current selection, but in the render function we only draw, no calculations should be done here
-                document.getElementById("additional").innerHTML = "Pasdf.";
-                
             },
             
             shutdown: function() {
                 
                 //now we also want the player ot return to whatever he was doing, so set him back to his original position
-                player.sprite.x = this.playerPositionX;
-                player.sprite.y = this.playerPositionY;
-                player.sprite.animations.play(this.playerAnimation);
-                player.sprite.animations.stop(null, true);
+                this.loadPlayerOverworldOrientation();
                 
                 //once again we don't want the game to destroy the player
                 game.world.remove(player.sprite);
