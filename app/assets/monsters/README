@@ -1,0 +1,4 @@
+This is where we can store data about various monsters.
+We will have two components, a file that stores map names, and every map name will contain an array of monster names.
+And we will have the actual monster data, this fill will have an array of monster names and their data.
+See the monsters.json file for a demo of how the monster data should be represented
