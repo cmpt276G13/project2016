@@ -371,6 +371,32 @@
             },
         };
         
+        //creates a text box at the given position
+        //returns a Phaser Graphics object that represents the text box
+        function createTextBox(x, y, width, height) {
+            
+            var box = game.add.graphics(x, y);
+            
+            //first create the colored rectangle
+            var fillColor = 0x000099;
+            box.beginFill(fillColor, 0.4);
+            box.drawRect(0, 0, width, height);
+            box.endFill();
+            
+            //now create a border around it to make it look nice
+            var lineThickness = 3;
+            var lineColor = 0x888888;
+            
+            box.lineStyle(lineThickness, lineColor, 0.8);
+            box.x = x + lineThickness / 2;
+            box.lineTo(width - lineThickness, 0);
+            box.lineTo(width - lineThickness, height - lineThickness);
+            box.lineTo(0, height - lineThickness);
+            box.lineTo(0, 0);
+            
+            return box;
+        }
+        
         //the battle state
         //here players will battle some number of monsters
         var battleState = {
@@ -440,6 +466,21 @@
                 
             },
             
+            highlightSelectedAction: function() {
+                
+                //first clear the previously drawn rectangle
+                this.selectionBox.clear();
+                
+                //clear resets line style, so set it again
+                this.selectionBox.lineStyle(2, 0x0000FF, 1);
+                
+                //now draw a new rectangle around the current selection
+                var xPosition = this.actionTexts[this.selectedAction].x;
+                var yPosition = this.actionTexts[this.selectedAction].y;
+                
+                this.selectionBox.drawRect(xPosition, yPosition, 80, 30);
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -473,41 +514,37 @@
                 //first we have to create the box where the UI is displayed
                 //if you look at final fantasy battles, there are blue rectangles that contain all the text
                 //first is the rectangle that contains all the actions the player can take
-                this.playerActionsBox = game.add.graphics(0, 500);
-                this.playerActionsBox.beginFill(0x0000aa, 0.3);
-                this.playerActionsBox.drawRect(0, 0, 500, 90);
-                this.playerActionsBox.endFill();
                 
-                //draw a border around the box
-                this.playerActionsBox.lineStyle(5, 0x0000ff, 1);
-                this.playerActionsBox.lineTo(500, 0);
-                this.playerActionsBox.lineTo(500, 90);
-                this.playerActionsBox.lineTo(0, 90);
-                this.playerActionsBox.lineTo(0, 0);
+                var actionBoxWidth = game.scale.width;
+                var actionBoxHeight = 130;
+                var actionBoxX = 0;
+                var actionBoxY = game.scale.height - actionBoxHeight;
+                
+                this.playerActionsBox = createTextBox(actionBoxX, actionBoxY, actionBoxWidth, actionBoxHeight);
                 
                 //for now i'll only have run and fight, but only run will work
                 //we will generate all the text in an array that way we can position them easily
                 var choices = ['fight', 'run'];
-                this.text = [];
+                this.actionTexts = [];
                 
-                var horizontalPosition = 10;
-                var baseVerticalPosition = 570 - choices.length * 30;
+                var textMargins = 10;
+                var textSize = 25;
                 
                 var i = 0;
                 for(i = 0; i < choices.length; ++i) {
                     
-                    this.text.push(game.add.text(horizontalPosition, baseVerticalPosition + i * 30, choices[i], {fill: '#fff'} ));
+                    this.actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
+                    this.playerActionsBox.addChild(this.actionTexts[i]);
                 }
+                
+                //players selected action
+                this.selectedAction = 0;
                 
                 //now i'll create a rectangle that will circle the option the player selects
                 //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
                 //any draw positions will be relative to this origin, so set it to 0, 0
                 this.selectionBox = game.add.graphics(0, 0);
-                this.selectionBoxWidth = 80;
-                this.selectionBox.lineStyle(4, 0x0000FF, 1);
-                this.selectionBox.drawRect(horizontalPosition, baseVerticalPosition + 30, this.selectionBoxWidth, 30);
-                this.currentSelection = 0;
-                this.selectionBox.clear();
+                this.playerActionsBox.addChild(this.selectionBox);
                 
                 //again we want to add a listener for when the player presses on keys
                 game.input.keyboard.callbackContext = this;
@@ -516,15 +553,40 @@
             
             update: function() {
                 
-                
+                //make the game highlight the player's current selected action
+                this.highlightSelectedAction();
             },
             
             onKeyDown: function(key) {
                 
+                this.handlePlayerInput(key);
+            },
+            
+            handlePlayerInput: function(key) {
+                
+                //move the players selection
+                if(key.keyCode == Phaser.Keyboard.UP) {
+                    
+                    this.selectedAction -= 1;
+                    
+                    if(this.selectedAction < 0) {
+                        
+                        this.selectedAction = this.actionTexts.length - 1;
+                    }
+                }
+                
+                if(key.keyCode == Phaser.Keyboard.DOWN) {
+                    
+                    this.selectedAction = (this.selectedAction + 1) % this.actionTexts.length;
+                }
+                
                 if(key.keyCode == Phaser.Keyboard.ENTER) {
                     
-                    //we would like to return to the main map now
-                    game.state.start('overworld');
+                    //we would like to return to the main map if player selected run
+                    if(this.actionTexts[this.selectedAction].text == "run") {
+                        
+                        game.state.start('overworld');
+                    }
                 }
             },
             
