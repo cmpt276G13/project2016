@@ -2,7 +2,7 @@
 <p id="additional" style="font-size: 20px; color: red; text-align: center">  </p>
 
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
-<div id="Game">
+<div id="Game" style="padding: 10px;">
     
     <script>
         
@@ -217,10 +217,14 @@
                 this.cursors = game.input.keyboard.createCursorKeys();
                 player.cursors = this.cursors;
                 
-                //create a space key to handle misc action
-                //you can ignore this section for now
-                this.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-                this.enter.onDown.add(function(){game.state.start('battle')}, this);
+                //make phaser use a call back listener
+                //listener functions are functions that are called whenever a certain action happens
+                //here we want phaser to call a special function everytime a key is pressed down
+                //first argument is the context where the call back functiosn are run
+                //basically its what the name of the object that the 'this' variable in the listener function refers to
+                //second argument is the function to call when a key is pressed
+                //there are two more arguments that i haven't used yet
+                game.input.keyboard.addCallbacks(this, this.handleKeyDown);
             },
             
             //update function is where the game world is updated
@@ -240,6 +244,8 @@
                 
                 //next handle all the game's inputs
                 //start with keystate inputs, explained in the keystate function
+                //we don't have to worry about button press events since we created listener for those events
+                //but we can't create a listener for state events
                 this.handleStateInputs();
                 
                 //now we want to see if the player randomly encountered an enemy, this will send us to the battle state
@@ -339,6 +345,16 @@
                 }
             },
             
+            //function that we will send to phaser to handle key press events
+            handleKeyDown: function(key) {
+                
+                //if user presses the enter key we will enter the battle state
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    game.state.start('battle');
+                }
+            },
+            
             
             //this function is called when we leave the currents tate
             //the battle state is a seperate state, and when we enter the battle state, this state will be destoryed
@@ -435,16 +451,8 @@
                 this.selectionBox.drawRect(horizontalPosition, baseVerticalPosition + 30, this.selectionBoxWidth, 30);
                 this.currentSelection = 0;
                 
-                //generate controls for the player to use
-                this.cursors = game.input.keyboard.createCursorKeys();
-                this.enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-                
-                //we want to move the player's selection up or down when he presses the up/down button, but we can't use keystates anymore
-                //otherewise the selection would move non stop
-                //so now we set a function to call when the user presses the up or down key
-                this.cursors.down.onDown.add(this.pressDown, this);
-                this.enter.onDown.add(this.pressEnter);
-                
+                //again we want to add a listener for when the player presses on keys
+                game.input.keyboard.onDownCallback = this.pressEnter;
             },
             
             pressDown: function() {
@@ -453,10 +461,13 @@
                 //empty for now
             },
             
-            pressEnter: function() {
+            pressEnter: function(key) {
                 
-                //we would like to return to the main map now
-                game.state.start('overworld');
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    //we would like to return to the main map now
+                    game.state.start('overworld');
+                }
             },
             
             update: function() {
@@ -473,6 +484,7 @@
                 
                 //i want to draw the selection box as a rectangle, since phaser doesn't do it automatically
                 //we need to postiion the rectangle around the current selection, but in the render function we only draw, no calculations should be done here
+                document.getElementById("additional").innerHTML = "Pasdf.";
                 
             },
             
