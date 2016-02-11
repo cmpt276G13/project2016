@@ -2,7 +2,8 @@
     "orc": {
         
         "imageKey": "orc",
-        "health": 10,
+        "name": "orc",
+        "health": 7,
         "defense": 5,
         "strength": 5
     }

@@ -27,7 +27,16 @@
             this.strength = 10;
             this.defense = 10;
             this.level = 1;
+            this.name = "Player";
         };
+        
+        rpgEntity.prototype.getHit = function(strength) {
+            
+            var damage = Math.floor(strength - this.defense / 2);
+            this.health = clamp(this.health - damage, 0, this.health);
+            
+            return damage;
+        }
         
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
@@ -594,8 +603,7 @@
             //this function should transition to the next game state, and apply damage to enemies as needed
             finishPlayerAttack: function() {
                 
-                //incomplete
-                this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                this.changeState(this.BattleState.PLAYER_ATTACK_RESULTS);
             },
             
             //this function clears all data required for all the states, used when you first enter battle
@@ -634,6 +642,16 @@
                     this.selectedMonsterIndicator.visible = false;
                     this.textBox.visible = false;
                 }
+                
+                if(stateToExit == this.BattleState.PLAYER_ATTACKING) {
+                    
+                    this.textBox.visible = false;
+                }
+                
+                if(stateToExit == this.BattleState.PLAYER_ATTACK_RESULTS) {
+                    
+                    this.textBox.visible = false;
+                }
             },
             
             //this function handles all variable changes that need to be made when you enter a given state
@@ -660,7 +678,36 @@
                     this.text.setText("Select a monster to attack.");
                 }
                 
+                if(stateToEnter == this.BattleState.PLAYER_ATTACKING) {
+                    
+                    this.textBox.visible = true;
+                    this.text.setText("Attacking " + this.monsters[this.selectedMonsterId].imageKey);
+                    player.sprite.animations.play("attack");
+                }
+                
+                if(stateToEnter == this.BattleState.PLAYER_ATTACK_RESULTS) {
+                    
+                    //player just attacked a mosnter, determine the results of the attack, and display it to the screen
+                    var results = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
+                    this.textBox.visible = true;
+                    this.text.setText(results);
+                    
+                    //exiting this state will be a timed event, that way we won't have to try and calcualte how long the damage message will be displayed
+                    this.endPlayerTurn.resume();
+                    this.endPlayerTurn.start();
+                }
+                
                 this.currentState = stateToEnter;
+            },
+            
+            //makes the attacker attack the defender
+            //determines if the attacker hit the defender
+            //determiens damage dealth
+            //returns a string
+            determineAttackResults: function(attacker, defender) {
+                
+                var damage = defender.getHit(attacker.strength);
+                return attacker.name + " has hit " + defender.name + " and dealt " + damage.toString() + " damage.";
             },
             
             create: function() {
@@ -720,6 +767,7 @@
                     PLAYER_SELECT_FIGHT_ACTION: 1,
                     PLAYER_SELECT_ATTACK_TARGET: 2,
                     PLAYER_ATTACKING: 3,
+                    PLAYER_ATTACK_RESULTS: 4,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
@@ -748,6 +796,17 @@
                 
                 this.clearStates();
                 this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                
+                //now we create some timed events
+                //timed events are things that occur after a certain time has passed
+                //we will need a couple for the battle
+                //first when the player attacks an enemy we want to put a small delay after the player damages the enemy
+                //during this time the player won't be able to receive any inputs or do anything at all
+                //at the end we will go to the enemies turn (for now it'll just restart the player's turn)
+                //i use a loop timer because a normal timer runs the function once, and its impossible to make it run it again
+                //so instead i will put a looped timer which will pause itself its finished, that way we can reuse it as needed
+                this.endPlayerTurn = game.time.create(false);
+                this.endPlayerTurn.loop(Phaser.Timer.SECOND * 1.8, function(){this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);this.endPlayerTurn.pause();}, this);
                 
                 /*create some kind of indicator to indicate what mosnter hte player has currently selected
                 create a number that represents the currently selected mosnter's array index
@@ -856,11 +915,7 @@
                 
                 if(key.keyCode == Phaser.Keyboard.ENTER) {
                     
-                    /*this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
-                    this.selectedMonsterIndicator.visible = false;
-                    this.textBox.visible = false;
-                    player.sprite.animations.play('attack');*/
-                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                    this.changeState(this.BattleState.PLAYER_ATTACKING);
                 }
             },
             
