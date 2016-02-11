@@ -156,6 +156,7 @@
         		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
         		player.sprite.animations.add('up', [12, 13, 14, 15], 10, true);
         		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
+        		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
         		
         		//right now the player will draw onto the screen since phaser automatically draws all new sprites
         		//we want to not draw the player to the screen, so we remove him from phaser's rendering list
@@ -447,18 +448,26 @@
                 //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
                 var monster = new rpgEntity();
                 $.extend(monster, monsterDatabase[monsterName]);
+                monster.x = 200;
+                monster.y = 300;
                 
-                return monster;
+                return [monster];
             },
             
-            generateMonsterSprites: function() {
+            generateMonsterSprites: function(monsters) {
                 
                 //all monsters have a key that can be used to get the name of the sprite for the monster
                 //lets get this monsters image to draw
                 //we can position the mosnter for battle as well
-                return game.add.sprite(200, 300, this.monster.imageKey);
+                var i = 0;
+                for(i = 0; i < monsters.length; ++i) {
+                    
+                    monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey);
+                }
             },
             
+            //saves the orientation of the player as it was in the overworld state, before the battle started
+            //this is needed so we can restore the player back to his original position when the battle ends
             savePlayerOverworldOrientation: function() {
                 
                 this.playerPositionX = player.sprite.x;
@@ -466,6 +475,7 @@
                 this.playerAnimation = player.sprite.animations.name;
             },
             
+            //loads the players overworld position so that he ends up exactly where he was before the battle started
             loadPlayerOverworldOrientation: function() {
                 
                 player.sprite.x = this.playerPositionX;
@@ -474,6 +484,7 @@
                 player.sprite.animations.stop(null, true);
             },
             
+            //positions the player in the battle screen
             orientPlayerForBattle: function() {
                 
                 player.sprite.x = 500;
@@ -487,6 +498,29 @@
                 player.sprite.animations.stop(null, true);
             },
             
+            //an action box is a rectangular display that lists a bunch of possible actions a player can make
+            //it consists of a container that stores the text, and the texts that are supposed to be displayed
+            //it also contains information about what action is currently being selected, and a way to indicate what action is selected
+            createActionBox: function(x, y, width, height, choices) {
+                
+                var box = new Object();
+                
+                this.createActionsContainer(x, y, width, height, box);
+                this.createActionTexts(choices, box);
+                
+                //players selected action
+                box.selectedAction = 0;
+                
+                //now i'll create a rectangle that will circle the option the player selects
+                //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
+                //any draw positions will be relative to this origin, so set it to 0, 0
+                box.selectionOutline = game.add.graphics(0, 0);
+                box.actionsContainer.addChild(box.selectionOutline);
+                
+                return box;
+            },
+            
+            //actions container is the rectangle box where the action texts are displayed
             createActionsContainer: function(x, y, width, height, actionBox) {
                 
                 var actionBoxX = 0;
@@ -495,6 +529,7 @@
                 actionBox.actionsContainer = createTextBox(x, y, width, height);
             },
             
+            //the actions available to the player, in text form
             createActionTexts: function(choices, actionBox) {
                 
                 var textMargins = 10;
@@ -517,26 +552,7 @@
                 actionBox.texts = actionTexts;
             },
             
-            //an action box is a rectangular display that lists a bunch of possible actions a player can make
-            createActionBox: function(x, y, width, height, choices) {
-                
-                var box = new Object();
-                
-                this.createActionsContainer(x, y, width, height, box);
-                this.createActionTexts(choices, box);
-                
-                //players selected action
-                box.selectedAction = 0;
-                
-                //now i'll create a rectangle that will circle the option the player selects
-                //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
-                //any draw positions will be relative to this origin, so set it to 0, 0
-                box.selectionOutline = game.add.graphics(0, 0);
-                box.actionsContainer.addChild(box.selectionOutline);
-                
-                return box;
-            },
-            
+            //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
             highlightSelectedAction: function(actionBox) {
                 
                 //first clear the previously drawn rectangle
@@ -554,6 +570,14 @@
                 actionBox.selectionOutline.drawRect(xPosition, yPosition, 80, 30);
             },
             
+            //function that is called when the player's attack animation finishes
+            //this function should transition to the next game state, and apply damage to enemies as needed
+            finishPlayerAttack: function() {
+                
+                //incomplete
+                this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -568,10 +592,10 @@
                 //next we will create a monster
                 //we might have a battle with multiple monsters, so the name is plural
                 //although right now it generates a single monster, later it might create an array of monsters
-                this.monster = this.loadMonsters();
+                this.monsters = this.loadMonsters();
                 
                 //we've only loaded the data for the mosnter, we now need to create an image so we can see them
-                this.monster.sprite = this.generateMonsterSprites();
+                this.generateMonsterSprites(this.monsters);
                 
                 //now we want to reload the player
                 game.add.existing(player.sprite);
@@ -609,9 +633,13 @@
                     
                     PLAYER_SELECT_MAIN_ACTION: 0,
                     PLAYER_SELECT_FIGHT_ACTION: 1,
+                    PLAYER_ATTACKING: 2,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                
+                //add a function to call when the player's aniamtion finishes, because we don't want damage calculation to occur while the player's animation is ongoing
+                player.sprite.events.onAnimationComplete.add(this.finishPlayerAttack, this);
                 
             },
             
@@ -620,6 +648,7 @@
                 //make the game highlight the player's current selected action
                 this.highlightSelectedAction(this.actionBox);
                 this.highlightSelectedAction(this.fightBox);
+                
             },
             
             onKeyDown: function(key) {
@@ -629,11 +658,14 @@
             
             handlePlayerInput: function(key) {
                 
+                //certain game states only allow certain inputs
+                //main game state allows users to select fight, items, or run
+                //fight action state allows users to choose to attack, use a skill, or other stuff
                 if(this.currentState == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
                     
                     this.handleMainActionInput(key);
                     
-                } else {
+                } else if(this.currentState == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
                     
                     this.handleFightActionInput(key);
                 }
@@ -641,8 +673,10 @@
             
             handleMainActionInput: function(key) {
                 
+                //first handle user input if they press up or down to choose an action
                 this.handleActionSelection(key, this.actionBox);
                 
+                //execute the action the user has chosen
                 if(key.keyCode == Phaser.Keyboard.ENTER) {
                     
                     //we would like to return to the main map if player selected run
@@ -670,6 +704,16 @@
                     if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
                         
                         this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                    }
+                    
+                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack") {
+                        
+                        this.currentState = this.BattleState.PLAYER_ATTACKING;
+                        player.sprite.animations.play('attack');
+                    }
+                    
+                    if(this.currentState != this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
+                        
                         this.fightBox.actionsContainer.visible = false;
                     }
                 }
