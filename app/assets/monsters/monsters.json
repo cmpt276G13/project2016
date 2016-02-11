@@ -8,7 +8,8 @@
         "strength": 5,
         "startingFrame": 8,
         "animations": [
-            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5}
+            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5},
+            {"name": "dying", "frames": [8, 12, 0, 4, 8, 12, 0, 4], "speed": 5}
         ]
     }
 }

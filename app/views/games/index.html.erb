@@ -39,6 +39,7 @@
             this.defense = 10;
             this.level = 1;
             this.name = "Player";
+            this.shouldDelete = false;
             
             //last used attack is the attribtues of the attack last used by this entity
             //this is used to save data about an attack, which is used for damage calculation during the damage calculation state
@@ -53,7 +54,20 @@
         rpgEntity.prototype.getHit = function(damageReceived) {
             
             this.health = clamp(this.health - damageReceived, 0, this.health);
-        }
+        };
+        
+        
+        //makes enemy start their death animation, sets the call back function
+        function killEntity(dyingEntity) {
+            
+            //start death animation, make entity fade to black as well
+            //when it finishes fading, it will be marked for deletion
+            tween = game.add.tween(dyingEntity.sprite).to({alpha: 0});
+            tween.onComplete.add(function(dyingEntity){dyingEntity.shouldDelete = true; }, dyingEntity, 0, dyingEntity);
+            tween.delay(600);
+            tween.start();
+            dyingEntity.sprite.animations.play("dying");
+        };
         
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
@@ -685,7 +699,7 @@
                     
                     
                 }
-                
+
                 this.hideMessage();
             },
             
@@ -750,6 +764,12 @@
                     //enemy attacked, determine damage dealt to player
                     var damage = this.determineAttackResults(this.monsters[this.currentEnemy], player);
                     this.damageTexts.push(this.createDamageText(player, damage) );
+                }
+                
+                //if any enemy is dead, play their dying animation
+                if(stateToEnter == this.BattleState.CULL_DEAD_ENEMIES) {
+                    
+                    this.killDeadEnemies();
                 }
             
                 this.currentState = stateToEnter;
@@ -849,6 +869,45 @@
                 }
             },
             
+            //looks for all dead enemies and plays their dying animation
+            killDeadEnemies: function() {
+                
+                for(var i = 0; i < this.monsters.length; i++) {
+                    
+                    if(this.monsters[i].health != 0) {
+                        
+                        continue;
+                    }
+                    
+                    killEntity(this.monsters[i]);
+                }
+            },
+            
+            //deletes all entities marked for deletion
+            //returns true if all dead entities have been deleted
+            //false if there are entities that are still animating, and need to be deleted later
+            deleteMarkedEntities: function(entities) {
+                
+                for(var i = 0; i < entities.length; ++i) {
+                    
+                    if(entities[i].health != 0) {
+                        
+                        continue;
+                    }
+                    
+                    if(!entities[i].shouldDelete) {
+                        
+                        
+                        return false;
+                    }
+                    
+                    entities[i].sprite.destroy();
+                    entities.remove(i, 1);
+                }
+                
+                return true;
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -906,9 +965,10 @@
                     PLAYER_SELECT_FIGHT_ACTION: 1,
                     PLAYER_SELECT_ATTACK_TARGET: 2,
                     PLAYER_ATTACKING: 3,
-                    PLAYER_ATTACK_RESULTS: 4,
-                    ENEMY_TURN_START: 5,
-                    ENEMY_ATTACK_RESUlTS: 6,
+                    PLAYER_ATTACK_RESULTS: 5,
+                    CULL_DEAD_ENEMIES: 6,
+                    ENEMY_TURN_START: 7,
+                    ENEMY_ATTACK_RESUlTS: 8,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
@@ -961,14 +1021,28 @@
                     
                     if(moveToNextState) {
                         
-                        this.changeState(this.BattleState.ENEMY_TURN_START);
+                        this.changeState(this.BattleState.CULL_DEAD_ENEMIES);
+                    }
+                }
+                
+                if(this.currentState == this.BattleState.CULL_DEAD_ENEMIES) {
+                    
+                    
+                    //check if all dead monsters have been marked for deletion yet
+                    //until dead mosnters are marked for deletion, we have to wait for their death animation to complete
+                    //after theyre makred for deletion, delete the dead enemies, and move onto either the enemies turn, or victor if no enemes are left
+                    var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
+                    
+                    if(removedAllMarkedEntites) {
+                        
+                        this.changeState(PLAYER_SELECT_MAIN_ACTION);
                     }
                 }
                 
                 if(this.currentState == this.BattleState.ENEMY_TURN_START) {
                     
                     //starting the enemy turn, begin by making the first enemy attack, and move on from there
-                    this.changeState(this.BattleState.ENEMY_TURN);;
+                    this.changeState(this.BattleState.ENEMY_TURN);
                 }
                 
                 if(this.currentState == this.BattleState.ENEMY_ATTACK_RESUlTS) {
