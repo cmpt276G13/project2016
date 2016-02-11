@@ -21,6 +21,17 @@
             return Math.max(min, Math.min(number, max));
         }
         
+        //given an attacker's power attribute, and a defender's defense attribute, this function will calculate the damage received by teh defender
+        //attackPower is a number, and you can use any entity attribute to represent the power
+        //for example, a normal attack might use an etities strength, while a magic attack might use their magic power
+        //same applies for the defender
+        //this is a general use function meant to calcualte damage for any time of object
+        //this can be extended to incorporate a damage range so it can calculate a random damage
+        function determineDamage(attackPower, defenderDefense) {
+            
+            return Math.floor(clamp(attackPower - defenderDefense / 2, 1, attackPower));
+        }
+        
         function rpgEntity() {
             
             this.health = 20;
@@ -28,14 +39,20 @@
             this.defense = 10;
             this.level = 1;
             this.name = "Player";
+            
+            //last used attack is the attribtues of the attack last used by this entity
+            //this is used to save data about an attack, which is used for damage calculation during the damage calculation state
+            this.lastUsedAttack = {
+                
+                //must set this whenever the entity attacks
+                //feel free to add other traits at any time
+                power: 10,
+            };
         };
         
-        rpgEntity.prototype.getHit = function(strength) {
+        rpgEntity.prototype.getHit = function(damageReceived) {
             
-            var damage = Math.floor(strength - this.defense / 2);
-            this.health = clamp(this.health - damage, 0, this.health);
-            
-            return damage;
+            this.health = clamp(this.health - damageReceived, 0, this.health);
         }
         
         //define a global player variable
@@ -650,7 +667,8 @@
                 
                 if(stateToExit == this.BattleState.PLAYER_ATTACK_RESULTS) {
                     
-                    this.textBox.visible = false;
+                    //delete all damage texts, and to do that we have to delete all phaser sprites
+                    this.clearDamageTexts();
                 }
             },
             
@@ -683,31 +701,86 @@
                     this.textBox.visible = true;
                     this.text.setText("Attacking " + this.monsters[this.selectedMonsterId].imageKey);
                     player.sprite.animations.play("attack");
+                    
+                    //set the player's attack attribute
+                    player.lastUsedAttack.power = player.strength;
                 }
                 
                 if(stateToEnter == this.BattleState.PLAYER_ATTACK_RESULTS) {
                     
                     //player just attacked a mosnter, determine the results of the attack, and display it to the screen
-                    var results = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
-                    this.textBox.visible = true;
-                    this.text.setText(results);
+                    var damage = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
                     
-                    //exiting this state will be a timed event, that way we won't have to try and calcualte how long the damage message will be displayed
-                    this.endPlayerTurn.resume();
-                    this.endPlayerTurn.start();
+                    //get damage received by this entity
+                    this.damageTexts.push(this.createDamageText(this.monsters[this.selectedMonsterId], damage) );
                 }
                 
+                if(stateToEnter == this.BattleState.ENEMY_TURN_START) {
+                    
+                    this.currentEnemy = 0;
+                }
+            
                 this.currentState = stateToEnter;
             },
             
             //makes the attacker attack the defender
-            //determines if the attacker hit the defender
-            //determiens damage dealth
+            //determines if the attack hit the defender
+            //determines damage dealt
             //returns a string
             determineAttackResults: function(attacker, defender) {
                 
-                var damage = defender.getHit(attacker.strength);
-                return attacker.name + " has hit " + defender.name + " and dealt " + damage.toString() + " damage.";
+                var damage = determineDamage(attacker.lastUsedAttack.power, defender.defense);
+                defender.getHit(damage);
+                return damage;
+            },
+            
+            //creates a damage text that displays the amount of damage the given entity received
+            createDamageText: function(entity, damageReceived) {
+                
+                var damageText = new Object();
+                damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), {fill: 'red'});
+                damageText.text.alpha = 0.3;
+                damageText.text.anchor.setTo(0.5, 0);
+                
+                entity.sprite.addChild(damageText.text);
+                
+                var textTween = game.add.tween(damageText.text).to({y: -40, alpha: 1}, 1000, Phaser.Easing.Bounce.Out);
+                textTween.start();
+                
+                damageText.tween = textTween;
+                
+                return damageText;
+            },
+            
+            clearDamageTexts: function() {
+                
+                var i = 0;
+                
+                for(i = 0; i < this.damageTexts.length; i++) {
+                    
+                    this.damageTexts[i].text.destroy();
+                }
+                
+                this.damageTexts = [];
+            },
+            
+            //checks if all of the attack results texts have finished their tweening
+            finishedDisplayingResults: function() {
+                
+                //if any text is still tweening, then we have to wait for it to finish
+                var i = 0;
+                
+                for(i = 0; i < this.damageTexts.length; i++) {
+                    
+                    
+                    if(this.damageTexts[i].tween.isRunning) {
+                        
+                        return false;
+                    }
+                    
+                }
+
+                return true;
             },
             
             create: function() {
@@ -768,6 +841,7 @@
                     PLAYER_SELECT_ATTACK_TARGET: 2,
                     PLAYER_ATTACKING: 3,
                     PLAYER_ATTACK_RESULTS: 4,
+                    ENEMY_TURN_START: 5,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
@@ -794,19 +868,11 @@
                 this.text.fill = 'white';
                 this.textBox.addChild(this.text);
                 
-                this.clearStates();
-                this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                
-                //now we create some timed events
-                //timed events are things that occur after a certain time has passed
-                //we will need a couple for the battle
-                //first when the player attacks an enemy we want to put a small delay after the player damages the enemy
-                //during this time the player won't be able to receive any inputs or do anything at all
-                //at the end we will go to the enemies turn (for now it'll just restart the player's turn)
-                //i use a loop timer because a normal timer runs the function once, and its impossible to make it run it again
-                //so instead i will put a looped timer which will pause itself its finished, that way we can reuse it as needed
-                this.endPlayerTurn = game.time.create(false);
-                this.endPlayerTurn.loop(Phaser.Timer.SECOND * 1.8, function(){this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);this.endPlayerTurn.pause();}, this);
+                //this contains text that will display the amount of damage an enemy or player received after an attack
+                //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted
+                //damage texts will contain the text reprsenting the damage, and a phaser tween object
+                //tween objects represent a linear interpolation between two object states, we will use it to animate the text
+                this.damageTexts = [];
                 
                 /*create some kind of indicator to indicate what mosnter hte player has currently selected
                 create a number that represents the currently selected mosnter's array index
@@ -819,8 +885,15 @@
                 allow user's up/down movement to select a different mosnter in the list
                 move the rectangle according to the users selection
                 if the player presses enter, then set the target to that monster, and set the current state to player attacking
-                stop drawing the selection, but the selected monster's id will be saved*/
+                stop drawing the selection, but the selected monster's id will be saved
                 
+                once player presses the attack button, it will run the player attack animtion.
+                after the animation is compelted it should display the damage the enemy received over their head
+                the next turn won't start until the damage is disappeard on all enemies that were hit
+                after the damage dissapears, it will be the enemies turn.*/
+                
+                this.clearStates();
+                this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
             },
             
             update: function() {
@@ -830,6 +903,18 @@
                 this.highlightSelectedAction(this.fightBox);
                 
                 this.highlightSelectedEnemy();
+                
+                //if we are showing player attack results, then we have to check if all the damage numbers have been displayed
+                //if we've displayed all the numbers, its time to move onto the enemy's turn
+                if(this.currentState == this.BattleState.PLAYER_ATTACK_RESULTS) {
+                    
+                    var moveToNextState = this.finishedDisplayingResults();
+                    
+                    if(moveToNextState) {
+                        
+                        this.changeState(this.BattleState.ENEMY_TURN_START);
+                    }
+                }
             },
             
             onKeyDown: function(key) {
