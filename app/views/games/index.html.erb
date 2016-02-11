@@ -10,10 +10,29 @@
         //This creates the canvas for the game to display, and allows you to use the Phaser engine
         var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Game');
         
+        //Returns a random integer between min (inclusive) and max (inclusive)
+        function getRandomInt(min, max) {
+            
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        function clamp(number, min, max) {
+            
+            return Math.max(min, Math.min(number, max));
+        }
+        
+        function rpgEntity() {
+            
+            this.health = 20;
+            this.strength = 10;
+            this.defense = 10;
+            this.level = 1;
+        };
+        
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
-        var player = {
+        var player = new rpgEntity();//{
             
             //players will have various stats, these will be loaded from the rails data base
             //for now all we have is the player's sprite, which is a phaser game object that handles drawing/movement, and other great stuff
@@ -29,7 +48,7 @@
             ...
             ...
             */
-        };
+        //};
         
         //create all of the required game states
         //A game state is basically a collection of all of the objects that are currently on screen
@@ -221,6 +240,7 @@
                 //polling a key means you check if a key is pressed, or released
                 this.cursors = game.input.keyboard.createCursorKeys();
                 player.cursors = this.cursors;
+                player.x = 0;
                 
                 //make phaser use a call back listener
                 //listener functions are functions that are called whenever a certain action happens
@@ -425,7 +445,10 @@
                 
                 //now get the monster with the above key
                 //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
-                return monsterDatabase[monsterName];
+                var monster = new rpgEntity();
+                $.extend(monster, monsterDatabase[monsterName]);
+                
+                return monster;
             },
             
             generateMonsterSprites: function() {
@@ -456,26 +479,27 @@
                 player.sprite.x = 500;
                 player.sprite.y = 300;
                 
+                player.sprite.body.velocity.x = 0;
+                player.sprite.body.velocity.y = 0;
+                
                 //player face left
                 player.sprite.animations.play('left');
                 player.sprite.animations.stop(null, true);
             },
             
-            createActionsBox: function(width, height) {
+            createActionsContainer: function(x, y, width, height, actionBox) {
                 
-                var actionBoxWidth = game.scale.width;
-                var actionBoxHeight = 130;
                 var actionBoxX = 0;
                 var actionBoxY = game.scale.height - height;
                 
-                return createTextBox(actionBoxX, actionBoxY, width, height);
+                actionBox.actionsContainer = createTextBox(x, y, width, height);
             },
             
-            createActionTexts: function(choices) {
+            createActionTexts: function(choices, actionBox) {
                 
                 var textMargins = 10;
                 var textSize = 28;
-                this.heightLargestText = 0;
+                actionBox.heightLargestText = 0;
                 
                 var actionTexts = [];
                 
@@ -484,35 +508,62 @@
                     
                     actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
                 
-                    this.heightLargestText = actionTexts[i].height > this.heightLargestText ? actionTexts[i].height : this.heightLargestText;
+                    actionBox.heightLargestText = actionTexts[i].height > actionBox.heightLargestText ? actionTexts[i].height : actionBox.heightLargestText;
                     
                     //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
-                    this.playerActionsBox.addChild(actionTexts[i]);
+                    actionBox.actionsContainer.addChild(actionTexts[i]);
                 }
                 
-                return actionTexts;
+                actionBox.texts = actionTexts;
             },
             
-            highlightSelectedAction: function() {
+            //an action box is a rectangular display that lists a bunch of possible actions a player can make
+            createActionBox: function(x, y, width, height, choices) {
+                
+                var box = new Object();
+                
+                this.createActionsContainer(x, y, width, height, box);
+                this.createActionTexts(choices, box);
+                
+                //players selected action
+                box.selectedAction = 0;
+                
+                //now i'll create a rectangle that will circle the option the player selects
+                //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
+                //any draw positions will be relative to this origin, so set it to 0, 0
+                box.selectionOutline = game.add.graphics(0, 0);
+                box.actionsContainer.addChild(box.selectionOutline);
+                
+                return box;
+            },
+            
+            highlightSelectedAction: function(actionBox) {
                 
                 //first clear the previously drawn rectangle
-                this.selectionBox.clear();
+                actionBox.selectionOutline.clear();
                 
                 //clear resets line style, so set it again
-                this.selectionBox.lineStyle(2, 0x0000FF, 1);
+                actionBox.selectionOutline.lineStyle(2, 0x0000FF, 1);
                 
                 //now draw a new rectangle around the current selection
-                var xPosition = this.actionTexts[this.selectedAction].x;
-                var yPosition = this.actionTexts[this.selectedAction].y;
-                var height = this.heightLargetText;
+                var xPosition = actionBox.texts[actionBox.selectedAction].x;
+                var yPosition = actionBox.texts[actionBox.selectedAction].y;
                 
-                this.selectionBox.drawRect(xPosition, yPosition, 80, 30);
+                var height = actionBox.heightLargetText;
+                
+                actionBox.selectionOutline.drawRect(xPosition, yPosition, 80, 30);
+            },
+            
+            determineVisibleSelection: function() {
+                
+                this.actionBox.selectionOutline.visible = this.currentState == this.BattleState.PLAYER_TURN;
+                this.fightBox.actionsContainer.visible = this.currentState == this.BattleState.PLAYER_TURN && this.playerTurnState == this.PlayerTurnState.SELECTING_FIGHT_OPTIONS;
             },
             
             create: function() {
                 
                 //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "Only the run option works for now.";
+                document.getElementById("additional").innerHTML = "select an action, only run works";
                 
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
         		this.text = game.add.text(0, 0, "BATTLe", style);
@@ -547,32 +598,43 @@
                 var actionBoxWidth = game.scale.width;
                 var actionBoxHeight = 130;
                 
-                //this.playerActionsBox = createTextBox(actionBoxX, actionBoxY, actionBoxWidth, actionBoxHeight);
-                this.playerActionsBox = this.createActionsBox(actionBoxWidth, actionBoxHeight);
+                //create the main actions
+                this.actionBox = this.createActionBox(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
                 
-                //for now i'll only have run and fight, but only run will work
-                //we will generate all the text in an array that way we can position them easily
-                var choices = ['fight', 'items', 'run'];
-                this.actionTexts = this.createActionTexts(choices);
-                
-                //players selected action
-                this.selectedAction = 0;
-                
-                //now i'll create a rectangle that will circle the option the player selects
-                //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
-                //any draw positions will be relative to this origin, so set it to 0, 0
-                this.selectionBox = game.add.graphics(0, 0);
-                this.playerActionsBox.addChild(this.selectionBox);
+                //create the options that show up if player selects to fight
+                this.fightBox = this.createActionBox(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
+
                 
                 //again we want to add a listener for when the player presses on keys
                 game.input.keyboard.callbackContext = this;
                 game.input.keyboard.onDownCallback = this.onKeyDown;
+                
+                //variables that represent the current battle state
+                //this emulates a game state system, but without having to switch between phaser game states
+                this.BattleState = {
+                    
+                    PLAYER_TURN: 0,
+                    ENEMY_TURN: 1,
+                };
+                
+                //sub battle states that occur during the different battle states
+                this.PlayerTurnState = {
+                    
+                    SELECTING_MAIN_ACTION: 0,
+                    SELECTING_FIGHT_OPTIONS: 1,
+                };
+                
+                this.currentState = this.BattleState.PLAYER_TURN;
+                this.playerTurnState = this.PlayerTurnState.SELECTING_MAIN_ACTION;
+                
             },
             
             update: function() {
-                
+            
                 //make the game highlight the player's current selected action
-                this.highlightSelectedAction();
+                this.determineVisibleSelection();
+                this.highlightSelectedAction(this.actionBox);
+                this.highlightSelectedAction(this.fightBox);
             },
             
             onKeyDown: function(key) {
@@ -582,29 +644,68 @@
             
             handlePlayerInput: function(key) {
                 
+                if(this.currentState == this.BattleState.PLAYER_TURN) {
+                    
+                    if(this.playerTurnState == this.PlayerTurnState.SELECTING_MAIN_ACTION) {
+                        
+                        this.handleMainActionInput(key);
+                        
+                    } else {
+                        
+                        this.handleFightActionInput(key);
+                    }
+                }
+            },
+            
+            handleMainActionInput: function(key) {
+                
+                this.handleActionSelection(key, this.actionBox);
+                
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    //we would like to return to the main map if player selected run
+                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
+                        
+                        game.state.start('overworld');
+                    }
+                    
+                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
+                        
+                        this.playerTurnState = this.PlayerTurnState.SELECTING_FIGHT_OPTIONS;
+                    }
+                }
+            },
+            
+            handleFightActionInput: function(key) {
+                
+                this.handleActionSelection(key, this.fightBox);
+                
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    //we would like to return to the main map if player selected run
+                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
+                        
+                        this.playerTurnState = this.PlayerTurnState.SELECTING_MAIN_ACTION;
+                    }
+                }
+            },
+            
+            handleActionSelection: function(key, actionBox) {
+                
                 //move the players selection
                 if(key.keyCode == Phaser.Keyboard.UP) {
                     
-                    this.selectedAction -= 1;
+                    actionBox.selectedAction -= 1;
                     
-                    if(this.selectedAction < 0) {
+                    if(actionBox.selectedAction < 0) {
                         
-                        this.selectedAction = this.actionTexts.length - 1;
+                        actionBox.selectedAction = actionBox.texts.length - 1;
                     }
                 }
                 
                 if(key.keyCode == Phaser.Keyboard.DOWN) {
                     
-                    this.selectedAction = (this.selectedAction + 1) % this.actionTexts.length;
-                }
-                
-                if(key.keyCode == Phaser.Keyboard.ENTER) {
-                    
-                    //we would like to return to the main map if player selected run
-                    if(this.actionTexts[this.selectedAction].text == "run") {
-                        
-                        game.state.start('overworld');
-                    }
+                    actionBox.selectedAction = (actionBox.selectedAction + 1) % actionBox.texts.length;
                 }
             },
             
