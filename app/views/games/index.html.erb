@@ -147,7 +147,7 @@
                 game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
                 
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
-                game.load.image('orc','<%= asset_path("orc.png") %>' )
+                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
                 //the above just loads the json file, but doens't load the tileSheet (the images used to draw every single tile)
                 //here we load the tile image
@@ -488,7 +488,8 @@
                 var i = 0;
                 for(i = 0; i < monsters.length; ++i) {
                     
-                    monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey);
+                    monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, 8);
+                    monsters[i].sprite.animations.add("attack", [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], 5, false);
                 }
             },
             
@@ -623,6 +624,11 @@
                 this.changeState(this.BattleState.PLAYER_ATTACK_RESULTS);
             },
             
+            finishEnemyAttack: function() {
+                
+                this.changeState(this.BattleState.ENEMY_ATTACK_RESUlTS);
+            },
+            
             //this function clears all data required for all the states, used when you first enter battle
             clearStates: function() {
                 
@@ -657,19 +663,25 @@
                 if(stateToExit == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
                     
                     this.selectedMonsterIndicator.visible = false;
-                    this.textBox.visible = false;
                 }
                 
                 if(stateToExit == this.BattleState.PLAYER_ATTACKING) {
                     
-                    this.textBox.visible = false;
+                    
                 }
                 
-                if(stateToExit == this.BattleState.PLAYER_ATTACK_RESULTS) {
+                if(stateToExit == this.BattleState.PLAYER_ATTACK_RESULTS || stateToExit == this.BattleState.ENEMY_ATTACK_RESUlTS) {
                     
                     //delete all damage texts, and to do that we have to delete all phaser sprites
                     this.clearDamageTexts();
                 }
+                
+                if(stateToExit == this.BattleState.ENEMY_TURN) {
+                    
+                    
+                }
+                
+                this.hideMessage();
             },
             
             //this function handles all variable changes that need to be made when you enter a given state
@@ -680,26 +692,28 @@
                     
                     this.actionBox.selectedAction = 0;
                     this.actionBox.selectionOutline.visible= true;
+                    
+                    this.showMessage("Select an action");
                 }
                 
                 if(stateToEnter == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
                     
                     this.fightBox.selectedAction = 0;
                     this.fightBox.actionsContainer.visible = true;
+                    
+                    this.showMessage("Select an action");
                 }
                 
                 if(stateToEnter == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
                     
                     this.selectedMonsterId = 0;
                     this.selectedMonsterIndicator.visible = true;
-                    this.textBox.visible = true;
-                    this.text.setText("Select a monster to attack.");
+                    this.showMessage("Select a monster to attack");
                 }
                 
                 if(stateToEnter == this.BattleState.PLAYER_ATTACKING) {
                     
-                    this.textBox.visible = true;
-                    this.text.setText("Attacking " + this.monsters[this.selectedMonsterId].imageKey);
+                    this.showMessage("Attacking " + this.monsters[this.selectedMonsterId].imageKey);
                     player.sprite.animations.play("attack");
                     
                     //set the player's attack attribute
@@ -719,8 +733,32 @@
                     
                     this.currentEnemy = 0;
                 }
+                
+                if(stateToEnter == this.BattleState.ENEMY_TURN) {
+                    
+                    //determine what current enemy should do
+                    this.playEnemyTurn(this.currentEnemy);
+                }
+                
+                if(stateToEnter == this.BattleState.ENEMY_ATTACK_RESUlTS) {
+                    
+                    //enemy attacked, determine damage dealt to player
+                    var damage = this.determineAttackResults(this.monsters[this.currentEnemy], player);
+                    this.damageTexts.push(this.createDamageText(player, damage) );
+                }
             
                 this.currentState = stateToEnter;
+            },
+            
+            showMessage: function(message) {
+                
+                this.textBox.visible = true;
+                this.text.setText(message);
+            },
+            
+            hideMessage: function() {
+                
+                this.textBox.visible = false;
             },
             
             //makes the attacker attack the defender
@@ -783,6 +821,29 @@
                 return true;
             },
             
+            //play the turn of the current enemy
+            playEnemyTurn: function(enemyId) {
+                
+                //randomly determine what the enemy should do
+                //for now he just attacks
+                this.monsters[enemyId].sprite.events.onAnimationComplete.add(this.finishEnemyAttack, this);
+                this.monsters[enemyId].sprite.animations.play("attack");
+                this.monsters[enemyId].lastUsedAttack.power = this.monsters[enemyId].strength;
+                
+                this.showMessage(this.monsters[enemyId].name + " attacks!");
+            },
+            
+            startNextEnemyTurn: function() {
+                
+                this.currentEnemy += 1;
+                
+                //no more enemies, move back to player's turn
+                if(this.currentEnemy >= this.monsters.length) {
+                    
+                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                }
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -842,6 +903,7 @@
                     PLAYER_ATTACKING: 3,
                     PLAYER_ATTACK_RESULTS: 4,
                     ENEMY_TURN_START: 5,
+                    ENEMY_ATTACK_RESUlTS: 6,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
@@ -913,6 +975,22 @@
                     if(moveToNextState) {
                         
                         this.changeState(this.BattleState.ENEMY_TURN_START);
+                    }
+                }
+                
+                if(this.currentState == this.BattleState.ENEMY_TURN_START) {
+                    
+                    //starting the enemy turn, begin by making the first enemy attack, and move on from there
+                    this.changeState(this.BattleState.ENEMY_TURN);;
+                }
+                
+                if(this.currentState == this.BattleState.ENEMY_ATTACK_RESUlTS) {
+                    
+                    var moveToNextState = this.finishedDisplayingResults();
+                    
+                    if(moveToNextState) {
+                        
+                        this.startNextEnemyTurn();
                     }
                 }
             },
