@@ -488,8 +488,13 @@
                 var i = 0;
                 for(i = 0; i < monsters.length; ++i) {
                     
-                    monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, 8);
-                    monsters[i].sprite.animations.add("attack", [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], 5, false);
+                    monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
+                    
+                    for(var j = 0; j < monsters[i].animations.length; ++j) {
+                        
+                        animation = monsters[i].animations[j];
+                        monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
+                    }
                 }
             },
             
@@ -691,7 +696,7 @@
                 if(stateToEnter == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
                     
                     this.actionBox.selectedAction = 0;
-                    this.actionBox.selectionOutline.visible= true;
+                    this.actionBox.selectionOutline.visible = true;
                     
                     this.showMessage("Select an action");
                 }
@@ -935,24 +940,6 @@
                 //damage texts will contain the text reprsenting the damage, and a phaser tween object
                 //tween objects represent a linear interpolation between two object states, we will use it to animate the text
                 this.damageTexts = [];
-                
-                /*create some kind of indicator to indicate what mosnter hte player has currently selected
-                create a number that represents the currently selected mosnter's array index
-                create a graphics object that will draw a rectangle around the currently selected monster
-                
-                when player presses attack button:
-                
-                set the marker to the first object in the list
-                begin drawing the rectangle
-                allow user's up/down movement to select a different mosnter in the list
-                move the rectangle according to the users selection
-                if the player presses enter, then set the target to that monster, and set the current state to player attacking
-                stop drawing the selection, but the selected monster's id will be saved
-                
-                once player presses the attack button, it will run the player attack animtion.
-                after the animation is compelted it should display the damage the enemy received over their head
-                the next turn won't start until the damage is disappeard on all enemies that were hit
-                after the damage dissapears, it will be the enemies turn.*/
                 
                 this.clearStates();
                 this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
