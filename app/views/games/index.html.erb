@@ -554,16 +554,10 @@
                 actionBox.selectionOutline.drawRect(xPosition, yPosition, 80, 30);
             },
             
-            determineVisibleSelection: function() {
-                
-                this.actionBox.selectionOutline.visible = this.currentState == this.BattleState.PLAYER_TURN;
-                this.fightBox.actionsContainer.visible = this.currentState == this.BattleState.PLAYER_TURN && this.playerTurnState == this.PlayerTurnState.SELECTING_FIGHT_OPTIONS;
-            },
-            
             create: function() {
                 
                 //misc instructions, ignore
-                document.getElementById("additional").innerHTML = "select an action, only run works";
+                document.getElementById("additional").innerHTML = "select an action";
                 
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
         		this.text = game.add.text(0, 0, "BATTLe", style);
@@ -603,7 +597,7 @@
                 
                 //create the options that show up if player selects to fight
                 this.fightBox = this.createActionBox(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
-
+                this.fightBox.actionsContainer.visible = false;
                 
                 //again we want to add a listener for when the player presses on keys
                 game.input.keyboard.callbackContext = this;
@@ -613,26 +607,17 @@
                 //this emulates a game state system, but without having to switch between phaser game states
                 this.BattleState = {
                     
-                    PLAYER_TURN: 0,
-                    ENEMY_TURN: 1,
+                    PLAYER_SELECT_MAIN_ACTION: 0,
+                    PLAYER_SELECT_FIGHT_ACTION: 1,
                 };
                 
-                //sub battle states that occur during the different battle states
-                this.PlayerTurnState = {
-                    
-                    SELECTING_MAIN_ACTION: 0,
-                    SELECTING_FIGHT_OPTIONS: 1,
-                };
-                
-                this.currentState = this.BattleState.PLAYER_TURN;
-                this.playerTurnState = this.PlayerTurnState.SELECTING_MAIN_ACTION;
+                this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
                 
             },
             
             update: function() {
             
                 //make the game highlight the player's current selected action
-                this.determineVisibleSelection();
                 this.highlightSelectedAction(this.actionBox);
                 this.highlightSelectedAction(this.fightBox);
             },
@@ -644,16 +629,13 @@
             
             handlePlayerInput: function(key) {
                 
-                if(this.currentState == this.BattleState.PLAYER_TURN) {
+                if(this.currentState == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
                     
-                    if(this.playerTurnState == this.PlayerTurnState.SELECTING_MAIN_ACTION) {
-                        
-                        this.handleMainActionInput(key);
-                        
-                    } else {
-                        
-                        this.handleFightActionInput(key);
-                    }
+                    this.handleMainActionInput(key);
+                    
+                } else {
+                    
+                    this.handleFightActionInput(key);
                 }
             },
             
@@ -671,7 +653,9 @@
                     
                     if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
                         
-                        this.playerTurnState = this.PlayerTurnState.SELECTING_FIGHT_OPTIONS;
+                        this.fightBox.selectedAction = 0;
+                        this.currentState = this.BattleState.PLAYER_SELECT_FIGHT_ACTION;
+                        this.fightBox.actionsContainer.visible = true;
                     }
                 }
             },
@@ -685,7 +669,8 @@
                     //we would like to return to the main map if player selected run
                     if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
                         
-                        this.playerTurnState = this.PlayerTurnState.SELECTING_MAIN_ACTION;
+                        this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                        this.fightBox.actionsContainer.visible = false;
                     }
                 }
             },
