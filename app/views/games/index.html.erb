@@ -570,12 +570,97 @@
                 actionBox.selectionOutline.drawRect(xPosition, yPosition, 80, 30);
             },
             
+            //draws a rectangle around the monster that the player has currently chosen to attack
+            highlightSelectedEnemy: function() {
+                
+                //first clear the previously drawn selection
+                this.selectedMonsterIndicator.clear();
+                
+                //set line style
+                this.selectedMonsterIndicator.lineStyle(2, 0xff0000, 1);
+                
+                //make sure the selected mosnter exists
+                this.selectedMonsterId = clamp(this.selectedMonsterId, 0, this.monsters.length);
+                
+                var xPosition = this.monsters[this.selectedMonsterId].sprite.x;
+                var yPosition = this.monsters[this.selectedMonsterId].sprite.y;
+                var width = this.monsters[this.selectedMonsterId].sprite.width;
+                var height = this.monsters[this.selectedMonsterId].sprite.height;
+                
+                this.selectedMonsterIndicator.drawRect(xPosition, yPosition, width, height);
+            },
+            
             //function that is called when the player's attack animation finishes
             //this function should transition to the next game state, and apply damage to enemies as needed
             finishPlayerAttack: function() {
                 
                 //incomplete
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+            },
+            
+            //this function clears all data required for all the states, used when you first enter battle
+            clearStates: function() {
+                
+                for(state in this.BattleState) {
+                    
+                    this.exitState(this.BattleState[state]);
+                }
+            },
+            
+            //this function makes it easy to handle state changes
+            //it goes from one state to another, and changes any variables required when entering or leaving a state
+            changeState: function(targetState) {
+                
+                this.exitState(this.currentState);
+                this.enterState(targetState);
+            },
+            
+            //this function handles all variable changes that need to be made when you exit the given state
+            //it calls any functions that need to be called when a state finishes
+            exitState: function(stateToExit) {
+                
+                if(stateToExit == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
+                    
+                    this.actionBox.selectionOutline.visible = false;
+                }
+                
+                if(stateToExit == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
+                    
+                    this.fightBox.actionsContainer.visible = false;
+                }
+                
+                if(stateToExit == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
+                    
+                    this.selectedMonsterIndicator.visible = false;
+                    this.textBox.visible = false;
+                }
+            },
+            
+            //this function handles all variable changes that need to be made when you enter a given state
+            //it calls any functions that need to be called when a state starts
+            enterState: function(stateToEnter) {
+                
+                if(stateToEnter == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
+                    
+                    this.actionBox.selectedAction = 0;
+                    this.actionBox.selectionOutline.visible= true;
+                }
+                
+                if(stateToEnter == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
+                    
+                    this.fightBox.selectedAction = 0;
+                    this.fightBox.actionsContainer.visible = true;
+                }
+                
+                if(stateToEnter == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
+                    
+                    this.selectedMonsterId = 0;
+                    this.selectedMonsterIndicator.visible = true;
+                    this.textBox.visible = true;
+                    this.text.setText("Select a monster to attack.");
+                }
+                
+                this.currentState = stateToEnter;
             },
             
             create: function() {
@@ -633,13 +718,49 @@
                     
                     PLAYER_SELECT_MAIN_ACTION: 0,
                     PLAYER_SELECT_FIGHT_ACTION: 1,
-                    PLAYER_ATTACKING: 2,
+                    PLAYER_SELECT_ATTACK_TARGET: 2,
+                    PLAYER_ATTACKING: 3,
                 };
                 
                 this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
                 
                 //add a function to call when the player's aniamtion finishes, because we don't want damage calculation to occur while the player's animation is ongoing
                 player.sprite.events.onAnimationComplete.add(this.finishPlayerAttack, this);
+                
+                //when the player starts to attack we need a way for the player to select a mosnter to attack
+                //this variable keeps track of what mosnter the player has selected
+                this.selectedMonsterId = 0;
+                
+                //this graphics object will draw a rectangle around the selected mosnter
+                this.selectedMonsterIndicator = game.add.graphics(0, 0);
+                
+                //we need a way to give messages to the player
+                //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
+                this.textBox = createTextBox(0, 0, game.scale.width, 50);
+                
+                //now create a text that will be displayed
+                //these settings make the text centerd to the message box
+                this.text = game.add.text(0, 0, "Message");
+                this.text.x = this.textBox.width / 2;
+                this.text.anchor.x = 0.5;
+                this.text.fill = 'white';
+                this.textBox.addChild(this.text);
+                
+                this.clearStates();
+                this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                
+                /*create some kind of indicator to indicate what mosnter hte player has currently selected
+                create a number that represents the currently selected mosnter's array index
+                create a graphics object that will draw a rectangle around the currently selected monster
+                
+                when player presses attack button:
+                
+                set the marker to the first object in the list
+                begin drawing the rectangle
+                allow user's up/down movement to select a different mosnter in the list
+                move the rectangle according to the users selection
+                if the player presses enter, then set the target to that monster, and set the current state to player attacking
+                stop drawing the selection, but the selected monster's id will be saved*/
                 
             },
             
@@ -649,6 +770,7 @@
                 this.highlightSelectedAction(this.actionBox);
                 this.highlightSelectedAction(this.fightBox);
                 
+                this.highlightSelectedEnemy();
             },
             
             onKeyDown: function(key) {
@@ -668,6 +790,10 @@
                 } else if(this.currentState == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
                     
                     this.handleFightActionInput(key);
+                    
+                } else if(this.currentState == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
+                    
+                    this.handleTargetSelectionInput(key);
                 }
             },
             
@@ -687,9 +813,7 @@
                     
                     if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
                         
-                        this.fightBox.selectedAction = 0;
-                        this.currentState = this.BattleState.PLAYER_SELECT_FIGHT_ACTION;
-                        this.fightBox.actionsContainer.visible = true;
+                        this.changeState(this.BattleState.PLAYER_SELECT_FIGHT_ACTION);
                     }
                 }
             },
@@ -703,19 +827,40 @@
                     //we would like to return to the main map if player selected run
                     if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
                         
-                        this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                     }
                     
                     if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack") {
                         
-                        this.currentState = this.BattleState.PLAYER_ATTACKING;
-                        player.sprite.animations.play('attack');
+                        this.changeState(this.BattleState.PLAYER_SELECT_ATTACK_TARGET);
                     }
+                }
+            },
+            
+            handleTargetSelectionInput: function(key) {
+                
+                if(key.keyCode == Phaser.Keyboard.UP) {
                     
-                    if(this.currentState != this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
+                    this.selectedMonsterId -= 1;
+                    
+                    if(this.selectedMonsterId < 0) {
                         
-                        this.fightBox.actionsContainer.visible = false;
+                        this.selectedMonsterId = this.monsters.length - 1;
                     }
+                }
+                
+                if(key.keyCode == Phaser.Keyboard.DOWN) {
+                    
+                    this.selectedMonsterId = (this.selectedMonsterId + 1) % this.monsters.length;
+                }
+                
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    /*this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
+                    this.selectedMonsterIndicator.visible = false;
+                    this.textBox.visible = false;
+                    player.sprite.animations.play('attack');*/
+                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                 }
             },
             
