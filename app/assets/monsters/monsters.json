@@ -3,7 +3,7 @@
         
         "imageKey": "orc",
         "name": "orc",
-        "health": 7,
+        "health": 8,
         "defense": 5,
         "strength": 5,
         "startingFrame": 8,

@@ -93,6 +93,83 @@
             */
         //};
         
+        //a substate object that handles functionality during a state
+        //its pretty much just a container for different functions that are called during certain game states
+        //it also stores the context under which the given functions should be called
+        function subState() {
+            
+            
+        };
+        
+        //adds a function of the given name to the state
+        //look at the state manager function calls to figure out what names to use
+        //generally it should be named on'Action'
+        subState.prototype.addFunction = function(functionName, functionImplementation, contextToCall) {
+            
+            //adds the given function as an object to the state
+            //the object has two properties, the actual function, and the context to call the function in
+            this[functionName] = {func: functionImplementation, context: contextToCall};
+        };
+        
+        //a sub state system that can be used at each major game state
+        //ignore for now if you don't know what a game state is, and read below
+        function stateManager() {
+            
+            //associative array of states
+            this.states = {};
+            this.currentState = "";
+        };
+        
+        //adds the given state to the state manager
+        //state name is the name used to identify the state (key to a hash)
+        //state is the state object
+        stateManager.prototype.addState = function(stateName, state) {
+            
+            this.states[stateName] = state;
+        };
+        
+        //switch from one state to another, this will exit current state, and switch to given state
+        //targetStateName is the name of the state you want to change to
+        //undefine behaviour if the target state hasn't been created
+        stateManager.prototype.changeState = function(targetStateName) {
+            
+            //first exit the current state
+            if(this.currentState != "" && typeof this.states[this.currentState].onExit !== "undefined") {
+                
+                this.states[this.currentState].onExit.func.call(this.states[this.currentState].context);
+            }
+            
+            this.currentState = targetStateName;
+            
+            if(typeof this.states[this.currentState].onEnter !== "undefined") {
+                
+                this.states[targetStateName].onEnter.func.call(this.states[targetStateName].context);
+            }
+            
+        };
+        
+        //calls the update function of the current state
+        stateManager.prototype.onUpdate = function() {
+            
+            if(typeof this.states[this.currentState].onUpdate !== "undefined") {
+                
+                this.states[this.currentState].onUpdate.func.call(this.states[this.currentState].context);
+            }
+        };
+        
+        stateManager.prototype.onKeyDown = function(key) {
+            
+            if(typeof this.states[this.currentState].onKeyDown !== "undefined") {
+                
+                this.states[this.currentState].onKeyDown.func.call(this.states[this.currentState].onKeyDown.context, key);
+            }
+        };
+        
+        function asdf(key) {
+            
+            document.getElementById("additional").innerHTML = this.monsters[key].health;
+        };
+        
         //create all of the required game states
         //A game state is basically a collection of all of the objects that are currently on screen
         //It also includes all the available functionality at any given time
@@ -212,6 +289,11 @@
         		game.state.start('overworld');
             },
         };
+        
+        function someFunc(index) {
+            
+             document.getElementById("additional").innerHTML = this.monsters[index].health;
+        }
         
         //the gameplay state
         //this is where the player will move around on the map
@@ -1022,7 +1104,6 @@
                 //make the game highlight the player's current selected action
                 this.highlightSelectedAction(this.actionBox);
                 this.highlightSelectedAction(this.fightBox);
-                document.getElementById("additional").innerHTML = this.monsters.length;
                 this.highlightSelectedEnemy();
                 
                 //if we are showing player attack results, then we have to check if all the damage numbers have been displayed
