@@ -1053,8 +1053,15 @@
                 
                 if(this.currentState == this.BattleState.ENEMY_TURN_START) {
                     
-                    //starting the enemy turn, begin by making the first enemy attack, and move on from there
-                    this.changeState(this.BattleState.ENEMY_TURN);
+                    if(this.monsters.length == 0) {
+                        
+                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                        
+                    } else {
+                        
+                        //starting the enemy turn, begin by making the first enemy attack, and move on from there
+                        this.changeState(this.BattleState.ENEMY_TURN);
+                    }
                 }
                 
                 //just a precaution incase we are in an enemy turn, but there are no enemies
@@ -1131,7 +1138,7 @@
                         this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                     }
                     
-                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack") {
+                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack" && this.monsters.length > 0) {
                         
                         this.changeState(this.BattleState.PLAYER_SELECT_ATTACK_TARGET);
                     }
