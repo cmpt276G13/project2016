@@ -151,7 +151,6 @@
                 
                 this.states[this.currentState].onExit.func.call(this.states[this.currentState].onExit.context);
             }
-            
             this.currentState = targetStateName;
             
             if(typeof this.states[this.currentState].onEnter !== "undefined") {
@@ -555,6 +554,136 @@
             
             return box;
         }
+        
+        /*
+        The following functions are meant to be added to the BATTLE STATE's subState manager for different states.
+        the reason they are outside here is because i made a system in the battle state to easily add states and functions, but
+        to do that you need to use premade functions
+        functions delared as object properties are created at run time
+        meaning i can't assign functions to objects if the functions are declared as object properties
+        so i'm defining these functions outside here, instead of in teh battle state object
+        
+        These functions probably WILL NOT work outside of the battle state, because they all use properties declared inside the battle state object (using the this context reference)
+        */
+        function selectMainActionEnter() {
+            
+            
+        };
+        
+        function selectMainActionExit() {
+            
+            
+        };
+        
+        function selectMainActionKeyDown(key) {
+            
+            
+        };
+        
+        function selectFightActionEnter() {
+            
+            
+        };
+        
+        function selectFightActionExit() {
+            
+            
+        };
+        
+        function selectFightActionKeyDown(key) {
+            
+            
+        };
+        
+        function playerAttackEnter() {
+            
+            
+        };
+        
+        function playerAttackExit() {
+            
+            
+        };
+        
+        function playerAttackUpdate() {
+            
+            
+        };
+        
+        function playerAttackResultsEnter() {
+            
+            
+        };
+        
+        function playerAttackResultsExit() {
+            
+            
+        };
+        
+        function playerAttackResultsUpdate() {
+            
+            
+        };
+    
+        function cullDeadEnemiesEnter() {
+            
+            
+        };
+    
+        function cullDeadEnemiesExit() {
+            
+            
+        };
+        
+        function cullDeadEnemiesUpdate() {
+            
+            
+        };
+        
+        function enemyTurnStartEnter() {
+            
+            
+        };
+        
+        function enemyTurnStartExit() {
+            
+            
+        };
+        
+        function enemyTurnStartUpdate() {
+            
+            
+        };
+        
+        function enemyTurnEnter() {
+            
+            
+        };
+        
+        function enemyTurnExit() {
+            
+            
+        };
+        
+        function enemyTurnUpdate() {
+            
+            
+        };
+        
+        function enemyAttackResultsEnter() {
+            
+            
+        };
+        
+        function enemyAttackResultsExit() {
+            
+            
+        };
+        
+        function enemyAttackResultsUpdate() {
+            
+               
+        };
         
         //the battle state
         //here players will battle some number of monsters
@@ -1015,43 +1144,90 @@
                 return true;
             },
             
+            //this object is where you should define all of the substates of the battle system
+            //any substate added here will be autoamtically added to the state manager
+            subStates: [
+                
+                //use as follows
+                //any sub state you want to add, create a new object in this
+                //each state object needs to itself be an object, containing two attributes, a name as a string, and an object containing all of the functions
+                //the id of each function should be the name you want to give the function after it is turned into a state object
+                
+                //example
+                //this state is for players to select a main action, either fight, run, or use items
+                {name: "selectMainAction", //name of the state
+                    functions: { //list of functions available in this state
+                        //in this state i want to add a function called onEnter.
+                        //i want onEnter to refer to the selectMainActionEnter function declared above
+                        onEnter: selectMainActionEnter,  //attribute name is the name i want to give the function. Attribute value is the function itself
+                        onExit: selectMainActionExit,    //create a function called onExit. the function that is actually called will be the selectMainActionExit function declared above
+                        onKeyDown: selectMainActionKeyDown
+                    }
+                },
+                
+                //any time you want to add a new state, just add it like in the example above
+                {name: "selectFightAction",
+                    functions: {
+                        
+                        onEnter: selectFightActionEnter,
+                        onExit: selectFightActionExit,
+                        onKeyDown: selectFightActionKeyDown
+                    }
+                    
+                }
+            ],
+            
             createSubStates: function() {
                 
                 this.stateManager = new stateManager();
                 
-                //create the select main action state
-                //here player chooses to fight, use items, or run
-                var mainActionState = new subState();
-                mainActionState.addFunction("onEnter", function(){
-                    this.actionBox.selectedAction = 0;
-                    this.actionBox.selectionOutline.visible = true;
+                //go through all the states and add them
+                for(var i = 0; i < this.subStates.length; ++i) {
                     
-                    this.showMessage("Select an action");}, this);
+                    var state = new subState();
                     
-                mainActionState.addFunction("onExit", function() {this.actionBox.selectionOutline.visible = false; this.hideMessage()}, this);
-                
-                mainActionState.addFunction("onKeyDown", function(key){
-                    //first handle user input if they press up or down to choose an action
-                this.handleActionSelection(key, this.actionBox);
-                
-                //execute the action the user has chosen
-                if(key.keyCode == Phaser.Keyboard.ENTER) {
-                    
-                    //we would like to return to the main map if player selected run
-                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
+                    //set the functions for this state
+                    for(functionName in this.subStates[i].functions) {
                         
-                        game.state.start('overworld');
+                        state.addFunction(functionName, this.subStates[i].functions[functionName], this);
                     }
                     
-                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_FIGHT_ACTION);
-                    }
+                    //add to state manager
+                    this.stateManager.addState(this.subStates[i].name, state);
                 }
-                }, this);
                 
-                this.stateManager.addState("PLAYER_SELECT_MAIN_ACTION", mainActionState);
-                this.stateManager.changeState("PLAYER_SELECT_MAIN_ACTION");
+                this.stateManager.changeState("selectFightAction");
+                
+                /*//create the select main action state
+                //here player chooses to fight, use items, or run
+                var selectMainAction = new subState();
+                selectMainAction.addFunction("onEnter", this.selectMainActionEnter, this);
+                selectMainAction.addFunction("onExit", this.selectMainActionExit, this);
+                selectMainAction.addFunction("onKeyDown", this.selectMainActionKeyDown, this);
+                
+                var selectFightAction = new subState();
+                selectFightAction.addFunction("onEnter", this.selectFightActionEnter, this);
+                selectFightAction.addFunction("onExit", this.selectFightActionEnter, this);
+                selectFightAction.addFunction("onKeyDown", this.selectFightActionKeyDown, this);
+                
+                var playerAttack = new subState();
+                playerAttack.addFunction("onEnter", this.playerAttackEnter, this);
+                playerAttack.addFunction("onExit", this.playerAttackExit, this);
+                playerAttack.addFunction("onUpdate", this.playerAttackUpdate, this);
+                
+                var playerAttackResults = new subState();
+                playerAttackResults.addFunction("onEnter", this.playerAttackResultsEnter, this);
+                playerAttackResults.addFunction("onExit", this.playerAttackResultsExit, this);
+                playerAttackResults.addFunction("onUpdate", this.playerAttackResultsUpdate, this);
+                
+                var cullDeadEnemies = new subState();
+                cullDeadEnemies.addFunction("onEnter", this.playerAttackEnter, this);
+                playerAttack.addFunction("onExit", this.playerAttackExit, this);
+                playerAttack.addFunction("onUpdate", this.playerAttackUpdate, this);
+                
+                this.stateManager.addState("SELECT_MAIN_ACTION", selectMainAction);
+                this.stateManager.addState("SELECT_FIGHT_ACTION", selectFightAction);
+                this.stateManager.addState("PLAYER_ATTACK", playerAttack);*/
             },
             
             create: function() {
