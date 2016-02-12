@@ -128,6 +128,19 @@
             this.states[stateName] = state;
         };
         
+        //calls the exit function of all of the states
+        //its a good idea to call this once all the states have been created
+        stateManager.prototype.exitAll = function() {
+            
+            for(current in this.states) {
+                
+                if(typeof current.onExit !== "undefined") {
+                    
+                    current.onExit.func.call(current.onExit.context);
+                }
+            }
+        };
+        
         //switch from one state to another, this will exit current state, and switch to given state
         //targetStateName is the name of the state you want to change to
         //undefine behaviour if the target state hasn't been created
@@ -136,14 +149,14 @@
             //first exit the current state
             if(this.currentState != "" && typeof this.states[this.currentState].onExit !== "undefined") {
                 
-                this.states[this.currentState].onExit.func.call(this.states[this.currentState].context);
+                this.states[this.currentState].onExit.func.call(this.states[this.currentState].onExit.context);
             }
             
             this.currentState = targetStateName;
             
             if(typeof this.states[this.currentState].onEnter !== "undefined") {
                 
-                this.states[targetStateName].onEnter.func.call(this.states[targetStateName].context);
+                this.states[targetStateName].onEnter.func.call(this.states[targetStateName].onEnter.context);
             }
             
         };
@@ -153,7 +166,7 @@
             
             if(typeof this.states[this.currentState].onUpdate !== "undefined") {
                 
-                this.states[this.currentState].onUpdate.func.call(this.states[this.currentState].context);
+                this.states[this.currentState].onUpdate.func.call(this.states[this.currentState].onUpdate.context);
             }
         };
         
@@ -1002,6 +1015,45 @@
                 return true;
             },
             
+            createSubStates: function() {
+                
+                this.stateManager = new stateManager();
+                
+                //create the select main action state
+                //here player chooses to fight, use items, or run
+                var mainActionState = new subState();
+                mainActionState.addFunction("onEnter", function(){
+                    this.actionBox.selectedAction = 0;
+                    this.actionBox.selectionOutline.visible = true;
+                    
+                    this.showMessage("Select an action");}, this);
+                    
+                mainActionState.addFunction("onExit", function() {this.actionBox.selectionOutline.visible = false; this.hideMessage()}, this);
+                
+                mainActionState.addFunction("onKeyDown", function(key){
+                    //first handle user input if they press up or down to choose an action
+                this.handleActionSelection(key, this.actionBox);
+                
+                //execute the action the user has chosen
+                if(key.keyCode == Phaser.Keyboard.ENTER) {
+                    
+                    //we would like to return to the main map if player selected run
+                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
+                        
+                        game.state.start('overworld');
+                    }
+                    
+                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
+                        
+                        this.changeState(this.BattleState.PLAYER_SELECT_FIGHT_ACTION);
+                    }
+                }
+                }, this);
+                
+                this.stateManager.addState("PLAYER_SELECT_MAIN_ACTION", mainActionState);
+                this.stateManager.changeState("PLAYER_SELECT_MAIN_ACTION");
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -1097,6 +1149,8 @@
                 
                 this.clearStates();
                 this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                
+                this.createSubStates();
             },
             
             update: function() {
