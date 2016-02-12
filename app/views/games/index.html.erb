@@ -56,14 +56,17 @@
             this.health = clamp(this.health - damageReceived, 0, this.health);
         };
         
-        
+        function mark() {
+            
+            this.shouldDelete = true;
+        }
         //makes enemy start their death animation, sets the call back function
         function killEntity(dyingEntity) {
             
             //start death animation, make entity fade to black as well
             //when it finishes fading, it will be marked for deletion
             tween = game.add.tween(dyingEntity.sprite).to({alpha: 0});
-            tween.onComplete.add(function(dyingEntity){dyingEntity.shouldDelete = true; }, dyingEntity, 0, dyingEntity);
+            tween.onComplete.add(mark, dyingEntity);
             tween.delay(600);
             tween.start();
             dyingEntity.sprite.animations.play("dying");
@@ -618,9 +621,14 @@
             
             //draws a rectangle around the monster that the player has currently chosen to attack
             highlightSelectedEnemy: function() {
-                
+            
                 //first clear the previously drawn selection
                 this.selectedMonsterIndicator.clear();
+                
+                if(this.selectedMonsterId >= this.monsters.length) {
+                    
+                    return;
+                }
                 
                 //set line style
                 this.selectedMonsterIndicator.lineStyle(2, 0xff0000, 1);
@@ -866,7 +874,11 @@
                 if(this.currentEnemy >= this.monsters.length) {
                     
                     this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
+                    return;
                 }
+                
+                //enemy left, start his turn
+                this.changeState(this.BattleState.ENEMY_TURN);
             },
             
             //looks for all dead enemies and plays their dying animation
@@ -888,23 +900,23 @@
             //false if there are entities that are still animating, and need to be deleted later
             deleteMarkedEntities: function(entities) {
                 
-                for(var i = 0; i < entities.length; ++i) {
+                for(var i = 0; i < entities.length;) {
                     
                     if(entities[i].health != 0) {
                         
+                        i += 1;
                         continue;
                     }
-                    
+
                     if(!entities[i].shouldDelete) {
-                        
                         
                         return false;
                     }
                     
                     entities[i].sprite.destroy();
-                    entities.remove(i, 1);
+                    entities.splice(i, 1);
+                    
                 }
-                
                 return true;
             },
             
@@ -1010,7 +1022,7 @@
                 //make the game highlight the player's current selected action
                 this.highlightSelectedAction(this.actionBox);
                 this.highlightSelectedAction(this.fightBox);
-                
+                document.getElementById("additional").innerHTML = this.monsters.length;
                 this.highlightSelectedEnemy();
                 
                 //if we are showing player attack results, then we have to check if all the damage numbers have been displayed
@@ -1035,7 +1047,7 @@
                     
                     if(removedAllMarkedEntites) {
                         
-                        this.changeState(PLAYER_SELECT_MAIN_ACTION);
+                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                     }
                 }
                 
@@ -1043,6 +1055,12 @@
                     
                     //starting the enemy turn, begin by making the first enemy attack, and move on from there
                     this.changeState(this.BattleState.ENEMY_TURN);
+                }
+                
+                //just a precaution incase we are in an enemy turn, but there are no enemies
+                if(this.currentState == this.BattleState.ENEMY_TURN && this.currentEnemy >= this.monsters.length) {
+                    
+                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                 }
                 
                 if(this.currentState == this.BattleState.ENEMY_ATTACK_RESUlTS) {
