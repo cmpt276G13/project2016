@@ -134,9 +134,9 @@
             
             for(current in this.states) {
                 
-                if(typeof current.onExit !== "undefined") {
+                if(typeof this.states[current] !== "undefined") {
                     
-                    current.onExit.func.call(current.onExit.context);
+                    this.states[current].onExit.func.call(this.states[current].onExit.context);
                 }
             }
         };
@@ -553,8 +553,8 @@
             box.lineTo(0, 0);
             
             return box;
-        }
-        
+        };
+       
         /*
         The following functions are meant to be added to the BATTLE STATE's subState manager for different states.
         the reason they are outside here is because i made a system in the battle state to easily add states and functions, but
@@ -564,15 +564,21 @@
         so i'm defining these functions outside here, instead of in teh battle state object
         
         These functions probably WILL NOT work outside of the battle state, because they all use properties declared inside the battle state object (using the this context reference)
+        
+        just pretend these functions are in the battle state, because when they're called, the context will be set to the battle state
         */
         function selectMainActionEnter() {
             
-            
+            this.actionBox.selectedAction = 0;
+            this.actionBox.selectionOutline.visible = true;
+                    
+            this.showMessage("Select an action");
         };
         
         function selectMainActionExit() {
             
-            
+            this.actionBox.selectionOutline.visible = false;
+            this.hideMessage();
         };
         
         function selectMainActionKeyDown(key) {
@@ -582,12 +588,16 @@
         
         function selectFightActionEnter() {
             
-            
+            this.fightBox.selectedAction = 0;
+            this.fightBox.actionsContainer.visible = true;
+                    
+            this.showMessage("Select an action");
         };
         
         function selectFightActionExit() {
             
-            
+            this.fightBox.actionsContainer.visible = false;
+            this.hideMessage();
         };
         
         function selectFightActionKeyDown(key) {
@@ -595,14 +605,40 @@
             
         };
         
-        function playerAttackEnter() {
+        function playerSelectTargetEnter() {
+            
+            this.selectedMonsterId = 0;
+            this.selectedMonsterIndicator.visible = true;
+            this.showMessage("Select a monster to attack");
+        };
+        
+        function playerSelectTargetExit() {
+            
+            this.selectedMonsterIndicator.visible = false;
+            this.hideMessage();
+        };
+        
+        function playerSelectTargetKeyDown(key) {
             
             
         };
         
+        function playerSelectTargetUpdate() {
+            
+            
+        };
+        
+        function playerAttackEnter() {
+            
+            this.showMessage("Attacking " + this.monsters[this.selectedMonsterId].name);
+            player.sprite.animations.play("attack");
+            
+            player.lastUsedAttack.power = player.strength;
+        };
+        
         function playerAttackExit() {
             
-            
+            this.hideMessage();
         };
         
         function playerAttackUpdate() {
@@ -612,12 +648,16 @@
         
         function playerAttackResultsEnter() {
             
-            
+            var damage = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
+                    
+                    //get damage received by this entity
+            this.damageTexts.push(this.createDamageText(this.monsters[this.selectedMonsterId], damage) );
         };
         
         function playerAttackResultsExit() {
             
-            
+            this.clearDamageTexts();
+            this.hideMessage();
         };
         
         function playerAttackResultsUpdate() {
@@ -627,12 +667,12 @@
     
         function cullDeadEnemiesEnter() {
             
-            
+            this.killDeadEnemies();
         };
     
         function cullDeadEnemiesExit() {
             
-            
+            this.hideMessage();
         };
         
         function cullDeadEnemiesUpdate() {
@@ -642,12 +682,12 @@
         
         function enemyTurnStartEnter() {
             
-            
+            this.currentEnemy = 0;
         };
         
         function enemyTurnStartExit() {
             
-            
+            this.hideMessage()
         };
         
         function enemyTurnStartUpdate() {
@@ -662,7 +702,7 @@
         
         function enemyTurnExit() {
             
-            
+            this.hideMessage();
         };
         
         function enemyTurnUpdate() {
@@ -672,12 +712,13 @@
         
         function enemyAttackResultsEnter() {
             
-            
+            var damage = this.determineAttackResults(this.monsters[this.currentEnemy], player);
+            this.damageTexts.push(this.createDamageText(player, damage) );
         };
         
         function enemyAttackResultsExit() {
             
-            
+            playerAttackResultsExit();
         };
         
         function enemyAttackResultsUpdate() {
@@ -1173,8 +1214,45 @@
                         onExit: selectFightActionExit,
                         onKeyDown: selectFightActionKeyDown
                     }
-                    
+                },
+                
+                {name: "playerSelectTarget",
+                    functions: {
+                        
+                        onEnter: playerSelectTargetEnter,
+                        onExit: playerSelectTargetExit,
+                        onKeyDown: playerSelectTargetKeyDown,
+                        onUpdate: playerSelectTargetUpdate
+                    }
+                },
+                
+                {name: "playerAttack",
+                    functions: {
+                        
+                        onEnter: playerAttackEnter,
+                        onExit: playerAttackExit,
+                        onUpdate: playerAttackUpdate
+                    }
+                },
+                
+                {name: "playerAttackResults",
+                    functions: {
+                        
+                        onEnter: playerAttackResultsEnter,
+                        onExit: playerAttackResultsExit,
+                        onUpdate: playerAttackResultsUpdate
+                    }
+                },
+                
+                {name: "cullDeadEnemies",
+                    functions: {
+                        
+                        onEnter: cullDeadEnemiesEnter,
+                        onExit: cullDeadEnemiesExit,
+                        onUpdate: cullDeadEnemiesUpdate
+                    }
                 }
+                
             ],
             
             createSubStates: function() {
@@ -1195,39 +1273,6 @@
                     //add to state manager
                     this.stateManager.addState(this.subStates[i].name, state);
                 }
-                
-                this.stateManager.changeState("selectFightAction");
-                
-                /*//create the select main action state
-                //here player chooses to fight, use items, or run
-                var selectMainAction = new subState();
-                selectMainAction.addFunction("onEnter", this.selectMainActionEnter, this);
-                selectMainAction.addFunction("onExit", this.selectMainActionExit, this);
-                selectMainAction.addFunction("onKeyDown", this.selectMainActionKeyDown, this);
-                
-                var selectFightAction = new subState();
-                selectFightAction.addFunction("onEnter", this.selectFightActionEnter, this);
-                selectFightAction.addFunction("onExit", this.selectFightActionEnter, this);
-                selectFightAction.addFunction("onKeyDown", this.selectFightActionKeyDown, this);
-                
-                var playerAttack = new subState();
-                playerAttack.addFunction("onEnter", this.playerAttackEnter, this);
-                playerAttack.addFunction("onExit", this.playerAttackExit, this);
-                playerAttack.addFunction("onUpdate", this.playerAttackUpdate, this);
-                
-                var playerAttackResults = new subState();
-                playerAttackResults.addFunction("onEnter", this.playerAttackResultsEnter, this);
-                playerAttackResults.addFunction("onExit", this.playerAttackResultsExit, this);
-                playerAttackResults.addFunction("onUpdate", this.playerAttackResultsUpdate, this);
-                
-                var cullDeadEnemies = new subState();
-                cullDeadEnemies.addFunction("onEnter", this.playerAttackEnter, this);
-                playerAttack.addFunction("onExit", this.playerAttackExit, this);
-                playerAttack.addFunction("onUpdate", this.playerAttackUpdate, this);
-                
-                this.stateManager.addState("SELECT_MAIN_ACTION", selectMainAction);
-                this.stateManager.addState("SELECT_FIGHT_ACTION", selectFightAction);
-                this.stateManager.addState("PLAYER_ATTACK", playerAttack);*/
             },
             
             create: function() {
