@@ -939,7 +939,7 @@
     
         function cullDeadEnemiesEnter() {
             
-            this.killDeadEnemies();
+            this.startEnemyDeathAnimation();
         };
     
         function cullDeadEnemiesExit() {
@@ -1198,7 +1198,7 @@
             },
             
             //looks for all dead enemies and plays their dying animation
-            killDeadEnemies: function() {
+            startEnemyDeathAnimation: function() {
                 
                 for(var i = 0; i < this.monsters.length; i++) {
                     
