@@ -160,7 +160,7 @@
         function objectHighlighter() {
             
             //each object will in the array has two properties
-            //the first property is the object that will be hightlighted
+            //the first property is the object that will be highlighted
             //the second property is the phaser graphics object that does the highlighting
             //ex: highlights[0] = {object: someOrc, graphics: someGraphicsObject}
             this.highlights = [];
@@ -754,6 +754,34 @@
         
         just pretend these functions are in the battle state, because when they're called, the context will be set to the battle state
         */
+        
+        /*
+        
+        The current State order is as follows
+        
+        selectMainAction:  here player selects to fight, use items or run
+            selectFightAction: if player chooses to fight, this state allows players to choose to attack, or use skills
+            
+        if player chooses to attack
+        
+        playerSelectTarget: choose an enemy to attack (if we have multiple enemies)
+        
+        after an enemy is chosen
+        
+        playerAttack: plays the player attacking animation, animate skills, etc, it will automatically leave this state because of a listener event attached to player animation
+        playerAttackResults: this displays what happened with the player's attack, wether it hit or miss, how much damage it did
+        cullDeadEnemies: here the game cecks if any enemies died, if they did then the game starts the enemeis' death animation, once their animation finishes it goes to next state, and removes enemies
+            
+            if all enemies are dead, it will go to the victory state, which displays some message, and then exits battle
+        
+        enemyTurnStart: this is just here to reset the id of the current enemy, automatically goes to next state
+        enemyTurn: the current enemy, marked by curerntEnemy, chooses an action
+        enemyAttack: if enemy chose to attack it will play attack animation, same as player
+        enemyAttackResults: same as player
+        
+        then it goes back to selectMAinAction
+        
+        */
         function selectMainActionEnter() {
             
             this.mainActionsDisplay.selectedAction = 0;
@@ -833,15 +861,13 @@
         
         function playerSelectTargetEnter() {
             
-            this.selectedMonsterId = 0;
+            this.enemySelector.startSelectionProcess(this.monsters);
             this.showMessage("Select a monster to attack");
-            
-            this.monsterHighlighter.showHighlights();
         };
         
         function playerSelectTargetExit() {
-            
-            this.monsterHighlighter.hideHighlights();
+  
+            this.enemySelector.highlighter.hideHighlights();
             this.hideMessage();
         };
         
@@ -849,33 +875,29 @@
             
             if(key.keyCode == Phaser.Keyboard.UP) {
                 
-                this.selectedMonsterId -= 1;
-                
-                if(this.selectedMonsterId < 0) {
-                    
-                    this.selectedMonsterId = this.monsters.length - 1;
-                }
+                this.enemySelector.selectPrevious(this.monsters);
             }
             
             if(key.keyCode == Phaser.Keyboard.DOWN) {
                 
-                this.selectedMonsterId = (this.selectedMonsterId + 1) % this.monsters.length;
+                this.enemySelector.selectNext(this.monsters);
             }
             
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
+                this.enemySelector.addCurrentSelection(this.monsters);
                 this.stateManager.changeState("playerAttack");
             }
         };
         
         function playerSelectTargetUpdate() {
             
-            this.monsterHighlighter.addHighlight(this.monsters[this.selectedMonsterId].sprite);
+            
         };
         
         function playerAttackEnter() {
             
-            this.showMessage("Attacking " + this.monsters[this.selectedMonsterId].name);
+            this.showMessage("Attacking " + this.monsters[this.enemySelector.selectedEnemiesIndices[0]].name);
             
             //when player finishes his attack animation we will damage the enemy
             player.sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("playerAttackResults"); }, this);
@@ -893,10 +915,10 @@
         
         function playerAttackResultsEnter() {
             
-            var damage = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
+            var damage = this.determineAttackResults(player, this.monsters[this.enemySelector.selectedEnemiesIndices[0]]);
             
                     //get damage received by this entity
-            this.damageTexts.push(this.createDamageText(this.monsters[this.selectedMonsterId], damage) );
+            this.damageTexts.push(this.createDamageText(this.monsters[this.enemySelector.selectedEnemiesIndices[0]], damage) );
         };
         
         function playerAttackResultsExit() {
@@ -1339,15 +1361,35 @@
                 highlighter: new objectHighlighter(),
                 
                 //each number in array represents the index of a monster that has been selected
-                //i'm using an array of indices instead of a single monster index that way we can support attacks that select multiple enemies
-                //if you only select a single monster, and you want to select a different mosnter
-                //the id of the newly selected monster will be the first element of the array
+                //once a monster is selected, it is added to the selected enemies indices list
+                //this allows us to select multiple enemies
                 selectedEnemiesIndices: [],
+                
+                //currently targted enemy, this is different from the selectedenemiesindice
+                //enemy with this target IS NOT SELECTED, it must be added to the list once player actually selects it
+                currentSelection: 0,
                 
                 addSelection: function(idOfSelected, monsters) {
                     
+                    if(idOfSelected >= monsters.length) {
+                        
+                        return;
+                    }
+                    
                     this.selectedEnemiesIndices.push(idOfSelected);
                     this.highlighter.addHighlight(monsters[idOfSelected].sprite);
+                },
+                
+                addCurrentSelection: function(monsters) {
+                    
+                    this.addSelection(this.currentSelection, monsters);
+                },
+                
+                startSelectionProcess: function(monsters) {
+                    
+                    this.clearSelection();
+                    this.currentSelection = 0;
+                    this.highlightCurrentSelection(monsters);
                 },
                 
                 selectNext: function(monsters) {
@@ -1357,7 +1399,7 @@
                         return;
                     }
                     
-                    this.selectedEnemiesIndices[0] = (this.selectedEnemiesIndices[0] + 1) % monsters.length;
+                    this.currentSelection = (this.currentSelection + 1) % monsters.length;
                     this.highlightAllSelections(monsters);
                 },
                 
@@ -1368,11 +1410,11 @@
                         return;
                     }
                     
-                    this.selectedEnemiesIndices[0] -= 1;
+                    this.currentSelection -= 1;
                     
-                    if(this.selectedEnemiesIndices[0] < 0) {
+                    if(this.currentSelection < 0) {
                         
-                        this.selectedEnemiesIndices[0] = monsters.length - 1;
+                        this.currentSelection = monsters.length - 1;
                     }
                     
                     this.highlightAllSelections(monsters);
@@ -1384,14 +1426,26 @@
                     this.highlighter.clearHighlights();
                 },
                 
-                highlightAllSelections: function(monsters) {
-                    
-                    this.highlighter.clearHighlights();
+                highlightSelectedEnemies: function(monsters) {
                     
                     for(var i = 0; i < this.selectedEnemiesIndices.length; ++i) {
                         
                         this.highlighter.addHighlight(monsters[i].sprite);
                     }
+                },
+                
+                highlightCurrentSelection: function(monsters) {
+                    
+                    this.highlighter.addHighlight(monsters[this.currentSelection].sprite);
+                },
+                
+                highlightAllSelections: function(monsters) {
+                    
+                    this.highlighter.clearHighlights();
+                    
+                    this.highlightSelectedEnemies();
+                    
+                    this.highlightCurrentSelection();
                 },
                 
                 getSelectedMonsters: function(monsters) {
@@ -1451,12 +1505,6 @@
                 //again we want to add a listener for when the player presses on keys
                 game.input.keyboard.callbackContext = this;
                 game.input.keyboard.onDownCallback = this.onKeyDown;
-                
-                //when the player starts to attack we need a way for the player to select a mosnter to attack
-                //this variable keeps track of what mosnter the player has selected
-                this.selectedMonsterId = 0;
-                
-                this.monsterHighlighter = new objectHighlighter();
                 
                 //we need a way to give messages to the player
                 //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
