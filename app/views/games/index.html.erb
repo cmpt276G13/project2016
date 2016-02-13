@@ -60,6 +60,7 @@
             
             this.shouldDelete = true;
         }
+        
         //makes enemy start their death animation, sets the call back function
         function killEntity(dyingEntity) {
             
@@ -92,6 +93,89 @@
             ...
             */
         //};
+        
+        //an action display is a rectangular display that lists a bunch of possible actions a player can make
+        //it consists of a container that stores the text, and the texts that are supposed to be displayed
+        //it also contains information about what action is currently being selected, and a way to indicate what action is selected
+        function actionDisplay(x, y, width, height, actionTexts) {
+            
+            //background that is displayed behind all the text
+            this.background = createActionDisplayBackground(x, y, width, height);
+            
+            //index of currently selected action (corresponds to the array of action texts)
+            this.selectedAction = 0;
+            
+            //object that indicates what action is currently being selected
+            //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
+            //any draw positions will be relative to this origin, so set it to 0, 0
+            this.selectionDisplay = game.add.graphics(0, 0);
+            this.background.addChild(this.selectionDisplay);
+            
+            //the text that will be displayed
+            this.actionTexts = createActionTexts(actionTexts, this.background);
+        };
+        
+        //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
+        actionDisplay.prototype.highlightSelectedAction = function() {
+            
+            //first clear the previously drawn rectangle
+            this.selectionDisplay.clear();
+            
+            //don't draw anything if there is no text
+            if(this.selectedAction >= this.actionTexts.length) {
+                
+                return;
+            }
+            
+            //clear resets line style, so set it again
+            this.selectionDisplay.lineStyle(2, 0x0000FF, 1);
+            
+            //now draw a new rectangle around the current selection
+            var xPosition = this.actionTexts[this.selectedAction].x;
+            var yPosition = this.actionTexts[this.selectedAction].y;
+            
+            this.selectionDisplay.drawRect(xPosition, yPosition, 80, 30);
+        };
+        
+        //users will be able to change their currently selected action
+        actionDisplay.prototype.selectNext = function() {
+            
+            this.selectedAction = (this.selectedAction + 1) % this.actionTexts.length;
+        };
+        
+        actionDisplay.prototype.selectPrevious = function() {
+            
+            this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTexts.length - 1 : this.selectedAction - 1;
+        };
+        
+        //the display background is the rectangle box where the action texts are displayed
+        function createActionDisplayBackground(x, y, width, height) {
+            
+            var actionBoxX = 0;
+            var actionBoxY = game.scale.height - height;
+            
+            return createTextBox(x, y, width, height);
+        };
+        
+        //the actions available to the player, in text form
+        function createActionTexts(choices, actionDisplayBackground) {
+            
+            var textMargins = 10;
+            var textSize = 28;
+            
+            var actionTexts = [];
+            
+            var i = 0;
+            for(i = 0; i < choices.length; ++i) {
+                
+                actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
+        
+                //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
+                actionDisplayBackground.addChild(actionTexts[i]);
+            }
+            
+            return actionTexts;
+        };
         
         //a substate object that handles functionality during a state
         //its pretty much just a container for different functions that are called during certain game states
@@ -569,32 +653,32 @@
         */
         function selectMainActionEnter() {
             
-            this.actionBox.selectedAction = 0;
-            this.actionBox.selectionOutline.visible = true;
+            this.mainActionsDisplay.selectedAction = 0;
+            this.mainActionsDisplay.selectionDisplay.visible = true;
                     
             this.showMessage("Select an action");
         };
         
         function selectMainActionExit() {
             
-            this.actionBox.selectionOutline.visible = false;
+            this.mainActionsDisplay.selectionDisplay.visible = false;
             this.hideMessage();
         };
         
         function selectMainActionKeyDown(key) {
             
-            this.handleActionSelection(key, this.actionBox);
+            this.handleActionSelection(key, this.mainActionsDisplay);
             
             //execute the action the user has chosen
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
                 //we would like to return to the main map if player selected run
-                if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
+                if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "run") {
                     
                     game.state.start('overworld');
                 }
                 
-                if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
+                if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "fight") {
                     
                     this.stateManager.changeState("selectFightAction");
                 }
@@ -603,36 +687,36 @@
         
         function selectMainActionUpdate() {
             
-            this.highlightSelectedAction(this.actionBox);
+            this.mainActionsDisplay.highlightSelectedAction();
         };
         
         function selectFightActionEnter() {
             
-            this.fightBox.selectedAction = 0;
-            this.fightBox.actionsContainer.visible = true;
+            this.fightActionsDisplay.selectedAction = 0;
+            this.fightActionsDisplay.background.visible = true;
                     
             this.showMessage("Select an action");
         };
         
         function selectFightActionExit() {
             
-            this.fightBox.actionsContainer.visible = false;
+            this.fightActionsDisplay.background.visible = false;
             this.hideMessage();
         };
         
         function selectFightActionKeyDown(key) {
             
-            this.handleActionSelection(key, this.fightBox);
+            this.handleActionSelection(key, this.fightActionsDisplay);
                 
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
                 //we would like to return to the main map if player selected run
-                if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
+                if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "cancel") {
                     
                     this.stateManager.changeState("selectMainAction");
                 }
                 
-                if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack" && this.monsters.length > 0) {
+                if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "attack" && this.monsters.length > 0) {
                     
                     this.stateManager.changeState("playerSelectTarget");
                 }
@@ -641,7 +725,7 @@
         
         function selectFightActionUpdate() {
             
-            this.highlightSelectedAction(this.fightBox);
+            this.fightActionsDisplay.highlightSelectedAction();
         };
         
         function playerSelectTargetEnter() {
@@ -790,7 +874,11 @@
         
         function enemyTurnExit() {
             
-            this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.removeAll();
+            if(this.currentEnemy < this.monsters.length) {
+                
+                this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.removeAll();
+            }
+
             this.hideMessage();
         };
         
@@ -911,78 +999,6 @@
                 //player face left
                 player.sprite.animations.play('left');
                 player.sprite.animations.stop(null, true);
-            },
-            
-            //an action box is a rectangular display that lists a bunch of possible actions a player can make
-            //it consists of a container that stores the text, and the texts that are supposed to be displayed
-            //it also contains information about what action is currently being selected, and a way to indicate what action is selected
-            createActionBox: function(x, y, width, height, choices) {
-                
-                var box = new Object();
-                
-                this.createActionsContainer(x, y, width, height, box);
-                this.createActionTexts(choices, box);
-                
-                //players selected action
-                box.selectedAction = 0;
-                
-                //now i'll create a rectangle that will circle the option the player selects
-                //the constructor for graphics takes in a position, but the position actually sets the origin for hte graphics obejct
-                //any draw positions will be relative to this origin, so set it to 0, 0
-                box.selectionOutline = game.add.graphics(0, 0);
-                box.actionsContainer.addChild(box.selectionOutline);
-                
-                return box;
-            },
-            
-            //actions container is the rectangle box where the action texts are displayed
-            createActionsContainer: function(x, y, width, height, actionBox) {
-                
-                var actionBoxX = 0;
-                var actionBoxY = game.scale.height - height;
-                
-                actionBox.actionsContainer = createTextBox(x, y, width, height);
-            },
-            
-            //the actions available to the player, in text form
-            createActionTexts: function(choices, actionBox) {
-                
-                var textMargins = 10;
-                var textSize = 28;
-                actionBox.heightLargestText = 0;
-                
-                var actionTexts = [];
-                
-                var i = 0;
-                for(i = 0; i < choices.length; ++i) {
-                    
-                    actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
-                
-                    actionBox.heightLargestText = actionTexts[i].height > actionBox.heightLargestText ? actionTexts[i].height : actionBox.heightLargestText;
-                    
-                    //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
-                    actionBox.actionsContainer.addChild(actionTexts[i]);
-                }
-                
-                actionBox.texts = actionTexts;
-            },
-            
-            //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
-            highlightSelectedAction: function(actionBox) {
-                
-                //first clear the previously drawn rectangle
-                actionBox.selectionOutline.clear();
-                
-                //clear resets line style, so set it again
-                actionBox.selectionOutline.lineStyle(2, 0x0000FF, 1);
-                
-                //now draw a new rectangle around the current selection
-                var xPosition = actionBox.texts[actionBox.selectedAction].x;
-                var yPosition = actionBox.texts[actionBox.selectedAction].y;
-                
-                var height = actionBox.heightLargetText;
-                
-                actionBox.selectionOutline.drawRect(xPosition, yPosition, 80, 30);
             },
             
             //draws a rectangle around the monster that the player has currently chosen to attack
@@ -1297,11 +1313,14 @@
                 var actionBoxHeight = 130;
                 
                 //create the main actions
-                this.actionBox = this.createActionBox(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
+                /*this.actionBox = this.createActionBox(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
                 
                 //create the options that show up if player selects to fight
                 this.fightBox = this.createActionBox(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
-                this.fightBox.actionsContainer.visible = false;
+                this.fightBox.actionsContainer.visible = false;*/
+                
+                this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
+                this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
                 
                 //again we want to add a listener for when the player presses on keys
                 game.input.keyboard.callbackContext = this;
@@ -1334,6 +1353,7 @@
                 
                 
                 this.createSubStates();
+                this.stateManager.exitAll();
                 this.stateManager.changeState("selectMainAction");
             },
             
@@ -1347,22 +1367,17 @@
                 this.stateManager.onKeyDown(key);
             },
             
-            handleActionSelection: function(key, actionBox) {
+            handleActionSelection: function(key, actionDisplay) {
                 
                 //move the players selection
                 if(key.keyCode == Phaser.Keyboard.UP) {
                     
-                    actionBox.selectedAction -= 1;
-                    
-                    if(actionBox.selectedAction < 0) {
-                        
-                        actionBox.selectedAction = actionBox.texts.length - 1;
-                    }
+                    actionDisplay.selectPrevious();
                 }
                 
                 if(key.keyCode == Phaser.Keyboard.DOWN) {
                     
-                    actionBox.selectedAction = (actionBox.selectedAction + 1) % actionBox.texts.length;
+                    actionDisplay.selectNext();
                 }
             },
             
