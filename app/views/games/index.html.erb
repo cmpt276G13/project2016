@@ -54,12 +54,38 @@
             
             //last used attack is the attribtues of the attack last used by this entity
             //this is used to save data about an attack, which is used for damage calculation during the damage calculation state
-            this.lastUsedAttack = {
-                
-                //must set this whenever the entity attacks
-                //feel free to add other traits at any time
-                power: 10,
-            };
+            //attack attributes are objects that can be found below
+            this.lastUsedAttack = {};
+        };
+        
+        //attack property holds different properties for an attack
+        //this is a way to seperate a skill's damage, number of monsters it hits, etc. from the skill animation and such
+        //the attack parameter is supposed to be some kind of skill, each skill will keep track of its traits
+        //i.e, if you had a magic skill called fireball, it would have the required attack properties
+        //the skill object wouldn't store the skill's base attributes (preset values that don't take the user's stats into account)
+        //and the attack property stores values after you take into account the user's level, strength, and so on
+        //so the user parameter is an rpgEntity object, but for now i'll ignore it
+        function attackProperty(attack, user) {
+            
+            this.power = attack.power + user.strength / 2;
+            this.targetsHit = attack.targetsHit;
+            this.manaCost = attack.manaCost;
+        };
+        
+        //attack objects, for now i'll just have a basic attack
+        function basicAttack() {
+            
+            this.power = 5;
+            this.targetsHit = 2;
+            this.manaCost = 0;
+        };
+        
+        //use attack simply sets the attributes of the last used attack
+        //it doesn't play any animations or anything
+        //its up to the application who called this function to play the appropriate animation
+        rpgEntity.prototype.useAttack = function(attack) {
+            
+            this.lastUsedAttack = new attackProperty(attack, this);
         };
         
         rpgEntity.prototype.getHit = function(damageReceived) {
@@ -891,6 +917,7 @@
                 
                 if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "attack" && this.monsters.length > 0) {
                     
+                    player.useAttack(new basicAttack());
                     this.stateManager.changeState("playerSelectTarget");
                 }
             }
@@ -903,8 +930,8 @@
         
         function playerSelectTargetEnter() {
             
-            this.monsterSelector.startSelectionProcess(this.monsters, 2);
-            this.showMessage("Select a monster to attack");
+            this.monsterSelector.startSelectionProcess(this.monsters, player.lastUsedAttack.targetsHit);
+            this.showMessage("Select " + player.lastUsedAttack.targetsHit.toString() + " monster(s) to attack");
         };
         
         function playerSelectTargetExit() {
@@ -943,13 +970,11 @@
         
         function playerAttackEnter() {
             
-            this.showMessage("Attacking " + this.monsters[this.monsterSelector.selectedMonstersIndices[0]].name);
+            this.showMessage("You Attack!");
             
             //when player finishes his attack animation we will damage the monster
             player.sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("playerAttackResults"); }, this);
             player.sprite.animations.play("attack");
-            
-            player.lastUsedAttack.power = player.strength;
         };
         
         function playerAttackExit() {
@@ -966,7 +991,7 @@
             
             for(var i = 0; i < indicesDamagedMonsters.length; ++i) {
                 
-                var damage = this.determineAttackResults(player, this.monsters[indicesDamagedMonsters[i]]);
+                var damage = this.determineAttackResults(player.lastUsedAttack, this.monsters[indicesDamagedMonsters[i]]);
             
                 //get damage received by this entity
                 this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage) );
@@ -1023,7 +1048,7 @@
             //for now he just attacks
             this.monsters[this.currentMonster].sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("monsterAttackResults"); } , this);
             this.monsters[this.currentMonster].sprite.animations.play("attack");
-            this.monsters[this.currentMonster].lastUsedAttack.power = this.monsters[this.currentMonster].strength;
+            this.monsters[this.currentMonster].useAttack(new basicAttack());
             
             this.showMessage(this.monsters[this.currentMonster].name + " attacks!");
         };
@@ -1040,7 +1065,7 @@
         
         function monsterAttackResultsEnter() {
             
-            var damage = this.determineAttackResults(this.monsters[this.currentMonster], player);
+            var damage = this.determineAttackResults(this.monsters[this.currentMonster].lastUsedAttack, player);
             this.damageTexts.push(this.createDamageText(player, damage) );
         };
         
@@ -1173,12 +1198,12 @@
                 this.messageBox.hide();
             },
             
-            //makes the attacker attack the defender
+            //makes the attack hit the defender
             //determines if the attack hit the defender
             //determines damage dealt
-            determineAttackResults: function(attacker, defender) {
+            determineAttackResults: function(attack, defender) {
                 
-                var damage = determineDamage(attacker.lastUsedAttack.power, defender.defense);
+                var damage = determineDamage(attack.power, defender.defense);
                 defender.getHit(damage);
                 return damage;
             },
