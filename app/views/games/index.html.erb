@@ -94,6 +94,66 @@
             */
         //};
         
+        //creates a text box at the given position
+        //this is just the background that text will be displayed on
+        function createTextboxBackground(x, y, width, height) {
+            
+            var box = game.add.graphics(x, y);
+            
+            //first create the colored rectangle
+            var fillColor = 0x000099;
+            box.beginFill(fillColor, 0.4);
+            box.drawRect(0, 0, width, height);
+            box.endFill();
+            
+            //now create a border around it to make it look nice
+            var lineThickness = 3;
+            var lineColor = 0x888888;
+            
+            box.lineStyle(lineThickness, lineColor, 0.8);
+            box.x = x + lineThickness / 2;
+            box.lineTo(width - lineThickness, 0);
+            box.lineTo(width - lineThickness, height - lineThickness);
+            box.lineTo(0, height - lineThickness);
+            box.lineTo(0, 0);
+            
+            return box;
+        };
+        
+        //object that draws a text box onto the screen, and allows you to set the text that is displayed
+        //text will be centerd onto the given rectangular bounds
+        function textBox(x, y, width, height) {
+            
+            //text box background
+            this.background = createTextboxBackground(x, y, width, height);
+            this.background.fixedToCamera = true;
+            
+            //text to display
+            this.text = game.add.text(0, 0, "Message");
+            this.text.x = this.background.width / 2;
+            this.text.y = this.background.height / 2;
+            this.text.anchor.y = 0.5;
+            this.text.anchor.x = 0.5;
+            this.text.fill = 'white';
+            
+            this.background.addChild(this.text);
+        };
+        
+        textBox.prototype.setText = function(newText) {
+            
+            this.text.text = newText;
+        };
+        
+        textBox.prototype.show = function() {
+            
+            this.background.visible = true;
+        };
+        
+        textBox.prototype.hide = function() {
+            
+            this.background.visible = false;
+        };
+        
         //object that handles Phaser sprite highlighting
         //it takes a list of phaser objects, and draws a border around a subset of objects in that list
         //it then keeps a list of highlights, and can clear them and recreate them as needed
@@ -161,7 +221,8 @@
         function actionDisplay(x, y, width, height, actionTexts) {
             
             //background that is displayed behind all the text
-            this.background = createActionDisplayBackground(x, y, width, height);
+            this.background = createTextboxBackground(x, y, width, height);
+            this.background.fixedToCamera = true;
             
             //index of currently selected action (corresponds to the array of action texts)
             this.selectedAction = 0;
@@ -207,15 +268,6 @@
         actionDisplay.prototype.selectPrevious = function() {
             
             this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTexts.length - 1 : this.selectedAction - 1;
-        };
-        
-        //the display background is the rectangle box where the action texts are displayed
-        function createActionDisplayBackground(x, y, width, height) {
-            
-            var actionBoxX = 0;
-            var actionBoxY = game.scale.height - height;
-            
-            return createTextBox(x, y, width, height);
         };
         
         //the actions available to the player, in text form
@@ -689,32 +741,6 @@
                 game.world.remove(player.sprite);
             },
         };
-        
-        //creates a text box at the given position
-        //returns a Phaser Graphics object that represents the text box
-        function createTextBox(x, y, width, height) {
-            
-            var box = game.add.graphics(x, y);
-            
-            //first create the colored rectangle
-            var fillColor = 0x000099;
-            box.beginFill(fillColor, 0.4);
-            box.drawRect(0, 0, width, height);
-            box.endFill();
-            
-            //now create a border around it to make it look nice
-            var lineThickness = 3;
-            var lineColor = 0x888888;
-            
-            box.lineStyle(lineThickness, lineColor, 0.8);
-            box.x = x + lineThickness / 2;
-            box.lineTo(width - lineThickness, 0);
-            box.lineTo(width - lineThickness, height - lineThickness);
-            box.lineTo(0, height - lineThickness);
-            box.lineTo(0, 0);
-            
-            return box;
-        };
        
         /*
         The following functions are meant to be added to the BATTLE STATE's subState manager for different states.
@@ -1081,13 +1107,13 @@
             
             showMessage: function(message) {
                 
-                this.textBox.visible = true;
-                this.text.setText(message);
+                this.messageBox.show();
+                this.messageBox.setText(message);
             },
             
             hideMessage: function() {
                 
-                this.textBox.visible = false;
+                this.messageBox.hide();
             },
             
             //makes the attacker attack the defender
@@ -1344,13 +1370,6 @@
                 var actionBoxWidth = game.scale.width;
                 var actionBoxHeight = 130;
                 
-                //create the main actions
-                /*this.actionBox = this.createActionBox(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
-                
-                //create the options that show up if player selects to fight
-                this.fightBox = this.createActionBox(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
-                this.fightBox.actionsContainer.visible = false;*/
-                
                 this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
                 this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
                 
@@ -1366,7 +1385,7 @@
                 
                 //we need a way to give messages to the player
                 //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-                this.textBox = createTextBox(0, 0, game.scale.width, 50);
+                /*this.textBox = createTextboxBackground(0, 0, game.scale.width, 50);
                 
                 //now create a text that will be displayed
                 //these settings make the text centerd to the message box
@@ -1374,7 +1393,8 @@
                 this.text.x = this.textBox.width / 2;
                 this.text.anchor.x = 0.5;
                 this.text.fill = 'white';
-                this.textBox.addChild(this.text);
+                this.textBox.addChild(this.text);*/
+                this.messageBox = new textBox(0, 0, game.scale.width, 50);
                 
                 //this contains text that will display the amount of damage an enemy or player received after an attack
                 //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted
