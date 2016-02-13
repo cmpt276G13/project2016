@@ -559,6 +559,13 @@
         //the gameplay state
         //this is where the player will move around on the map
         //the technical term is overworld, so thats the name i will use for this state
+        
+        /*
+            We will use the same substate system that the battle state uses.
+            Currently the overworld is very simple and has no substates.
+            eventually we will need to add different substates, so when we do we wil implement the system like it's implemented in the battle state.
+        
+        */
         var overworldState = {
             
             generateTilemap: function() {
@@ -896,7 +903,7 @@
         
         function playerSelectTargetEnter() {
             
-            this.monsterSelector.startSelectionProcess(this.monsters);
+            this.monsterSelector.startSelectionProcess(this.monsters, 2);
             this.showMessage("Select a monster to attack");
         };
         
@@ -921,6 +928,10 @@
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
                 this.monsterSelector.addCurrentSelection(this.monsters);
+            }
+            
+            if(this.monsterSelector.isSelectionFinished()) {
+                        
                 this.stateManager.changeState("playerAttack");
             }
         };
@@ -950,10 +961,16 @@
         
         function playerAttackResultsEnter() {
             
-            var damage = this.determineAttackResults(player, this.monsters[this.monsterSelector.selectedMonstersIndices[0]]);
+            //damage all the monsters
+            var indicesDamagedMonsters = this.monsterSelector.selectedMonstersIndices;
             
-                    //get damage received by this entity
-            this.damageTexts.push(this.createDamageText(this.monsters[this.monsterSelector.selectedMonstersIndices[0]], damage) );
+            for(var i = 0; i < indicesDamagedMonsters.length; ++i) {
+                
+                var damage = this.determineAttackResults(player, this.monsters[indicesDamagedMonsters[i]]);
+            
+                //get damage received by this entity
+                this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage) );
+            }
         };
         
         function playerAttackResultsExit() {
@@ -1087,7 +1104,12 @@
                 monster.x = 200;
                 monster.y = 300;
                 
-                return [monster];
+                var monster2 = new rpgEntity();
+                $.extend(monster2, monsterDatabase[monsterName]);
+                monster2.x = 230;
+                monster2.y = 330;
+                
+                return [monster, monster2];
             },
             
             generateMonsterSprites: function(monsters) {
@@ -1353,11 +1375,26 @@
                 //monster with this target IS NOT SELECTED, it must be added to the list once player actually selects it
                 currentSelection: 0,
                 
+                //this variable determines how many monsters you need to select, it is set with the beginSelectionProcess function
+                //when this is set, every time the selector adds a monster, it will increase the number of selected mosnters
+                //it will finish selection when the number of selected monsters is equal to this
+                requiredSelections: 0,
+                
                 addSelection: function(idOfSelected, monsters) {
                     
-                    if(idOfSelected >= monsters.length) {
+                    //don't allow over selection
+                    if(idOfSelected >= monsters.length || this.selectedMonstersIndices.length == this.requiredSelections) {
                         
                         return;
+                    }
+                    
+                    //don't allow duplicate selections
+                    for(var index = 0; index < this.selectedMonstersIndices.length; ++index) {
+                        
+                        if(this.selectedMonstersIndices[index] == idOfSelected) {
+                            
+                            return;
+                        }
                     }
                     
                     this.selectedMonstersIndices.push(idOfSelected);
@@ -1369,30 +1406,22 @@
                     this.addSelection(this.currentSelection, monsters);
                 },
                 
-                startSelectionProcess: function(monsters) {
+                startSelectionProcess: function(monsters, requiredSelections) {
                     
                     this.clearSelection();
+                    this.requiredSelections = Math.min(requiredSelections, monsters.length);
                     this.currentSelection = 0;
+                    this.highlighter.showHighlights();
                     this.highlightCurrentSelection(monsters);
                 },
                 
                 selectNext: function(monsters) {
-                    
-                    if(this.selectedMonstersIndices.length == 0) {
-                        
-                        return;
-                    }
                     
                     this.currentSelection = (this.currentSelection + 1) % monsters.length;
                     this.highlightAllSelections(monsters);
                 },
                 
                 selectPrevious: function(monsters) {
-                    
-                    if(this.selectedMonstersIndices.length == 0) {
-                        
-                        return;
-                    }
                     
                     this.currentSelection -= 1;
                     
@@ -1402,6 +1431,11 @@
                     }
                     
                     this.highlightAllSelections(monsters);
+                },
+                
+                isSelectionFinished: function() {
+                    
+                    return this.selectedMonstersIndices.length === this.requiredSelections;
                 },
                 
                 clearSelection: function() {
@@ -1414,7 +1448,7 @@
                     
                     for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
                         
-                        this.highlighter.addHighlight(monsters[i].sprite);
+                        this.highlighter.addHighlight(monsters[this.selectedMonstersIndices[i]].sprite);
                     }
                 },
                 
@@ -1427,9 +1461,9 @@
                     
                     this.highlighter.clearHighlights();
                     
-                    this.highlightSelectedMonsters();
+                    this.highlightSelectedMonsters(monsters);
                     
-                    this.highlightCurrentSelection();
+                    this.highlightCurrentSelection(monsters);
                 },
                 
                 getSelectedMonsters: function(monsters) {
