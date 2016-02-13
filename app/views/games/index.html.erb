@@ -390,9 +390,34 @@
             }
         };
         
-        function asdf(key) {
-            
-            document.getElementById("additional").innerHTML = this.monsters[key].health;
+        //add states when given a 'state template'.
+        //a state template is an array of objects, each object looks like this:
+        /*
+        name: "stateName"
+        functions: {
+            functionName: functionToCall,
+            functionName: functionToCall
+        }
+        */
+        //for an example of a template, see battle state
+        //we will use state templates to quickly generate all the required states
+        //its not required, and you can manually create your own state objects
+        //but its a lot easier to just add states to the template, and this function will autoamitcally add the state to the manager
+        stateManager.prototype.addFromTemplate = function(template, context) {
+                
+            //go through all the states and add them
+            for(var i = 0; i < template.length; ++i) {
+                
+                var state = new subState();
+                
+                //set the functions for this state
+                for(functionName in template[i].functions) {
+                    
+                    state.addFunction(functionName, template[i].functions[functionName], context);
+                }
+                
+                this.addState(template[i].name, state);
+            }
         };
         
         //create all of the required game states
@@ -1333,26 +1358,6 @@
                 
             ],
             
-            createSubStates: function() {
-                
-                this.stateManager = new stateManager();
-                
-                //go through all the states and add them
-                for(var i = 0; i < this.subStates.length; ++i) {
-                    
-                    var state = new subState();
-                    
-                    //set the functions for this state
-                    for(functionName in this.subStates[i].functions) {
-                        
-                        state.addFunction(functionName, this.subStates[i].functions[functionName], this);
-                    }
-                    
-                    //add to state manager
-                    this.stateManager.addState(this.subStates[i].name, state);
-                }
-            },
-            
             //class that handles monster selection
             //it keeps track of selected monsters until the list is cleared
             //and it highlights the selected monsters
@@ -1516,7 +1521,8 @@
                 //tween objects represent a linear interpolation between two object states, we will use it to animate the text
                 this.damageTexts = [];
                 
-                this.createSubStates();
+                this.stateManager = new stateManager();
+                this.stateManager.addFromTemplate(this.subStates, this);
                 this.stateManager.exitAll();
                 this.stateManager.changeState("selectMainAction");
             },
