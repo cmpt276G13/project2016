@@ -61,7 +61,7 @@
             this.shouldDelete = true;
         }
         
-        //makes enemy start their death animation, sets the call back function
+        //makes monster start their death animation, sets the call back function
         function killEntity(dyingEntity) {
             
             //start death animation, make entity fade to black as well
@@ -624,10 +624,10 @@
                 //but we can't create a listener for state events
                 this.handleStateInputs();
                 
-                //now we want to see if the player randomly encountered an enemy, this will send us to the battle state
-                //we only want to check if player encounterd an enemy if he moved
+                //now we want to see if the player randomly encountered an monster, this will send us to the battle state
+                //we only want to check if player encounterd an monster if he moved
                 //for now its commentd out since I didn't create the battle state
-                //basically if hte player travels a certain distance, we check if he should battle an enemy
+                //basically if hte player travels a certain distance, we check if he should battle an monster
                 /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
                     
                     game.state.start('battle');
@@ -764,20 +764,20 @@
             
         if player chooses to attack
         
-        playerSelectTarget: choose an enemy to attack (if we have multiple enemies)
+        playerSelectTarget: choose an monster to attack (if we have multiple monsters)
         
-        after an enemy is chosen
+        after an monster is chosen
         
         playerAttack: plays the player attacking animation, animate skills, etc, it will automatically leave this state because of a listener event attached to player animation
         playerAttackResults: this displays what happened with the player's attack, wether it hit or miss, how much damage it did
-        cullDeadEnemies: here the game cecks if any enemies died, if they did then the game starts the enemeis' death animation, once their animation finishes it goes to next state, and removes enemies
+        cullDeadMonsters: here the game cecks if any monsters died, if they did then the game starts the enemeis' death animation, once their animation finishes it goes to next state, and removes monsters
             
-            if all enemies are dead, it will go to the victory state, which displays some message, and then exits battle
+            if all monsters are dead, it will go to the victory state, which displays some message, and then exits battle
         
-        enemyTurnStart: this is just here to reset the id of the current enemy, automatically goes to next state
-        enemyTurn: the current enemy, marked by curerntEnemy, chooses an action
-        enemyAttack: if enemy chose to attack it will play attack animation, same as player
-        enemyAttackResults: same as player
+        monsterTurnStart: this is just here to reset the id of the current monster, automatically goes to next state
+        monsterTurn: the current monster, marked by curerntMonster, chooses an action
+        monsterAttack: if monster chose to attack it will play attack animation, same as player
+        monsterAttackResults: same as player
         
         then it goes back to selectMAinAction
         
@@ -861,13 +861,13 @@
         
         function playerSelectTargetEnter() {
             
-            this.enemySelector.startSelectionProcess(this.monsters);
+            this.monsterSelector.startSelectionProcess(this.monsters);
             this.showMessage("Select a monster to attack");
         };
         
         function playerSelectTargetExit() {
   
-            this.enemySelector.highlighter.hideHighlights();
+            this.monsterSelector.highlighter.hideHighlights();
             this.hideMessage();
         };
         
@@ -875,17 +875,17 @@
             
             if(key.keyCode == Phaser.Keyboard.UP) {
                 
-                this.enemySelector.selectPrevious(this.monsters);
+                this.monsterSelector.selectPrevious(this.monsters);
             }
             
             if(key.keyCode == Phaser.Keyboard.DOWN) {
                 
-                this.enemySelector.selectNext(this.monsters);
+                this.monsterSelector.selectNext(this.monsters);
             }
             
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
-                this.enemySelector.addCurrentSelection(this.monsters);
+                this.monsterSelector.addCurrentSelection(this.monsters);
                 this.stateManager.changeState("playerAttack");
             }
         };
@@ -897,9 +897,9 @@
         
         function playerAttackEnter() {
             
-            this.showMessage("Attacking " + this.monsters[this.enemySelector.selectedEnemiesIndices[0]].name);
+            this.showMessage("Attacking " + this.monsters[this.monsterSelector.selectedMonstersIndices[0]].name);
             
-            //when player finishes his attack animation we will damage the enemy
+            //when player finishes his attack animation we will damage the monster
             player.sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("playerAttackResults"); }, this);
             player.sprite.animations.play("attack");
             
@@ -915,10 +915,10 @@
         
         function playerAttackResultsEnter() {
             
-            var damage = this.determineAttackResults(player, this.monsters[this.enemySelector.selectedEnemiesIndices[0]]);
+            var damage = this.determineAttackResults(player, this.monsters[this.monsterSelector.selectedMonstersIndices[0]]);
             
                     //get damage received by this entity
-            this.damageTexts.push(this.createDamageText(this.monsters[this.enemySelector.selectedEnemiesIndices[0]], damage) );
+            this.damageTexts.push(this.createDamageText(this.monsters[this.monsterSelector.selectedMonstersIndices[0]], damage) );
         };
         
         function playerAttackResultsExit() {
@@ -933,21 +933,21 @@
             
             if(moveToNextState) {
                 
-                this.stateManager.changeState("cullDeadEnemies");
+                this.stateManager.changeState("cullDeadMonsters");
             }
         };
     
-        function cullDeadEnemiesEnter() {
+        function cullDeadMonstersEnter() {
             
-            this.startEnemyDeathAnimation();
+            this.startMonsterDeathAnimation();
         };
     
-        function cullDeadEnemiesExit() {
+        function cullDeadMonstersExit() {
             
             this.hideMessage();
         };
         
-        function cullDeadEnemiesUpdate() {
+        function cullDeadMonstersUpdate() {
             
             var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
                     
@@ -959,22 +959,22 @@
             
             if(removedAllMarkedEntites && this.monsters.length > 0) {
                 
-                //enemy turn start
-                this.stateManager.changeState("enemyTurnStart");
+                //monster turn start
+                this.stateManager.changeState("monsterTurnStart");
             }
         };
         
-        function enemyTurnStartEnter() {
+        function monsterTurnStartEnter() {
             
-            this.currentEnemy = 0;
+            this.currentMonster = 0;
         };
         
-        function enemyTurnStartExit() {
+        function monsterTurnStartExit() {
             
             this.hideMessage()
         };
         
-        function enemyTurnStartUpdate() {
+        function monsterTurnStartUpdate() {
             
             
             if(this.monsters.length == 0) {
@@ -983,43 +983,43 @@
                 
             } else {
                 
-                this.stateManager.changeState("enemyTurn");
+                this.stateManager.changeState("monsterTurn");
             }
         };
         
-        function enemyTurnEnter() {
+        function monsterTurnEnter() {
             
-            //randomly determine what the enemy should do
+            //randomly determine what the monster should do
             //for now he just attacks
-            this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("enemyAttackResults"); } , this);
-            this.monsters[this.currentEnemy].sprite.animations.play("attack");
-            this.monsters[this.currentEnemy].lastUsedAttack.power = this.monsters[this.currentEnemy].strength;
+            this.monsters[this.currentMonster].sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("monsterAttackResults"); } , this);
+            this.monsters[this.currentMonster].sprite.animations.play("attack");
+            this.monsters[this.currentMonster].lastUsedAttack.power = this.monsters[this.currentMonster].strength;
             
-            this.showMessage(this.monsters[this.currentEnemy].name + " attacks!");
+            this.showMessage(this.monsters[this.currentMonster].name + " attacks!");
         };
         
-        function enemyTurnExit() {
+        function monsterTurnExit() {
             
-            if(this.currentEnemy < this.monsters.length) {
+            if(this.currentMonster < this.monsters.length) {
                 
-                this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.removeAll();
+                this.monsters[this.currentMonster].sprite.events.onAnimationComplete.removeAll();
             }
 
             this.hideMessage();
         };
         
-        function enemyAttackResultsEnter() {
+        function monsterAttackResultsEnter() {
             
-            var damage = this.determineAttackResults(this.monsters[this.currentEnemy], player);
+            var damage = this.determineAttackResults(this.monsters[this.currentMonster], player);
             this.damageTexts.push(this.createDamageText(player, damage) );
         };
         
-        function enemyAttackResultsExit() {
+        function monsterAttackResultsExit() {
             
             playerAttackResultsExit.call(this);
         };
         
-        function enemyAttackResultsUpdate() {
+        function monsterAttackResultsUpdate() {
             
             var moveToNextState = this.finishedDisplayingResults();
             
@@ -1028,17 +1028,17 @@
                 return;
             }
             
-            this.currentEnemy += 1;
+            this.currentMonster += 1;
             
-            //no more enemies, move back to player's turn
-            if(this.currentEnemy >= this.monsters.length) {
+            //no more monsters, move back to player's turn
+            if(this.currentMonster >= this.monsters.length) {
             
                 this.stateManager.changeState("selectMainAction");
                 return;
             }
             
-            //enemy left, start his turn
-            this.stateManager.changeState("enemyTurn");
+            //monster left, start his turn
+            this.stateManager.changeState("monsterTurn");
         };
         
         //the battle state
@@ -1197,8 +1197,8 @@
                 return true;
             },
             
-            //looks for all dead enemies and plays their dying animation
-            startEnemyDeathAnimation: function() {
+            //looks for all dead monsters and plays their dying animation
+            startMonsterDeathAnimation: function() {
                 
                 for(var i = 0; i < this.monsters.length; i++) {
                     
@@ -1296,38 +1296,38 @@
                     }
                 },
                 
-                {name: "cullDeadEnemies",
+                {name: "cullDeadMonsters",
                     functions: {
                         
-                        onEnter: cullDeadEnemiesEnter,
-                        onExit: cullDeadEnemiesExit,
-                        onUpdate: cullDeadEnemiesUpdate
+                        onEnter: cullDeadMonstersEnter,
+                        onExit: cullDeadMonstersExit,
+                        onUpdate: cullDeadMonstersUpdate
                     }
                 },
                 
-                {name: "enemyTurnStart",
+                {name: "monsterTurnStart",
                     functions: {
                         
-                        onEnter: enemyTurnStartEnter,
-                        onExit: enemyTurnStartExit,
-                        onUpdate: enemyTurnStartUpdate
+                        onEnter: monsterTurnStartEnter,
+                        onExit: monsterTurnStartExit,
+                        onUpdate: monsterTurnStartUpdate
                     }
                 },
                 
-                {name: "enemyTurn",
+                {name: "monsterTurn",
                     functions: {
                         
-                        onEnter: enemyTurnEnter,
-                        onExit: enemyTurnExit
+                        onEnter: monsterTurnEnter,
+                        onExit: monsterTurnExit
                     }
                 },
                 
-                {name: "enemyAttackResults",
+                {name: "monsterAttackResults",
                     functions: {
                         
-                        onEnter: enemyAttackResultsEnter,
-                        onExit: enemyAttackResultsExit,
-                        onUpdate: enemyAttackResultsUpdate
+                        onEnter: monsterAttackResultsEnter,
+                        onExit: monsterAttackResultsExit,
+                        onUpdate: monsterAttackResultsUpdate
                     }
                 }
                 
@@ -1353,20 +1353,20 @@
                 }
             },
             
-            //class that handles enemy selection
-            //it keeps track of selected enemies until the list is cleared
-            //and it highlights the selected enemies
-            enemySelector: {
+            //class that handles monster selection
+            //it keeps track of selected monsters until the list is cleared
+            //and it highlights the selected monsters
+            monsterSelector: {
                 
                 highlighter: new objectHighlighter(),
                 
                 //each number in array represents the index of a monster that has been selected
-                //once a monster is selected, it is added to the selected enemies indices list
-                //this allows us to select multiple enemies
-                selectedEnemiesIndices: [],
+                //once a monster is selected, it is added to the selected monsters indices list
+                //this allows us to select multiple monsters
+                selectedMonstersIndices: [],
                 
-                //currently targted enemy, this is different from the selectedenemiesindice
-                //enemy with this target IS NOT SELECTED, it must be added to the list once player actually selects it
+                //currently targted monster, this is different from the selectedmonstersindice
+                //monster with this target IS NOT SELECTED, it must be added to the list once player actually selects it
                 currentSelection: 0,
                 
                 addSelection: function(idOfSelected, monsters) {
@@ -1376,7 +1376,7 @@
                         return;
                     }
                     
-                    this.selectedEnemiesIndices.push(idOfSelected);
+                    this.selectedMonstersIndices.push(idOfSelected);
                     this.highlighter.addHighlight(monsters[idOfSelected].sprite);
                 },
                 
@@ -1394,7 +1394,7 @@
                 
                 selectNext: function(monsters) {
                     
-                    if(this.selectedEnemiesIndices.length == 0) {
+                    if(this.selectedMonstersIndices.length == 0) {
                         
                         return;
                     }
@@ -1405,7 +1405,7 @@
                 
                 selectPrevious: function(monsters) {
                     
-                    if(this.selectedEnemiesIndices.length == 0) {
+                    if(this.selectedMonstersIndices.length == 0) {
                         
                         return;
                     }
@@ -1422,13 +1422,13 @@
                 
                 clearSelection: function() {
                     
-                    this.selectedEnemiesIndices = [];
+                    this.selectedMonstersIndices = [];
                     this.highlighter.clearHighlights();
                 },
                 
-                highlightSelectedEnemies: function(monsters) {
+                highlightSelectedMonsters: function(monsters) {
                     
-                    for(var i = 0; i < this.selectedEnemiesIndices.length; ++i) {
+                    for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
                         
                         this.highlighter.addHighlight(monsters[i].sprite);
                     }
@@ -1443,7 +1443,7 @@
                     
                     this.highlighter.clearHighlights();
                     
-                    this.highlightSelectedEnemies();
+                    this.highlightSelectedMonsters();
                     
                     this.highlightCurrentSelection();
                 },
@@ -1510,7 +1510,7 @@
                 //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
                 this.messageBox = new textBox(0, 0, game.scale.width, 50);
                 
-                //this contains text that will display the amount of damage an enemy or player received after an attack
+                //this contains text that will display the amount of damage an monster or player received after an attack
                 //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted
                 //damage texts will contain the text reprsenting the damage, and a phaser tween object
                 //tween objects represent a linear interpolation between two object states, we will use it to animate the text
