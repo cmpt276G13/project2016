@@ -94,6 +94,54 @@
             */
         //};
         
+        //object that handles Phaser sprite highlighting
+        //it takes a list of phaser objects, and draws a border around a subset of objects in that list
+        //it then keeps a list of highlights, and can clear them and recreate them as needed
+        function objectHighlighter() {
+            
+            //each object will in the array has two properties
+            //the first property is the object that will be hightlighted
+            //the second property is the phaser graphics object that does the highlighting
+            //ex: highlights[0] = {object: someOrc, graphics: someGraphicsObject}
+            this.highlights = [];
+        };
+        
+        //takes the given PHASER GRAPHICS OBJECT and highlights it
+        //this object must be a phaser object that has the variables, x, y, width, and height
+        //and supports the function addchild()
+        objectHighlighter.prototype.addHighlight = function(objectToHighlight) {
+            
+            var highlightedObject = {};
+            highlightedObject.object = objectToHighlight;
+            
+            //create the graphics object
+            highlightedObject.graphics = game.add.graphics(0, 0);
+            highlightedObject.object.addChild(highlightedObject.graphics);
+            
+            //style the highlight
+            highlightedObject.graphics.lineStyle(2, 0xff0000, 1);
+            
+            //draw the highlight
+            var x = objectToHighlight.x;
+            var y = objectToHighlight.y;
+            var width = objectToHighlight.width;
+            var height = objectToHighlight.height;
+            
+            highlightedObject.drawRect(x, y, width, height);
+            
+            this.highlight.push(highlightedObject);
+        };
+        
+        objectHighlighter.prototype.clearHighlights = function() {
+            
+            for(var i = 0; i < this.highlights.length; ++i) {
+                
+                this.highlights[i].graphics.destroy();
+            }
+            
+            this.highlights = [];
+        };
+        
         //an action display is a rectangular display that lists a bunch of possible actions a player can make
         //it consists of a container that stores the text, and the texts that are supposed to be displayed
         //it also contains information about what action is currently being selected, and a way to indicate what action is selected
@@ -175,6 +223,22 @@
             }
             
             return actionTexts;
+        };
+        
+        //onKeyDown listener for action Display objects
+        //this will assume the arrow keys is used to move, and it will move the current action selection for the given action display
+        function actionDisplayKeyDown(key, actionDisplay) {
+                
+            //move the players selection
+            if(key.keyCode == Phaser.Keyboard.UP) {
+                
+                actionDisplay.selectPrevious();
+            }
+            
+            if(key.keyCode == Phaser.Keyboard.DOWN) {
+                
+                actionDisplay.selectNext();
+            }
         };
         
         //a substate object that handles functionality during a state
@@ -667,7 +731,7 @@
         
         function selectMainActionKeyDown(key) {
             
-            this.handleActionSelection(key, this.mainActionsDisplay);
+            actionDisplayKeyDown(key, this.mainActionsDisplay);
             
             //execute the action the user has chosen
             if(key.keyCode == Phaser.Keyboard.ENTER) {
@@ -706,7 +770,7 @@
         
         function selectFightActionKeyDown(key) {
             
-            this.handleActionSelection(key, this.fightActionsDisplay);
+            actionDisplayKeyDown(key, this.fightActionsDisplay);
                 
             if(key.keyCode == Phaser.Keyboard.ENTER) {
                 
@@ -1024,27 +1088,6 @@
                 var height = this.monsters[this.selectedMonsterId].sprite.height;
                 
                 this.selectedMonsterIndicator.drawRect(xPosition, yPosition, width, height);
-            },
-            
-            //function that is called when the player's attack animation finishes
-            //this function should transition to the next game state, and apply damage to enemies as needed
-            finishPlayerAttack: function() {
-                
-                this.changeState(this.BattleState.PLAYER_ATTACK_RESULTS);
-            },
-            
-            finishEnemyAttack: function() {
-                
-                this.changeState(this.BattleState.ENEMY_ATTACK_RESUlTS);
-            },
-            
-            //this function clears all data required for all the states, used when you first enter battle
-            clearStates: function() {
-                
-                for(state in this.BattleState) {
-                    
-                    this.exitState(this.BattleState[state]);
-                }
             },
             
             showMessage: function(message) {
@@ -1365,20 +1408,6 @@
             onKeyDown: function(key) {
                 
                 this.stateManager.onKeyDown(key);
-            },
-            
-            handleActionSelection: function(key, actionDisplay) {
-                
-                //move the players selection
-                if(key.keyCode == Phaser.Keyboard.UP) {
-                    
-                    actionDisplay.selectPrevious();
-                }
-                
-                if(key.keyCode == Phaser.Keyboard.DOWN) {
-                    
-                    actionDisplay.selectNext();
-                }
             },
             
             //this is a render (drawing) function
