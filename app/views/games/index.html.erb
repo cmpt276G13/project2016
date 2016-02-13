@@ -122,14 +122,11 @@
             highlightedObject.graphics.lineStyle(2, 0xff0000, 1);
             
             //draw the highlight
-            var x = objectToHighlight.x;
-            var y = objectToHighlight.y;
             var width = objectToHighlight.width;
             var height = objectToHighlight.height;
+            highlightedObject.graphics.drawRect(0, 0, width, height);
             
-            highlightedObject.drawRect(x, y, width, height);
-            
-            this.highlight.push(highlightedObject);
+            this.highlights.push(highlightedObject);
         };
         
         objectHighlighter.prototype.clearHighlights = function() {
@@ -140,6 +137,22 @@
             }
             
             this.highlights = [];
+        };
+        
+        objectHighlighter.prototype.showHighlights = function() {
+            
+            for(var i = 0; i < this.highlights.length; ++i) {
+                
+                this.highlights[i].graphics.visible = true;
+            }
+        };
+        
+        objectHighlighter.prototype.hideHighlights = function() {
+            
+            for(var i = 0; i < this.highlights.length; ++i) {
+                
+                this.highlights[i].graphics.visible = false;
+            }
         };
         
         //an action display is a rectangular display that lists a bunch of possible actions a player can make
@@ -795,13 +808,14 @@
         function playerSelectTargetEnter() {
             
             this.selectedMonsterId = 0;
-            this.selectedMonsterIndicator.visible = true;
             this.showMessage("Select a monster to attack");
+            
+            this.monsterHighlighter.showHighlights();
         };
         
         function playerSelectTargetExit() {
             
-            this.selectedMonsterIndicator.visible = false;
+            this.monsterHighlighter.hideHighlights();
             this.hideMessage();
         };
         
@@ -830,7 +844,7 @@
         
         function playerSelectTargetUpdate() {
             
-            this.highlightSelectedEnemy();
+            this.monsterHighlighter.addHighlight(this.monsters[this.selectedMonsterId].sprite);
         };
         
         function playerAttackEnter() {
@@ -1063,31 +1077,6 @@
                 //player face left
                 player.sprite.animations.play('left');
                 player.sprite.animations.stop(null, true);
-            },
-            
-            //draws a rectangle around the monster that the player has currently chosen to attack
-            highlightSelectedEnemy: function() {
-            
-                //first clear the previously drawn selection
-                this.selectedMonsterIndicator.clear();
-                
-                if(this.selectedMonsterId >= this.monsters.length) {
-                    
-                    return;
-                }
-                
-                //set line style
-                this.selectedMonsterIndicator.lineStyle(2, 0xff0000, 1);
-                
-                //make sure the selected mosnter exists
-                this.selectedMonsterId = clamp(this.selectedMonsterId, 0, this.monsters.length);
-                
-                var xPosition = this.monsters[this.selectedMonsterId].sprite.x;
-                var yPosition = this.monsters[this.selectedMonsterId].sprite.y;
-                var width = this.monsters[this.selectedMonsterId].sprite.width;
-                var height = this.monsters[this.selectedMonsterId].sprite.height;
-                
-                this.selectedMonsterIndicator.drawRect(xPosition, yPosition, width, height);
             },
             
             showMessage: function(message) {
@@ -1373,8 +1362,7 @@
                 //this variable keeps track of what mosnter the player has selected
                 this.selectedMonsterId = 0;
                 
-                //this graphics object will draw a rectangle around the selected mosnter
-                this.selectedMonsterIndicator = game.add.graphics(0, 0);
+                this.monsterHighlighter = new objectHighlighter();
                 
                 //we need a way to give messages to the player
                 //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
