@@ -24,12 +24,12 @@
         function getRandomInt(min, max) {
             
             return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+        };
         
         function clamp(number, min, max) {
             
             return Math.max(min, Math.min(number, max));
-        }
+        };
         
         //given an attacker's power attribute, and a defender's defense attribute, this function will calculate the damage received by teh defender
         //attackPower is a number, and you can use any entity attribute to represent the power
@@ -76,7 +76,7 @@
         function basicAttack() {
             
             this.power = 5;
-            this.targetsHit = 2;
+            this.targetsHit = 6;
             this.manaCost = 0;
         };
         
@@ -96,7 +96,7 @@
         function markForDeletion() {
             
             this.shouldDelete = true;
-        }
+        };
         
         //makes monster start their death animation, sets the call back function
         function startDeathAnimation(dyingEntity) {
@@ -1111,30 +1111,39 @@
                 //please look up how JSON works if you are unfamiliar with it
                 var monsterNames = game.cache.getJSON('monsterList');
                 
-                //now we want to randomly select a monster name from this list
-                //the object basiclaly has 1 element named monsters, which is an array of names
-                //these names are actually keys to the database, so we can use it directly
-                //randomly select monster name (for now just use the orc name since i haven't created the others)
-                var id = 0;
-                var monsterName = monsterNames.monsters[id];
-                
-                //now we can use this key to load the monster data
-                //first turn the monster database to a javascript object
+                //now turn the monster database to a javascript object, os we can find monsters in this database
                 var monsterDatabase = game.cache.getJSON('monsterData');
                 
-                //now get the monster with the above key
-                //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
-                var monster = new rpgEntity();
-                $.extend(monster, monsterDatabase[monsterName]);
-                monster.x = 200;
-                monster.y = 300;
+                //determine how many monsters we should spawn
+                var monstersToSpawn = getRandomInt(1, 3);
+                var monsters = [];
+                document.getElementById("additional").innerHTML = monstersToSpawn;
                 
-                var monster2 = new rpgEntity();
-                $.extend(monster2, monsterDatabase[monsterName]);
-                monster2.x = 230;
-                monster2.y = 330;
+                for(var i = 0; i < monstersToSpawn; ++i) {
+                    
+                    //now we want to randomly select a monster name from this list
+                    //the object basiclaly has 1 element named monsters, which is an array of names
+                    //these names are actually keys to the database, so we can use it directly
+                    //randomly select monster name (for now just use the orc name since i haven't created the others)
+                    var id = 0;
+                    var monsterName = monsterNames.monsters[id];
+                    
+                    //now we can use this key to load the monster data
+                    //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
+                    var monster = new rpgEntity();
+                    $.extend(monster, monsterDatabase[monsterName]);
+                    
+                    var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
+                    document.getElementById("additional").innerHTML = num;
+                    
+                    //position the monster somewhere
+                    monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
+                    monster.y = 200 + 50 * (i % num);
+                    
+                    monsters.push(monster);
+                }
                 
-                return [monster, monster2];
+                return monsters;
             },
             
             generateMonsterSprites: function(monsters) {
@@ -1177,7 +1186,7 @@
             orientPlayerForBattle: function() {
                 
                 player.sprite.x = 500;
-                player.sprite.y = 300;
+                player.sprite.y = 250;
                 
                 player.sprite.body.velocity.x = 0;
                 player.sprite.body.velocity.y = 0;
