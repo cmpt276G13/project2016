@@ -5,6 +5,16 @@
 <div id="Game" style="padding: 10px;">
     
     <script>
+    
+        /*
+        
+        Before you start wokring on the game, please make sure you understand how to make a game using phaser (basic knowledge).
+        
+        You can go through this tutorial for a veeeeeery basic introduction to phaser game development: http://phaser.io/tutorials/making-your-first-phaser-game
+        and then go through this tutorial to see how to use game states and other stuff: https://software.intel.com/en-us/html5/hub/blogs/how-to-make-a-sidescroller-game-with-html5
+        
+        
+        */
         
         //create instance of the game engine.
         //This creates the canvas for the game to display, and allows you to use the Phaser engine
@@ -34,11 +44,12 @@
         
         function rpgEntity() {
             
+            //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
             this.health = 20;
             this.strength = 10;
             this.defense = 10;
             this.level = 1;
-            this.name = "Player";
+            this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database
             this.shouldDelete = false;
             
             //last used attack is the attribtues of the attack last used by this entity
@@ -56,18 +67,18 @@
             this.health = clamp(this.health - damageReceived, 0, this.health);
         };
         
-        function mark() {
+        function markForDeletion() {
             
             this.shouldDelete = true;
         }
         
         //makes monster start their death animation, sets the call back function
-        function killEntity(dyingEntity) {
+        function startDeathAnimation(dyingEntity) {
             
             //start death animation, make entity fade to black as well
             //when it finishes fading, it will be marked for deletion
             tween = game.add.tween(dyingEntity.sprite).to({alpha: 0});
-            tween.onComplete.add(mark, dyingEntity);
+            tween.onComplete.add(markForDeletion, dyingEntity);
             tween.delay(600);
             tween.start();
             dyingEntity.sprite.animations.play("dying");
@@ -1209,7 +1220,7 @@
                         continue;
                     }
                     
-                    killEntity(this.monsters[i]);
+                    startDeathAnimation(this.monsters[i]);
                 }
             },
             
