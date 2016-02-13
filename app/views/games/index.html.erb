@@ -799,7 +799,6 @@
             
             if all monsters are dead, it will go to the victory state, which displays some message, and then exits battle
         
-        monsterTurnStart: this is just here to reset the id of the current monster, automatically goes to next state
         monsterTurn: the current monster, marked by curerntMonster, chooses an action
         monsterAttack: if monster chose to attack it will play attack animation, same as player
         monsterAttackResults: same as player
@@ -985,29 +984,7 @@
             if(removedAllMarkedEntites && this.monsters.length > 0) {
                 
                 //monster turn start
-                this.stateManager.changeState("monsterTurnStart");
-            }
-        };
-        
-        function monsterTurnStartEnter() {
-            
-            this.currentMonster = 0;
-        };
-        
-        function monsterTurnStartExit() {
-            
-            this.hideMessage()
-        };
-        
-        function monsterTurnStartUpdate() {
-            
-            
-            if(this.monsters.length == 0) {
-                
-                this.stateManager.changeState("selectMainAction");
-                
-            } else {
-                
+                this.currentMonster = 0;
                 this.stateManager.changeState("monsterTurn");
             }
         };
@@ -1327,15 +1304,6 @@
                         onEnter: cullDeadMonstersEnter,
                         onExit: cullDeadMonstersExit,
                         onUpdate: cullDeadMonstersUpdate
-                    }
-                },
-                
-                {name: "monsterTurnStart",
-                    functions: {
-                        
-                        onEnter: monsterTurnStartEnter,
-                        onExit: monsterTurnStartExit,
-                        onUpdate: monsterTurnStartUpdate
                     }
                 },
                 
