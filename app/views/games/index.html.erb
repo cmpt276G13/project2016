@@ -1119,7 +1119,6 @@
             //makes the attacker attack the defender
             //determines if the attack hit the defender
             //determines damage dealt
-            //returns a string
             determineAttackResults: function(attacker, defender) {
                 
                 var damage = determineDamage(attacker.lastUsedAttack.power, defender.defense);
@@ -1332,6 +1331,82 @@
                 }
             },
             
+            //class that handles enemy selection
+            //it keeps track of selected enemies until the list is cleared
+            //and it highlights the selected enemies
+            enemySelector: {
+                
+                highlighter: new objectHighlighter(),
+                
+                //each number in array represents the index of a monster that has been selected
+                //i'm using an array of indices instead of a single monster index that way we can support attacks that select multiple enemies
+                //if you only select a single monster, and you want to select a different mosnter
+                //the id of the newly selected monster will be the first element of the array
+                selectedEnemiesIndices: [],
+                
+                addSelection: function(idOfSelected, monsters) {
+                    
+                    this.selectedEnemiesIndices.push(idOfSelected);
+                    this.highlighter.addHighlight(monsters[idOfSelected].sprite);
+                },
+                
+                selectNext: function(monsters) {
+                    
+                    if(this.selectedEnemiesIndices.length == 0) {
+                        
+                        return;
+                    }
+                    
+                    this.selectedEnemiesIndices[0] = (this.selectedEnemiesIndices[0] + 1) % monsters.length;
+                    this.highlightAllSelections(monsters);
+                },
+                
+                selectPrevious: function(monsters) {
+                    
+                    if(this.selectedEnemiesIndices.length == 0) {
+                        
+                        return;
+                    }
+                    
+                    this.selectedEnemiesIndices[0] -= 1;
+                    
+                    if(this.selectedEnemiesIndices[0] < 0) {
+                        
+                        this.selectedEnemiesIndices[0] = monsters.length - 1;
+                    }
+                    
+                    this.highlightAllSelections(monsters);
+                },
+                
+                clearSelection: function() {
+                    
+                    this.selectedEnemiesIndices = [];
+                    this.highlighter.clearHighlights();
+                },
+                
+                highlightAllSelections: function(monsters) {
+                    
+                    this.highlighter.clearHighlights();
+                    
+                    for(var i = 0; i < this.selectedEnemiesIndices.length; ++i) {
+                        
+                        this.highlighter.addHighlight(monsters[i].sprite);
+                    }
+                },
+                
+                getSelectedMonsters: function(monsters) {
+                    
+                    var selected = [];
+                    
+                    for(var i = 0; i < monsters.length; ++i) {
+                        
+                        selected.push(monsters[i]);
+                    }
+                    
+                    return selected;
+                },
+            },
+            
             create: function() {
                 
                 //misc instructions, ignore
@@ -1385,15 +1460,6 @@
                 
                 //we need a way to give messages to the player
                 //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-                /*this.textBox = createTextboxBackground(0, 0, game.scale.width, 50);
-                
-                //now create a text that will be displayed
-                //these settings make the text centerd to the message box
-                this.text = game.add.text(0, 0, "Message");
-                this.text.x = this.textBox.width / 2;
-                this.text.anchor.x = 0.5;
-                this.text.fill = 'white';
-                this.textBox.addChild(this.text);*/
                 this.messageBox = new textBox(0, 0, game.scale.width, 50);
                 
                 //this contains text that will display the amount of damage an enemy or player received after an attack
@@ -1401,7 +1467,6 @@
                 //damage texts will contain the text reprsenting the damage, and a phaser tween object
                 //tween objects represent a linear interpolation between two object states, we will use it to animate the text
                 this.damageTexts = [];
-                
                 
                 this.createSubStates();
                 this.stateManager.exitAll();
