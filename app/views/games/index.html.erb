@@ -583,7 +583,27 @@
         
         function selectMainActionKeyDown(key) {
             
+            this.handleActionSelection(key, this.actionBox);
             
+            //execute the action the user has chosen
+            if(key.keyCode == Phaser.Keyboard.ENTER) {
+                
+                //we would like to return to the main map if player selected run
+                if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
+                    
+                    game.state.start('overworld');
+                }
+                
+                if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
+                    
+                    this.stateManager.changeState("selectFightAction");
+                }
+            }
+        };
+        
+        function selectMainActionUpdate() {
+            
+            this.highlightSelectedAction(this.actionBox);
         };
         
         function selectFightActionEnter() {
@@ -602,7 +622,26 @@
         
         function selectFightActionKeyDown(key) {
             
+            this.handleActionSelection(key, this.fightBox);
+                
+            if(key.keyCode == Phaser.Keyboard.ENTER) {
+                
+                //we would like to return to the main map if player selected run
+                if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
+                    
+                    this.stateManager.changeState("selectMainAction");
+                }
+                
+                if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack" && this.monsters.length > 0) {
+                    
+                    this.stateManager.changeState("playerSelectTarget");
+                }
+            }
+        };
+        
+        function selectFightActionUpdate() {
             
+            this.highlightSelectedAction(this.fightBox);
         };
         
         function playerSelectTargetEnter() {
@@ -620,17 +659,38 @@
         
         function playerSelectTargetKeyDown(key) {
             
+            if(key.keyCode == Phaser.Keyboard.UP) {
+                
+                this.selectedMonsterId -= 1;
+                
+                if(this.selectedMonsterId < 0) {
+                    
+                    this.selectedMonsterId = this.monsters.length - 1;
+                }
+            }
             
+            if(key.keyCode == Phaser.Keyboard.DOWN) {
+                
+                this.selectedMonsterId = (this.selectedMonsterId + 1) % this.monsters.length;
+            }
+            
+            if(key.keyCode == Phaser.Keyboard.ENTER) {
+                
+                this.stateManager.changeState("playerAttack");
+            }
         };
         
         function playerSelectTargetUpdate() {
             
-            
+            this.highlightSelectedEnemy();
         };
         
         function playerAttackEnter() {
             
             this.showMessage("Attacking " + this.monsters[this.selectedMonsterId].name);
+            
+            //when player finishes his attack animation we will damage the enemy
+            player.sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("playerAttackResults"); }, this);
             player.sprite.animations.play("attack");
             
             player.lastUsedAttack.power = player.strength;
@@ -638,18 +698,15 @@
         
         function playerAttackExit() {
             
+            player.sprite.events.onAnimationComplete.removeAll();
             this.hideMessage();
         };
         
-        function playerAttackUpdate() {
-            
-            
-        };
         
         function playerAttackResultsEnter() {
             
             var damage = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
-                    
+            
                     //get damage received by this entity
             this.damageTexts.push(this.createDamageText(this.monsters[this.selectedMonsterId], damage) );
         };
@@ -662,7 +719,12 @@
         
         function playerAttackResultsUpdate() {
             
+            var moveToNextState = this.finishedDisplayingResults();
             
+            if(moveToNextState) {
+                
+                this.stateManager.changeState("cullDeadEnemies");
+            }
         };
     
         function cullDeadEnemiesEnter() {
@@ -677,7 +739,19 @@
         
         function cullDeadEnemiesUpdate() {
             
+            var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
+                    
+            if(removedAllMarkedEntites && this.monsters.length == 0) {
+                
+                //go to victory
+                this.stateManager.changeState("selectMainAction");
+            }
             
+            if(removedAllMarkedEntites && this.monsters.length > 0) {
+                
+                //enemy turn start
+                this.stateManager.changeState("enemyTurnStart");
+            }
         };
         
         function enemyTurnStartEnter() {
@@ -693,21 +767,31 @@
         function enemyTurnStartUpdate() {
             
             
+            if(this.monsters.length == 0) {
+                
+                this.stateManager.changeState("selectMainAction");
+                
+            } else {
+                
+                this.stateManager.changeState("enemyTurn");
+            }
         };
         
         function enemyTurnEnter() {
             
+            //randomly determine what the enemy should do
+            //for now he just attacks
+            this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("enemyAttackResults"); } , this);
+            this.monsters[this.currentEnemy].sprite.animations.play("attack");
+            this.monsters[this.currentEnemy].lastUsedAttack.power = this.monsters[this.currentEnemy].strength;
             
+            this.showMessage(this.monsters[this.currentEnemy].name + " attacks!");
         };
         
         function enemyTurnExit() {
             
+            this.monsters[this.currentEnemy].sprite.events.onAnimationComplete.removeAll();
             this.hideMessage();
-        };
-        
-        function enemyTurnUpdate() {
-            
-            
         };
         
         function enemyAttackResultsEnter() {
@@ -718,12 +802,29 @@
         
         function enemyAttackResultsExit() {
             
-            playerAttackResultsExit();
+            playerAttackResultsExit.call(this);
         };
         
         function enemyAttackResultsUpdate() {
             
-               
+            var moveToNextState = this.finishedDisplayingResults();
+            
+            if(!moveToNextState) {
+                
+                return;
+            }
+            
+            this.currentEnemy += 1;
+            
+            //no more enemies, move back to player's turn
+            if(this.currentEnemy >= this.monsters.length) {
+            
+                this.stateManager.changeState("selectMainAction");
+                return;
+            }
+            
+            //enemy left, start his turn
+            this.stateManager.changeState("enemyTurn");
         };
         
         //the battle state
@@ -930,124 +1031,6 @@
                 }
             },
             
-            //this function makes it easy to handle state changes
-            //it goes from one state to another, and changes any variables required when entering or leaving a state
-            changeState: function(targetState) {
-                
-                this.exitState(this.currentState);
-                this.enterState(targetState);
-            },
-            
-            //this function handles all variable changes that need to be made when you exit the given state
-            //it calls any functions that need to be called when a state finishes
-            exitState: function(stateToExit) {
-                
-                if(stateToExit == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
-                    
-                    this.actionBox.selectionOutline.visible = false;
-                }
-                
-                if(stateToExit == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
-                    
-                    this.fightBox.actionsContainer.visible = false;
-                }
-                
-                if(stateToExit == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
-                    
-                    this.selectedMonsterIndicator.visible = false;
-                }
-                
-                if(stateToExit == this.BattleState.PLAYER_ATTACKING) {
-                    
-                    
-                }
-                
-                if(stateToExit == this.BattleState.PLAYER_ATTACK_RESULTS || stateToExit == this.BattleState.ENEMY_ATTACK_RESUlTS) {
-                    
-                    //delete all damage texts, and to do that we have to delete all phaser sprites
-                    this.clearDamageTexts();
-                }
-                
-                if(stateToExit == this.BattleState.ENEMY_TURN) {
-                    
-                    
-                }
-
-                this.hideMessage();
-            },
-            
-            //this function handles all variable changes that need to be made when you enter a given state
-            //it calls any functions that need to be called when a state starts
-            enterState: function(stateToEnter) {
-                
-                if(stateToEnter == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
-                    
-                    this.actionBox.selectedAction = 0;
-                    this.actionBox.selectionOutline.visible = true;
-                    
-                    this.showMessage("Select an action");
-                }
-                
-                if(stateToEnter == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
-                    
-                    this.fightBox.selectedAction = 0;
-                    this.fightBox.actionsContainer.visible = true;
-                    
-                    this.showMessage("Select an action");
-                }
-                
-                if(stateToEnter == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
-                    
-                    this.selectedMonsterId = 0;
-                    this.selectedMonsterIndicator.visible = true;
-                    this.showMessage("Select a monster to attack");
-                }
-                
-                if(stateToEnter == this.BattleState.PLAYER_ATTACKING) {
-                    
-                    this.showMessage("Attacking " + this.monsters[this.selectedMonsterId].imageKey);
-                    player.sprite.animations.play("attack");
-                    
-                    //set the player's attack attribute
-                    player.lastUsedAttack.power = player.strength;
-                }
-                
-                if(stateToEnter == this.BattleState.PLAYER_ATTACK_RESULTS) {
-                    
-                    //player just attacked a mosnter, determine the results of the attack, and display it to the screen
-                    var damage = this.determineAttackResults(player, this.monsters[this.selectedMonsterId]);
-                    
-                    //get damage received by this entity
-                    this.damageTexts.push(this.createDamageText(this.monsters[this.selectedMonsterId], damage) );
-                }
-                
-                if(stateToEnter == this.BattleState.ENEMY_TURN_START) {
-                    
-                    this.currentEnemy = 0;
-                }
-                
-                if(stateToEnter == this.BattleState.ENEMY_TURN) {
-                    
-                    //determine what current enemy should do
-                    this.playEnemyTurn(this.currentEnemy);
-                }
-                
-                if(stateToEnter == this.BattleState.ENEMY_ATTACK_RESUlTS) {
-                    
-                    //enemy attacked, determine damage dealt to player
-                    var damage = this.determineAttackResults(this.monsters[this.currentEnemy], player);
-                    this.damageTexts.push(this.createDamageText(player, damage) );
-                }
-                
-                //if any enemy is dead, play their dying animation
-                if(stateToEnter == this.BattleState.CULL_DEAD_ENEMIES) {
-                    
-                    this.killDeadEnemies();
-                }
-            
-                this.currentState = stateToEnter;
-            },
-            
             showMessage: function(message) {
                 
                 this.textBox.visible = true;
@@ -1119,33 +1102,6 @@
                 return true;
             },
             
-            //play the turn of the current enemy
-            playEnemyTurn: function(enemyId) {
-                
-                //randomly determine what the enemy should do
-                //for now he just attacks
-                this.monsters[enemyId].sprite.events.onAnimationComplete.add(this.finishEnemyAttack, this);
-                this.monsters[enemyId].sprite.animations.play("attack");
-                this.monsters[enemyId].lastUsedAttack.power = this.monsters[enemyId].strength;
-                
-                this.showMessage(this.monsters[enemyId].name + " attacks!");
-            },
-            
-            startNextEnemyTurn: function() {
-                
-                this.currentEnemy += 1;
-                
-                //no more enemies, move back to player's turn
-                if(this.currentEnemy >= this.monsters.length) {
-                    
-                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                    return;
-                }
-                
-                //enemy left, start his turn
-                this.changeState(this.BattleState.ENEMY_TURN);
-            },
-            
             //looks for all dead enemies and plays their dying animation
             killDeadEnemies: function() {
                 
@@ -1202,7 +1158,8 @@
                         //i want onEnter to refer to the selectMainActionEnter function declared above
                         onEnter: selectMainActionEnter,  //attribute name is the name i want to give the function. Attribute value is the function itself
                         onExit: selectMainActionExit,    //create a function called onExit. the function that is actually called will be the selectMainActionExit function declared above
-                        onKeyDown: selectMainActionKeyDown
+                        onKeyDown: selectMainActionKeyDown,
+                        onUpdate: selectMainActionUpdate,
                     }
                 },
                 
@@ -1212,7 +1169,8 @@
                         
                         onEnter: selectFightActionEnter,
                         onExit: selectFightActionExit,
-                        onKeyDown: selectFightActionKeyDown
+                        onKeyDown: selectFightActionKeyDown,
+                        onUpdate: selectFightActionUpdate
                     }
                 },
                 
@@ -1230,8 +1188,7 @@
                     functions: {
                         
                         onEnter: playerAttackEnter,
-                        onExit: playerAttackExit,
-                        onUpdate: playerAttackUpdate
+                        onExit: playerAttackExit
                     }
                 },
                 
@@ -1250,6 +1207,32 @@
                         onEnter: cullDeadEnemiesEnter,
                         onExit: cullDeadEnemiesExit,
                         onUpdate: cullDeadEnemiesUpdate
+                    }
+                },
+                
+                {name: "enemyTurnStart",
+                    functions: {
+                        
+                        onEnter: enemyTurnStartEnter,
+                        onExit: enemyTurnStartExit,
+                        onUpdate: enemyTurnStartUpdate
+                    }
+                },
+                
+                {name: "enemyTurn",
+                    functions: {
+                        
+                        onEnter: enemyTurnEnter,
+                        onExit: enemyTurnExit
+                    }
+                },
+                
+                {name: "enemyAttackResults",
+                    functions: {
+                        
+                        onEnter: enemyAttackResultsEnter,
+                        onExit: enemyAttackResultsExit,
+                        onUpdate: enemyAttackResultsUpdate
                     }
                 }
                 
@@ -1324,25 +1307,6 @@
                 game.input.keyboard.callbackContext = this;
                 game.input.keyboard.onDownCallback = this.onKeyDown;
                 
-                //variables that represent the current battle state
-                //this emulates a game state system, but without having to switch between phaser game states
-                this.BattleState = {
-                    
-                    PLAYER_SELECT_MAIN_ACTION: 0,
-                    PLAYER_SELECT_FIGHT_ACTION: 1,
-                    PLAYER_SELECT_ATTACK_TARGET: 2,
-                    PLAYER_ATTACKING: 3,
-                    PLAYER_ATTACK_RESULTS: 5,
-                    CULL_DEAD_ENEMIES: 6,
-                    ENEMY_TURN_START: 7,
-                    ENEMY_ATTACK_RESUlTS: 8,
-                };
-                
-                this.currentState = this.BattleState.PLAYER_SELECT_MAIN_ACTION;
-                
-                //add a function to call when the player's aniamtion finishes, because we don't want damage calculation to occur while the player's animation is ongoing
-                player.sprite.events.onAnimationComplete.add(this.finishPlayerAttack, this);
-                
                 //when the player starts to attack we need a way for the player to select a mosnter to attack
                 //this variable keeps track of what mosnter the player has selected
                 this.selectedMonsterId = 0;
@@ -1368,160 +1332,19 @@
                 //tween objects represent a linear interpolation between two object states, we will use it to animate the text
                 this.damageTexts = [];
                 
-                this.clearStates();
-                this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
                 
                 this.createSubStates();
+                this.stateManager.changeState("selectMainAction");
             },
             
             update: function() {
             
-                //make the game highlight the player's current selected action
-                this.highlightSelectedAction(this.actionBox);
-                this.highlightSelectedAction(this.fightBox);
-                this.highlightSelectedEnemy();
-                
-                //if we are showing player attack results, then we have to check if all the damage numbers have been displayed
-                //if we've displayed all the numbers, its time to move onto the enemy's turn
-                if(this.currentState == this.BattleState.PLAYER_ATTACK_RESULTS) {
-                    
-                    var moveToNextState = this.finishedDisplayingResults();
-                    
-                    if(moveToNextState) {
-                        
-                        this.changeState(this.BattleState.CULL_DEAD_ENEMIES);
-                    }
-                }
-                
-                if(this.currentState == this.BattleState.CULL_DEAD_ENEMIES) {
-                    
-                    
-                    //check if all dead monsters have been marked for deletion yet
-                    //until dead mosnters are marked for deletion, we have to wait for their death animation to complete
-                    //after theyre makred for deletion, delete the dead enemies, and move onto either the enemies turn, or victor if no enemes are left
-                    var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
-                    
-                    if(removedAllMarkedEntites) {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                    }
-                }
-                
-                if(this.currentState == this.BattleState.ENEMY_TURN_START) {
-                    
-                    if(this.monsters.length == 0) {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                        
-                    } else {
-                        
-                        //starting the enemy turn, begin by making the first enemy attack, and move on from there
-                        this.changeState(this.BattleState.ENEMY_TURN);
-                    }
-                }
-                
-                //just a precaution incase we are in an enemy turn, but there are no enemies
-                if(this.currentState == this.BattleState.ENEMY_TURN && this.currentEnemy >= this.monsters.length) {
-                    
-                    this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                }
-                
-                if(this.currentState == this.BattleState.ENEMY_ATTACK_RESUlTS) {
-                    
-                    var moveToNextState = this.finishedDisplayingResults();
-                    
-                    if(moveToNextState) {
-                        
-                        this.startNextEnemyTurn();
-                    }
-                }
+                this.stateManager.onUpdate();
             },
             
             onKeyDown: function(key) {
                 
-                this.handlePlayerInput(key);
-            },
-            
-            handlePlayerInput: function(key) {
-                
-                //certain game states only allow certain inputs
-                //main game state allows users to select fight, items, or run
-                //fight action state allows users to choose to attack, use a skill, or other stuff
-                if(this.currentState == this.BattleState.PLAYER_SELECT_MAIN_ACTION) {
-                    
-                    this.handleMainActionInput(key);
-                    
-                } else if(this.currentState == this.BattleState.PLAYER_SELECT_FIGHT_ACTION) {
-                    
-                    this.handleFightActionInput(key);
-                    
-                } else if(this.currentState == this.BattleState.PLAYER_SELECT_ATTACK_TARGET) {
-                    
-                    this.handleTargetSelectionInput(key);
-                }
-            },
-            
-            handleMainActionInput: function(key) {
-                
-                //first handle user input if they press up or down to choose an action
-                this.handleActionSelection(key, this.actionBox);
-                
-                //execute the action the user has chosen
-                if(key.keyCode == Phaser.Keyboard.ENTER) {
-                    
-                    //we would like to return to the main map if player selected run
-                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "run") {
-                        
-                        game.state.start('overworld');
-                    }
-                    
-                    if(this.actionBox.texts[this.actionBox.selectedAction].text == "fight") {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_FIGHT_ACTION);
-                    }
-                }
-            },
-            
-            handleFightActionInput: function(key) {
-                
-                this.handleActionSelection(key, this.fightBox);
-                
-                if(key.keyCode == Phaser.Keyboard.ENTER) {
-                    
-                    //we would like to return to the main map if player selected run
-                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "cancel") {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_MAIN_ACTION);
-                    }
-                    
-                    if(this.fightBox.texts[this.fightBox.selectedAction].text == "attack" && this.monsters.length > 0) {
-                        
-                        this.changeState(this.BattleState.PLAYER_SELECT_ATTACK_TARGET);
-                    }
-                }
-            },
-            
-            handleTargetSelectionInput: function(key) {
-                
-                if(key.keyCode == Phaser.Keyboard.UP) {
-                    
-                    this.selectedMonsterId -= 1;
-                    
-                    if(this.selectedMonsterId < 0) {
-                        
-                        this.selectedMonsterId = this.monsters.length - 1;
-                    }
-                }
-                
-                if(key.keyCode == Phaser.Keyboard.DOWN) {
-                    
-                    this.selectedMonsterId = (this.selectedMonsterId + 1) % this.monsters.length;
-                }
-                
-                if(key.keyCode == Phaser.Keyboard.ENTER) {
-                    
-                    this.changeState(this.BattleState.PLAYER_ATTACKING);
-                }
+                this.stateManager.onKeyDown(key);
             },
             
             handleActionSelection: function(key, actionBox) {
