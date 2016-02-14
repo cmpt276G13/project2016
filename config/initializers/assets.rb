@@ -9,3 +9,12 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
+Rails.application.config.assets.precompile += %w(battleState.js)
+Rails.application.config.assets.precompile += %w(bootState.js)
+Rails.application.config.assets.precompile += %w(overworldState.js)
+Rails.application.config.assets.precompile += %w(stateManager.js)
+Rails.application.config.assets.precompile += %w(objectHighlighter.js)
+Rails.application.config.assets.precompile += %w(rpgEntity.js)
+Rails.application.config.assets.precompile += %w(textbox.js)
+Rails.application.config.assets.precompile += %w(actionDisplay.js)
+Rails.application.config.assets.precompile += %w(battleSubstateFunctions.js)
