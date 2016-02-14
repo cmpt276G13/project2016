@@ -9,7 +9,9 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", about_path
     get about_path
     assert_template 'static_pages/about'
+    assert_select "title", full_title("About")
     get signup_path
     assert_template 'users/new'
+    assert_select "title", full_title("Sign up")
   end
 end
