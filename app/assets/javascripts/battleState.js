@@ -2,6 +2,218 @@
 //here players will battle some number of monsters
 var battleState = {
     
+    //this object is where you should define all of the substates of the battle system
+    //any substate added here will be autoamtically added to the state manager
+    
+    //All functions in the substates can be found in battleSubstateFunctions
+    subStates: [
+        
+        //use as follows
+        //any sub state you want to add, create a new object in this
+        //each state object needs to itself be an object, containing two attributes, a name as a string, and an object containing all of the functions
+        //the id of each function should be the name you want to give the function after it is turned into a state object
+        
+        //example
+        //this state is for players to select a main action, either fight, run, or use items
+        {name: "selectMainAction", //name of the state
+            functions: { //list of functions available in this state
+                //in this state i want to add a function called onEnter.
+                //i want onEnter to refer to the selectMainActionEnter function declared above
+                onEnter: selectMainActionEnter,  //attribute name is the name i want to give the function. Attribute value is the function itself
+                onExit: selectMainActionExit,    //create a function called onExit. the function that is actually called will be the selectMainActionExit function declared above
+                onKeyDown: selectMainActionKeyDown,
+                onUpdate: selectMainActionUpdate,
+            }
+        },
+        
+        //any time you want to add a new state, just add it like in the example above
+        {name: "selectFightAction",
+            functions: {
+                
+                onEnter: selectFightActionEnter,
+                onExit: selectFightActionExit,
+                onKeyDown: selectFightActionKeyDown,
+                onUpdate: selectFightActionUpdate
+            }
+        },
+        
+        {name: "playerSelectTarget",
+            functions: {
+                
+                onEnter: playerSelectTargetEnter,
+                onExit: playerSelectTargetExit,
+                onKeyDown: playerSelectTargetKeyDown,
+                onUpdate: playerSelectTargetUpdate
+            }
+        },
+        
+        {name: "playerAttack",
+            functions: {
+                
+                onEnter: playerAttackEnter,
+                onExit: playerAttackExit,
+                onUpdate: playerAttackUpdate
+            }
+        },
+        
+        {name: "playerAttackResults",
+            functions: {
+                
+                onEnter: playerAttackResultsEnter,
+                onExit: playerAttackResultsExit,
+                onUpdate: playerAttackResultsUpdate
+            }
+        },
+        
+        {name: "cullDeadMonsters",
+            functions: {
+                
+                onEnter: cullDeadMonstersEnter,
+                onExit: cullDeadMonstersExit,
+                onUpdate: cullDeadMonstersUpdate
+            }
+        },
+        
+        {name: "monsterTurn",
+            functions: {
+                
+                onEnter: monsterTurnEnter,
+                onExit: monsterTurnExit,
+                onUpdate: monsterTurnUpdate
+            }
+        },
+        
+        {name: "monsterAttackResults",
+            functions: {
+                
+                onEnter: monsterAttackResultsEnter,
+                onExit: monsterAttackResultsExit,
+                onUpdate: monsterAttackResultsUpdate
+            }
+        }
+        
+    ],
+    
+    //class that handles monster selection
+    //it keeps track of selected monsters until the list is cleared
+    //and it highlights the selected monsters
+    monsterSelector: {
+        
+        highlighter: new objectHighlighter(),
+        
+        //each number in array represents the index of a monster that has been selected
+        //once a monster is selected, it is added to the selected monsters indices list
+        //this allows us to select multiple monsters
+        selectedMonstersIndices: [],
+        
+        //currently targted monster, this is different from the selectedmonstersindice
+        //monster with this target IS NOT SELECTED, it must be added to the list once player actually selects it
+        currentSelection: 0,
+        
+        //this variable determines how many monsters you need to select, it is set with the beginSelectionProcess function
+        //when this is set, every time the selector adds a monster, it will increase the number of selected mosnters
+        //it will finish selection when the number of selected monsters is equal to this
+        requiredSelections: 0,
+        
+        addSelection: function(idOfSelected, monsters) {
+            
+            //don't allow over selection
+            if(idOfSelected >= monsters.length || this.selectedMonstersIndices.length == this.requiredSelections) {
+                
+                return;
+            }
+            
+            //don't allow duplicate selections
+            for(var index = 0; index < this.selectedMonstersIndices.length; ++index) {
+                
+                if(this.selectedMonstersIndices[index] == idOfSelected) {
+                    
+                    return;
+                }
+            }
+            
+            this.selectedMonstersIndices.push(idOfSelected);
+            this.highlighter.addHighlight(monsters[idOfSelected].sprite);
+        },
+        
+        addCurrentSelection: function(monsters) {
+            
+            this.addSelection(this.currentSelection, monsters);
+        },
+        
+        startSelectionProcess: function(monsters, requiredSelections) {
+            
+            this.clearSelection();
+            this.requiredSelections = Math.min(requiredSelections, monsters.length);
+            this.currentSelection = 0;
+            this.highlighter.showHighlights();
+            this.highlightCurrentSelection(monsters);
+        },
+        
+        selectNext: function(monsters) {
+            
+            this.currentSelection = (this.currentSelection + 1) % monsters.length;
+            this.highlightAllSelections(monsters);
+        },
+        
+        selectPrevious: function(monsters) {
+            
+            this.currentSelection -= 1;
+            
+            if(this.currentSelection < 0) {
+                
+                this.currentSelection = monsters.length - 1;
+            }
+            
+            this.highlightAllSelections(monsters);
+        },
+        
+        isSelectionFinished: function() {
+            
+            return this.selectedMonstersIndices.length === this.requiredSelections;
+        },
+        
+        clearSelection: function() {
+            
+            this.selectedMonstersIndices = [];
+            this.highlighter.clearHighlights();
+        },
+        
+        highlightSelectedMonsters: function(monsters) {
+            
+            for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
+                
+                this.highlighter.addHighlight(monsters[this.selectedMonstersIndices[i]].sprite);
+            }
+        },
+        
+        highlightCurrentSelection: function(monsters) {
+            
+            this.highlighter.addHighlight(monsters[this.currentSelection].sprite);
+        },
+        
+        highlightAllSelections: function(monsters) {
+            
+            this.highlighter.clearHighlights();
+            
+            this.highlightSelectedMonsters(monsters);
+            
+            this.highlightCurrentSelection(monsters);
+        },
+        
+        getSelectedMonsters: function(monsters) {
+            
+            var selected = [];
+            
+            for(var i = 0; i < monsters.length; ++i) {
+                
+                selected.push(monsters[i]);
+            }
+            
+            return selected;
+        },
+    },
+    
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         
@@ -205,216 +417,6 @@ var battleState = {
             
         }
         return true;
-    },
-    
-    //this object is where you should define all of the substates of the battle system
-    //any substate added here will be autoamtically added to the state manager
-    
-    //All functions in the substates can be found in battleSubstateFunctions
-    subStates: [
-        
-        //use as follows
-        //any sub state you want to add, create a new object in this
-        //each state object needs to itself be an object, containing two attributes, a name as a string, and an object containing all of the functions
-        //the id of each function should be the name you want to give the function after it is turned into a state object
-        
-        //example
-        //this state is for players to select a main action, either fight, run, or use items
-        {name: "selectMainAction", //name of the state
-            functions: { //list of functions available in this state
-                //in this state i want to add a function called onEnter.
-                //i want onEnter to refer to the selectMainActionEnter function declared above
-                onEnter: selectMainActionEnter,  //attribute name is the name i want to give the function. Attribute value is the function itself
-                onExit: selectMainActionExit,    //create a function called onExit. the function that is actually called will be the selectMainActionExit function declared above
-                onKeyDown: selectMainActionKeyDown,
-                onUpdate: selectMainActionUpdate,
-            }
-        },
-        
-        //any time you want to add a new state, just add it like in the example above
-        {name: "selectFightAction",
-            functions: {
-                
-                onEnter: selectFightActionEnter,
-                onExit: selectFightActionExit,
-                onKeyDown: selectFightActionKeyDown,
-                onUpdate: selectFightActionUpdate
-            }
-        },
-        
-        {name: "playerSelectTarget",
-            functions: {
-                
-                onEnter: playerSelectTargetEnter,
-                onExit: playerSelectTargetExit,
-                onKeyDown: playerSelectTargetKeyDown,
-                onUpdate: playerSelectTargetUpdate
-            }
-        },
-        
-        {name: "playerAttack",
-            functions: {
-                
-                onEnter: playerAttackEnter,
-                onExit: playerAttackExit
-            }
-        },
-        
-        {name: "playerAttackResults",
-            functions: {
-                
-                onEnter: playerAttackResultsEnter,
-                onExit: playerAttackResultsExit,
-                onUpdate: playerAttackResultsUpdate
-            }
-        },
-        
-        {name: "cullDeadMonsters",
-            functions: {
-                
-                onEnter: cullDeadMonstersEnter,
-                onExit: cullDeadMonstersExit,
-                onUpdate: cullDeadMonstersUpdate
-            }
-        },
-        
-        {name: "monsterTurn",
-            functions: {
-                
-                onEnter: monsterTurnEnter,
-                onExit: monsterTurnExit
-            }
-        },
-        
-        {name: "monsterAttackResults",
-            functions: {
-                
-                onEnter: monsterAttackResultsEnter,
-                onExit: monsterAttackResultsExit,
-                onUpdate: monsterAttackResultsUpdate
-            }
-        }
-        
-    ],
-    
-    //class that handles monster selection
-    //it keeps track of selected monsters until the list is cleared
-    //and it highlights the selected monsters
-    monsterSelector: {
-        
-        highlighter: new objectHighlighter(),
-        
-        //each number in array represents the index of a monster that has been selected
-        //once a monster is selected, it is added to the selected monsters indices list
-        //this allows us to select multiple monsters
-        selectedMonstersIndices: [],
-        
-        //currently targted monster, this is different from the selectedmonstersindice
-        //monster with this target IS NOT SELECTED, it must be added to the list once player actually selects it
-        currentSelection: 0,
-        
-        //this variable determines how many monsters you need to select, it is set with the beginSelectionProcess function
-        //when this is set, every time the selector adds a monster, it will increase the number of selected mosnters
-        //it will finish selection when the number of selected monsters is equal to this
-        requiredSelections: 0,
-        
-        addSelection: function(idOfSelected, monsters) {
-            
-            //don't allow over selection
-            if(idOfSelected >= monsters.length || this.selectedMonstersIndices.length == this.requiredSelections) {
-                
-                return;
-            }
-            
-            //don't allow duplicate selections
-            for(var index = 0; index < this.selectedMonstersIndices.length; ++index) {
-                
-                if(this.selectedMonstersIndices[index] == idOfSelected) {
-                    
-                    return;
-                }
-            }
-            
-            this.selectedMonstersIndices.push(idOfSelected);
-            this.highlighter.addHighlight(monsters[idOfSelected].sprite);
-        },
-        
-        addCurrentSelection: function(monsters) {
-            
-            this.addSelection(this.currentSelection, monsters);
-        },
-        
-        startSelectionProcess: function(monsters, requiredSelections) {
-            
-            this.clearSelection();
-            this.requiredSelections = Math.min(requiredSelections, monsters.length);
-            this.currentSelection = 0;
-            this.highlighter.showHighlights();
-            this.highlightCurrentSelection(monsters);
-        },
-        
-        selectNext: function(monsters) {
-            
-            this.currentSelection = (this.currentSelection + 1) % monsters.length;
-            this.highlightAllSelections(monsters);
-        },
-        
-        selectPrevious: function(monsters) {
-            
-            this.currentSelection -= 1;
-            
-            if(this.currentSelection < 0) {
-                
-                this.currentSelection = monsters.length - 1;
-            }
-            
-            this.highlightAllSelections(monsters);
-        },
-        
-        isSelectionFinished: function() {
-            
-            return this.selectedMonstersIndices.length === this.requiredSelections;
-        },
-        
-        clearSelection: function() {
-            
-            this.selectedMonstersIndices = [];
-            this.highlighter.clearHighlights();
-        },
-        
-        highlightSelectedMonsters: function(monsters) {
-            
-            for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
-                
-                this.highlighter.addHighlight(monsters[this.selectedMonstersIndices[i]].sprite);
-            }
-        },
-        
-        highlightCurrentSelection: function(monsters) {
-            
-            this.highlighter.addHighlight(monsters[this.currentSelection].sprite);
-        },
-        
-        highlightAllSelections: function(monsters) {
-            
-            this.highlighter.clearHighlights();
-            
-            this.highlightSelectedMonsters(monsters);
-            
-            this.highlightCurrentSelection(monsters);
-        },
-        
-        getSelectedMonsters: function(monsters) {
-            
-            var selected = [];
-            
-            for(var i = 0; i < monsters.length; ++i) {
-                
-                selected.push(monsters[i]);
-            }
-            
-            return selected;
-        },
     },
     
     create: function() {

@@ -160,14 +160,24 @@ function playerAttackEnter() {
     this.showMessage("You Attack!");
     
     //when player finishes his attack animation we will damage the monster
-    player.sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("playerAttackResults"); }, this);
-    player.sprite.animations.play("attack");
+    player.useAttack(createAttack(player, this.monsterSelector.getSelectedMonsters(this.monsters)[0], new basicAttack()) );
+    player.lastUsedAttack.onUse(player);
 };
 
 function playerAttackExit() {
     
-    player.sprite.events.onAnimationComplete.removeAll();
     this.hideMessage();
+};
+
+function playerAttackUpdate() {
+    
+    document.getElementById("additional").innerHTML = player.lastUsedAttack.isFinished;
+    //move onto the next state when the player's last used attack has finished
+    if(player.lastUsedAttack.isFinished) {
+        
+        
+        this.stateManager.changeState("playerAttackResults");
+    }
 };
 
 
@@ -233,21 +243,25 @@ function monsterTurnEnter() {
     
     //randomly determine what the monster should do
     //for now he just attacks
-    this.monsters[this.currentMonster].sprite.events.onAnimationComplete.add(function(){this.stateManager.changeState("monsterAttackResults"); } , this);
-    this.monsters[this.currentMonster].sprite.animations.play("attack");
-    this.monsters[this.currentMonster].useAttack(new basicAttack());
+    var attack = createAttack(this.monsters[this.currentMonster], player, new basicAttack());
+    this.monsters[this.currentMonster].useAttack(attack);
+    this.monsters[this.currentMonster].lastUsedAttack.onUse(this.monsters[this.currentMonster]);
     
     this.showMessage(this.monsters[this.currentMonster].name + " attacks!");
 };
 
 function monsterTurnExit() {
-    
-    if(this.currentMonster < this.monsters.length) {
-        
-        this.monsters[this.currentMonster].sprite.events.onAnimationComplete.removeAll();
-    }
 
     this.hideMessage();
+};
+
+function monsterTurnUpdate() {
+    
+    //move onto the results when this monster's last attack finishes displaying
+    if(this.monsters[this.currentMonster].lastUsedAttack.isFinished) {
+        
+        this.stateManager.changeState("monsterAttackResults");
+    }
 };
 
 function monsterAttackResultsEnter() {

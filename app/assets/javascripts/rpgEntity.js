@@ -19,40 +19,30 @@ function rpgEntity() {
     this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database
     this.shouldDelete = false;
     
-    //last used attack is the attribtues of the attack last used by this entity
-    //this is used to save data about an attack, which is used for damage calculation during the damage calculation state
-    //attack attributes are objects that can be found below
+    //store the last attack used by this entity
+    //this will be an attack object as defined below
+    //this is used to animate attacks after they are used, and for damage calculation
     this.lastUsedAttack = {};
 };
 
-//attack property holds different properties for an attack
-//this is a way to seperate a skill's damage, number of monsters it hits, etc. from the skill animation and such
-//the attack parameter is supposed to be some kind of skill, each skill will keep track of its traits
-//i.e, if you had a magic skill called fireball, it would have the required attack properties
-//the skill object wouldn't store the skill's base attributes (preset values that don't take the user's stats into account)
-//and the attack property stores values after you take into account the user's level, strength, and so on
-//so the user parameter is an rpgEntity object, but for now i'll ignore it
-function attackProperty(attack, user) {
-    
-    this.power = attack.power + user.strength / 2;
-    this.targetsHit = attack.targetsHit;
-    this.manaCost = attack.manaCost;
-};
-
-//attack objects, for now i'll just have a basic attack
-function basicAttack() {
-    
-    this.power = 5;
-    this.targetsHit = 6;
-    this.manaCost = 0;
-};
-
-//use attack simply sets the attributes of the last used attack
-//it doesn't play any animations or anything
-//its up to the application who called this function to play the appropriate animation
+//sets the last used attack to the given attack
+//calculates the power of the attack based on the entities stats
+//and calls the attacks onUse function, with the entity as thea rgument
+//if the attack is setup correctly (using the create attack function) then all the animations should play properly
 rpgEntity.prototype.useAttack = function(attack) {
     
-    this.lastUsedAttack = new attackProperty(attack, this);
+    this.lastUsedAttack = attack;
+    
+    //power of the attack is calculated based on what type of attack it is
+    //physical and magic attacks result in different power calculation
+    if(this.lastUsedAttack.attackType == attackType.PHYSICAL) {
+        
+        this.lastUsedAttack.power = attack.power + this.strength / 2;
+        
+    } else if(this.lastUsedAttack.attackType == attackType.MAGIC) {
+        
+        //this.lastUsedAttack.power = attack.power + this.magicPower / 2;
+    }
 };
 
 rpgEntity.prototype.getHit = function(damageReceived) {
@@ -75,4 +65,165 @@ function startDeathAnimation(dyingEntity) {
     tween.delay(600);
     tween.start();
     dyingEntity.sprite.animations.play("dying");
+};
+
+//creates an attack object given the attack data below
+//this function will set up all the animation call backs for the animation to play
+//user and target are rpg entities
+//all skills should also have a onUse function, that defines what happens whwen it is called
+//this would just put the skill at its starting location, and begin the appropriate animation
+//the on use function will take in the user rpg entity as an argument
+function createAttack(user, target, attackData) {
+    
+    //if the attack doesn't have an animation, no need to create its own animation
+    //instead it uses the user's attack animation, and when the animaton finishes, the attack is finished
+    if(attackData.hasOwnAnimation == false) {
+        
+        user.sprite.animations.getAnimation("attack").onComplete.addOnce(function(){this.isFinished = true;}, attackData);
+        attackData.onUse = function(user){user.sprite.animations.play('attack')};
+        
+        return attackData;
+    }
+    
+    //load spritesheet for animation
+    var sprite = game.add.sprite(0, 0, attackData.spriteKey, 0);
+    
+    //setup the animation
+    var create = sprite.add.animations.add("create", attackData.animations["create"].frames, attackData.animations["create"].speed);
+    var update = sprite.add.animations.add("update", attackData.animations["update"].frames, attackData.animations["update"].speed);
+    var destroy = sprite.add.animations.add("destroy", attackData.animations["destroy"].frames, attackData.animations["destroy"].speed);
+    
+    //setup the animation call backs
+    create.onComplete.addOnce(function(){this.animations.play("update"); }, sprite);
+    update.onComplete.addOnce(function(){this.animations.play("destroy"); }, sprite);
+    destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attackData);
+    
+    attackData.sprite = sprite;
+    
+    //setup the onUse function
+    //attackData.onUse = function(user){user.sprite.animati}
+    
+    //setup the behaviour
+    /*
+    We can worry about this stuff once we have skills
+    if(attackData.behaviour == skillBehaviour.PROJECTILE) {
+        
+        
+    }
+    
+    */
+    
+    return attackData;
+};
+
+//attack type determines what stats to use for damage calculation
+//it also determines which animation frame to use
+//physical attacks have a different animation than magic attacks
+var attackType = {
+    
+    PHYSICAL: 0,
+    MAGIC: 1
+};
+
+/*
+
+all the skills beyond this point should be in a json file
+for now i'll leave it here
+*/
+//attack objects, for now i'll just have a basic attack
+function basicAttack() {
+    
+    this.power = 5;
+    this.targetsHit = 1;
+    this.manaCost = 0;
+    this.hasOwnAnimation = false;//skills that have their own animation require an additional sprite
+    
+    this.attackType = attackType.PHYSICAL;
+    
+    //flag used to check if the skill has finished animating, and we can move from the dispalying attack state to the attack results state
+    this.isFinished = false;
+    
+    //since this skill doesn't have its own animations, we have no reason to define animation data
+    //or how it behaves, since it has no sprite to manipulate
+};
+
+//we need to define how the skill behaves
+//this is so we know when the skill finishes, and how to move it around
+//some skills, like the fireball, should end when they hit their target
+//other skillss might just play an animation and end when the animation finishes, without moving at all
+//maybe they just appear on top of the target
+//so we define a spellBehaviour
+var skillBehaviour = {
+    
+    PROJECTILE: 0,
+    STATIONARY: 1
+};
+
+//simple physical attack that requires a seperate animation
+function slash() {
+    
+    this.power = 10;
+    this.targetsHit = 2;
+    this.manaCost = 4;
+    this.hasOwnAnimation = true;
+    
+    this.attackType = attackType.PHYSICAL;
+    
+    //flag used to check if the skill has finished animating, and we can move from the dispalying attack state to the attack results state
+    this.isFinished = false;
+    
+    //this string defines a key to the phaser resource cache
+    //it refers to a sprite sheet that should be used for this attack
+    this.spriteKey = 'slash';
+    
+    //skill needs its own animation
+    //every skill animation has 3 parts
+    //create is the animation that plays when the spell first starts
+    //a update animation, that plays while the skill is still alive
+    //and a destroy animation, that plays when the spell ends
+    this.animations = {
+        
+        create: {frames: [0, 1, 2, 3, 4, 5], speed: 5},
+        update: {frames: [6, 7, 8, 9, 10], speed: 5},
+        destroy: {frames: [12, 13, 14, 15, 16], speed: 5}
+    };
+    
+    //finally we need to define how the spell behaves
+    //this is so we know when the spell finishes
+    //some spells, like the fireball, should end when they hit their target
+    //other spells might just play an animation and end when the animation finishes
+    //so we define a spellType
+    this.behaviour = skillBehaviour.STATIONARY;
+};
+
+//simple magic attaack, that is not goign to be put into the game.
+//i have this here to show what properties a magic attack should have
+function fireball() {
+    
+    this.power = 10;
+    this.targetsHit = 2;
+    this.manaCost = 3;
+    this.hasOwnAnimation = true;
+    
+    this.attackType = attackType.MAGIC;
+    
+    this.isFinished = false;
+    
+    //this string defines a key to the phaser resource cache
+    //it refers to a sprite sheet that should be used for this attack
+    this.spriteKey = 'fireball';
+    
+    //skill needs its own animation
+    //every skill animation has 3 parts
+    //create is the animation that plays when the spell first starts
+    //a update animation, that plays while the skill is still alive
+    //and a destroy animation, that plays when the spell ends
+    this.animations = {
+        
+        create: {frames: [0, 1, 2, 3, 4, 5], speed: 5},
+        update: {frames: [6, 7, 8, 9, 10], speed: 5},
+        destroy: {frames: [12, 13, 14, 15, 16], speed: 5}
+    };
+    
+    this.behaviour = skillBehaviour.PROJECTILE;
 };
