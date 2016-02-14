@@ -10,10 +10,12 @@
 $gray-medium-light: #eaeaea;
 
 /* Universal */
+
 a {
   text-align: center;
 }
 
+// Place padding for the header to go in.
 body {
   padding-top: 100px;
 }
@@ -32,6 +34,36 @@ textarea {
     margin-bottom: 10px;
   }
 }
+
+/* Typography */
+// This will apply to all headers and paragraphs.
+// We can decide on whether we should use this or not.
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3em;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: $gray-light;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
+}
+
 
 /* Header*/
 // We can delete this part if we're going to use a picture or something
