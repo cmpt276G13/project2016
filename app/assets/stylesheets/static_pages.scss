@@ -28,3 +28,21 @@ textarea {
     margin-bottom: 10px;
   }
 }
+
+/* Header*/
+// We can delete this part if we're going to use a picture or something
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: white;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+}
