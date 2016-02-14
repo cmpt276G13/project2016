@@ -5,6 +5,10 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+// We can decide on the colours later, just use this for a template.
+
+$gray-medium-light: #eaeaea;
+
 /* Universal */
 a {
   text-align: center;
@@ -44,5 +48,33 @@ textarea {
   &:hover {
     color: white;
     text-decoration: none;
+  }
+}
+
+/* Footer */
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid $gray-medium-light;
+  color: $gray-light;
+  a {
+    color: $gray;
+    &:hover {
+      color: $gray-darker;
+    }
+  }
+
+  small {
+    float: left;
+  }
+
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 15px;
+    }
   }
 }
