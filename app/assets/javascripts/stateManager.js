@@ -74,6 +74,14 @@ stateManager.prototype.onUpdate = function() {
     }
 };
 
+stateManager.prototype.onKeystates = function() {
+    
+    if(typeof this.states[this.currentState].onKeystates !== "undefined") {
+        
+        this.states[this.currentState].onKeystates.func.call(this.states[this.currentState].onKeystates.context);
+    }
+};
+
 stateManager.prototype.onKeyDown = function(key) {
     
     if(typeof this.states[this.currentState].onKeyDown !== "undefined") {
