@@ -129,12 +129,12 @@ function playerSelectTargetExit() {
 
 function playerSelectTargetKeyDown(key) {
     
-    if(key.keyCode == Phaser.Keyboard.UP) {
+    if(key.keyCode == Phaser.Keyboard.UP || key.keyCode == Phaser.Keyboard.LEFT) {
         
         this.monsterSelector.selectPrevious(this.monsters);
     }
     
-    if(key.keyCode == Phaser.Keyboard.DOWN) {
+    if(key.keyCode == Phaser.Keyboard.DOWN || key.keyCode == Phaser.Keyboard.RIGHT) {
         
         this.monsterSelector.selectNext(this.monsters);
     }
