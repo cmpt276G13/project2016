@@ -129,14 +129,24 @@ function playerSelectTargetExit() {
 
 function playerSelectTargetKeyDown(key) {
     
-    if(key.keyCode == Phaser.Keyboard.UP || key.keyCode == Phaser.Keyboard.LEFT) {
+    if(key.keyCode == Phaser.Keyboard.UP) {
         
-        this.monsterSelector.selectPrevious(this.monsters);
+        this.monsterSelector.selectPrevious(this.monsters, 1);
     }
     
-    if(key.keyCode == Phaser.Keyboard.DOWN || key.keyCode == Phaser.Keyboard.RIGHT) {
+    if(key.keyCode == Phaser.Keyboard.DOWN) {
         
-        this.monsterSelector.selectNext(this.monsters);
+        this.monsterSelector.selectNext(this.monsters, 1);
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.LEFT) {
+        
+        this.monsterSelector.selectPrevious(this.monsters, 2);
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.RIGHT) {
+        
+        this.monsterSelector.selectNext(this.monsters, 2);
     }
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {

@@ -34,7 +34,6 @@ var overworldState = {
                 onUpdate: exploreUpdate
             }
         }
-        
     ],
     
     generateTilemap: function() {
@@ -136,7 +135,7 @@ var overworldState = {
         
         //next handle all the game's inputs
         //start with keystate inputs, explained in the keystate function
-        //we don't have to worry about button press events since we created listener for those events
+        //we don't have to worry about button press events since we created a listener for those events
         //but we can't create a listener for state events
         this.stateManager.onKeystates();
     },

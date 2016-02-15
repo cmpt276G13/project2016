@@ -26,9 +26,8 @@ function rpgEntity() {
 };
 
 //sets the last used attack to the given attack
+//The attack should be created with createAttack()
 //calculates the power of the attack based on the entities stats
-//and calls the attacks onUse function, with the entity as thea rgument
-//if the attack is setup correctly (using the create attack function) then all the animations should play properly
 rpgEntity.prototype.useAttack = function(attack) {
     
     this.lastUsedAttack = attack;
@@ -134,7 +133,7 @@ for now i'll leave it here
 function basicAttack() {
     
     this.power = 5;
-    this.targetsHit = 1;
+    this.targetsHit = 5;
     this.manaCost = 0;
     this.hasOwnAnimation = false;//skills that have their own animation require an additional sprite
     
