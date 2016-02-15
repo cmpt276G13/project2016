@@ -214,6 +214,21 @@ var battleState = {
         },
     },
     
+    //rewards received by the player when he kills an enemy
+    //awarded at the end of the battle state (in the victory sub state)
+    rewards: {
+        
+        experience: 0,
+        gold: 0,
+        
+        //if we want monsters to give items when thjey die, then we can add all items to this array
+        items: [],
+        
+        //same for new skills
+        //add a key to the skills object
+        skills: [/*add skill keys, ex: 'fireball'  */]
+    },
+    
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         

@@ -233,6 +233,7 @@ function cullDeadMonstersExit() {
 
 function cullDeadMonstersUpdate() {
     
+    //before deleting dead entites store the rewards the monsters give to the player
     var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
             
     if(removedAllMarkedEntites && this.monsters.length == 0) {
