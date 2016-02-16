@@ -389,7 +389,7 @@ var battleState = {
         rewardsText += "Gained " + this.rewards.gold + " Gold\n";
         
         this.rewardsTextbox.setText(rewardsText);
-        this.rewardsTextbox.text.fontSize = 18;
+        this.rewardsTextbox.text.fontSize = 20;
         this.rewardsTextbox.text.y = 0;
         this.rewardsTextbox.text.anchor.y = 0;
     },

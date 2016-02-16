@@ -46,7 +46,8 @@ function textBox(x, y, width, height, centerToPoint) {
     
     //text to display
     this.text = game.add.text(0, 0, "Message");
-    this.text.x = this.background.width / 2;
+    this.text.fontSize = 22;
+    this.text.x = this.background.width / 2 - 6;
     this.text.y = this.background.height / 2;
     this.text.anchor.x = 0.5;
     this.text.anchor.y = 0.5;
