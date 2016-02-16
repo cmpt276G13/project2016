@@ -2,15 +2,19 @@
 //this is just the background that text will be displayed on
 function createTextboxBackground(x, y, width, height, centerToPoint) {
     
-    var posX = x;
-    var posY = y;
+    var lineThickness = 3;
     
-        
+    var posX = x + lineThickness * 3;
+    width -= lineThickness * 6;
+    
+    var posY = y - lineThickness * 3;
+    
     if(centerToPoint) {
         
         posX -= width / 2;
         posY -= height / 2;
     }
+    
     var box = game.add.graphics(posX, posY);
     
     //first create the colored rectangle
@@ -19,15 +23,14 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     box.beginFill(fillColor, 0.4);
     
     //now create a border around it to make it look nice
-    var lineThickness = 3;
     var lineColor = 0x888888;
     
     box.lineStyle(lineThickness, lineColor, 0.8);
     box.x = posX + lineThickness / 2;
-    box.lineTo(width - lineThickness, 0);
-    box.lineTo(width - lineThickness, height - lineThickness);
-    box.lineTo(0, height - lineThickness);
-    box.lineTo(0, 0);
+    box.quadraticCurveTo(width / 2, -lineThickness * 5, width - lineThickness, 0);
+    box.quadraticCurveTo(width + lineThickness * 5, height / 2, width - lineThickness, height - lineThickness);
+    box.quadraticCurveTo(width / 2, height + lineThickness * 5, 0, height - lineThickness);
+    box.quadraticCurveTo(-lineThickness * 5, height / 2, 0, 0);
     box.endFill();
     
     return box;
