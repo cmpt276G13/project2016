@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'game' => 'games#index'
   get 'about' => 'static_pages#about'
   get 'signup' => 'users#new'
+  resources :users
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
