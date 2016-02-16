@@ -147,5 +147,5 @@ var overworldState = {
     shutdown: function() {
         
         game.world.remove(player.sprite);
-    },
+    }
 };

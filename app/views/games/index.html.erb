@@ -35,19 +35,25 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
 <div id="Game" style="padding: 10px;">
     
-    <%= javascript_include_tag "bootState"%>
-    <%= javascript_include_tag "overworldState"%>
-    <%= javascript_include_tag "battleState" %>
     <%= javascript_include_tag "rpgEntity" %>
     <%= javascript_include_tag "stateManager" %>
     <%= javascript_include_tag "objectHighlighter" %>
     <%= javascript_include_tag "textbox" %>
     <%= javascript_include_tag "actionDisplay" %>
-    <%= javascript_include_tag "battleSubstateFunctions"%>
+    <%= javascript_include_tag "bootState"%>
     <%= javascript_include_tag "overworldSubstateFunctions" %>
+    <%= javascript_include_tag "overworldState"%>
+    <%= javascript_include_tag "battleSubstateFunctions"%>
+    <%= javascript_include_tag "battleState" %>
         
     <script>
-        
+    
+        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
+        if(typeof overworldState === "undefined") {
+            
+            location.reload();
+        };
+    
         /*
         
         Before you start wokring on the game, please make sure you understand how to make a game using phaser (basic knowledge).
@@ -195,8 +201,10 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');
-            },
+            }
         };
+        
+        document.getElementById("additional").innerHTML = typeof overworldState;
         
         //register all of the gameplay states
         game.state.add('boot', bootState);
@@ -206,6 +214,6 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
         
         //now run the boot state, which will call load and overworld as needed
         game.state.start('boot');
-        
+
     </script>
 </div>
