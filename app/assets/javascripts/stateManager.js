@@ -39,7 +39,7 @@ stateManager.prototype.exitAll = function() {
     
     for(current in this.states) {
         
-        if(typeof this.states[current] !== "undefined") {
+        if(typeof this.states[current].onExit !== "undefined") {
             
             this.states[current].onExit.func.call(this.states[current].onExit.context);
         }

@@ -90,6 +90,13 @@ var battleState = {
                 onExit: monsterAttackResultsExit,
                 onUpdate: monsterAttackResultsUpdate
             }
+        },
+        
+        {name: "victory",
+            functions: {
+                
+                onEnter: victoryEnter   
+            }
         }
         
     ],
@@ -246,7 +253,6 @@ var battleState = {
         //determine how many monsters we should spawn
         var monstersToSpawn = getRandomInt(1, 3);
         var monsters = [];
-        document.getElementById("additional").innerHTML = monstersToSpawn;
         
         for(var i = 0; i < monstersToSpawn; ++i) {
             
@@ -263,7 +269,6 @@ var battleState = {
             $.extend(monster, monsterDatabase[monsterName]);
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
-            document.getElementById("additional").innerHTML = num;
             
             //position the monster somewhere
             monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
@@ -498,7 +503,7 @@ var battleState = {
         
         //we need a way to give messages to the player
         //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-        this.messageBox = new textBox(0, 0, game.scale.width, 50);
+        this.messageBox = new textBox(0, 0, game.scale.width, 50, false);
         
         //this contains text that will display the amount of damage an monster or player received after an attack
         //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted
@@ -509,7 +514,7 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("victory");
     },
     
     update: function() {
