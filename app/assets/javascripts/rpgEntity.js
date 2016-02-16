@@ -13,7 +13,7 @@ function rpgEntity() {
     
     //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
     this.health = 20;
-    this.strength = 10;
+    this.strength = 100;
     this.defense = 10;
     this.level = 1;
     this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database

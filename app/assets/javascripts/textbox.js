@@ -5,9 +5,9 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     var lineThickness = 3;
     
     var posX = x + lineThickness * 3;
-    width -= lineThickness * 6;
+    width -= lineThickness * 6.2;
     
-    var posY = y - lineThickness * 3;
+    var posY = y - lineThickness * 3.5;
     
     if(centerToPoint) {
         

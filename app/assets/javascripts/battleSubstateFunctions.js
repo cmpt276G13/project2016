@@ -240,7 +240,7 @@ function cullDeadMonstersUpdate() {
     if(removedAllMarkedEntites && this.monsters.length == 0) {
         
         //go to victory
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("victory");
     }
     
     if(removedAllMarkedEntites && this.monsters.length > 0) {
@@ -313,12 +313,16 @@ function victoryEnter() {
     
     //player won a match, create a message box at the center of the screen
     //show player all the rewards he received
-    this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 3, true);
-    var rewardsText = "You've gained\n\n";
-    rewardsText += "Experience: " + this.rewards.experience + "\n";
-    rewardsText += "Gold: " + this.rewards.gold + "\n";
+    this.createRewardsText();
     
-    this.rewardsTextbox.setText(rewardsText);
-    this.rewardsTextbox.text.y = 0;
-    this.rewardsTextbox.text.anchor.y = 0;
+    this.applyRewardsToPlayer();
 };
+
+function victoryKeyDown(key) {
+    
+    //execute the action the user has chosen
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        game.state.start('overworld');
+    }
+}

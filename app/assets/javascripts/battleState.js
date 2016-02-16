@@ -95,7 +95,8 @@ var battleState = {
         {name: "victory",
             functions: {
                 
-                onEnter: victoryEnter   
+                onEnter: victoryEnter,
+                onKeyDown: victoryKeyDown
             }
         }
         
@@ -381,6 +382,18 @@ var battleState = {
         this.damageTexts = [];
     },
     
+    createRewardsText: function() {
+        
+        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
+        var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
+        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        
+        this.rewardsTextbox.setText(rewardsText);
+        this.rewardsTextbox.text.fontSize = 18;
+        this.rewardsTextbox.text.y = 0;
+        this.rewardsTextbox.text.anchor.y = 0;
+    },
+    
     //checks if all of the attack results texts have finished their tweening
     finishedDisplayingResults: function() {
         
@@ -429,6 +442,12 @@ var battleState = {
             this.rewards.items.concat(this.monsters[i].rewards.items);
             this.rewards.skills.concat(this.monsters[i].rewards.experience);
         }
+    },
+    
+    applyRewardsToPlayer: function() {
+        
+        player.gold += this.rewards.gold;
+        player.experience += this.rewards.experience;
     },
     
     //deletes all entities marked for deletion
@@ -514,7 +533,7 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("victory");
+        this.stateManager.changeState("selectMainAction");
     },
     
     update: function() {
