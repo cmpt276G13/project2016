@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   before_save {
-    #Ensures entries are unique in the database
-    self.username = username.downcase,
-    self.email = email.downcase
+    # Ensures entries are unique in the database
+    username.downcase!
+    email.downcase!
   }
   validates :username, presence: true, length: {maximum: 50},
             uniqueness: {case_sensitive: false}
