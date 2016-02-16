@@ -83,7 +83,11 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
-        var player = new rpgEntity();//{
+        var player = new rpgEntity();
+        player.gold = 0;
+        player.experience = 0;
+        player.items = [];
+        player.skills = [];//{
             
             //players will have various stats, these will be loaded from the rails data base
             //for now all we have is the player's sprite, which is a phaser game object that handles drawing/movement, and other great stuff

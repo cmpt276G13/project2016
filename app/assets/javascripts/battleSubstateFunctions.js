@@ -224,6 +224,7 @@ function playerAttackResultsUpdate() {
 function cullDeadMonstersEnter() {
     
     this.startMonsterDeathAnimation();
+    this.storePlayerRewards();
 };
 
 function cullDeadMonstersExit() {

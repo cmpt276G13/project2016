@@ -409,6 +409,23 @@ var battleState = {
         }
     },
     
+    //finds all dead enemies and stores their rewards so we can give it to the player later
+   storePlayerRewards: function() {
+        
+        for(var i = 0; i < this.monsters.length; i++) {
+            
+            if(this.monsters[i].health != 0) {
+                
+                continue;
+            }
+            
+            this.rewards.experience += this.monsters[i].rewards.experience;
+            this.rewards.gold += this.monsters[i].rewards.gold;
+            this.rewards.items.concat(this.monsters[i].rewards.items);
+            this.rewards.skills.concat(this.monsters[i].rewards.experience);
+        }
+    },
+    
     //deletes all entities marked for deletion
     //returns true if all dead entities have been deleted
     //false if there are entities that are still animating, and need to be deleted later
