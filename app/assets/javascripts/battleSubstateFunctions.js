@@ -344,12 +344,27 @@ function defeatEnter() {
     var tween = game.add.tween(this.blackCover.graphics);
     tween.to({alpha: 1});
     
+    //add message to display when screen fades to black
+    //can't use the message box because the black screen draws ontop of it, since it was created after the message box
+    this.deathMessage = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, 30, true);
+    this.deathMessage.hide();
+    this.deathMessage.text.y = this.deathMessage.text.y - 5;
+    this.deathMessage.setText("You have died.");
+    
     //after screen is black we want to indicate that we are ready to exit battle
-    tween.onComplete.add(function(){this.blackCover.finishedTransition = true}, this);
+    tween.onComplete.add(function(){this.blackCover.finishedTransition = true; this.deathMessage.show();}, this);
     tween.start();
 }
 
 function defeatExit() {
     
     
+}
+
+function defeatUpdate() {
+    
+    if(this.blackCover.finishedTransition) {
+        
+        game.state.start('overworld');
+    }
 }
