@@ -4,6 +4,7 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     
     var lineThickness = 3;
     
+    //small hack to get the allignment right, since drawing a curved textbox increases textbox size
     var posX = x + lineThickness * 3;
     width -= lineThickness * 6.2;
     
@@ -48,7 +49,7 @@ function textBox(x, y, width, height, centerToPoint) {
     this.text = game.add.text(0, 0, "Message");
     this.text.fontSize = 22;
     this.text.x = this.background.width / 2 - 6;
-    this.text.y = this.background.height / 2;
+    this.text.y = this.background.height / 2 - this.text.fontSize / 4;
     this.text.anchor.x = 0.5;
     this.text.anchor.y = 0.5;
     this.text.fill = 'white';
