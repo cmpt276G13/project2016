@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   get 'game' => 'games#index'
   get 'about' => 'static_pages#about'
   get 'signup' => 'users#new'
+  get    'login'   => 'sessions#new'
+  post   'login'   => 'sessions#create'
+  delete 'logout'  => 'sessions#destroy'
   resources :users
 
   # Example of regular route:
