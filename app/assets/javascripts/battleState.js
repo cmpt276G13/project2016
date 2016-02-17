@@ -104,7 +104,8 @@ var battleState = {
             functions: {
                 
                 onEnter: defeatEnter,
-                onExit: defeatExit
+                onExit: defeatExit,
+                onKeyDown: defeatKeyDown
             }
         }
         
@@ -541,7 +542,7 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("defeat");
+        this.stateManager.changeState("selectMainAction");
     },
     
     update: function() {

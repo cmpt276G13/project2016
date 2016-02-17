@@ -296,6 +296,13 @@ function monsterAttackResultsUpdate() {
         return;
     }
     
+    //if player died, move to defeat
+    if(player.health == 0) {
+        
+        this.stateManager.changeState("defeat");
+        return;
+    }
+    
     this.currentMonster += 1;
     
     //no more monsters, move back to player's turn
@@ -361,9 +368,9 @@ function defeatExit() {
     
 }
 
-function defeatUpdate() {
+function defeatKeyDown(key) {
     
-    if(this.blackCover.finishedTransition) {
+    if(this.blackCover.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
         
         game.state.start('overworld');
     }
