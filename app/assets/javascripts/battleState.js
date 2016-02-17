@@ -98,6 +98,14 @@ var battleState = {
                 onEnter: victoryEnter,
                 onKeyDown: victoryKeyDown
             }
+        },
+        
+        {name: "defeat",
+            functions: {
+                
+                onEnter: defeatEnter,
+                onExit: defeatExit
+            }
         }
         
     ],
