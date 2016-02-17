@@ -10,7 +10,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      
+      flash[:success] = "Welcome to the GeoHunter!"
+      redirect_to @user # Change this if we want to redirect to a tutorial
     else
       render 'new'
     end
@@ -19,7 +20,7 @@ class UsersController < ApplicationController
   private
   
     def user_params
-      params.require(:user).permit(:name, :email, :password,
+      params.require(:user).permit(:username, :email, :password,
                                     :password_confirmation)
     end
 end
