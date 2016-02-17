@@ -541,7 +541,7 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("defeat");
     },
     
     update: function() {

@@ -326,3 +326,30 @@ function victoryKeyDown(key) {
         game.state.start('overworld');
     }
 }
+
+function defeatEnter() {
+    
+    //create a sprite that covers the whole screen, and will go from 0 transparency to 100% transparency
+    //this will act as a fade to black effect
+    this.blackCover = {};
+    this.blackCover.graphics = game.add.graphics(0, 0);
+    this.blackCover.graphics.beginFill(0x000000, 1);
+    this.blackCover.graphics.drawRect(0, 0, game.scale.width, game.scale.height);
+    this.blackCover.graphics.endFill();
+    this.blackCover.graphics.alpha = 0;
+    this.blackCover.finishedTransition = false;
+    
+    
+    //now add a transition from 0 transparency to full
+    var tween = game.add.tween(this.blackCover.graphics);
+    tween.to({alpha: 1});
+    
+    //after screen is black we want to indicate that we are ready to exit battle
+    tween.onComplete.add(function(){this.blackCover.finishedTransition = true}, this);
+    tween.start();
+}
+
+function defeatExit() {
+    
+    
+}
