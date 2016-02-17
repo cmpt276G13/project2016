@@ -89,6 +89,14 @@ var overworldState = {
         //first we will create the tile map
         this.generateTilemap();
         
+        
+        //now we would load the objects in this map
+        //objects are the dynamic parts of the map
+        //also stuff that can't be tiles
+        //like a spawn point
+        //which i'll set manually since i didn't put one in the map
+        this.spawnPoint = {x: 0, y: 0};
+        
         //now we create the player
         //we already created a player sprite, but we told phaser not to draw him
         //we need to add him back to the game world for drawing
@@ -96,6 +104,7 @@ var overworldState = {
         
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
+        
         
         //this function makes phaser use arrow keys for movement
         //it creates a collection of keys that you can poll for events (look at update function for polling code)

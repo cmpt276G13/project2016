@@ -349,7 +349,7 @@ function defeatEnter() {
     
     //now add a transition from 0 transparency to full
     var tween = game.add.tween(this.blackCover.graphics);
-    tween.to({alpha: 1});
+    tween.to({alpha: 1}, 700);
     
     //add message to display when screen fades to black
     //can't use the message box because the black screen draws ontop of it, since it was created after the message box
@@ -365,13 +365,16 @@ function defeatEnter() {
 
 function defeatExit() {
     
-    
 }
 
 function defeatKeyDown(key) {
     
     if(this.blackCover.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
         
-        game.state.start('overworld');
+        //now make the deathmessage fade to black, and then go back to the overworld
+        var tween = game.add.tween(this.deathMessage.background);
+        tween.to({alpha: 0}, 300);
+        tween.onComplete.add(function(){game.state.start('overworld');}, this);
+        tween.start();
     }
 }
