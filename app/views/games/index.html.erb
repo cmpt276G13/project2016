@@ -35,6 +35,9 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
 <div id="Game" style="padding: 10px;">
     
+    <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
+        to be available in every single page of our application.-->
+    <%= javascript_include_tag "screenTransitionEffects"%>
     <%= javascript_include_tag "rpgEntity" %>
     <%= javascript_include_tag "stateManager" %>
     <%= javascript_include_tag "objectHighlighter" %>
@@ -45,7 +48,7 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
     <%= javascript_include_tag "overworldState"%>
     <%= javascript_include_tag "battleSubstateFunctions"%>
     <%= javascript_include_tag "battleState" %>
-        
+    
     <script>
     
         //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen

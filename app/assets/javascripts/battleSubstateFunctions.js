@@ -336,20 +336,8 @@ function victoryKeyDown(key) {
 
 function defeatEnter() {
     
-    //create a sprite that covers the whole screen, and will go from 0 transparency to 100% transparency
-    //this will act as a fade to black effect
-    this.blackCover = {};
-    this.blackCover.graphics = game.add.graphics(0, 0);
-    this.blackCover.graphics.beginFill(0x000000, 1);
-    this.blackCover.graphics.drawRect(0, 0, game.scale.width, game.scale.height);
-    this.blackCover.graphics.endFill();
-    this.blackCover.graphics.alpha = 0;
-    this.blackCover.finishedTransition = false;
-    
-    
-    //now add a transition from 0 transparency to full
-    var tween = game.add.tween(this.blackCover.graphics);
-    tween.to({alpha: 1}, 700);
+    //create a transition so we fade to a black screen
+    this.fadeToBlack = new fadeToBlack(700);
     
     //add message to display when screen fades to black
     //can't use the message box because the black screen draws ontop of it, since it was created after the message box
@@ -358,9 +346,8 @@ function defeatEnter() {
     this.deathMessage.text.y = this.deathMessage.text.y - 5;
     this.deathMessage.setText("You have died.");
     
-    //after screen is black we want to indicate that we are ready to exit battle
-    tween.onComplete.add(function(){this.blackCover.finishedTransition = true; this.deathMessage.show();}, this);
-    tween.start();
+    this.fadeToBlack.setOnExit(function(){this.fadeToBlack.finishedTransition = true; this.deathMessage.show();}, this);
+    this.fadeToBlack.start();
 }
 
 function defeatExit() {
@@ -369,7 +356,7 @@ function defeatExit() {
 
 function defeatKeyDown(key) {
     
-    if(this.blackCover.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
+    if(this.fadeToBlack.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
         
         //now make the deathmessage fade to black, and then go back to the overworld
         var tween = game.add.tween(this.deathMessage.background);

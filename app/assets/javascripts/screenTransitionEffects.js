@@ -7,12 +7,13 @@ function cover(color) {
     
     this.graphics = game.add.graphics(0, 0);
     this.graphics.beginFill(color);
-    this.blackCover.graphics.drawRect(0, 0, game.scale.width, game.scale.height);
-    this.blackCover.graphics.endFill();
+    this.graphics.drawRect(0, 0, game.scale.width, game.scale.height);
+    this.graphics.endFill();
 };
 
 //effect that makes the screen slowly fade to black
 //duration specifies how long the fade should last, in milliseconds
+//actual effect doesn't start until you call the start button
 function fadeToBlack(duration) {
     
     this.cover = new cover(0x000000);
@@ -24,13 +25,13 @@ function fadeToBlack(duration) {
 
 //set a function to call when the fade effect finishes
 //you can give a function and a context to call the function in
-fadeToBlack.prototype.setOnExit(func, context) {
+fadeToBlack.prototype.setOnExit = function(func, context) {
     
     this.tween.onComplete.add(func, context);
 }
 
 //begin the fade
-fadeToBlack.prototype.start() {
+fadeToBlack.prototype.start = function() {
     
     this.tween.start();
 }
