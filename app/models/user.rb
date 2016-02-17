@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :remember_token
-  has_one :player
+  has_one :player # Relations to players table
   
   before_save {
     # Ensures entries are unique in the database.
