@@ -54,7 +54,7 @@ module SessionsHelper
   def get_user_location
     # http://www.rubydoc.info/gems/geo_ip
     #return: hash w/ location info
-    user_location = GeoIp.geolocation(request.remote_ip)
+    GeoIp.geolocation(request.remote_ip)
     #@latitude = @user_location[:latitude]
     #@longitude = @user_location[:longitude]
   end
@@ -68,5 +68,14 @@ module SessionsHelper
   # Stores the URL trying to be accessed.
   def store_location
     session[:forwarding_url] = request.url if request.get?
+  end
+  
+  # Confirms a logged-in user. For controllers to determine if logged_in
+  def logged_in_user
+    unless logged_in?
+      store_location
+      flash[:danger] = "Please log in."
+      redirect_to login_url
+    end
   end
 end

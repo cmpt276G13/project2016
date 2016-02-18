@@ -14,8 +14,9 @@ class SessionsController < ApplicationController
       render 'new'
     end
     
-      #@user_location <- u_l[:ip], [:country_name], [:city], [:latitude], [:longitude]
-      @user_location = get_user_location
+    # Not needed because we should only grab location in the hub page.
+    #@user_location <- u_l[:ip], [:country_name], [:city], [:latitude], [:longitude]
+    #@user_location = get_user_location
   end
 
   def destroy
