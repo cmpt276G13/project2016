@@ -47,7 +47,7 @@ rpgEntity.prototype.useAttack = function(attack) {
 
 rpgEntity.prototype.getHit = function(damageReceived) {
     
-    this.health = clamp(this.health - damageReceived, 0, this.health);
+    this.health = clamp(this.health - damageReceived, 0, this.maxHealth);
 };
 
 function markForDeletion() {

@@ -334,6 +334,7 @@ var battleState = {
         };
         
         statContainer.playerHealthBar = new HealthBar(game, barStyle);
+        statContainer.playerHealthBar.setValue(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
 
         return statContainer;
@@ -510,6 +511,10 @@ var battleState = {
         while(player.experience > player.experienceToNextLevel) {
             
             player.levelUp();
+            
+            //start the level up effect, for now just display a message
+            this.showMessage("You have leveled up!");
+            this.playerStatDisplay.playerHealthBar.setValueNoTransition(player.health);
         }
     },
     

@@ -111,7 +111,7 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
             //normally we'd give the player some stat points that he can use
             //for now just raise his stats
             this.maxHealth += 20;
-            this.currentHealth = this.maxHealth;
+            this.health = this.maxHealth;
             this.strength += 5;
             this.defense += 5;
             this.experience -= this.experienceToNextLevel;
