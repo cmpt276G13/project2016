@@ -1,6 +1,12 @@
+<!-- Using gmaps4rails for the map, geo_ip for user_location -->
+<center>
+<h1><strong>You Are In: </strong> <%= @user_location[:country_name] %></h1>
+
+
 <div style='width: 800px;'>
   <div id="geolocation" style='width: 800px; height: 400px;'></div>
 </div>
+</center>
 
 <script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script> 
 <script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
