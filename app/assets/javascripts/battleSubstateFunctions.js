@@ -296,9 +296,10 @@ function monsterAttackResultsUpdate() {
         return;
     }
     
-    //if player died, move to defeat
+    //if player died, move to player death animation
     if(player.health == 0) {
         
+        //for now move straight to defeat screen
         this.stateManager.changeState("defeat");
         return;
     }

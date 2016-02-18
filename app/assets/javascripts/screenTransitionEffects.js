@@ -21,6 +21,7 @@ function fadeToBlack(duration) {
     
     this.tween = game.add.tween(this.cover.graphics);
     this.tween.to({alpha: 1}, duration);
+    this.finishedTransition = false;
 };
 
 //set a function to call when the fade effect finishes
@@ -32,6 +33,32 @@ fadeToBlack.prototype.setOnExit = function(func, context) {
 
 //begin the fade
 fadeToBlack.prototype.start = function() {
+    
+    this.tween.start();
+}
+
+//createes a black screen that fades away
+//opposite of fadeToBlack
+function fadeFromBlack(duration) {
+    
+    this.cover = new cover(0x000000);
+    this.cover.graphics.alpha = 1;
+    
+    this.tween = game.add.tween(this.cover.graphics);
+    this.tween.to({alpha: 0}, duration);
+    
+    this.finishedTransition = false;
+}
+
+//set a function to call when the fade effect finishes
+//you can give a function and a context to call the function in
+fadeFromBlack.prototype.setOnExit = function(func, context) {
+    
+    this.tween.onComplete.add(func, context);
+}
+
+//begin the fade
+fadeFromBlack.prototype.start = function() {
     
     this.tween.start();
 }

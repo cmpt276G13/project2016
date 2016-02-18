@@ -33,6 +33,24 @@ var overworldState = {
                 onKeystates: exploreKeystates,
                 onUpdate: exploreUpdate
             }
+        },
+        
+        //there are 3 ways to enter the overworld state.
+        //when the player first starts the game
+        //when the player dies in battle
+        //when the player wins a battle
+        //they are different in the following ways:
+        //starting game for the first time should do a slow fade, and maybe some other effect
+        //exiting battle should be a quick fade with no other effect
+        //respawning after dying in battle should be similar to starting the game,
+        //except you need to show an effect to indicate the player respawned
+        {name: "startGame",
+            functions: {
+                
+                onEnter: startGameEnter,
+                onExit: startGameExit,
+                onUpdate: startGameUpdate
+            }
         }
     ],
     
@@ -126,7 +144,7 @@ var overworldState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("explore");
+        this.stateManager.changeState("startGame");
     },
     
     //function that we will send to phaser to handle key press events
