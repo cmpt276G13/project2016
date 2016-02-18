@@ -1,5 +1,7 @@
 class SessionsController < ApplicationController
   def new
+    #returns all details including ip, country, city, lat, long
+    @info = GeoIp.geolocation(request.remote_ip)
   end
 
   def create
