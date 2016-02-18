@@ -13,6 +13,9 @@ class SessionsController < ApplicationController
       flash.now[:danger] = 'Invalid username/password combination'
       render 'new'
     end
+    
+      #@user_location <- u_l[:ip], [:country_name], [:city], [:latitude], [:longitude]
+      @user_location = get_user_location
   end
 
   def destroy

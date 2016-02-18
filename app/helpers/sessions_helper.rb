@@ -48,8 +48,9 @@ module SessionsHelper
   # :ip, :country_name, :city, :latitude, :longitude, etc.
   def get_user_location
     # http://www.rubydoc.info/gems/geo_ip
-    @user_location = GeoIp.geolocation(request.remote_ip)
-    @latitude = @user_location[:latitude]
-    @longitude = @user_location[:longitude]
+    #return: hash w/ location info
+    user_location = GeoIp.geolocation(request.remote_ip)
+    #@latitude = @user_location[:latitude]
+    #@longitude = @user_location[:longitude]
   end
 end
