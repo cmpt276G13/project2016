@@ -12,7 +12,8 @@ function determineDamage(attackPower, defenderDefense) {
 function rpgEntity() {
     
     //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
-    this.health = 20;
+    this.maxHealth = 25;
+    this.health = 25;
     this.strength = 10;
     this.defense = 10;
     this.level = 1;
@@ -46,7 +47,7 @@ rpgEntity.prototype.useAttack = function(attack) {
 
 rpgEntity.prototype.getHit = function(damageReceived) {
     
-    this.health = clamp(this.health - damageReceived, 0, this.health);
+    this.health = clamp(this.health - damageReceived, 0, this.maxHealth);
 };
 
 function markForDeletion() {

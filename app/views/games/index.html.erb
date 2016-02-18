@@ -4,19 +4,28 @@
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
 <div id="Game" style="padding: 10px;">
     
-    <%= javascript_include_tag "bootState"%>
-    <%= javascript_include_tag "overworldState"%>
-    <%= javascript_include_tag "battleState" %>
+    <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
+        to be available in every single page of our application.-->
+    <%= javascript_include_tag "screenTransitionEffects"%>
     <%= javascript_include_tag "rpgEntity" %>
     <%= javascript_include_tag "stateManager" %>
     <%= javascript_include_tag "objectHighlighter" %>
     <%= javascript_include_tag "textbox" %>
     <%= javascript_include_tag "actionDisplay" %>
-    <%= javascript_include_tag "battleSubstateFunctions"%>
+    <%= javascript_include_tag "bootState"%>
     <%= javascript_include_tag "overworldSubstateFunctions" %>
-        
+    <%= javascript_include_tag "overworldState"%>
+    <%= javascript_include_tag "battleSubstateFunctions"%>
+    <%= javascript_include_tag "battleState" %>
+    
     <script>
-        
+    
+        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
+        if(typeof overworldState === "undefined") {
+            
+            location.reload();
+        };
+    
         /*
         
         Before you start wokring on the game, please make sure you understand how to make a game using phaser (basic knowledge).
@@ -46,7 +55,43 @@
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
-        var player = new rpgEntity();//{
+        var player = new rpgEntity();
+        player.gold = 0;
+        player.experienceToNextLevel = 1;
+        player.experience = 0;
+        player.items = [];
+        player.skills = [];
+        
+        player.respawn = function(spawnPoint) {
+            
+            this.health = this.maxHealth;
+            this.sprite.x = spawnPoint.x;
+            this.sprite.y = spawnPoint.y;
+            this.sprite.animations.stop();
+            this.sprite.animations.frame = 0;
+        };
+        
+        //increases player's level
+        //uses up the currente exp, theres no need to subtract it after this function is called
+        player.levelUp = function() {
+            
+            this.level += 1;
+            
+            //normally we'd give the player some stat points that he can use
+            //for now just raise his stats
+            this.maxHealth += 20;
+            this.health = this.maxHealth;
+            this.strength += 5;
+            this.defense += 5;
+            this.experience -= this.experienceToNextLevel;
+            this.experienceToNextLevel += 5 * this.level;
+        };
+        
+        //flag used to check if player just started playing the game
+        //used by the overworld state to determine what intro effect it should use
+        var justStartedGame = true;
+        
+        //{
             
             //players will have various stats, these will be loaded from the rails data base
             //for now all we have is the player's sprite, which is a phaser game object that handles drawing/movement, and other great stuff
@@ -154,6 +199,7 @@
         		player.sprite.animations.add('up', [12, 13, 14, 15], 10, true);
         		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
         		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
+        		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
         		//right now the player will draw onto the screen since phaser automatically draws all new sprites
         		//we want to not draw the player to the screen, so we remove him from phaser's rendering list
@@ -164,8 +210,10 @@
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');
-            },
+            }
         };
+        
+        document.getElementById("additional").innerHTML = typeof overworldState;
         
         //register all of the gameplay states
         game.state.add('boot', bootState);
@@ -175,6 +223,6 @@
         
         //now run the boot state, which will call load and overworld as needed
         game.state.start('boot');
-        
+
     </script>
 </div>

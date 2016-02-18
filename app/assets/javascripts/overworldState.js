@@ -33,6 +33,33 @@ var overworldState = {
                 onKeystates: exploreKeystates,
                 onUpdate: exploreUpdate
             }
+        },
+        
+        //there are 3 ways to enter the overworld state.
+        //when the player first starts the game
+        //when the player dies in battle
+        //when the player wins a battle
+        //they are different in the following ways:
+        //starting game for the first time should do a slow fade, and maybe some other effect
+        //exiting battle should be a quick fade with no other effect
+        //respawning after dying in battle should be similar to starting the game,
+        //except you need to show an effect to indicate the player respawned
+        {name: "startGame",
+            functions: {
+                
+                onEnter: startGameEnter,
+                onExit: startGameExit,
+                onUpdate: startGameUpdate
+            }
+        },
+        
+        {name: "exitBattle",
+            functions: {
+                
+                onEnter: exitBattleEnter,
+                onExit: startGameExit,
+                onUpdate: startGameUpdate
+            }
         }
     ],
     
@@ -89,6 +116,14 @@ var overworldState = {
         //first we will create the tile map
         this.generateTilemap();
         
+        
+        //now we would load the objects in this map
+        //objects are the dynamic parts of the map
+        //also stuff that can't be tiles
+        //like a spawn point
+        //which i'll set manually since i didn't put one in the map
+        this.spawnPoint = {x: 0, y: 0};
+        
         //now we create the player
         //we already created a player sprite, but we told phaser not to draw him
         //we need to add him back to the game world for drawing
@@ -96,6 +131,7 @@ var overworldState = {
         
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
+        
         
         //this function makes phaser use arrow keys for movement
         //it creates a collection of keys that you can poll for events (look at update function for polling code)
@@ -117,7 +153,26 @@ var overworldState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("explore");
+        
+        if(justStartedGame) {
+            
+            justStartedGame = false;
+            this.stateManager.changeState("startGame");
+            
+        } else {
+            
+            //we came here from some other ingame state
+            //we need to check if we must respawn player
+            if(player.health == 0) {
+                
+                player.respawn(this.spawnPoint);
+                this.stateManager.changeState("startGame");
+                
+            } else {
+                
+                this.stateManager.changeState("exitBattle");
+            }
+        }
     },
     
     //function that we will send to phaser to handle key press events
@@ -147,5 +202,5 @@ var overworldState = {
     shutdown: function() {
         
         game.world.remove(player.sprite);
-    },
+    }
 };

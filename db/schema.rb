@@ -15,13 +15,14 @@ ActiveRecord::Schema.define(version: 20160217063107) do
 
   create_table "players", force: :cascade do |t|
     t.string   "username"
-    t.integer  "health"
-    t.integer  "strength"
-    t.integer  "defense"
-    t.integer  "level"
-    t.integer  "experience"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "health",     default: 50
+    t.integer  "strength",   default: 10
+    t.integer  "defense",    default: 10
+    t.integer  "level",      default: 1
+    t.integer  "experience", default: 0
+    t.integer  "gold",       default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   add_index "players", ["username"], name: "index_players_on_username", unique: true

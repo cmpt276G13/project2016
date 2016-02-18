@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
       log_in user
       # condition ? if true : if false
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-      redirect_to user # Could redirect to the hub page instead of the profile
+      redirect_back_or user # Default: could redirect to the hub page instead of the profile?
     else
       flash.now[:danger] = 'Invalid username/password combination'
       render 'new'

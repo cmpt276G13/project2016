@@ -44,4 +44,9 @@ class User < ActiveRecord::Base
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+  # Specifies the amount of users per page. Goes in unison with will_paginate.
+  def per_page
+    30
+  end
 end
