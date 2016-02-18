@@ -2,7 +2,7 @@
 //this is just the background that text will be displayed on
 function createTextboxBackground(x, y, width, height, centerToPoint) {
     
-    var lineThickness = 4;
+    var lineThickness = 3;
     
     //textbox positioning is affected by line thickness
     //the left, boddom, and right edges are misaligned

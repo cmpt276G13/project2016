@@ -323,7 +323,7 @@ var battleState = {
             
             isFixedToCamera: true,
             
-            animationDuration: 800,
+            animationDuration: 700,
             
             bg: {
                 color: '#222222'
