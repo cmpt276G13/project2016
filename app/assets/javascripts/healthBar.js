@@ -33,10 +33,13 @@ HealthBar.prototype.setupConfiguration = function (providedConfig) {
     this.flipped = this.config.flipped;
 };
 
+//Added rectnagle radius property that defines how 'curved' the rectangle corners will be
+//config can now accept radius as a parameter
 HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
     var defaultConfig= {
         width: 250,
         height: 40,
+        radius: 8,
         x: 0,
         y: 0,
         bg: {
@@ -64,12 +67,15 @@ function mergeObjetcs(targetObj, newObj) {
     return targetObj;
 }
 
+//Draw background and draw healtbar originally drew straight edged rectangles
+//this has been changed to draw rounded edge rectnagles
+//function to draw rounded edge is defined at the bottom of this page
 HealthBar.prototype.drawBackground = function() {
-
+    
     var bmd = this.game.add.bitmapData(this.config.width, this.config.height);
     bmd.ctx.fillStyle = this.config.bg.color;
     bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.config.width, this.config.height);
+    drawRoundedRectangle(bmd.ctx, this.config);
     bmd.ctx.fill();
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
@@ -80,11 +86,13 @@ HealthBar.prototype.drawBackground = function() {
     }
 };
 
+//changed
 HealthBar.prototype.drawHealthBar = function() {
+    
     var bmd = this.game.add.bitmapData(this.config.width, this.config.height);
     bmd.ctx.fillStyle = this.config.bar.color;
     bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, this.config.width, this.config.height);
+    drawRoundedRectangle(bmd.ctx, this.config);
     bmd.ctx.fill();
 
     this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, bmd);
@@ -128,4 +136,20 @@ HealthBar.prototype.setWidth = function(newWidth){
 HealthBar.prototype.setFixedToCamera = function(fixedToCamera) {
     this.bgSprite.fixedToCamera = fixedToCamera;
     this.barSprite.fixedToCamera = fixedToCamera;
+};
+
+//uses the given canvasContext to draw a rounded rectangle to the canvas
+//healthbarConfig is needed to get width, height, radius, etc
+//call this function AFTER CALLING BEGIN PATH ON THE CANVAS CONTEXT
+function drawRoundedRectangle(canvasContext, healthBarConfig) {
+    
+    canvasContext.moveTo(healthBarConfig.radius, 0);
+    canvasContext.lineTo(healthBarConfig.width - healthBarConfig.radius, 0);
+    canvasContext.quadraticCurveTo(healthBarConfig.width, 0, healthBarConfig.width, healthBarConfig.radius);
+    canvasContext.lineTo(healthBarConfig.width, healthBarConfig.height - healthBarConfig.radius);
+    canvasContext.quadraticCurveTo(healthBarConfig.width, healthBarConfig.height, healthBarConfig.width - healthBarConfig.radius, healthBarConfig.height);
+    canvasContext.lineTo(healthBarConfig.radius, healthBarConfig.height);
+    canvasContext.quadraticCurveTo(0, healthBarConfig.height, 0, healthBarConfig.height - healthBarConfig.radius);
+    canvasContext.lineTo(0, healthBarConfig.radius);
+    canvasContext.quadraticCurveTo(0, 0, healthBarConfig.radius, 0);
 };

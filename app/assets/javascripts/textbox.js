@@ -28,8 +28,8 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     var lineColor = 0x888888;
     var boxRadius = lineThickness * 4;
     
-    box.moveTo(boxRadius, 0);
     box.lineStyle(lineThickness, lineColor, 0.8);
+    box.moveTo(boxRadius, 0);
     box.lineTo(width - boxRadius, 0);
     box.quadraticCurveTo(width, 0, width, boxRadius);
     box.lineTo(width, height - boxRadius);
