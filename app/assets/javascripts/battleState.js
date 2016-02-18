@@ -92,6 +92,13 @@ var battleState = {
             }
         },
         
+        {name: "playerDying",
+            functions: {
+                
+                onEnter: playerDyingEnter
+            }
+        },
+        
         {name: "victory",
             functions: {
                 

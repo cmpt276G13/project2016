@@ -300,7 +300,7 @@ function monsterAttackResultsUpdate() {
     if(player.health == 0) {
         
         //for now move straight to defeat screen
-        this.stateManager.changeState("defeat");
+        this.stateManager.changeState("playerDying");
         return;
     }
     
@@ -316,6 +316,12 @@ function monsterAttackResultsUpdate() {
     //monster left, start his turn
     this.stateManager.changeState("monsterTurn");
 };
+
+function playerDyingEnter() {
+    
+    player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
+    player.sprite.animations.play("dying");
+}
 
 function victoryEnter() {
     
