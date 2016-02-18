@@ -142,3 +142,12 @@ function startGameUpdate() {
         this.stateManager.changeState("explore");
     }
 }
+
+function exitBattleEnter() {
+    
+    //create a fade in effect
+    this.fadeFromBlack = new fadeFromBlack(250);
+    this.fadeFromBlack.setOnExit(function(){this.fadeFromBlack.finishedTransition = true}, this);
+    this.fadeFromBlack.start();
+    
+};

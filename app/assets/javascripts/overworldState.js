@@ -51,6 +51,15 @@ var overworldState = {
                 onExit: startGameExit,
                 onUpdate: startGameUpdate
             }
+        },
+        
+        {name: "exitBattle",
+            functions: {
+                
+                onEnter: exitBattleEnter,
+                onExit: startGameExit,
+                onUpdate: startGameUpdate
+            }
         }
     ],
     
@@ -144,7 +153,26 @@ var overworldState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("startGame");
+        
+        if(justStartedGame) {
+            
+            justStartedGame = false;
+            this.stateManager.changeState("startGame");
+            
+        } else {
+            
+            //we came here from some other ingame state
+            //we need to check if we must respawn player
+            if(player.health == 0) {
+                
+                player.respawn(this.spawnPoint);
+                this.stateManager.changeState("startGame");
+                
+            } else {
+                
+                this.stateManager.changeState("exitBattle");
+            }
+        }
     },
     
     //function that we will send to phaser to handle key press events
