@@ -1,7 +1,5 @@
 class SessionsController < ApplicationController
   def new
-    #returns all details including ip, country, city, lat, long
-    @info = GeoIp.geolocation(request.remote_ip)
   end
 
   def create
@@ -15,6 +13,12 @@ class SessionsController < ApplicationController
       flash.now[:danger] = 'Invalid username/password combination'
       render 'new'
     end
+    
+    # http://www.rubydoc.info/gems/geo_ip
+    # returns :ip, :country_name, :city, :latitude, :longitude, etc.
+    @info = GeoIp.geolocation(request.remote_ip)
+    @latitude = @info[:latitude]
+    @longitude = @info[:longitude]
   end
 
   def destroy
