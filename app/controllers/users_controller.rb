@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in @user
-      flash[:success] = "Welcome to the GeoHunter!"
+      flash[:success] = "Welcome to GeoHunter!"
       redirect_to @user # Change this if we want to redirect to a tutorial
     else
       render 'new'
