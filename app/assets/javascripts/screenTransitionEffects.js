@@ -9,6 +9,7 @@ function cover(color) {
     this.graphics.beginFill(color);
     this.graphics.drawRect(0, 0, game.scale.width, game.scale.height);
     this.graphics.endFill();
+    this.graphics.fixedToCamera = true;
 };
 
 //effect that makes the screen slowly fade to black

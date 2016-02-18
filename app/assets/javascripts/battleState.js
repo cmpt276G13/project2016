@@ -334,7 +334,7 @@ var battleState = {
         };
         
         statContainer.playerHealthBar = new HealthBar(game, barStyle);
-        statContainer.playerHealthBar.setValue(player.health);
+        statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
 
         return statContainer;
