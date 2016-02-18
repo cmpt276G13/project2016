@@ -90,3 +90,19 @@ aside {
 .gravatar_edit {
   margin-top: 15px;
 }
+
+/* Users index */
+
+.users {
+  margin: 0;
+  width: 100%;
+  td {
+    overflow: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid $gray-lighter;
+    &.num {
+      font-weight: bold;
+      font-size: 2em;
+    }
+  }
+}
