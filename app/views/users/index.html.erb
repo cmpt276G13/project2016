@@ -2,13 +2,13 @@
 <h1>Rankings</h1>
 
 <%= will_paginate %>
-<%- page = params[:page].to_i%>
+<%- page = params[:page].to_i%> <!-- Grab the page number -->
 
 <!-- Unfinished. Haven't made a way to determine rankings -->
 <table class="users">
   <% @users.each_with_index do |user, i| %>
     <tr>
-      <td class="num center"><%= page > 1 ? i + (((page - 1) * @PER_PAGE) + 1) : i + 1 %></td>
+      <td class="num center"><%= page > 1 ? i + (((page - 1) * User.per_page) + 1) : i + 1 %></td>
       <td>
         <%= gravatar_for user, size: 50 %>
         <%= link_to user.username, user %>

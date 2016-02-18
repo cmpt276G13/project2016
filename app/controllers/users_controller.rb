@@ -3,8 +3,7 @@ class UsersController < ApplicationController
   before_action :correct_user,   only: [:edit, :update]
   
   def index
-    @PER_PAGE = 30 # Specifies the amount of users per page
-    @users = User.paginate(page: params[:page], :per_page => @PER_PAGE)
+    @users = User.paginate(page: params[:page], :per_page => User.per_page)
   end
   
   def show
