@@ -350,7 +350,6 @@ function defeatEnter() {
     //can't use the message box because the black screen draws ontop of it, since it was created after the message box
     this.deathMessage = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, 30, true);
     this.deathMessage.hide();
-    this.deathMessage.text.y = this.deathMessage.text.y - 5;
     this.deathMessage.setText("You have died.");
     
     this.fadeToBlack.setOnExit(function(){this.fadeToBlack.finishedTransition = true; this.deathMessage.show();}, this);

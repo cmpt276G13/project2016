@@ -2,13 +2,15 @@
 //this is just the background that text will be displayed on
 function createTextboxBackground(x, y, width, height, centerToPoint) {
     
-    var lineThickness = 3;
+    var lineThickness = 4;
     
-    //small hack to get the allignment right, since drawing a curved textbox increases textbox size
-    var posX = x + lineThickness * 3;
-    width -= lineThickness * 6.2;
+    //textbox positioning is affected by line thickness
+    //the left, boddom, and right edges are misaligned
+    var posX = x + lineThickness / 2;
+    var posY = y;
     
-    var posY = y - lineThickness * 3.5;
+    width -= lineThickness;
+    height -= lineThickness;
     
     if(centerToPoint) {
         
@@ -20,18 +22,22 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     
     //first create the colored rectangle
     var fillColor = 0x000099;
-    box.moveTo(0, 0);
     box.beginFill(fillColor, 0.4);
     
     //now create a border around it to make it look nice
     var lineColor = 0x888888;
+    var boxRadius = lineThickness * 4;
     
+    box.moveTo(boxRadius, 0);
     box.lineStyle(lineThickness, lineColor, 0.8);
-    box.x = posX + lineThickness / 2;
-    box.quadraticCurveTo(width / 2, -lineThickness * 5, width - lineThickness, 0);
-    box.quadraticCurveTo(width + lineThickness * 5, height / 2, width - lineThickness, height - lineThickness);
-    box.quadraticCurveTo(width / 2, height + lineThickness * 5, 0, height - lineThickness);
-    box.quadraticCurveTo(-lineThickness * 5, height / 2, 0, 0);
+    box.lineTo(width - boxRadius, 0);
+    box.quadraticCurveTo(width, 0, width, boxRadius);
+    box.lineTo(width, height - boxRadius);
+    box.quadraticCurveTo(width, height, width - boxRadius, height);
+    box.lineTo(boxRadius, height);
+    box.quadraticCurveTo(0, height, 0, height - boxRadius);
+    box.lineTo(0, lineThickness);
+    box.quadraticCurveTo(0, 0, boxRadius, 0);
     box.endFill();
     
     return box;
@@ -47,14 +53,14 @@ function textBox(x, y, width, height, centerToPoint) {
     
     //text to display
     this.text = game.add.text(0, 0, "Message");
+    this.background.addChild(this.text);
+    
     this.text.fontSize = 22;
-    this.text.x = this.background.width / 2 - 6;
-    this.text.y = this.background.height / 2 - this.text.fontSize / 4;
+    this.text.x = this.background.width / 2;
+    this.text.y = this.background.height / 2;
     this.text.anchor.x = 0.5;
     this.text.anchor.y = 0.5;
     this.text.fill = 'white';
-    
-    this.background.addChild(this.text);
 };
 
 textBox.prototype.setText = function(newText) {
