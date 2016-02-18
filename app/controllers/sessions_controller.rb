@@ -13,12 +13,6 @@ class SessionsController < ApplicationController
       flash.now[:danger] = 'Invalid username/password combination'
       render 'new'
     end
-    
-    # http://www.rubydoc.info/gems/geo_ip
-    # returns :ip, :country_name, :city, :latitude, :longitude, etc.
-    @info = GeoIp.geolocation(request.remote_ip)
-    @latitude = @info[:latitude]
-    @longitude = @info[:longitude]
   end
 
   def destroy
