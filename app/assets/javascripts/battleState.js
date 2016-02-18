@@ -520,13 +520,15 @@ var battleState = {
         //set player to battle position, and orientation
         this.orientPlayerForBattle();
         
+        this.healthBar = new HealthBar(game, {x: 0, y: 0});
+        
         //now we want to have some UI to display all the battle options
         
         //first we have to create the box where the UI is displayed
         //if you look at final fantasy battles, there are blue rectangles that contain all the text
         //first is the rectangle that contains all the actions the player can take
         
-        var actionBoxWidth = game.scale.width;
+        var actionBoxWidth = game.scale.width / 3.5;
         var actionBoxHeight = 130;
         
         this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
