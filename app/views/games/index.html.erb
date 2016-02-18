@@ -17,6 +17,8 @@
     <%= javascript_include_tag "overworldState"%>
     <%= javascript_include_tag "battleSubstateFunctions"%>
     <%= javascript_include_tag "battleState" %>
+    <%= javascript_include_tag "pauseMenuState" %>
+    <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     
     <script>
     
@@ -212,14 +214,15 @@
         		game.state.start('overworld');
             }
         };
-        
-        document.getElementById("additional").innerHTML = typeof overworldState;
+        document.getElementById("additional").innerHTML = pauseMenuState;
         
         //register all of the gameplay states
         game.state.add('boot', bootState);
         game.state.add('load', loadState);
         game.state.add('overworld', overworldState);
+        game.state.add('pauseMenu', pauseMenuState);
         game.state.add('battle', battleState);
+        
         
         //now run the boot state, which will call load and overworld as needed
         game.state.start('boot');

@@ -23,6 +23,8 @@ function actionDisplay(x, y, width, height, actionTexts) {
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     
+    this.selectionDisplay.visible = true;
+    
     //first clear the previously drawn rectangle
     this.selectionDisplay.clear();
     
