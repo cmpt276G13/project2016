@@ -57,10 +57,10 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     execjs (2.6.0)
-    geo_ip (0.6.2)
-      rest-client (~> 1.6)
     faker (1.4.2)
       i18n (~> 0.5)
+    geo_ip (0.6.2)
+      rest-client (~> 1.6)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     gmaps4rails (2.1.2)
@@ -173,8 +173,8 @@ DEPENDENCIES
   bootstrap-will_paginate (= 0.0.10)
   byebug
   coffee-rails (~> 4.1.0)
-  geo_ip
   faker (= 1.4.2)
+  geo_ip
   gmaps4rails
   jbuilder (~> 2.0)
   jquery-rails
