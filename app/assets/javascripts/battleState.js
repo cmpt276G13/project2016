@@ -520,8 +520,6 @@ var battleState = {
         //set player to battle position, and orientation
         this.orientPlayerForBattle();
         
-        this.healthBar = new HealthBar(game, {x: 300, y: 300});
-        
         //now we want to have some UI to display all the battle options
         
         //first we have to create the box where the UI is displayed

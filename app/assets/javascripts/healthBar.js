@@ -35,11 +35,17 @@ HealthBar.prototype.setupConfiguration = function (providedConfig) {
 
 //Added rectnagle radius property that defines how 'curved' the rectangle corners will be
 //config can now accept radius as a parameter
+//also defines a 'MaxHealth' parameter
+//originally the health bar required setting a percentage value
+//but that's annoying so i added maxHealth so you can set the health value directly
+//note that the healthbar will never exceed its max value
+//you must define a new max value if you want to change an entity's max health
 HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
     var defaultConfig= {
         width: 250,
         height: 40,
-        radius: 8,
+        radius: 8,//defines how curved the bar is
+        maxHealth: 100,
         x: 0,
         y: 0,
         bg: {
@@ -116,7 +122,27 @@ HealthBar.prototype.setPosition = function (x, y) {
     }
 };
 
+//sets the new current health value
+//new
+HealthBar.prototype.setValue = function(newValue) {
+    
+    var percentHealth = newValue / this.config.maxHealth;
+    this.setPercent(percentHealth * 100);
+};
 
+//set the new max health
+//if setCurrentToMax is true, it will set the current health value to the new max
+HealthBar.prototype.setMax = function(newMax, setCurrentToMax) {
+    
+    this.config.maxHealth = newMax;
+    
+    if(setCurrentToMax) {
+        
+        this.setPercent(100);
+    }
+}
+
+//sets the health value to the given percent
 HealthBar.prototype.setPercent = function(newValue){
     if(newValue < 0) newValue = 0;
     if(newValue > 100) newValue = 100;
