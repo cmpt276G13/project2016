@@ -3,10 +3,10 @@
         
         "imageKey": "orc",
         "name": "orc",
-        "maxHealth": 30,
-        "health": 30,
-        "defense": 20,
-        "strength": 20,
+        "maxHealth": 15,
+        "health": 15,
+        "defense": 6,
+        "strength": 6,
         "startingFrame": 8,
         "animations": [
             {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5},

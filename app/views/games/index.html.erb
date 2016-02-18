@@ -88,6 +88,7 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
         var player = new rpgEntity();
         player.gold = 0;
+        player.experienceToNextLevel = 1;
         player.experience = 0;
         player.items = [];
         player.skills = [];
@@ -99,7 +100,23 @@ handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
             this.sprite.y = spawnPoint.y;
             this.sprite.animations.stop();
             this.sprite.animations.frame = 0;
-        }
+        };
+        
+        //increases player's level
+        //uses up the currente exp, theres no need to subtract it after this function is called
+        player.levelUp = function() {
+            
+            this.level += 1;
+            
+            //normally we'd give the player some stat points that he can use
+            //for now just raise his stats
+            this.maxHealth += 20;
+            this.health = this.maxHealth;
+            this.strength += 5;
+            this.defense += 5;
+            this.experience -= this.experienceToNextLevel;
+            this.experienceToNextLevel += 5 * this.level;
+        };
         
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use

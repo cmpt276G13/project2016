@@ -123,11 +123,20 @@ HealthBar.prototype.setPosition = function (x, y) {
 };
 
 //sets the new current health value
-//new
+//new function
 HealthBar.prototype.setValue = function(newValue) {
     
     var percentHealth = newValue / this.config.maxHealth;
     this.setPercent(percentHealth * 100);
+};
+
+//sets the new current health value
+//health bar won't animate to the given value, instead it will forcibly be set to it
+//new function
+HealthBar.prototype.setValueNoTransition = function(newValue) {
+    
+    var percentHealth = newValue / this.config.maxHealth;
+    this.setPercentNoTransition(percentHealth * 100);
 };
 
 //set the new max health
@@ -152,11 +161,30 @@ HealthBar.prototype.setPercent = function(newValue){
     this.setWidth(newWidth);
 };
 
+//sets health value to the given percent
+//does not animate the health bar
+HealthBar.prototype.setPercentNoTransition = function(newValue){
+    if(newValue < 0) newValue = 0;
+    if(newValue > 100) newValue = 100;
+
+    var newWidth =  (newValue * this.config.width) / 100;
+    
+    this.setWidthNoTransition(newWidth);
+};
+
 HealthBar.prototype.setWidth = function(newWidth){
     if(this.flipped) {
         newWidth = -1 * newWidth;
     }
     this.game.add.tween(this.barSprite).to( { width: newWidth }, this.config.animationDuration, Phaser.Easing.Linear.None, true);
+};
+
+HealthBar.prototype.setWidthNoTransition = function(newWidth){
+    if(this.flipped) {
+        newWidth = -1 * newWidth;
+    }
+    this.barSprite.width = newWidth;
+    //this.game.add.tween(this.barSprite).to( { width: newWidth }, this.config.animationDuration, Phaser.Easing.Linear.None, true);
 };
 
 HealthBar.prototype.setFixedToCamera = function(fixedToCamera) {
