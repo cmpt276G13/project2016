@@ -54,7 +54,7 @@ HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
         bar: {
             color: '#FEFF03'
         },
-        animationDuration: 200,
+        animationDuration: 400,
         flipped: false,
         isFixedToCamera: false
     };
@@ -85,7 +85,7 @@ HealthBar.prototype.drawBackground = function() {
     bmd.ctx.fill();
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
-    this.bgSprite.anchor.set(0.5);
+    //this.bgSprite.anchor.set(0.5);
 
     if(this.flipped){
         this.bgSprite.scale.x = -1;
@@ -101,8 +101,8 @@ HealthBar.prototype.drawHealthBar = function() {
     drawRoundedRectangle(bmd.ctx, this.config);
     bmd.ctx.fill();
 
-    this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, bmd);
-    this.barSprite.anchor.y = 0.5;
+    this.barSprite = this.game.add.sprite(this.x /*- this.bgSprite.width/2*/, this.y, bmd);
+    //this.barSprite.anchor.y = 0.5;
 
     if(this.flipped){
         this.barSprite.scale.x = -1;
@@ -162,6 +162,14 @@ HealthBar.prototype.setWidth = function(newWidth){
 HealthBar.prototype.setFixedToCamera = function(fixedToCamera) {
     this.bgSprite.fixedToCamera = fixedToCamera;
     this.barSprite.fixedToCamera = fixedToCamera;
+};
+
+//allow adding healthbar as a child to something else
+//parent is a phaser graphics object capable of having a child
+HealthBar.prototype.addParent = function(parent) {
+    
+    parent.addChild(this.bgSprite);
+    parent.addChild(this.barSprite);
 };
 
 //uses the given canvasContext to draw a rounded rectangle to the canvas

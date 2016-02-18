@@ -22,7 +22,7 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     
     //first create the colored rectangle
     var fillColor = 0x000099;
-    box.beginFill(fillColor, 0.4);
+    box.beginFill(fillColor, 0.7);
     
     //now create a border around it to make it look nice
     var lineColor = 0x888888;
@@ -36,7 +36,7 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     box.quadraticCurveTo(width, height, width - boxRadius, height);
     box.lineTo(boxRadius, height);
     box.quadraticCurveTo(0, height, 0, height - boxRadius);
-    box.lineTo(0, lineThickness);
+    box.lineTo(0, boxRadius);
     box.quadraticCurveTo(0, 0, boxRadius, 0);
     box.endFill();
     
@@ -52,7 +52,7 @@ function textBox(x, y, width, height, centerToPoint) {
     this.background.fixedToCamera = true;
     
     //text to display
-    this.text = game.add.text(0, 0, "Message");
+    this.text = game.add.text(0, 0, "");
     this.background.addChild(this.text);
     
     this.text.fontSize = 22;

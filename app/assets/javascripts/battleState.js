@@ -297,6 +297,48 @@ var battleState = {
         return monsters;
     },
     
+    //create a UI that displays the player's current stats
+    generatePlayerStatDisplay: function(x, y, width, height){
+        
+        //container for the ui
+        var statContainer = {};
+        statContainer.textBox = new textBox(x, y, width, height);
+        
+        var textStyle = {fontSize: 22};
+        
+        //text for the player name
+        statContainer.playerName = game.add.text(5, 10, player.name);
+        statContainer.playerName.fontSize = 22;
+        statContainer.playerName.fill = 'white';
+        statContainer.textBox.background.addChild(statContainer.playerName);
+        
+        var barStyle = {
+            
+            x: statContainer.playerName.width * 2,
+            y: statContainer.playerName.y,
+            width: 100,
+            height: 20,
+            radius: 6,
+            maxHealth: player.maxHealth,
+            
+            isFixedToCamera: true,
+            
+            animationDuration: 800,
+            
+            bg: {
+                color: '#222222'
+            },
+            bar: {
+                color: '#FFFFFF'
+            }
+        };
+        
+        statContainer.playerHealthBar = new HealthBar(game, barStyle);
+        statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+
+        return statContainer;
+    },
+    
     generateMonsterSprites: function(monsters) {
         
         //all monsters have a key that can be used to get the name of the sprite for the monster
@@ -528,6 +570,9 @@ var battleState = {
         
         var actionBoxWidth = game.scale.width / 3.5;
         var actionBoxHeight = 130;
+        
+        //create the ui that displays the player's stats
+        this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
         this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
         this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);

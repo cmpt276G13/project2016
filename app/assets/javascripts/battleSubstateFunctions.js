@@ -280,6 +280,8 @@ function monsterAttackResultsEnter() {
     
     var damage = this.determineAttackResults(this.monsters[this.currentMonster].lastUsedAttack, player);
     this.damageTexts.push(this.createDamageText(player, damage) );
+    
+    this.playerStatDisplay.playerHealthBar.setValue(player.health);
 };
 
 function monsterAttackResultsExit() {
