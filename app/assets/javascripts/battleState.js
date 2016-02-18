@@ -90,6 +90,30 @@ var battleState = {
                 onExit: monsterAttackResultsExit,
                 onUpdate: monsterAttackResultsUpdate
             }
+        },
+        
+        {name: "playerDying",
+            functions: {
+                
+                onEnter: playerDyingEnter
+            }
+        },
+        
+        {name: "victory",
+            functions: {
+                
+                onEnter: victoryEnter,
+                onKeyDown: victoryKeyDown
+            }
+        },
+        
+        {name: "defeat",
+            functions: {
+                
+                onEnter: defeatEnter,
+                onExit: defeatExit,
+                onKeyDown: defeatKeyDown
+            }
         }
         
     ],
@@ -214,6 +238,21 @@ var battleState = {
         },
     },
     
+    //rewards received by the player when he kills an enemy
+    //awarded at the end of the battle state (in the victory sub state)
+    rewards: {
+        
+        experience: 0,
+        gold: 0,
+        
+        //if we want monsters to give items when thjey die, then we can add all items to this array
+        items: [],
+        
+        //same for new skills
+        //add a key to the skills object
+        skills: [/*add skill keys, ex: 'fireball'  */]
+    },
+    
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         
@@ -231,7 +270,6 @@ var battleState = {
         //determine how many monsters we should spawn
         var monstersToSpawn = getRandomInt(1, 3);
         var monsters = [];
-        document.getElementById("additional").innerHTML = monstersToSpawn;
         
         for(var i = 0; i < monstersToSpawn; ++i) {
             
@@ -248,7 +286,6 @@ var battleState = {
             $.extend(monster, monsterDatabase[monsterName]);
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
-            document.getElementById("additional").innerHTML = num;
             
             //position the monster somewhere
             monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
@@ -258,6 +295,48 @@ var battleState = {
         }
         
         return monsters;
+    },
+    
+    //create a UI that displays the player's current stats
+    generatePlayerStatDisplay: function(x, y, width, height){
+        
+        //container for the ui
+        var statContainer = {};
+        statContainer.textBox = new textBox(x, y, width, height);
+        
+        var textStyle = {fontSize: 22};
+        
+        //text for the player name
+        statContainer.playerName = game.add.text(5, 10, player.name);
+        statContainer.playerName.fontSize = 22;
+        statContainer.playerName.fill = 'white';
+        statContainer.textBox.background.addChild(statContainer.playerName);
+        
+        var barStyle = {
+            
+            x: statContainer.playerName.width * 2,
+            y: statContainer.playerName.y,
+            width: 100,
+            height: 20,
+            radius: 6,
+            maxHealth: player.maxHealth,
+            
+            isFixedToCamera: true,
+            
+            animationDuration: 700,
+            
+            bg: {
+                color: '#222222'
+            },
+            bar: {
+                color: '#FFFFFF'
+            }
+        };
+        
+        statContainer.playerHealthBar = new HealthBar(game, barStyle);
+        statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+
+        return statContainer;
     },
     
     generateMonsterSprites: function(monsters) {
@@ -361,6 +440,18 @@ var battleState = {
         this.damageTexts = [];
     },
     
+    createRewardsText: function() {
+        
+        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
+        var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
+        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        
+        this.rewardsTextbox.setText(rewardsText);
+        this.rewardsTextbox.text.fontSize = 20;
+        this.rewardsTextbox.text.y = 0;
+        this.rewardsTextbox.text.anchor.y = 0;
+    },
+    
     //checks if all of the attack results texts have finished their tweening
     finishedDisplayingResults: function() {
         
@@ -392,6 +483,29 @@ var battleState = {
             
             startDeathAnimation(this.monsters[i]);
         }
+    },
+    
+    //finds all dead enemies and stores their rewards so we can give it to the player later
+   storePlayerRewards: function() {
+        
+        for(var i = 0; i < this.monsters.length; i++) {
+            
+            if(this.monsters[i].health != 0) {
+                
+                continue;
+            }
+            
+            this.rewards.experience += this.monsters[i].rewards.experience;
+            this.rewards.gold += this.monsters[i].rewards.gold;
+            this.rewards.items.concat(this.monsters[i].rewards.items);
+            this.rewards.skills.concat(this.monsters[i].rewards.experience);
+        }
+    },
+    
+    applyRewardsToPlayer: function() {
+        
+        player.gold += this.rewards.gold;
+        player.experience += this.rewards.experience;
     },
     
     //deletes all entities marked for deletion
@@ -454,8 +568,11 @@ var battleState = {
         //if you look at final fantasy battles, there are blue rectangles that contain all the text
         //first is the rectangle that contains all the actions the player can take
         
-        var actionBoxWidth = game.scale.width;
+        var actionBoxWidth = game.scale.width / 3.5;
         var actionBoxHeight = 130;
+        
+        //create the ui that displays the player's stats
+        this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
         this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
         this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
@@ -466,7 +583,7 @@ var battleState = {
         
         //we need a way to give messages to the player
         //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-        this.messageBox = new textBox(0, 0, game.scale.width, 50);
+        this.messageBox = new textBox(0, 0, game.scale.width, 40, false);
         
         //this contains text that will display the amount of damage an monster or player received after an attack
         //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted

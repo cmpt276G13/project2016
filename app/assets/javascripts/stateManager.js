@@ -39,7 +39,7 @@ stateManager.prototype.exitAll = function() {
     
     for(current in this.states) {
         
-        if(typeof this.states[current] !== "undefined") {
+        if(typeof this.states[current].onExit !== "undefined") {
             
             this.states[current].onExit.func.call(this.states[current].onExit.context);
         }
@@ -52,10 +52,7 @@ stateManager.prototype.exitAll = function() {
 stateManager.prototype.changeState = function(targetStateName) {
     
     //first exit the current state
-    if(this.currentState != "" && typeof this.states[this.currentState].onExit !== "undefined") {
-        
-        this.states[this.currentState].onExit.func.call(this.states[this.currentState].onExit.context);
-    }
+    this.onExit();
     this.currentState = targetStateName;
     
     if(typeof this.states[this.currentState].onEnter !== "undefined") {
@@ -63,6 +60,14 @@ stateManager.prototype.changeState = function(targetStateName) {
         this.states[targetStateName].onEnter.func.call(this.states[targetStateName].onEnter.context);
     }
     
+};
+
+stateManager.prototype.onExit = function() {
+    
+    if(this.currentState != "" && typeof this.states[this.currentState].onExit !== "undefined") {
+        
+        this.states[this.currentState].onExit.func.call(this.states[this.currentState].onExit.context);
+    }
 };
 
 //calls the update function of the current state
@@ -89,6 +94,7 @@ stateManager.prototype.onKeyDown = function(key) {
         this.states[this.currentState].onKeyDown.func.call(this.states[this.currentState].onKeyDown.context, key);
     }
 };
+
 
 //add states when given a 'state template'.
 //a state template is an array of objects, each object looks like this:
