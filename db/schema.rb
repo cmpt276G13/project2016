@@ -13,16 +13,8 @@
 
 ActiveRecord::Schema.define(version: 20160219072030) do
 
-  create_table "locations", force: :cascade do |t|
-    t.string   "address"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "players", force: :cascade do |t|
-    t.string   "username"
+    t.integer  "user_id"
     t.integer  "health",                   default: 50
     t.integer  "strength",                 default: 10
     t.integer  "defense",                  default: 10
@@ -35,7 +27,7 @@ ActiveRecord::Schema.define(version: 20160219072030) do
     t.integer  "experience_to_next_level", default: 10
   end
 
-  add_index "players", ["username"], name: "index_players_on_username", unique: true
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
@@ -45,8 +37,6 @@ ActiveRecord::Schema.define(version: 20160219072030) do
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "remember_digest"
-    t.float    "latitude"
-    t.float    "longitude"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
