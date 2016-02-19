@@ -3,8 +3,8 @@
         
         "imageKey": "orc",
         "name": "orc",
-        "maxHealth": 15,
-        "health": 15,
+        "maxHealth": 14,
+        "health": 14,
         "defense": 6,
         "strength": 6,
         "startingFrame": 8,

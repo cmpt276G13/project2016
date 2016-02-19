@@ -8,5 +8,6 @@ class GamesController < ApplicationController
         #note that Player is assumed to be a model
         
         #@player = Player.find(name of player, or some other way to identify him)
+        @currentUser = current_user
     end
 end
