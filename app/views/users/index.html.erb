@@ -12,9 +12,9 @@
       <td>
         <%= gravatar_for user, size: 50 %>
         <%= link_to user.username, user %>
-        <% if current_user && current_user.admin? && !current_user?(user) %>
+        <% if current_user && current_user.admin? && !current_user?(user) && !user.admin? %>
         | <%= link_to "delete", user, method: :delete,
-                                      data: { confirm: "You sure?" } %>
+                                data: { confirm: "As an Admin, are you sure you want to delete this user?" } %>
         <% end %>
       </td>
     </tr>
