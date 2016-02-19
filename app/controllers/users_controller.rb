@@ -4,11 +4,15 @@ class UsersController < ApplicationController
   before_action :admin_user,     only: :destroy
   
   def index
-    @users = User.paginate(page: params[:page], :per_page => User.per_page)
+    # Change order of users.
+    # User.joins(:user => :player).select("users.id").group("users.id").order("player.experience DESC")
+    @users = User.includes(:player).order("players.level DESC, players.experience DESC").
+                  paginate(page: params[:page], :per_page => User.per_page)
   end
   
   def show
     @user = User.find(params[:id])
+    @player = @user.player
   end
   
   def new

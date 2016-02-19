@@ -26,6 +26,9 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     end
     user = User.find_by(username: username)
     assert user.player
+    assert_equal user.player.health, 50
+    assert_equal user.player.strength, 10
+    assert_equal user.player.level, 1
     assert_template 'users/show'
     assert is_logged_in?
     assert_not flash.empty?

@@ -16,16 +16,18 @@ player2:
   health: 50
   strength: 10
   defense: 10
-  level: 1
+  level: 2
   experience: 50
   gold: 0
 
+# This player should be at the top of the rankings
+# Make sure the level is equal to player4, but experience is higher
 player3:
   user: lana
   health: 50
   strength: 10
   defense: 10
-  level: 1
+  level: 5
   experience: 20
   gold: 0
 
@@ -34,6 +36,6 @@ player4:
   health: 50
   strength: 10
   defense: 10
-  level: 1
-  experience: 90
+  level: 5
+  experience: 1
   gold: 0
