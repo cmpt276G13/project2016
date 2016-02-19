@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
+  # logged_in_user is defined in sessions_helper.rb
   before_action :logged_in_user, only: [:edit, :update, :destroy]
-  before_action :correct_user,   only: [:edit, :update]
-  before_action :admin_user,     only: :destroy
+  before_action :correct_user_or_admin,   only: [:edit, :update, :destroy]
   
   def index
     # Change order of users.
@@ -61,13 +61,8 @@ class UsersController < ApplicationController
     # Functions to be run before this controller
     
     # Confirms the correct user.
-    def correct_user
+    def correct_user_or_admin
       @user = User.find(params[:id])
-      redirect_to(root_url) unless current_user?(@user)
-    end
-    
-    # Confirms an admin user.
-    def admin_user
-      redirect_to(root_url) unless current_user.admin?
+      redirect_to(root_url) unless current_user?(@user) || current_user.admin?
     end
 end
