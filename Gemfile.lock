@@ -178,6 +178,7 @@ DEPENDENCIES
   gmaps4rails
   jbuilder (~> 2.0)
   jquery-rails
+  json
   pg
   puma
   rails (= 4.2.5.1)

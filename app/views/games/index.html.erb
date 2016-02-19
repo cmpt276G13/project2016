@@ -58,11 +58,23 @@
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
         var player = new rpgEntity();
-        player.gold = 0;
-        player.experienceToNextLevel = 1;
-        player.experience = 0;
+        
         player.items = [];
         player.skills = [];
+        
+        player.load = function() {
+            
+            this.name = '<%= @currentUser.username%>';
+            this.health = <%= @currentUser.player.health%>;
+            this.maxHealth = player.health;
+            this.gold = <%= @currentUser.player.gold%>;
+            this.experienceToNextLevel = 1;
+            this.experience = <%= @currentUser.player.experience%>;
+            this.strength = <%= @currentUser.player.strength%>;
+            
+            //player.items = ...
+            //player.skills = ...
+        };
         
         player.respawn = function(spawnPoint) {
             
@@ -88,6 +100,8 @@
             this.experience -= this.experienceToNextLevel;
             this.experienceToNextLevel += 5 * this.level;
         };
+        
+        player.load();
         
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use
@@ -214,7 +228,6 @@
         		game.state.start('overworld');
             }
         };
-        document.getElementById("additional").innerHTML = pauseMenuState;
         
         //register all of the gameplay states
         game.state.add('boot', bootState);

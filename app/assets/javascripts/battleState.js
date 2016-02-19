@@ -240,17 +240,20 @@ var battleState = {
     
     //rewards received by the player when he kills an enemy
     //awarded at the end of the battle state (in the victory sub state)
-    rewards: {
+    createRewards: function() {
         
-        experience: 0,
-        gold: 0,
+        var rewards = {};
+        rewards.experience = 0;
+        rewards.gold = 0;
         
         //if we want monsters to give items when thjey die, then we can add all items to this array
-        items: [],
+        rewards.items = [];
         
         //same for new skills
         //add a key to the skills object
-        skills: [/*add skill keys, ex: 'fireball'  */]
+        rewards.skills = [/*add skill keys, ex: 'fireball'  */];
+        
+        return rewards;
     },
     
     //load the data of the monsters the player has to fight
@@ -564,6 +567,8 @@ var battleState = {
         
         //now we want to reload the player
         game.add.existing(player.sprite);
+        
+        this.rewards = this.createRewards();
         
         //we also have to reposition the player since we are starting a battle
         //when we exit the battle, the player will be at a different position than when he started, so we need to save the players old position and orientation
