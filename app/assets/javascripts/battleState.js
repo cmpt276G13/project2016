@@ -511,7 +511,7 @@ var battleState = {
         player.gold += this.rewards.gold;
         player.experience += this.rewards.experience;
         
-        while(player.experience > player.experienceToNextLevel) {
+        while(player.experience >= player.experienceToNextLevel) {
             
             player.levelUp();
             

@@ -64,13 +64,15 @@
         
         player.load = function() {
             
+            this.level = <%= @currentUser.player.level%>
             this.name = '<%= @currentUser.username%>';
-            this.health = <%= @currentUser.player.health%>;
-            this.maxHealth = player.health;
+            this.maxHealth = <%= @currentUser.player.max_health%>;
+            this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //some how the health exceeded max health
             this.gold = <%= @currentUser.player.gold%>;
-            this.experienceToNextLevel = 1;
+            this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
+            this.defense = <%= @currentUser.player.defense%>;
             
             //player.items = ...
             //player.skills = ...
@@ -78,11 +80,25 @@
         
         player.save = function() {
             
+            var saveData = {
+                
+                level: this.level,
+                max_Health: this.maxHealth,
+                health: this.health,
+                gold: this.gold,
+                experience_to_next_level: this.experienceToNextLevel,
+                experience: this.experience,
+                strength: this.strength,
+                defense: this.defense
+            };
+            
             $.ajax( {
                 
                 type: "POST",
-                url: "/save",
-                data: this
+                url: "/game/save",
+                data: JSON.stringify(saveData),
+                contentType: "application/json",
+                dataType: "json"
             });
         };
         
@@ -112,8 +128,7 @@
         };
         
         player.load();
-        player.save();
-        
+        document.getElementById("additional").innerHTML = player.health+"/"+player.maxHealth;
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use
         var justStartedGame = true;

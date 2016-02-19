@@ -10,4 +10,14 @@ class GamesController < ApplicationController
         #@player = Player.find(name of player, or some other way to identify him)
         @currentUser = current_user
     end
+    
+    def save 
+       
+       current_user.player.update_attributes(playerParams)
+    end
+    
+    def playerParams
+       
+       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health) 
+    end
 end
