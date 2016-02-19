@@ -76,6 +76,16 @@
             //player.skills = ...
         };
         
+        player.save = function() {
+            
+            $.ajax( {
+                
+                type: "POST",
+                url: "/save",
+                data: this
+            });
+        };
+        
         player.respawn = function(spawnPoint) {
             
             this.health = this.maxHealth;
@@ -102,6 +112,7 @@
         };
         
         player.load();
+        player.save();
         
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use
