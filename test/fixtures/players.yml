@@ -1,17 +1,52 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  username: MyString
-  health: 1
-  strength: 1
-  defense: 1
-  level: 1
-  experience: 1
+# Users should already have players created upon sign up.
 
-two:
-  username: MyString
-  health: 1
-  strength: 1
-  defense: 1
+michael:
+  user: michael
+  health: 50
+  strength: 10
+  defense: 10
   level: 1
+  experience: 2
+  gold: 0
+
+archer:
+  user: archer
+  health: 50
+  strength: 10
+  defense: 10
+  level: 2
+  experience: 50
+  gold: 0
+
+# This player should be at the top of the rankings
+# Make sure the level is equal to player4, but experience is higher
+lana:
+  user: lana
+  health: 50
+  strength: 10
+  defense: 10
+  level: 5
+  experience: 20
+  gold: 0
+
+malory:
+  user: malory
+  health: 50
+  strength: 10
+  defense: 10
+  level: 5
   experience: 1
+  gold: 0
+
+<% 30.times do |n| %>
+player_<%= n %>:
+  user: user_<%= n %>
+  health: 50
+  strength: 10
+  defense: 10
+  level: 1
+  experience: 0
+  gold: 0
+<% end %>

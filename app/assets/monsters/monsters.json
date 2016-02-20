@@ -3,13 +3,23 @@
         
         "imageKey": "orc",
         "name": "orc",
-        "health": 8,
-        "defense": 5,
-        "strength": 5,
+        "maxHealth": 14,
+        "health": 14,
+        "defense": 6,
+        "strength": 6,
         "startingFrame": 8,
         "animations": [
             {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5},
             {"name": "dying", "frames": [8, 12, 0, 4, 8, 12, 0, 4], "speed": 5}
-        ]
+        ],
+        
+        "rewards": {
+            
+            "experience": 5,
+            "gold": 10,
+            
+            "items": [],
+            "skills": []
+        }
     }
 }

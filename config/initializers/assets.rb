@@ -9,6 +9,8 @@ Rails.application.config.assets.version = '1.0'
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( search.js )
+
+#precompile the page specific javascript
 Rails.application.config.assets.precompile += %w(battleState.js)
 Rails.application.config.assets.precompile += %w(bootState.js)
 Rails.application.config.assets.precompile += %w(overworldState.js)
@@ -19,3 +21,6 @@ Rails.application.config.assets.precompile += %w(textbox.js)
 Rails.application.config.assets.precompile += %w(actionDisplay.js)
 Rails.application.config.assets.precompile += %w(battleSubstateFunctions.js)
 Rails.application.config.assets.precompile += %w(overworldSubstateFunctions.js)
+Rails.application.config.assets.precompile += %w(screenTransitionEffects.js)
+Rails.application.config.assets.precompile += %w(pauseMenuState.js)
+Rails.application.config.assets.precompile += %w(pauseMenuSubstateFunctions.js)

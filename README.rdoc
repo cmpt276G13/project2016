@@ -2,6 +2,10 @@
 
 Some of the code is courtesy of railstutorial.org, and possibly guides.rubyonrails.org/getting_started.html
 
+run
+  rake db:seed
+to create fake sample data
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

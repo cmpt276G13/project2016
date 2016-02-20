@@ -11,21 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217063107) do
+ActiveRecord::Schema.define(version: 20160219072030) do
 
   create_table "players", force: :cascade do |t|
-    t.string   "username"
-    t.integer  "health",     default: 50
-    t.integer  "strength",   default: 10
-    t.integer  "defense",    default: 10
-    t.integer  "level",      default: 1
-    t.integer  "experience", default: 0
-    t.integer  "gold",       default: 0
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "user_id"
+    t.integer  "health",                   default: 50
+    t.integer  "strength",                 default: 10
+    t.integer  "defense",                  default: 10
+    t.integer  "level",                    default: 1
+    t.integer  "experience",               default: 0
+    t.integer  "gold",                     default: 0
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "max_health",               default: 50
+    t.integer  "experience_to_next_level", default: 10
   end
 
-  add_index "players", ["username"], name: "index_players_on_username", unique: true
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

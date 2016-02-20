@@ -1,2 +1,38 @@
 <% provide(:title, @user.username) %>
-<h1><%= @user.username %></h1>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <%= gravatar_for @user %>
+        <%= @user.username %>
+      </h1>
+      <% if current_user?(@user) %>
+        <%= link_to "Delete your account", @user, method: :delete,
+                      data: { confirm: "Are you sure you want to delete your account?" } %>
+      <% end %>
+      <% if current_user && current_user.admin? && !current_user?(@user) && !@user.admin? %>
+        <%= link_to "delete", @user, method: :delete,
+                      data: { confirm: "As an Admin, are you sure you want to delete this user?" } %>
+      <% end %>
+    </section>
+  </aside>
+  <div class="col-md-8">
+    <h3>Player</h3>
+    <table class="player">
+      <tr>
+        <td>Health: <%= @player.health %>/<%= @player.max_health %></td>
+      </tr>
+      <tr>
+        <td>Level: <%= @player.level %></td>
+        <td>Experience: <%= @player.experience %>/<%= @player.experience_to_next_level %></td>
+      </tr>
+      <tr>
+        <td>Strength: <%= @player.strength %></td>
+        <td>Defense: <%= @player.defense %></td>
+      </tr>
+      <tr>
+        <td>Gold: <%= @player.gold %></td>
+      </tr>
+    </table>
+  </div>
+</div>

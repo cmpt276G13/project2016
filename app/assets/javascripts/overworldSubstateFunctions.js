@@ -111,6 +111,48 @@ function exploreKeyDown(key) {
     //if user presses the enter key we will enter the battle state
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
+        game.state.start('pauseMenu');
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.SPACEBAR) {
+        
         game.state.start('battle');
     }
+};
+
+function startGameEnter() {
+    
+    //create a fade in effect
+    this.fadeFromBlack = new fadeFromBlack(1000);
+    this.fadeFromBlack.setOnExit(function(){this.fadeFromBlack.finishedTransition = true}, this);
+    this.fadeFromBlack.start();
+    
+};
+
+function startGameExit() {
+    
+    //get rid of the black screen so it doesn't cover the whole screen
+    //object not created until you enter the startgame state, so don't delete if its nonexistant
+    if(typeof this.fadeFromBlack !== "undefined") {
+        
+        this.fadeFromBlack.cover.graphics.destroy();
+        delete this.fadeFromBlack;
+    }
+};
+
+function startGameUpdate() {
+    
+    if(this.fadeFromBlack.finishedTransition) {
+        
+        this.stateManager.changeState("explore");
+    }
+}
+
+function exitBattleEnter() {
+    
+    //create a fade in effect
+    this.fadeFromBlack = new fadeFromBlack(250);
+    this.fadeFromBlack.setOnExit(function(){this.fadeFromBlack.finishedTransition = true}, this);
+    this.fadeFromBlack.start();
+    
 };

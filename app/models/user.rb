@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessor :remember_token
-  has_one :player
+  has_one :player, dependent: :destroy # Relations to players table
   
   before_save {
     # Ensures entries are unique in the database.
@@ -43,5 +43,10 @@ class User < ActiveRecord::Base
   # Forgets a user.
   def forget
     update_attribute(:remember_digest, nil)
+  end
+  
+  # Specifies the amount of users per page. Goes in unison with will_paginate.
+  def per_page
+    30
   end
 end

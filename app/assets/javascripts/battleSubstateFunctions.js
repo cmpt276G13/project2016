@@ -181,7 +181,6 @@ function playerAttackExit() {
 
 function playerAttackUpdate() {
     
-    document.getElementById("additional").innerHTML = player.lastUsedAttack.isFinished;
     //move onto the next state when the player's last used attack has finished
     if(player.lastUsedAttack.isFinished) {
         
@@ -224,6 +223,7 @@ function playerAttackResultsUpdate() {
 function cullDeadMonstersEnter() {
     
     this.startMonsterDeathAnimation();
+    this.storePlayerRewards();
 };
 
 function cullDeadMonstersExit() {
@@ -233,12 +233,13 @@ function cullDeadMonstersExit() {
 
 function cullDeadMonstersUpdate() {
     
+    //before deleting dead entites store the rewards the monsters give to the player
     var removedAllMarkedEntites = this.deleteMarkedEntities(this.monsters);
             
     if(removedAllMarkedEntites && this.monsters.length == 0) {
         
         //go to victory
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("victory");
     }
     
     if(removedAllMarkedEntites && this.monsters.length > 0) {
@@ -278,6 +279,8 @@ function monsterAttackResultsEnter() {
     
     var damage = this.determineAttackResults(this.monsters[this.currentMonster].lastUsedAttack, player);
     this.damageTexts.push(this.createDamageText(player, damage) );
+    
+    this.playerStatDisplay.playerHealthBar.setValue(player.health);
 };
 
 function monsterAttackResultsExit() {
@@ -294,6 +297,14 @@ function monsterAttackResultsUpdate() {
         return;
     }
     
+    //if player died, move to player death animation
+    if(player.health == 0) {
+        
+        //for now move straight to defeat screen
+        this.stateManager.changeState("playerDying");
+        return;
+    }
+    
     this.currentMonster += 1;
     
     //no more monsters, move back to player's turn
@@ -306,3 +317,58 @@ function monsterAttackResultsUpdate() {
     //monster left, start his turn
     this.stateManager.changeState("monsterTurn");
 };
+
+function playerDyingEnter() {
+    
+    player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
+    player.sprite.animations.play("dying");
+}
+
+function victoryEnter() {
+    
+    //player won a match, create a message box at the center of the screen
+    //show player all the rewards he received
+    this.createRewardsText();
+    
+    this.applyRewardsToPlayer();
+};
+
+function victoryKeyDown(key) {
+    
+    //execute the action the user has chosen
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        game.state.start('overworld');
+    }
+}
+
+function defeatEnter() {
+    
+    //create a transition so we fade to a black screen
+    this.fadeToBlack = new fadeToBlack(700);
+    
+    //add message to display when screen fades to black
+    //can't use the message box because the black screen draws ontop of it, since it was created after the message box
+    this.deathMessage = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, 30, true);
+    this.deathMessage.hide();
+    this.deathMessage.setText("You have died.");
+    
+    this.fadeToBlack.setOnExit(function(){this.fadeToBlack.finishedTransition = true; this.deathMessage.show();}, this);
+    this.fadeToBlack.start();
+}
+
+function defeatExit() {
+    
+}
+
+function defeatKeyDown(key) {
+    
+    if(this.fadeToBlack.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        //now make the deathmessage fade to black, and then go back to the overworld
+        var tween = game.add.tween(this.deathMessage.background);
+        tween.to({alpha: 0}, 300);
+        tween.onComplete.add(function(){game.state.start('overworld');}, this);
+        tween.start();
+    }
+}

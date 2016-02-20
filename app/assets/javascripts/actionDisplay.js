@@ -23,6 +23,8 @@ function actionDisplay(x, y, width, height, actionTexts) {
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     
+    this.selectionDisplay.visible = true;
+    
     //first clear the previously drawn rectangle
     this.selectionDisplay.clear();
     
@@ -39,7 +41,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     var xPosition = this.actionTexts[this.selectedAction].x;
     var yPosition = this.actionTexts[this.selectedAction].y;
     
-    this.selectionDisplay.drawRect(xPosition, yPosition, 80, 30);
+    this.selectionDisplay.drawRect(xPosition, yPosition, 100, 30);
 };
 
 //users will be able to change their currently selected action
@@ -65,7 +67,8 @@ function createActionTexts(choices, actionDisplayBackground) {
     for(i = 0; i < choices.length; ++i) {
         
         actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
-
+        actionTexts[i].fontSize = 22;
+        
         //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
         actionDisplayBackground.addChild(actionTexts[i]);
     }
