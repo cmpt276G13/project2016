@@ -67,7 +67,7 @@
         
         player.load = function() {
             
-            this.level = <%= @currentUser.player.level%>
+            this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
             this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //some how the health exceeded max health
