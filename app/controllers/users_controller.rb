@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  layout "application2"
   # logged_in_user is defined in sessions_helper.rb
   before_action :logged_in_user, only: [:edit, :update, :destroy]
   before_action :correct_user_or_admin,   only: [:edit, :update, :destroy]
