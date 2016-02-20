@@ -17,6 +17,8 @@
                                 data: { confirm: "As an Admin, are you sure you want to delete this user?" } %>
         <% end %>
       </td>
+      <td>Level: <%= user.player.level %></td>
+      <td>Experience: <%= user.player.experience %>/<%= user.player.experience_to_next_level %></td>
     </tr>
   <% end %>
 </table>
