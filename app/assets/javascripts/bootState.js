@@ -20,5 +20,8 @@ var bootState = {
         
         //we're done with this state, so let's go onto the loading state to load the game resources
         game.state.start('load');
+        
+        //capture all keys the game uses so it doesn't affect the browser
+        game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
     },
 };
