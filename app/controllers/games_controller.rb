@@ -13,10 +13,10 @@ class GamesController < ApplicationController
     
     def save 
        
-       current_user.player.update_attributes(playerParams)
+       current_user.player.update_attributes(player_params)
     end
     
-    def playerParams
+    def player_params
        
        params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health) 
     end

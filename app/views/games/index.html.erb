@@ -21,7 +21,7 @@
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     
     <script>
-    
+    document.getElementById("additional").innerHTML = "select an action";
         //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
         if(typeof overworldState === "undefined") {
             
@@ -59,6 +59,10 @@
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
         var player = new rpgEntity();
         
+        player.experience = 0;
+        player.experienceToNextLevel = 1;
+        player.gold = 0;
+        player.strength = 2000;
         player.items = [];
         player.skills = [];
         
@@ -80,10 +84,12 @@
         
         player.save = function() {
             
+            document.getElementById("additional").innerHTML = this.health + " " + this.maxHealth;
+            
             var saveData = {
                 
                 level: this.level,
-                max_Health: this.maxHealth,
+                max_health: this.maxHealth,
                 health: this.health,
                 gold: this.gold,
                 experience_to_next_level: this.experienceToNextLevel,
