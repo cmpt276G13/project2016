@@ -21,7 +21,6 @@
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     
     <script>
-    document.getElementById("additional").innerHTML = "select an action";
         //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
         if(typeof overworldState === "undefined") {
             
@@ -83,8 +82,6 @@
         };
         
         player.save = function() {
-            
-            document.getElementById("additional").innerHTML = this.health + " " + this.maxHealth;
             
             var saveData = {
                 

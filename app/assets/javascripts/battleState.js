@@ -238,24 +238,6 @@ var battleState = {
         },
     },
     
-    //rewards received by the player when he kills an enemy
-    //awarded at the end of the battle state (in the victory sub state)
-    createRewards: function() {
-        
-        var rewards = {};
-        rewards.experience = 0;
-        rewards.gold = 0;
-        
-        //if we want monsters to give items when thjey die, then we can add all items to this array
-        rewards.items = [];
-        
-        //same for new skills
-        //add a key to the skills object
-        rewards.skills = [/*add skill keys, ex: 'fireball'  */];
-        
-        return rewards;
-    },
-    
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         
@@ -300,6 +282,125 @@ var battleState = {
         return monsters;
     },
     
+    generateMonsterSprites: function(monsters) {
+        
+        //all monsters have a key that can be used to get the name of the sprite for the monster
+        //lets get this monsters image to draw
+        //we can position the mosnter for battle as well
+        var i = 0;
+        for(i = 0; i < monsters.length; ++i) {
+            
+            monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
+            
+            for(var j = 0; j < monsters[i].animations.length; ++j) {
+                
+                animation = monsters[i].animations[j];
+                monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
+            }
+        }
+    },
+    
+    //looks for all dead monsters and plays their dying animation
+    startMonsterDeathAnimation: function() {
+        
+        for(var i = 0; i < this.monsters.length; i++) {
+            
+            if(this.monsters[i].health != 0) {
+                
+                continue;
+            }
+            
+            startDeathAnimation(this.monsters[i]);
+        }
+    },
+    
+    //deletes all entities marked for deletion
+    //returns true if all dead entities have been deleted
+    //false if there are entities that are still animating, and need to be deleted later
+    deleteMarkedEntities: function(entities) {
+        
+        for(var i = 0; i < entities.length;) {
+            
+            if(entities[i].health != 0) {
+                
+                i += 1;
+                continue;
+            }
+
+            if(!entities[i].shouldDelete) {
+                
+                return false;
+            }
+            
+            entities[i].sprite.destroy();
+            entities.splice(i, 1);
+            
+        }
+        return true;
+    },
+    
+    //rewards received by the player when he kills an enemy
+    //awarded at the end of the battle state (in the victory sub state)
+    createRewards: function() {
+        
+        var rewards = {};
+        rewards.experience = 0;
+        rewards.gold = 0;
+        
+        //if we want monsters to give items when thjey die, then we can add all items to this array
+        rewards.items = [];
+        
+        //same for new skills
+        //add a key to the skills object
+        rewards.skills = [/*add skill keys, ex: 'fireball'  */];
+        
+        return rewards;
+    },
+    
+    //finds all dead enemies and stores their rewards so we can give it to the player later
+    storePlayerRewards: function() {
+        
+        for(var i = 0; i < this.monsters.length; i++) {
+            
+            if(this.monsters[i].health != 0) {
+                
+                continue;
+            }
+            
+            this.rewards.experience += this.monsters[i].rewards.experience;
+            this.rewards.gold += this.monsters[i].rewards.gold;
+            this.rewards.items.concat(this.monsters[i].rewards.items);
+            this.rewards.skills.concat(this.monsters[i].rewards.experience);
+        }
+    },
+    
+    applyRewardsToPlayer: function() {
+        
+        player.gold += this.rewards.gold;
+        player.experience += this.rewards.experience;
+        
+        while(player.experience >= player.experienceToNextLevel) {
+            
+            player.levelUp();
+            
+            //start the level up effect, for now just display a message
+            this.showMessage("You have leveled up!");
+            this.playerStatDisplay.playerHealthBar.setValueNoTransition(player.health);
+        }
+    },
+    
+    createRewardsText: function() {
+        
+        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
+        var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
+        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        
+        this.rewardsTextbox.setText(rewardsText);
+        this.rewardsTextbox.text.fontSize = 20;
+        this.rewardsTextbox.text.y = 0;
+        this.rewardsTextbox.text.anchor.y = 0;
+    },
+    
     //create a UI that displays the player's current stats
     generatePlayerStatDisplay: function(x, y, width, height){
         
@@ -341,24 +442,6 @@ var battleState = {
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
 
         return statContainer;
-    },
-    
-    generateMonsterSprites: function(monsters) {
-        
-        //all monsters have a key that can be used to get the name of the sprite for the monster
-        //lets get this monsters image to draw
-        //we can position the mosnter for battle as well
-        var i = 0;
-        for(i = 0; i < monsters.length; ++i) {
-            
-            monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
-            
-            for(var j = 0; j < monsters[i].animations.length; ++j) {
-                
-                animation = monsters[i].animations[j];
-                monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
-            }
-        }
     },
     
     //saves the orientation of the player as it was in the overworld state, before the battle started
@@ -444,18 +527,6 @@ var battleState = {
         this.damageTexts = [];
     },
     
-    createRewardsText: function() {
-        
-        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
-        var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
-        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
-        
-        this.rewardsTextbox.setText(rewardsText);
-        this.rewardsTextbox.text.fontSize = 20;
-        this.rewardsTextbox.text.y = 0;
-        this.rewardsTextbox.text.anchor.y = 0;
-    },
-    
     //checks if all of the attack results texts have finished their tweening
     finishedDisplayingResults: function() {
         
@@ -472,77 +543,6 @@ var battleState = {
             
         }
 
-        return true;
-    },
-    
-    //looks for all dead monsters and plays their dying animation
-    startMonsterDeathAnimation: function() {
-        
-        for(var i = 0; i < this.monsters.length; i++) {
-            
-            if(this.monsters[i].health != 0) {
-                
-                continue;
-            }
-            
-            startDeathAnimation(this.monsters[i]);
-        }
-    },
-    
-    //finds all dead enemies and stores their rewards so we can give it to the player later
-   storePlayerRewards: function() {
-        
-        for(var i = 0; i < this.monsters.length; i++) {
-            
-            if(this.monsters[i].health != 0) {
-                
-                continue;
-            }
-            
-            this.rewards.experience += this.monsters[i].rewards.experience;
-            this.rewards.gold += this.monsters[i].rewards.gold;
-            this.rewards.items.concat(this.monsters[i].rewards.items);
-            this.rewards.skills.concat(this.monsters[i].rewards.experience);
-        }
-    },
-    
-    applyRewardsToPlayer: function() {
-        
-        player.gold += this.rewards.gold;
-        player.experience += this.rewards.experience;
-        
-        while(player.experience >= player.experienceToNextLevel) {
-            
-            player.levelUp();
-            
-            //start the level up effect, for now just display a message
-            this.showMessage("You have leveled up!");
-            this.playerStatDisplay.playerHealthBar.setValueNoTransition(player.health);
-        }
-    },
-    
-    //deletes all entities marked for deletion
-    //returns true if all dead entities have been deleted
-    //false if there are entities that are still animating, and need to be deleted later
-    deleteMarkedEntities: function(entities) {
-        
-        for(var i = 0; i < entities.length;) {
-            
-            if(entities[i].health != 0) {
-                
-                i += 1;
-                continue;
-            }
-
-            if(!entities[i].shouldDelete) {
-                
-                return false;
-            }
-            
-            entities[i].sprite.destroy();
-            entities.splice(i, 1);
-            
-        }
         return true;
     },
     

@@ -107,8 +107,8 @@ var overworldState = {
     create: function() {
         
         //misc instructions, ignore
-        //document.getElementById("additional").innerHTML = "Use the arrow keys to move the player. Press Enter to enter battle";
-		
+        document.getElementById("additional").innerHTML = "Press Enter to view stats. Press Space to enter battle.";
+        
         //Phaser draws objects in the order they are created (all applications have a rendering order, this is jsut phaser's order)
         //this means that objects created first will be drawn underneath objects created last
         //so we need to create background objects first
