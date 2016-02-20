@@ -66,8 +66,7 @@ function createActionTexts(choices, actionDisplayBackground) {
     var i = 0;
     for(i = 0; i < choices.length; ++i) {
         
-        actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], {fill: '#fff'} ));
-        actionTexts[i].fontSize = 22;
+        actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], actionStyle));
         
         //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
         actionDisplayBackground.addChild(actionTexts[i]);

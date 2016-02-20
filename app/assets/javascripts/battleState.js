@@ -411,7 +411,7 @@ var battleState = {
         var textStyle = {fontSize: 22};
         
         //text for the player name
-        statContainer.playerName = game.add.text(5, 10, player.name);
+        statContainer.playerName = game.add.text(5, 10, player.name, healthBarCaptionStyle);
         statContainer.playerName.fontSize = 22;
         statContainer.playerName.fill = 'white';
         statContainer.textBox.background.addChild(statContainer.playerName);
@@ -495,7 +495,7 @@ var battleState = {
     createDamageText: function(entity, damageReceived) {
         
         var damageText = new Object();
-        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), {fill: 'red'});
+        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), damageStyle);
         damageText.text.alpha = 0.3;
         damageText.text.anchor.setTo(0.5, 0);
         

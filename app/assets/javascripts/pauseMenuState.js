@@ -28,16 +28,17 @@ var pauseMenuState = {
             fontSize: 18
         };
         
-        display.playerName = game.add.text(display.background.width / 2, textOffset, player.name, textStyle);
+        display.playerName = game.add.text(display.background.width / 2, textOffset, player.name, healthBarCaptionStyle);
         display.playerName.anchor.setTo(0.5, 0);
-        display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, textStyle);
+        display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, healthBarCaptionStyle);
         display.playerLevel.anchor.setTo(0.5, 0);
         
-        display.playerHealth = game.add.text(textOffset, textOffset + 45, "HP      " + player.health + "/ " + player.maxHealth, textStyle);
-        display.playerExp = game.add.text(textOffset + display.background.width / 3 * 2, textOffset + 45, "EXP      " + player.experience + "/ " + player.experienceToNextLevel, textStyle);
-        display.playerStrength = game.add.text(display.background.width /4 , textOffset + 90, "STR        " + player.strength, textStyle);
-        display.playerDefense = game.add.text(display.background.width / 2, textOffset + 90, "DEF        " + player.defense, textStyle);
-        display.playerGold = game.add.text(display.background.width / 5 * 4 , display.background.height - 30, "GOLD     " + player.gold, textStyle);
+        display.playerHealth = new attributeDisplayText('HP:', player.health + "/ " + player.maxHealth, textOffset, textOffset + 45, 145, 20, healthBarCaptionStyle);
+       // game.add.text(textOffset, textOffset + 45, "HP      " + player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        display.playerExp = game.add.text(textOffset + display.background.width / 3 * 2, textOffset + 45, "EXP      " + player.experience + "/ " + player.experienceToNextLevel, healthBarCaptionStyle);
+        display.playerStrength = game.add.text(display.background.width /4 , textOffset + 90, "STR        " + player.strength, healthBarCaptionStyle);
+        display.playerDefense = game.add.text(display.background.width / 2, textOffset + 90, "DEF        " + player.defense, healthBarCaptionStyle);
+        display.playerGold = game.add.text(display.background.width / 5 * 4 , display.background.height - 30, "GOLD     " + player.gold, healthBarCaptionStyle);
         display.playerGold.x = display.background.width - textOffset - display.playerGold.width;
         
         barConfig = {
@@ -78,11 +79,13 @@ var pauseMenuState = {
         
         for(object in display) {
             
-            if(display[object] != display.background && display[object] != display.healthBar&& display[object] != display.expBar) {
+            if(display[object] != display.background && display[object] != display.healthBar&& display[object] != display.expBar && display[object] != display.playerHealth) {
                 
                 display.background.addChild(display[object]);
             }
         }
+        
+        display.playerHealth.addParent(display.background);
         
         return display;
     },
