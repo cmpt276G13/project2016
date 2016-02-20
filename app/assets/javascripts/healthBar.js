@@ -42,18 +42,25 @@ HealthBar.prototype.setupConfiguration = function (providedConfig) {
 //you must define a new max value if you want to change an entity's max health
 HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
     var defaultConfig= {
-        width: 250,
-        height: 40,
-        radius: 8,//defines how curved the bar is
+        width: 145,
+        height: 11,
+        radius: 6,//defines how curved the bar is
         maxHealth: 100,
         x: 0,
         y: 0,
         bg: {
-            color: '#651828'
+            color: '#651828',
+            gradientStart: 'white',
+            gradientEnd: 'black',
+            applyGradient: false
         },
         bar: {
-            color: '#FEFF03'
+            color: '#FEFF03',
+            applyGradient: true,
+            gradientStart: '#00ff00',
+            gradientEnd: '#7af5f5'
         },
+    
         animationDuration: 400,
         flipped: false,
         isFixedToCamera: false
@@ -79,7 +86,21 @@ function mergeObjetcs(targetObj, newObj) {
 HealthBar.prototype.drawBackground = function() {
     
     var bmd = this.game.add.bitmapData(this.config.width, this.config.height);
-    bmd.ctx.fillStyle = this.config.bg.color;
+    
+    if(this.config.bg.applyGradient) {
+        
+        //gradient effect, doesn't incorporate flipped
+        var grd = bmd.ctx.createLinearGradient(0, 0, this.config.width, this.config.height);
+        
+        grd.addColorStop(0, this.config.bg.gradientStart);
+        grd.addColorStop(1, this.config.bg.gradientEnd);
+        bmd.ctx.fillStyle = grd;
+        
+    } else {
+        
+        bmd.ctx.fillStyle = this.config.bg.color;
+    }
+    
     bmd.ctx.beginPath();
     drawRoundedRectangle(bmd.ctx, this.config);
     bmd.ctx.fill();
@@ -96,7 +117,22 @@ HealthBar.prototype.drawBackground = function() {
 HealthBar.prototype.drawHealthBar = function() {
     
     var bmd = this.game.add.bitmapData(this.config.width, this.config.height);
-    bmd.ctx.fillStyle = this.config.bar.color;
+    
+    if(this.config.bar.applyGradient) {
+        
+        //gradient effect, doesn't incorporate flipped
+        var grd = bmd.ctx.createLinearGradient(0, 0, this.config.width, this.config.height);
+        
+        grd.addColorStop(0, this.config.bar.gradientStart);
+        grd.addColorStop(1, this.config.bar.gradientEnd);
+        bmd.ctx.fillStyle = grd;
+        
+    } else {
+        
+        bmd.ctx.fillStyle = this.config.bar.color;
+    }
+    
+    
     bmd.ctx.beginPath();
     drawRoundedRectangle(bmd.ctx, this.config);
     bmd.ctx.fill();
