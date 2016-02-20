@@ -14,6 +14,9 @@ Project Name: GeoHunter
         *Using the Google Maps API to determine what game maps are available to the player. 
             (This system allows players to visit different in-game locations according to their real world position.)
 
+---------------------------
+Some of the code is courtesy of railstutorial.org, and possibly guides.rubyonrails.org/getting_started.html
 
-
-
+run
+  rake db:seed
+to create fake sample data
