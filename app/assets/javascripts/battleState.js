@@ -419,10 +419,7 @@ var battleState = {
         var barStyle = {
             
             x: statContainer.playerName.width * 2,
-            y: statContainer.playerName.y,
-            width: 100,
-            height: 20,
-            radius: 6,
+            y: statContainer.playerName.y + 7,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -431,9 +428,6 @@ var battleState = {
             
             bg: {
                 color: '#222222'
-            },
-            bar: {
-                color: '#FFFFFF'
             }
         };
         

@@ -56,7 +56,9 @@ var pauseMenuState = {
             
             bar: {
                 
-                color: 'green'
+                applyGradient: true,
+                gradientStart: '#00ff00',
+                gradientEnd: '#7af5f5'
             }
         };
         
@@ -67,7 +69,8 @@ var pauseMenuState = {
         barConfig.maxHealth = player.experienceToNextLevel;
         barConfig.x = display.background.width / 3 * 2 + textOffset;
         barConfig.bg.color = '0x111111';
-        barConfig.bar.color = 'teal';
+        barConfig.bar.gradientStart = '#ffff00';
+        barConfig.bar.gradientEnd = '#7af588';
         
         display.expBar = new HealthBar(game, barConfig);
         display.expBar.setValueNoTransition(player.experience);
