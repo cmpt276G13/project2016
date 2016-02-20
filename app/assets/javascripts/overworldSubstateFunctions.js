@@ -113,6 +113,11 @@ function exploreKeyDown(key) {
         
         game.state.start('pauseMenu');
     }
+    
+    if(key.keyCode == Phaser.Keyboard.SPACEBAR) {
+        
+        game.state.start('battle');
+    }
 };
 
 function startGameEnter() {

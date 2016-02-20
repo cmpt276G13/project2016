@@ -181,7 +181,6 @@ function playerAttackExit() {
 
 function playerAttackUpdate() {
     
-    document.getElementById("additional").innerHTML = player.lastUsedAttack.isFinished;
     //move onto the next state when the player's last used attack has finished
     if(player.lastUsedAttack.isFinished) {
         

@@ -41,7 +41,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     var xPosition = this.actionTexts[this.selectedAction].x;
     var yPosition = this.actionTexts[this.selectedAction].y;
     
-    this.selectionDisplay.drawRect(xPosition, yPosition, 80, 30);
+    this.selectionDisplay.drawRect(xPosition, yPosition, 100, 30);
 };
 
 //users will be able to change their currently selected action
