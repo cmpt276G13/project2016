@@ -176,7 +176,6 @@ var overworldState = {
         
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
-        
         player.save();
     },
     

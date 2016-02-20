@@ -133,8 +133,6 @@
             this.experienceToNextLevel += 5 * this.level;
         };
         
-        player.load();
-        document.getElementById("additional").innerHTML = player.health+"/"+player.maxHealth;
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use
         var justStartedGame = true;
@@ -240,6 +238,9 @@
                 
                 //prevent the player from leaving the world bounds, this means that player's can't walk off the edge of teh screen
                 player.sprite.body.collideWorldBounds = true;
+                
+                //load player data from server
+                player.load();
                 
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
