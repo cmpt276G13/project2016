@@ -1,3 +1,22 @@
+Project Name: GeoHunter
+
+    -Introduction:
+        *GeoHunter is a Turn-based Role Playing Game.
+        *It's also a Location Based Game.
+    
+    -Main goals:
+        *Acquire as much experience points as possible.
+        *Level up their character. (Levels represented by player's score on a leaderboard.)
+        
+    -Main features:
+        *Uusing the Google Maps API to determine what game maps are available to the player. 
+            (This system allows players to visit different in-game locations according to their real world position.)
+
+
+
+
+
+
 == README
 
 Some of the code is courtesy of railstutorial.org, and possibly guides.rubyonrails.org/getting_started.html
