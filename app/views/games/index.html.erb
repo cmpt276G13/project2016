@@ -21,7 +21,7 @@
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     
     <script>
-    
+    document.getElementById("additional").innerHTML = "select an action";
         //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
         if(typeof overworldState === "undefined") {
             
@@ -59,21 +59,53 @@
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
         var player = new rpgEntity();
         
+        player.experience = 0;
+        player.experienceToNextLevel = 1;
+        player.gold = 0;
+        player.strength = 2000;
         player.items = [];
         player.skills = [];
         
         player.load = function() {
             
+            this.level = <%= @currentUser.player.level%>
             this.name = '<%= @currentUser.username%>';
-            this.health = <%= @currentUser.player.health%>;
-            this.maxHealth = player.health;
+            this.maxHealth = <%= @currentUser.player.max_health%>;
+            this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //some how the health exceeded max health
             this.gold = <%= @currentUser.player.gold%>;
-            this.experienceToNextLevel = 1;
+            this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
+            this.defense = <%= @currentUser.player.defense%>;
             
             //player.items = ...
             //player.skills = ...
+        };
+        
+        player.save = function() {
+            
+            document.getElementById("additional").innerHTML = this.health + " " + this.maxHealth;
+            
+            var saveData = {
+                
+                level: this.level,
+                max_health: this.maxHealth,
+                health: this.health,
+                gold: this.gold,
+                experience_to_next_level: this.experienceToNextLevel,
+                experience: this.experience,
+                strength: this.strength,
+                defense: this.defense
+            };
+            
+            $.ajax( {
+                
+                type: "POST",
+                url: "/game/save",
+                data: JSON.stringify(saveData),
+                contentType: "application/json",
+                dataType: "json"
+            });
         };
         
         player.respawn = function(spawnPoint) {
@@ -100,8 +132,6 @@
             this.experience -= this.experienceToNextLevel;
             this.experienceToNextLevel += 5 * this.level;
         };
-        
-        player.load();
         
         //flag used to check if player just started playing the game
         //used by the overworld state to determine what intro effect it should use
@@ -208,6 +238,9 @@
                 
                 //prevent the player from leaving the world bounds, this means that player's can't walk off the edge of teh screen
                 player.sprite.body.collideWorldBounds = true;
+                
+                //load player data from server
+                player.load();
                 
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);

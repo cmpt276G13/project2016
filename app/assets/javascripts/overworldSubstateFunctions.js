@@ -111,7 +111,7 @@ function exploreKeyDown(key) {
     //if user presses the enter key we will enter the battle state
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        game.state.start('battle');
+        game.state.start('pauseMenu');
     }
 };
 
