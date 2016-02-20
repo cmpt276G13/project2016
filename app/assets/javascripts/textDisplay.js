@@ -50,3 +50,66 @@ attributeDisplayText.prototype.addParent = function(parent) {
     parent.addChild(this.name);
     parent.addChild(this.value);
 }
+
+//object that stores attribute text and displays them as a table with the specified number of columns
+
+//x,y are the top left position of the table
+//cellWidth and cellHeight are the dimensions of each attribute display text
+//columnSpacing is the horizontal gap between each cel
+//rowSpacing is the vertical gap between each cel
+function attributeDisplayTextTable(x, y, cellWidth, cellHeight, columnSpacing, rowSpacing) {
+    
+    this.x = x;
+    this.y = y;
+    this.cellWidth = cellWidth;
+    this.cellHeight = cellHeight;
+    this.columnSpacing = columnSpacing;
+    this.rowSpacing = rowSpacing;
+    
+    this.columns = {};
+}
+
+//add the given attributeText to the given column
+//column name is the name of the column to add the attribute to
+//attributeName is name of the attribute you want to add, value is the value
+//textStyle is the style to apply to the given attribute
+//it will automatically position the attribute in the table
+attributeDisplayTextTable.prototype.addAttribute = function(columnName, attributeName, attributeValue, textStyle) {
+    
+    //create the column as an array of attributes, if the array hasn't been initialized yet
+    if(typeof this.columns[columnName] === "undefined") {
+        
+        this.columns[columnName] = [];
+    }
+    
+    //you need to find the id of this column, that is, is this the first column, the second column, third...
+    var columnId = 0;
+    for(column in this.columns) {
+        
+        if(column == columnName) {
+            
+            break;
+        }
+        
+        columnId += 1;
+    }
+    
+    var xPos = this.x + columnId * (this.cellWidth + this.columnSpacing);
+    //add this to the bottom of the column
+    var yPos = this.y + this.columns[columnName].length * (this.cellHeight + this.rowSpacing);
+    
+    var attribute = new attributeDisplayText(attributeName, attributeValue, xPos, yPos, this.cellWidth, this.cellHeight, textStyle);
+    this.columns[columnName].push(attribute);
+}
+
+//set the parent of all the action display texts
+attributeDisplayTextTable.prototype.addParent = function(parent) {
+    
+    for(column in this.columns) {
+        
+        for(var i = 0; i < this.columns[column].length; ++i) {
+            
+            this.columns[column][i].addParent(parent);
+        }
+    }
+}

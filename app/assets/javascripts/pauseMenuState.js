@@ -34,18 +34,19 @@ var pauseMenuState = {
         display.playerLevel.anchor.setTo(0.5, 0);
         
         display.playerHealth = new attributeDisplayText('HP:', player.health + "/ " + player.maxHealth, textOffset, textOffset + 45, 145, 20, healthBarCaptionStyle);
-       // game.add.text(textOffset, textOffset + 45, "HP      " + player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
-        display.playerExp = game.add.text(textOffset + display.background.width / 3 * 2, textOffset + 45, "EXP      " + player.experience + "/ " + player.experienceToNextLevel, healthBarCaptionStyle);
-        display.playerStrength = game.add.text(display.background.width /4 , textOffset + 90, "STR        " + player.strength, healthBarCaptionStyle);
-        display.playerDefense = game.add.text(display.background.width / 2, textOffset + 90, "DEF        " + player.defense, healthBarCaptionStyle);
-        display.playerGold = game.add.text(display.background.width / 5 * 4 , display.background.height - 30, "GOLD     " + player.gold, healthBarCaptionStyle);
-        display.playerGold.x = display.background.width - textOffset - display.playerGold.width;
+        display.playerExp = new attributeDisplayText("EXP:", player.experience + "/ " + player.experienceToNextLevel, textOffset + display.background.width / 3 * 2, textOffset + 45, 145, 20, healthBarCaptionStyle);
+        
+        display.attributeTable = new attributeDisplayTextTable(display.background.width / 5, textOffset + 90, display.background.width / 4, 20, 80, 5);
+        display.attributeTable.addAttribute("left", "STR", player.strength, healthBarCaptionStyle);
+        display.attributeTable.addAttribute("right", "DEF", player.defense, healthBarCaptionStyle);
+        display.attributeTable.addAttribute("left", "GOLD", player.gold, healthBarCaptionStyle);
+        
+        display.background.addChild(display.playerName);
+        display.background.addChild(display.playerLevel);
+        display.attributeTable.addParent(display.background);
         
         barConfig = {
             
-            width: 145,
-            height: 11,
-            radius: 6,
             maxHealth: player.maxHealth,
             x: textOffset,
             y: textOffset + 63,
@@ -77,15 +78,8 @@ var pauseMenuState = {
         display.expBar.setValueNoTransition(player.experience);
         display.expBar.addParent(display.background);
         
-        for(object in display) {
-            
-            if(display[object] != display.background && display[object] != display.healthBar&& display[object] != display.expBar && display[object] != display.playerHealth) {
-                
-                display.background.addChild(display[object]);
-            }
-        }
-        
         display.playerHealth.addParent(display.background);
+        display.playerExp.addParent(display.background);
         
         return display;
     },
