@@ -113,3 +113,54 @@ attributeDisplayTextTable.prototype.addParent = function(parent) {
         }
     }
 }
+
+//displays a column of text
+//its like a single column of the attributedisplayTextTable, but its all text and not attributes
+//x, y is the position to begin displaying the lisst of texts, each added text will be displayed underneath the one added before it
+//cellWidth is the width of the region each text is displayed
+//cellHeight is the height of the region each text is displayed
+//text style is the style to apply to each text
+function textList(x, y, cellWidth, cellHeight, textStyle) {
+    
+    //parent object so its easy to set the parent of new text objects
+    this.parentGraphics = 
+    this.x = x;
+    this.y = y;
+    this.cellWidth = cellWidth;
+    this.cellHeight = cellHeight;
+    this.textStyle = textStyle;
+    
+    //array of phaser texts to display
+    this.texts = [];
+};
+
+//add the given array of texts to the list
+//each item in texts should be a string
+textList.prototype.addTexts = function(texts) {
+    
+    for(var i = 0; i < texts.length; ++i) {
+
+        this.addText(texts[i]);
+    }
+}
+
+//add the given text to the list
+textList.prototype.addText = function(text) {
+    
+    var xPos = this.x;
+    var yPos = this.y + this.texts.length * this.cellHeight;
+    
+    var newText = game.add.text(xPos, yPos, text, this.textStyle);
+    
+    this.texts.push(newText);
+}
+
+//add given object as parent to all texts
+//function must be called everytime you add a new text, for now
+textList.prototype.addParent = function(parent) {
+    
+    for(var i = 0; i < this.texts.length; ++i) {
+        
+        parent.addChild(this.texts[i]);
+    }
+}

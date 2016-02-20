@@ -17,7 +17,9 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.background.addChild(this.selectionDisplay);
     
     //the text that will be displayed
-    this.actionTexts = createActionTexts(actionTexts, this.background);
+    this.actionTextList = new textList(x + 5, y + 5, width - 10, 28, actionStyle); //createActionTexts(actionTexts, this.background);
+    this.actionTextList.addTexts(actionTexts);
+    this.actionTextList.addParent(this.background);
 };
 
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
@@ -29,7 +31,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     this.selectionDisplay.clear();
     
     //don't draw anything if there is no text
-    if(this.selectedAction >= this.actionTexts.length) {
+    if(this.selectedAction >= this.actionTextList.texts.length) {
         
         return;
     }
@@ -38,8 +40,8 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     this.selectionDisplay.lineStyle(2, 0x0000FF, 1);
     
     //now draw a new rectangle around the current selection
-    var xPosition = this.actionTexts[this.selectedAction].x;
-    var yPosition = this.actionTexts[this.selectedAction].y;
+    var xPosition = this.actionTextList.texts[this.selectedAction].x;
+    var yPosition = this.actionTextList.texts[this.selectedAction].y;
     
     this.selectionDisplay.drawRect(xPosition, yPosition, 100, 30);
 };
@@ -47,33 +49,23 @@ actionDisplay.prototype.highlightSelectedAction = function() {
 //users will be able to change their currently selected action
 actionDisplay.prototype.selectNext = function() {
     
-    this.selectedAction = (this.selectedAction + 1) % this.actionTexts.length;
+    this.selectedAction = (this.selectedAction + 1) % this.actionTextList.texts.length;
 };
 
 actionDisplay.prototype.selectPrevious = function() {
     
-    this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTexts.length - 1 : this.selectedAction - 1;
+    this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTextList.texts.length - 1 : this.selectedAction - 1;
 };
 
-//the actions available to the player, in text form
-function createActionTexts(choices, actionDisplayBackground) {
+actionDisplay.prototype.getSelectedActionString = function() {
     
-    var textMargins = 10;
-    var textSize = 28;
-    
-    var actionTexts = [];
-    
-    var i = 0;
-    for(i = 0; i < choices.length; ++i) {
+    if(this.selectedAction >= this.actionTextList.texts.length) {
         
-        actionTexts.push(game.add.text(textMargins, textMargins + i * textSize, choices[i], actionStyle));
-        
-        //by setting this text to the child of the action box, the text will be positioned relative to the action box instead of relative to the screen
-        actionDisplayBackground.addChild(actionTexts[i]);
+        return "";
     }
     
-    return actionTexts;
-};
+    return this.actionTextList.texts[this.selectedAction].text;
+}
 
 //onKeyDown listener for action Display objects
 //this will assume the arrow keys is used to move, and it will move the current action selection for the given action display
