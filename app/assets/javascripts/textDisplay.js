@@ -162,3 +162,70 @@ textList.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
 }
+
+//a table of text, like the table of attribute texts, but with normal texts instead
+//usefull for displaying skills, items, inventory, and other stuff that aren't attributes
+//internally it'll use an array of text lists
+//x ,y is the position of the tbale
+//cellwidth and cell height is the size of each cell in the table
+//textStyle is the style to applpy to each text
+function textTable(x, y, cellWidth, cellHeight) {
+    
+    this.parentGraphics = game.add.graphics(x, y);
+    
+    this.cellWidth = cellWidth;
+    this.cellHeight = cellHeight;
+    
+    this.columns = {};
+}
+
+//add the given text to the given column
+//column name is the name of the column to add the text to
+//text is the text to add
+//textStyle is the style to apply to the given attribute
+//it will automatically position the text in the table
+textTable.prototype.addText = function(columnName, text, textStyle) {
+    
+    //create the column as a text list, if the list hasn't been initialized yet
+    if(typeof this.columns[columnName] === "undefined") {
+        
+        this.createColumn(columnName, textStyle);
+    }
+    
+    this.columns[columnName].addText(text);
+}
+
+//texts should to an array of strings
+textTable.prototype.addTexts = function(columnName, texts, textStyle) {
+    
+    //create the column as a text list, if the list hasn't been initialized yet
+    if(typeof this.columns[columnName] === "undefined") {
+        
+        this.createColumn(columnName, textStyle);
+    }
+    
+    this.columns[columnName].addTexts(texts);
+}
+
+textTable.prototype.createColumn = function(columnName, textStyle) {
+    
+    //count number of columns the table has
+    var columns = 0;
+    
+    for(column in this.columns) {
+        
+        columns += 1;
+    }
+    
+    var columnX = this.cellWidth * columns;
+    var columnY = 0;
+    
+    this.columns[columnName] = new textList(columnX, columnY, this.cellWidth, this.cellHeight, textStyle);
+    this.columns[columnName].addParent(this.parentGraphics);
+}
+
+//set the parent of all the action display texts
+textTable.prototype.addParent = function(parent) {
+    
+    parent.addChild(this.parentGraphics);
+}
