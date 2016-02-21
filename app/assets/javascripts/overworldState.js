@@ -60,7 +60,15 @@ var overworldState = {
                 onExit: startGameExit,
                 onUpdate: startGameUpdate
             }
+        },
+        
+        {name: "enterBattle",
+            functions: {
+                
+                onEnter: enterBattleEnter
+            }
         }
+        
     ],
     
     generateTilemap: function() {
@@ -114,8 +122,8 @@ var overworldState = {
         //so we need to create background objects first
         
         //first we will create the tile map
-        this.generateTilemap();
         
+        this.generateTilemap();
         
         //now we would load the objects in this map
         //objects are the dynamic parts of the map

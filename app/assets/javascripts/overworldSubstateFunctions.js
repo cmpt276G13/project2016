@@ -116,7 +116,7 @@ function exploreKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.SPACEBAR) {
         
-        game.state.start('battle');
+        this.stateManager.changeState("enterBattle");
     }
 };
 
@@ -156,3 +156,17 @@ function exitBattleEnter() {
     this.fadeFromBlack.start();
     
 };
+
+function enterBattleEnter() {
+    
+    //target a circle onto the player
+    var mask = game.add.graphics(player.sprite.x + player.sprite.width / 2, player.sprite.y + player.sprite.height / 2);
+    
+    mask.beginFill(0xffffff);
+    mask.drawCircle(0, 0, game.scale.width * 1.5);
+    game.world.mask = mask;
+    
+    var zoomInTween = game.add.tween(mask.scale);
+    zoomInTween.to({x: 0, y: 0}, 600, null, true);
+    zoomInTween.onComplete.add(function(){game.state.start("battle")} );
+}

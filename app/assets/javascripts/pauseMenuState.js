@@ -22,24 +22,19 @@ var pauseMenuState = {
         display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
         
         var textOffset = 15;
-        var textStyle = {
-            
-            fill: 'white',
-            fontSize: 18
-        };
-        
-        display.playerName = game.add.text(display.background.width / 2, textOffset, player.name, healthBarCaptionStyle);
+
+        display.playerName = game.add.text(display.background.width / 2, textOffset, player.name, statDisplayStyle);
         display.playerName.anchor.setTo(0.5, 0);
-        display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, healthBarCaptionStyle);
+        display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, statDisplayStyle);
         display.playerLevel.anchor.setTo(0.5, 0);
         
         display.playerHealth = new attributeDisplayText('HP:', player.health + "/ " + player.maxHealth, textOffset, textOffset + 45, 145, 20, healthBarCaptionStyle);
         display.playerExp = new attributeDisplayText("EXP:", player.experience + "/ " + player.experienceToNextLevel, textOffset + display.background.width / 3 * 2, textOffset + 45, 145, 20, healthBarCaptionStyle);
         
         display.attributeTable = new attributeDisplayTextTable(display.background.width / 5, textOffset + 90, display.background.width / 4, 20, 80, 5);
-        display.attributeTable.addAttribute("left", "STR", player.strength, healthBarCaptionStyle);
-        display.attributeTable.addAttribute("right", "DEF", player.defense, healthBarCaptionStyle);
-        display.attributeTable.addAttribute("left", "GOLD", player.gold, healthBarCaptionStyle);
+        display.attributeTable.addAttribute("left", "STR", player.strength, statDisplayStyle);
+        display.attributeTable.addAttribute("right", "DEF", player.defense, statDisplayStyle);
+        display.attributeTable.addAttribute("left", "GOLD", player.gold, statDisplayStyle);
         
         display.background.addChild(display.playerName);
         display.background.addChild(display.playerLevel);

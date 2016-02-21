@@ -408,18 +408,10 @@ var battleState = {
         var statContainer = {};
         statContainer.textBox = new textBox(x, y, width, height);
         
-        var textStyle = {fontSize: 22};
-        
-        //text for the player name
-        statContainer.playerName = game.add.text(5, 10, player.name, healthBarCaptionStyle);
-        statContainer.playerName.fontSize = 22;
-        statContainer.playerName.fill = 'white';
-        statContainer.textBox.background.addChild(statContainer.playerName);
-        
         var barStyle = {
             
-            x: statContainer.playerName.width * 2,
-            y: statContainer.playerName.y + 7,
+            x: 153,
+            y: 26,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -434,6 +426,14 @@ var battleState = {
         statContainer.playerHealthBar = new HealthBar(game, barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+        
+        statContainer.attributeTable = new attributeDisplayTextTable(10, 10, 145, 15, 0, 0);
+        
+        statContainer.attributeTable.addAttribute("name", player.name, "", statDisplayStyle);
+        statContainer.attributeTable.addAttribute("health", "HP:", player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        
+        statContainer.attributeTable.addParent(statContainer.textBox.background);
+        
 
         return statContainer;
     },

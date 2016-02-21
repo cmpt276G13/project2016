@@ -8,8 +8,14 @@ var messageStyle = {
 var healthBarCaptionStyle = {
     
     fill: 'white',
-    fontSize: 18,
+    fontSize: 15,
     fontStyle: 'italic'
+}
+
+var statDisplayStyle = {
+    
+    fill: 'white',
+    fontSize: 20
 }
 
 var actionStyle = {
@@ -47,7 +53,7 @@ function attributeDisplayText(attributeName, attributeValue, x, y, width, height
     this.parentGraphics.addChild(this.value);
     
     //position the value text relative to its top right corner
-    this.value.anchor.setTo(1, 0);
+    this.value.anchor.setTo(1.0, 0);
 }
 
 attributeDisplayText.prototype.addParent = function(parent) {
