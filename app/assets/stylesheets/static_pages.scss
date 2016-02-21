@@ -136,14 +136,7 @@ footer {
   
 }
 
-.rankingtable {
-  counter-reset: serial-number;  /* Set the serial number counter to 0 */
-}
 
-.rankingtable td:first-child:before {
-  counter-increment: serial-number;  /* Increment the serial number counter */
-  content: counter(serial-number);  /* Display the counter */
-}
 
 
 
