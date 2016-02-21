@@ -1,5 +1,19 @@
+<style>
+.button1 {
+    background-color: white;
+    color: black;
+    border: 2px solid rgb(255,225,0);
+}
+
+.button1:hover {
+    background-color: rgb(255,225,0);
+    color: white;
+}
+</style>
+
 <div class="center jumbotron">
   <h1>Welcome to GeoHunter!</h1>
   <p>This is the main page of the game GeoHunter</p>
-  <%= link_to "Test Game", game_path, action: 'get'%> 
+  
+  <%= link_to "Test Game", game_path, action: 'get',:style =>'vertical-align:middle', :class=>'button button1'%> 
 </div>
