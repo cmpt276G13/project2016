@@ -19,6 +19,6 @@ Project Name: GeoHunter
 ----------------------------
 Some of the code is courtesy of railstutorial.org, and possibly guides.rubyonrails.org/getting_started.html
 
-run
+Uncomment some code in db/seed.rb, and then run
   rake db:seed
 to create fake sample data
