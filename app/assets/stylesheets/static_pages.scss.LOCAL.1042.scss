@@ -17,7 +17,7 @@ a {
 
 // Place padding for the header to go in.
 body {
-  padding: 50px;
+  padding-top: 100px;
 }
 
 section {
@@ -35,9 +35,6 @@ textarea {
   }
 }
 
-.homepage{
-  margin-top: 10px;
-}
 /* Typography */
 // This will apply to all headers and paragraphs.
 // We can decide on whether we should use this or not.
@@ -86,9 +83,7 @@ p {
     text-decoration: underline;
   }
 }
-.navbar{
-  margin-bottom: 50px;
-}
+
 /* Footer */
 
 footer {
@@ -117,7 +112,6 @@ footer {
   }
 }
 
-<<<<<<< HEAD
 /* Hub */
 
 .setup_links {
@@ -129,22 +123,3 @@ footer {
     margin-left: 50px;
   }
 }
-=======
-/* table Typography */
-
-#top10rankingtableheader,td{
-  padding: 10px;
-  
-}
-
-.rankingtable {
-  counter-reset: serial-number;  /* Set the serial number counter to 0 */
-}
-
-.rankingtable td:first-child:before {
-  counter-increment: serial-number;  /* Increment the serial number counter */
-  content: counter(serial-number);  /* Display the counter */
-}
-
-
->>>>>>> top10ranking

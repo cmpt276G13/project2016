@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   # logged_in_user is defined in sessions_helper.rb
   before_action :logged_in_user, only: [:edit, :update, :destroy]
   before_action :correct_user_or_admin,   only: [:edit, :update, :destroy]
+  # The line below is added for the case that the sign up page would show the top 10 rankings
+  layout "signuploginlayout"
   
   def index
     # Change order of users.

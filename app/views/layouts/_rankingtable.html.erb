@@ -1,0 +1,19 @@
+<div class="jumbotron">
+        <h1>Top 10 Players In Rank</h1>
+        <table id="rankingtable">
+          <thead>
+            <tr>
+              <th id="top10rankingtableheader">Username:</th>
+              <th id="top10rankingtableheader">level</th>
+              <th id="top10rankingtableheader">experience</th>
+            </tr>
+          </thead>
+          <% @users.each do |users| %>
+              <tr>
+                <td><%= users.username %></td>
+                <td><%= users.player.level %></td>
+                <td><%= users.player.experience %></td>
+              </tr>
+          <% end %>
+        </table>
+  </div>
