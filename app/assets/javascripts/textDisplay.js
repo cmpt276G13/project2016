@@ -123,7 +123,7 @@ attributeDisplayTextTable.prototype.addParent = function(parent) {
 function textList(x, y, cellWidth, cellHeight, textStyle) {
     
     //parent object so its easy to set the parent of new text objects
-    this.parentGraphics = 
+    this.parentGraphics = game.add.graphics(x, y);
     this.x = x;
     this.y = y;
     this.cellWidth = cellWidth;
@@ -151,6 +151,7 @@ textList.prototype.addText = function(text) {
     var yPos = this.y + this.texts.length * this.cellHeight;
     
     var newText = game.add.text(xPos, yPos, text, this.textStyle);
+    this.parentGraphics.addChild(newText);
     
     this.texts.push(newText);
 }
@@ -159,8 +160,5 @@ textList.prototype.addText = function(text) {
 //function must be called everytime you add a new text, for now
 textList.prototype.addParent = function(parent) {
     
-    for(var i = 0; i < this.texts.length; ++i) {
-        
-        parent.addChild(this.texts[i]);
-    }
+    parent.addChild(this.parentGraphics);
 }

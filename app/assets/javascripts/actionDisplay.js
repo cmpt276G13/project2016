@@ -17,7 +17,7 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.background.addChild(this.selectionDisplay);
     
     //the text that will be displayed
-    this.actionTextList = new textList(x + 5, y + 5, width - 10, 28, actionStyle); //createActionTexts(actionTexts, this.background);
+    this.actionTextList = new textList(5, 5, width - 10, 28, actionStyle); //createActionTexts(actionTexts, this.background);
     this.actionTextList.addTexts(actionTexts);
     this.actionTextList.addParent(this.background);
 };

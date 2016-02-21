@@ -59,12 +59,12 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "run") {
+        if(this.mainActionsDisplay.getSelectedActionString() == "run") {
             
             game.state.start('overworld');
         }
         
-        if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
             
             this.stateManager.changeState("selectFightAction");
         }
@@ -97,12 +97,12 @@ function selectFightActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "cancel") {
+        if(this.fightActionsDisplay.getSelectedActionString() == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
         }
         
-        if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "attack" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionString() == "attack" && this.monsters.length > 0) {
             
             player.useAttack(new basicAttack());
             this.stateManager.changeState("playerSelectTarget");
