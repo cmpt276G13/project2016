@@ -38,8 +38,13 @@ var damageStyle = {
 //you can use one of the global styles listed above
 function attributeDisplayText(attributeName, attributeValue, x, y, width, height, textStyle) {
     
-    this.name = game.add.text(x, y, attributeName, textStyle);
-    this.value = game.add.text(x + width, y, attributeValue, textStyle);
+    this.parentGraphics = game.add.graphics(x, y);
+    
+    this.name = game.add.text(0, 0, attributeName, textStyle);
+    this.value = game.add.text(width, 0, attributeValue, textStyle);
+    
+    this.parentGraphics.addChild(this.name);
+    this.parentGraphics.addChild(this.value);
     
     //position the value text relative to its top right corner
     this.value.anchor.setTo(1, 0);
@@ -47,8 +52,7 @@ function attributeDisplayText(attributeName, attributeValue, x, y, width, height
 
 attributeDisplayText.prototype.addParent = function(parent) {
     
-    parent.addChild(this.name);
-    parent.addChild(this.value);
+    parent.addChild(this.parentGraphics);
 }
 
 //object that stores attribute text and displays them as a table with the specified number of columns
@@ -59,8 +63,9 @@ attributeDisplayText.prototype.addParent = function(parent) {
 //rowSpacing is the vertical gap between each cel
 function attributeDisplayTextTable(x, y, cellWidth, cellHeight, columnSpacing, rowSpacing) {
     
-    this.x = x;
-    this.y = y;
+    this.parentGraphics = game.add.graphics(x, y);
+    // this.x = x;
+    // this.y = y;
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
     this.columnSpacing = columnSpacing;
@@ -94,24 +99,19 @@ attributeDisplayTextTable.prototype.addAttribute = function(columnName, attribut
         columnId += 1;
     }
     
-    var xPos = this.x + columnId * (this.cellWidth + this.columnSpacing);
+    var xPos = columnId * (this.cellWidth + this.columnSpacing);
     //add this to the bottom of the column
-    var yPos = this.y + this.columns[columnName].length * (this.cellHeight + this.rowSpacing);
+    var yPos = this.columns[columnName].length * (this.cellHeight + this.rowSpacing);
     
     var attribute = new attributeDisplayText(attributeName, attributeValue, xPos, yPos, this.cellWidth, this.cellHeight, textStyle);
+    attribute.addParent(this.parentGraphics);
     this.columns[columnName].push(attribute);
 }
 
 //set the parent of all the action display texts
 attributeDisplayTextTable.prototype.addParent = function(parent) {
     
-    for(column in this.columns) {
-        
-        for(var i = 0; i < this.columns[column].length; ++i) {
-            
-            this.columns[column][i].addParent(parent);
-        }
-    }
+    parent.addChild(this.parentGraphics);
 }
 
 //displays a column of text
