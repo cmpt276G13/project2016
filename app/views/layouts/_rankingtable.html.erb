@@ -2,11 +2,15 @@
         <h1>Top 10 Players In Rank</h1>
         <table>
           <tr>
-            <th id="top10rankingtableheader">Username</th>
+            <th id="top10rankingtableheader">Username:</th>
             <th id="top10rankingtableheader">RankingInfo</th>
           </tr>
-          <tr>
-              
-          </tr>
+          <% @users.each do |users| %>
+              <tr>
+                <td><%= users.username %></td>
+                <!--not done yet, need to decide what attribute to determine ranks-->
+                <!--<td></td>-->
+              </tr>
+          <% end %>
         </table>
   </div>

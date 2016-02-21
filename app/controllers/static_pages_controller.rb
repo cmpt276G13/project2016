@@ -2,6 +2,7 @@ class StaticPagesController < ApplicationController
   before_action :logged_in_user, only: :hub
   
   def index
+    @users=User.all
   end
   
   def hub
