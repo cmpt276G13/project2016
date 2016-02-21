@@ -154,7 +154,7 @@ function exitBattleEnter() {
     var mask = game.add.graphics(player.sprite.x + player.sprite.width / 2, player.sprite.y + player.sprite.height / 2);
     
     mask.beginFill(0xffffff);
-    mask.drawCircle(0, 0, game.scale.width * 3);
+    mask.drawCircle(0, 0, game.scale.width * 2);
     game.world.mask = mask;
     
     var maskInTween = game.add.tween(mask.scale);
@@ -168,7 +168,7 @@ function enterBattleEnter() {
     var mask = game.add.graphics(player.sprite.x + player.sprite.width / 2, player.sprite.y + player.sprite.height / 2);
     
     mask.beginFill(0xffffff);
-    mask.drawCircle(0, 0, game.scale.width * 3);
+    mask.drawCircle(0, 0, game.scale.width * 2);
     game.world.mask = mask;
     
     var maskInTween = game.add.tween(mask.scale);

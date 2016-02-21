@@ -604,6 +604,8 @@ var battleState = {
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
         this.stateManager.changeState("selectMainAction");
+        
+        lastState = "battle";
     },
     
     update: function() {

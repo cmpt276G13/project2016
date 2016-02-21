@@ -92,6 +92,8 @@ var pauseMenuState = {
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
         this.stateManager.changeState("menuHome");
+        
+        lastState = "pauseMenu";
     },
     
     update: function() {
