@@ -322,6 +322,7 @@ function playerDyingEnter() {
     
     player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
     player.sprite.animations.play("dying");
+    player.deaths += 1;
 }
 
 function victoryEnter() {

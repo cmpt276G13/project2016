@@ -66,6 +66,7 @@
         player.items = [];
         player.skills = [];
         
+        player.deaths = 0;
         player.load = function() {
             
             this.level = <%= @currentUser.player.level%>;
@@ -77,6 +78,7 @@
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
+            //this.deaths = <%= #@currentUser.player.deaths%>
             
             //player.items = ...
             //player.skills = ...
@@ -93,7 +95,8 @@
                 experience_to_next_level: this.experienceToNextLevel,
                 experience: this.experience,
                 strength: this.strength,
-                defense: this.defense
+                defense: this.defense//,
+                //deaths: this.deaths
             };
             
             $.ajax( {
