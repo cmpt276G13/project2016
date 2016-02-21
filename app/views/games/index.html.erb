@@ -221,6 +221,8 @@
             //create function creats the required object for this game state
             create: function() {
                 
+                lastState = "load";
+                
                 //create a text that says loading
                 //very simple loading screen
                 var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
@@ -269,6 +271,8 @@
         game.state.add('pauseMenu', pauseMenuState);
         game.state.add('battle', battleState);
         
+        //keep track of the last used state
+        lastState = "null";
         
         //now run the boot state, which will call load and overworld as needed
         game.state.start('boot');

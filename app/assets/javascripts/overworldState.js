@@ -56,9 +56,7 @@ var overworldState = {
         {name: "exitBattle",
             functions: {
                 
-                onEnter: exitBattleEnter,
-                onExit: startGameExit,
-                onUpdate: startGameUpdate
+                onEnter: exitBattleEnter
             }
         },
         
@@ -162,12 +160,11 @@ var overworldState = {
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
         
-        if(justStartedGame) {
+        if(lastState == "load") {
             
-            justStartedGame = false;
             this.stateManager.changeState("startGame");
             
-        } else {
+        } else if(lastState == "battle") {
             
             //we came here from some other ingame state
             //we need to check if we must respawn player
@@ -180,11 +177,17 @@ var overworldState = {
                 
                 this.stateManager.changeState("exitBattle");
             }
+            
+        } else if(lastState == "pauseMenu") {
+            
+            this.stateManager.changeState("explore");
         }
         
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
         player.save();
+        
+        lastState = "overworld";
     },
     
     //function that we will send to phaser to handle key press events

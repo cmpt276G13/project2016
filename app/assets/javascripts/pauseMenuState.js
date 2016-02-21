@@ -102,5 +102,10 @@ var pauseMenuState = {
     handleKeyDown: function(key) {
         
         this.stateManager.onKeyDown(key);
+    },
+    
+    shutdown: function() {
+        
+        game.world.remove(player.sprite);
     }
 };

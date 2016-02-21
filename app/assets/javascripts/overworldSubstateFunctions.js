@@ -142,7 +142,7 @@ function startGameExit() {
 
 function startGameUpdate() {
     
-    if(this.fadeFromBlack.finishedTransition) {
+    if(typeof this.fadeFromBlack !== "undefined" && this.fadeFromBlack.finishedTransition) {
         
         this.stateManager.changeState("explore");
     }
@@ -150,11 +150,16 @@ function startGameUpdate() {
 
 function exitBattleEnter() {
     
-    //create a fade in effect
-    this.fadeFromBlack = new fadeFromBlack(250);
-    this.fadeFromBlack.setOnExit(function(){this.fadeFromBlack.finishedTransition = true}, this);
-    this.fadeFromBlack.start();
+    //target a circle onto the player
+    var mask = game.add.graphics(player.sprite.x + player.sprite.width / 2, player.sprite.y + player.sprite.height / 2);
     
+    mask.beginFill(0xffffff);
+    mask.drawCircle(0, 0, game.scale.width * 3);
+    game.world.mask = mask;
+    
+    var maskInTween = game.add.tween(mask.scale);
+    maskInTween.from({x: 0, y: 0}, 600, null, true);
+    maskInTween.onComplete.add(function(){this.stateManager.changeState("explore"); game.world.mask.destroy();}, this);
 };
 
 function enterBattleEnter() {
@@ -163,10 +168,10 @@ function enterBattleEnter() {
     var mask = game.add.graphics(player.sprite.x + player.sprite.width / 2, player.sprite.y + player.sprite.height / 2);
     
     mask.beginFill(0xffffff);
-    mask.drawCircle(0, 0, game.scale.width * 1.5);
+    mask.drawCircle(0, 0, game.scale.width * 3);
     game.world.mask = mask;
     
-    var zoomInTween = game.add.tween(mask.scale);
-    zoomInTween.to({x: 0, y: 0}, 600, null, true);
-    zoomInTween.onComplete.add(function(){game.state.start("battle")} );
+    var maskInTween = game.add.tween(mask.scale);
+    maskInTween.to({x: 0, y: 0}, 600, null, true);
+    maskInTween.onComplete.add(function(){game.state.start("battle"); game.world.mask.destroy} );
 }
