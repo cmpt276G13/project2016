@@ -108,6 +108,11 @@ function selectFightActionKeyDown(key) {
             this.stateManager.changeState("playerSelectTarget");
         }
     }
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectMainAction");
+    }
 };
 
 function selectFightActionUpdate() {
@@ -128,6 +133,11 @@ function playerSelectTargetExit() {
 };
 
 function playerSelectTargetKeyDown(key) {
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectFightAction");
+    }
     
     if(key.keyCode == Phaser.Keyboard.UP) {
         
