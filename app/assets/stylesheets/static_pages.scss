@@ -130,12 +130,12 @@ footer {
 
 /* table Typography */
 
-#top10rankingtableheader,td{
-  padding: 20px;
+#top10rankingtable,#top10rankingtabledata,#top10rankingtableheader{
+  padding: 10px;
 }
 
 #rankingtablejumbotron{
-  width: 500px;
+  width: 400px;
   float: left;
   display: inline;
 }

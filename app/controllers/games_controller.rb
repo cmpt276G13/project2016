@@ -5,7 +5,6 @@ class GamesController < ApplicationController
     def index
         
         @users = User.includes(:player).order("players.level DESC, players.experience DESC")
-
         # the line above is for keeping the top 10 players list during the game is processing
         
         #eg. if i want he game to play in the index, i want to send the player's data to the index html file

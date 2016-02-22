@@ -5,14 +5,14 @@
             <tr>
               <th id="top10rankingtableheader">Username:</th>
               <th id="top10rankingtableheader">level</th>
-              <th id="top10rankingtableheader">experience</th>
+              <th id="top10rankingtableheader">deaths</th>
             </tr>
           </thead>
           <% @users.each do |users| %>
               <tr>
-                <td><%= users.username %></td>
-                <td><%= users.player.level %></td>
-                <td><%= users.player.experience %></td>
+                <td id="top10rankingtabledata"><%= users.username %></td>
+                <td id="top10rankingtabledata"><%= users.player.level %></td>
+                <td id="top10rankingtabledata"><%= users.player.deaths %></td>
               </tr>
           <% end %>
         </table>
