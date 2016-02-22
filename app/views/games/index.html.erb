@@ -1,11 +1,26 @@
-<h1 id="asdf">This is where the game will go</h1>
-<p id="additional" style="font-size: 20px; color: red; text-align: center">  </p>
+<style>
+#asdf{
+    color=white;
+    font-size: 50px;
+    text-align: center;
+}
+#Game{
+    background-color:black;
+    padding: 50px;
+}
+
+</style>
+<!--This is where the game will go -->
+<p id="asdf"><font face="Broadway"><B>Let's start our journey!</B></p>
+
+<p id="additional" style="font-size: 20px; color: red; text-align: center"> </p>
 
 <!-- Style the game display canvas however you wish by syling the 'Game' id -->
-<div id="Game" style="padding: 10px;">
+<div id="Game">
     
     <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
         to be available in every single page of our application.-->
+    <%= javascript_include_tag "textDisplay" %>
     <%= javascript_include_tag "screenTransitionEffects"%>
     <%= javascript_include_tag "rpgEntity" %>
     <%= javascript_include_tag "stateManager" %>
@@ -65,6 +80,7 @@
         player.items = [];
         player.skills = [];
         
+        player.deaths = 0;
         player.load = function() {
             
             this.level = <%= @currentUser.player.level%>;
@@ -76,6 +92,7 @@
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
+            this.deaths = <%= @currentUser.player.deaths%>;
             
             //player.items = ...
             //player.skills = ...
@@ -92,7 +109,8 @@
                 experience_to_next_level: this.experienceToNextLevel,
                 experience: this.experience,
                 strength: this.strength,
-                defense: this.defense
+                defense: this.defense,
+                deaths: this.deaths
             };
             
             $.ajax( {
@@ -129,10 +147,6 @@
             this.experience -= this.experienceToNextLevel;
             this.experienceToNextLevel += 5 * this.level;
         };
-        
-        //flag used to check if player just started playing the game
-        //used by the overworld state to determine what intro effect it should use
-        var justStartedGame = true;
         
         //{
             
@@ -212,11 +226,12 @@
                 //here we load the tile image
                 //again we would be using the mapName variable if it was set up
                 game.load.image('tileset', '<%= asset_path("TileSet.png") %>');
-                
             },
             
             //create function creats the required object for this game state
             create: function() {
+                
+                lastState = "load";
                 
                 //create a text that says loading
                 //very simple loading screen
@@ -266,6 +281,8 @@
         game.state.add('pauseMenu', pauseMenuState);
         game.state.add('battle', battleState);
         
+        //keep track of the last used state
+        lastState = "null";
         
         //now run the boot state, which will call load and overworld as needed
         game.state.start('boot');

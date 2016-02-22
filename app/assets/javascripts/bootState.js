@@ -23,5 +23,7 @@ var bootState = {
         
         //capture all keys the game uses so it doesn't affect the browser
         game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR, Phaser.Keyboard.ENTER]);
+        
+        lastState = "boot";
     },
 };
