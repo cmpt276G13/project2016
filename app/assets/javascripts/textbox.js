@@ -52,15 +52,13 @@ function textBox(x, y, width, height, centerToPoint) {
     this.background.fixedToCamera = true;
     
     //text to display
-    this.text = game.add.text(0, 0, "");
+    this.text = game.add.text(0, 0, "", messageStyle);
     this.background.addChild(this.text);
     
-    this.text.fontSize = 22;
     this.text.x = this.background.width / 2;
     this.text.y = this.background.height / 2;
     this.text.anchor.x = 0.5;
     this.text.anchor.y = 0.5;
-    this.text.fill = 'white';
 };
 
 textBox.prototype.setText = function(newText) {

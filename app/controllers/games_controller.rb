@@ -22,6 +22,6 @@ class GamesController < ApplicationController
     
     def player_params
        
-       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health) 
+       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths) 
     end
 end
