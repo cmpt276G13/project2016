@@ -17,7 +17,7 @@ a {
 
 // Place padding for the header to go in.
 body {
-  padding-top: 50px;
+  padding-top: 100px;
 }
 
 section {
@@ -35,9 +35,6 @@ textarea {
   }
 }
 
-.homepage{
-  margin-top: 10px;
-}
 /* Typography */
 // This will apply to all headers and paragraphs.
 // We can decide on whether we should use this or not.
@@ -90,7 +87,7 @@ p {
 /* Footer */
 
 footer {
-  margin-top: 800px;
+  margin-top: 45px;
   padding-top: 5px;
   border-top: 1px solid $gray-medium-light;
   color: $gray-light;
@@ -130,22 +127,17 @@ footer {
 
 /* table Typography */
 
-#top10rankingtable,#top10rankingtabledata,#top10rankingtableheader{
-  padding: 10px;
-}
-
-#rankingtablejumbotron{
-  width: 300px;
-  float: left;
-  position: relative;
-  display: inline;
-  overflow: scroll;
-}
-.center{
-  width: 700px;
-  float: right;
-  display: inline;
-
+.ranking_table{
+  margin: 0;
+  td {
+    overflow: auto;
+    padding: 10px 50px;
+    border-bottom: 1px solid black;
+    &.num {
+      font-weight: bold;
+      font-size: 2em;
+    }
+  }
 }
 
 
