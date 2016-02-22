@@ -37,6 +37,13 @@ var battleState = {
             }
         },
         
+        {name: "playerRunAway",
+            functions: {
+                
+                onEnter: playerRunAwayEnter
+            }
+        },
+        
         {name: "playerSelectTarget",
             functions: {
                 
@@ -113,6 +120,21 @@ var battleState = {
                 onEnter: defeatEnter,
                 onExit: defeatExit,
                 onKeyDown: defeatKeyDown
+            }
+        },
+        
+        {name: "intro",
+            functions:{
+                
+                onEnter: introEnter,
+                onUpdate: introUpdate
+            }
+        },
+        
+        {name: "outro",
+            functions: {
+                
+                onEnter: outroEnter
             }
         }
         
@@ -272,9 +294,10 @@ var battleState = {
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             
-            //position the monster somewhere
-            monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
-            monster.y = 200 + 50 * (i % num);
+            //position the monster somewhere offscreen
+            monster.x = getRandomInt(100, 300) * -1;
+            monster.y = getRandomInt(100, 300);
+            monster.finishedPositioning = false;//need to call move monsters to position at some point
             
             monsters.push(monster);
         }
@@ -297,6 +320,27 @@ var battleState = {
                 animation = monsters[i].animations[j];
                 monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
             }
+        }
+    },
+    
+    //once monster sprites have been created, begin a transition effect for hte monters
+    //this will make the monsters interpolate to their current position from an offscreen position
+    moveMonstersToPosition: function() {
+        
+        for(var i = 0; i < this.monsters.length; ++i) {
+            
+            var num = Math.max(Math.floor(this.monsters.length / 2), 2);
+            
+            //position the monster somewhere on the screen
+            var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
+            var yTarget = 200 + 50 * (i % num);
+            
+            this.monsters[i].sprite.position.y = yTarget;
+            
+            var tween = game.add.tween(this.monsters[i].sprite.position);
+            
+            tween.onComplete.add(function(){this.finishedPositioning = true;}, this.monsters[i]);
+            tween.to({x: xTarget}, getRandomInt(300, 450), null, true);
         }
     },
     
@@ -408,18 +452,10 @@ var battleState = {
         var statContainer = {};
         statContainer.textBox = new textBox(x, y, width, height);
         
-        var textStyle = {fontSize: 22};
-        
-        //text for the player name
-        statContainer.playerName = game.add.text(5, 10, player.name);
-        statContainer.playerName.fontSize = 22;
-        statContainer.playerName.fill = 'white';
-        statContainer.textBox.background.addChild(statContainer.playerName);
-        
         var barStyle = {
             
-            x: statContainer.playerName.width * 2,
-            y: statContainer.playerName.y + 7,
+            x: 153,
+            y: 26,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -434,6 +470,14 @@ var battleState = {
         statContainer.playerHealthBar = new HealthBar(game, barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+        
+        statContainer.attributeTable = new attributeDisplayTextTable(10, 10, 145, 15, 0, 0);
+        
+        statContainer.attributeTable.addAttribute("name", player.name, "", statDisplayStyle);
+        statContainer.attributeTable.addAttribute("health", "HP:", player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        
+        statContainer.attributeTable.addParent(statContainer.textBox.background);
+        
 
         return statContainer;
     },
@@ -495,7 +539,7 @@ var battleState = {
     createDamageText: function(entity, damageReceived) {
         
         var damageText = new Object();
-        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), {fill: 'red'});
+        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), damageStyle);
         damageText.text.alpha = 0.3;
         damageText.text.anchor.setTo(0.5, 0);
         
@@ -603,7 +647,9 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("intro");
+        
+        lastState = "battle";
     },
     
     update: function() {
