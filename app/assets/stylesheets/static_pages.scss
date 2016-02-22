@@ -90,7 +90,7 @@ p {
 /* Footer */
 
 footer {
-  margin-top: 650px;
+  margin-top: 800px;
   padding-top: 5px;
   border-top: 1px solid $gray-medium-light;
   color: $gray-light;
@@ -135,9 +135,11 @@ footer {
 }
 
 #rankingtablejumbotron{
-  width: 400px;
+  width: 300px;
   float: left;
+  position: relative;
   display: inline;
+  overflow: scroll;
 }
 .center{
   width: 700px;
