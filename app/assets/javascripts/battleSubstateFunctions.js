@@ -373,3 +373,25 @@ function defeatKeyDown(key) {
         tween.start();
     }
 }
+
+function introEnter() {
+    
+    //fade in from a black screen
+    var fadeIn = new fadeFromBlack(350);
+    fadeIn.setOnExit(this.moveMonstersToPosition, this);
+    fadeIn.start();
+}
+
+function introUpdate() {
+    
+    for(var i = 0; i < this.monsters.length; ++i) {
+        
+        if(typeof this.monsters[i].finishedPositioning !== "undefined" && !this.monsters[i].finishedPositioning) {
+            
+            return;
+        }
+    }
+    
+    //all monsters have moved into position, begin battle
+    this.stateManager.changeState("selectMainAction");
+}

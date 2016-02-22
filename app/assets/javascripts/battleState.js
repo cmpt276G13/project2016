@@ -114,6 +114,14 @@ var battleState = {
                 onExit: defeatExit,
                 onKeyDown: defeatKeyDown
             }
+        },
+        
+        {name: "intro",
+            functions:{
+                
+                onEnter: introEnter,
+                onUpdate: introUpdate
+            }
         }
         
     ],
@@ -272,9 +280,10 @@ var battleState = {
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             
-            //position the monster somewhere
-            monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
-            monster.y = 200 + 50 * (i % num);
+            //position the monster somewhere offscreen
+            monster.x = getRandomInt(100, 300) * -1;
+            monster.y = getRandomInt(100, 300);
+            monster.finishedPositioning = false;//need to call move monsters to position at some point
             
             monsters.push(monster);
         }
@@ -297,6 +306,27 @@ var battleState = {
                 animation = monsters[i].animations[j];
                 monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
             }
+        }
+    },
+    
+    //once monster sprites have been created, begin a transition effect for hte monters
+    //this will make the monsters interpolate to their current position from an offscreen position
+    moveMonstersToPosition: function() {
+        
+        for(var i = 0; i < this.monsters.length; ++i) {
+            
+            var num = Math.max(Math.floor(this.monsters.length / 2), 2);
+            
+            //position the monster somewhere on the screen
+            var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
+            var yTarget = 200 + 50 * (i % num);
+            
+            this.monsters[i].sprite.position.y = yTarget;
+            
+            var tween = game.add.tween(this.monsters[i].sprite.position);
+            
+            tween.onComplete.add(function(){this.finishedPositioning = true;}, this.monsters[i]);
+            tween.to({x: xTarget}, getRandomInt(300, 450), null, true);
         }
     },
     
@@ -603,7 +633,7 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("intro");
         
         lastState = "battle";
     },
