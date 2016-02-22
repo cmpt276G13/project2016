@@ -37,6 +37,13 @@ var battleState = {
             }
         },
         
+        {name: "playerRunAway",
+            functions: {
+                
+                onEnter: playerRunAwayEnter
+            }
+        },
+        
         {name: "playerSelectTarget",
             functions: {
                 

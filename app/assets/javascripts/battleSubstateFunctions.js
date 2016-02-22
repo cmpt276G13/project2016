@@ -61,7 +61,8 @@ function selectMainActionKeyDown(key) {
         //we would like to return to the main map if player selected run
         if(this.mainActionsDisplay.getSelectedActionString() == "run") {
             
-            game.state.start('overworld');
+            this.stateManager.changeState("playerRunAway");
+            //game.state.start('overworld');
         }
         
         if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
@@ -113,6 +114,17 @@ function selectFightActionKeyDown(key) {
         
         this.stateManager.changeState("selectMainAction");
     }
+};
+
+function playerRunAwayEnter() {
+    
+    //make player face away and run
+    player.sprite.animations.play("right");
+    
+    var tween = game.add.tween(player.sprite.position);
+    tween.onComplete.add(function(){this.stateManager.changeState("outro");}, this);
+    tween.to({x: game.scale.width + 100}, 400);
+    tween.start();
 };
 
 function selectFightActionUpdate() {
@@ -193,7 +205,6 @@ function playerAttackUpdate() {
     
     //move onto the next state when the player's last used attack has finished
     if(player.lastUsedAttack.isFinished) {
-        
         
         this.stateManager.changeState("playerAttackResults");
     }
