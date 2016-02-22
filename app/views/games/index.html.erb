@@ -35,12 +35,6 @@
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     
     <script>
-        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
-        if(typeof overworldState === "undefined") {
-            
-            location.reload();
-        };
-    
         /*
         
         Before you start wokring on the game, please make sure you understand how to make a game using phaser (basic knowledge).

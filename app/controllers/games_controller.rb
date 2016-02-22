@@ -8,6 +8,9 @@ class GamesController < ApplicationController
         
         #@player = Player.find(name of player, or some other way to identify him)
         @currentUser = current_user
+        if request.referer != (hub_url || game_url)
+            redirect_to hub_path
+        end
     end
     
     def save 
