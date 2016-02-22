@@ -349,7 +349,8 @@ function victoryKeyDown(key) {
     //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        game.state.start('overworld');
+        //fade to black
+        this.stateManager.changeState("outro");
     }
 }
 
@@ -376,11 +377,8 @@ function defeatKeyDown(key) {
     
     if(this.fadeToBlack.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
         
-        //now make the deathmessage fade to black, and then go back to the overworld
-        var tween = game.add.tween(this.deathMessage.background);
-        tween.to({alpha: 0}, 300);
-        tween.onComplete.add(function(){game.state.start('overworld');}, this);
-        tween.start();
+        //now make the screen fade to black, and then go back to the overworld
+        this.stateManager.changeState("outro");
     }
 }
 
@@ -404,4 +402,12 @@ function introUpdate() {
     
     //all monsters have moved into position, begin battle
     this.stateManager.changeState("selectMainAction");
+}
+
+function outroEnter() {
+    
+    var fade = new fadeToBlack(450);
+    
+    fade.setOnExit(function(){game.state.start("overworld")});
+    fade.start();
 }

@@ -122,6 +122,13 @@ var battleState = {
                 onEnter: introEnter,
                 onUpdate: introUpdate
             }
+        },
+        
+        {name: "outro",
+            functions: {
+                
+                onEnter: outroEnter
+            }
         }
         
     ],
