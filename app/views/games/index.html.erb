@@ -87,7 +87,7 @@
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
-            this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //some how the health exceeded max health
+            this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //if some how the health exceeded max health
             this.gold = <%= @currentUser.player.gold%>;
             this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
             this.experience = <%= @currentUser.player.experience%>;

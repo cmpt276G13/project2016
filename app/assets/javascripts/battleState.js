@@ -276,9 +276,6 @@ var battleState = {
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
-            //the object basiclaly has 1 element named monsters, which is an array of names
-            //these names are actually keys to the database, so we can use it directly
-            //randomly select monster name (for now just use the orc name since i haven't created the others)
             var id = 0;
             var monsterName = monsterNames.monsters[id];
             
@@ -587,12 +584,8 @@ var battleState = {
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
 		
-        //first we have to create a background to display
-        //i haven't put in any background yet but just know that it has to be created first
-        
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural
-        //although right now it generates a single monster, later it might create an array of monsters
         this.monsters = this.loadMonsters();
         
         //we've only loaded the data for the mosnter, we now need to create an image so we can see them
@@ -613,8 +606,6 @@ var battleState = {
         //now we want to have some UI to display all the battle options
         
         //first we have to create the box where the UI is displayed
-        //if you look at final fantasy battles, there are blue rectangles that contain all the text
-        //first is the rectangle that contains all the actions the player can take
         
         var actionBoxWidth = game.scale.width / 3.5;
         var actionBoxHeight = 130;
@@ -655,17 +646,6 @@ var battleState = {
     onKeyDown: function(key) {
         
         this.stateManager.onKeyDown(key);
-    },
-    
-    //this is a render (drawing) function
-    //phaser draws all of our game objects automatically, however we might want to do our own rendering calls
-    //in the render function we dont do any calculations at all
-    //all math, physics, updating, should be done in the update function
-    //only draw calls should be placed in this function
-    render: function() {
-        
-        //i want to draw the selection box as a rectangle, since phaser doesn't do it automatically
-        //we need to postiion the rectangle around the current selection, but in the render function we only draw, no calculations should be done here
     },
     
     shutdown: function() {
