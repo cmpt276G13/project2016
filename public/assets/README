@@ -1,2 +1,0 @@
-This folder is where we will put the tile map data for every single stage.
-ALL RESOURCES MUST BE LOCATED IN A FOLDER, THEY CANNOT BE LOCATED IN 'app/assets', BUT MUST BE CONTAINED IN SOME SUBFOLDER, eg. 'app/assets/maps'

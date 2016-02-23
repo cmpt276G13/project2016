@@ -148,6 +148,43 @@
             this.experienceToNextLevel += 5 * this.level;
         };
         
+        //function cann't be called before you preload the coordinateMapping.json file
+        //returns an object containing two attributes
+        //the first attribute called 'mapKey' is a string containing a key to a preloaded tilemap for this level
+        //2nd attribute called 'monsterListKey' is a key to a preloaded monster list for this level
+        function mapCoordinateToMap() {
+            
+            mapData = {};
+            
+            var mappings = game.cache.getJSON("coordinateMapping");
+            var playerPosX = <%=@latitude%>;
+            var playerPosY = <%=@longitude%>;
+            
+            //set to default data first
+            mapData.mapFileName = mappings["default"].mapFileName;
+            mapData.monsterListFileName = mappings["default"].monsterListFileName;
+            
+            //object will contain a list of areas
+            //each area has a bounding box that defines what coordinates map to that area
+            for(area in mappings) {
+                
+                if(playerPosX < mappings[area].left || playerPosX > mappings[area].right) {
+                    
+                    continue;
+                }
+                
+                if(playerPosY < mappings[area].top || playerPosY > mappings[area].bottom) {
+                    
+                    continue;
+                }
+                
+                mapData.mapFileName = mappings[area].mapFileName;
+                mapData.monsterListFileName = mappings[area].monsterListFileName;
+            }
+            
+            return mapData;
+        }
+        
         //{
             
             //players will have various stats, these will be loaded from the rails data base
@@ -191,6 +228,9 @@
                 //remeber that the first parameter is always a hash key to refer to this object later
                 //look at the documentation for all the parameters
                 game.load.spritesheet('player', '<%= asset_path("roshan.png") %>', 32, 48);
+                
+                //load data that maps a real world GPS location to an ingame map file
+                game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
                 
                 //since a player's game map is dependent on thier real world location, the map we load will depend on their location
                 //so here is where we specify what map to load

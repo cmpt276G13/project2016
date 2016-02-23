@@ -12,6 +12,8 @@ class GamesController < ApplicationController
         
         #@player = Player.find(name of player, or some other way to identify him)
         @currentUser = current_user
+        @latitude = get_user_location[:latitude]
+        @longitude = get_user_location[:longitude]
     end
     
     def save 
