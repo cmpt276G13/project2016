@@ -49,4 +49,9 @@ class User < ActiveRecord::Base
   def per_page
     30
   end
+  
+  # Rankings for users
+  def self.order_by_points
+    includes(:player).order("players.level - players.deaths DESC, players.experience DESC")
+  end
 end

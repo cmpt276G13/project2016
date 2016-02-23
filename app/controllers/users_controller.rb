@@ -2,14 +2,11 @@ class UsersController < ApplicationController
   # logged_in_user is defined in sessions_helper.rb
   before_action :logged_in_user, only: [:edit, :update, :destroy]
   before_action :correct_user_or_admin,   only: [:edit, :update, :destroy]
-  # The line below is added for the case that the sign up page would show the top 10 rankings
-  layout "signuploginlayout"
   
   def index
     # Change order of users.
     # User.joins(:user => :player).select("users.id").group("users.id").order("player.experience DESC")
-    @users = User.includes(:player).order("players.level - players.deaths DESC, players.experience DESC").
-                  paginate(page: params[:page], :per_page => User.per_page)
+    @users = User.order_by_points.paginate(page: params[:page], :per_page => User.per_page)
   end
   
   def show
