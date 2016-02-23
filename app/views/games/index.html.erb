@@ -41,16 +41,6 @@
             
             location.reload();
         };
-    
-        /*
-        
-        Before you start wokring on the game, please make sure you understand how to make a game using phaser (basic knowledge).
-        
-        You can go through this tutorial for a veeeeeery basic introduction to phaser game development: http://phaser.io/tutorials/making-your-first-phaser-game
-        and then go through this tutorial to see how to use game states and other stuff: https://software.intel.com/en-us/html5/hub/blogs/how-to-make-a-sidescroller-game-with-html5
-        
-        
-        */
         
         
         //Returns a random integer between min (inclusive) and max (inclusive)
@@ -67,6 +57,17 @@
         //create instance of the game engine.
         //This creates the canvas for the game to display, and allows you to use the Phaser engine
         var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Game');
+        
+        //global variable that stores important keys used by different parts of the game
+        //mapKey is the key to a tileset data thats been preloaded
+        //monsterListKey is key to the preloaded list of monsters for this map
+        //tilesetKEy is key to the tileset used to draw this map
+        var mapKeys = {
+            
+            mapKey: "default",
+            monsterListKey: "defaultMonsters",
+            tilesetKey: "tileset1"
+        }
         
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
@@ -149,9 +150,10 @@
         };
         
         //function cann't be called before you preload the coordinateMapping.json file
-        //returns an object containing two attributes
+        //returns an object containing 3 attributes
         //the first attribute called 'mapKey' is a string containing a key to a preloaded tilemap for this level
         //2nd attribute called 'monsterListKey' is a key to a preloaded monster list for this level
+        //3rd attribute called 'tilesetKey' is a key to a preloaded tileset image for this level
         function mapCoordinateToMap() {
             
             mapData = {};
@@ -161,8 +163,9 @@
             var playerPosY = <%=@longitude%>;
             
             //set to default data first
-            mapData.mapFileName = mappings["default"].mapFileName;
-            mapData.monsterListFileName = mappings["default"].monsterListFileName;
+            mapData.mapKey = mappings["default"].mapKey;
+            mapData.monsterListKey = mappings["default"].monsterListKey;
+            mapData.tilesetKey = mappings["default"].tilesetKey;
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
@@ -178,30 +181,13 @@
                     continue;
                 }
                 
-                mapData.mapFileName = mappings[area].mapFileName;
-                mapData.monsterListFileName = mappings[area].monsterListFileName;
+                mapData.tilesetKey = mappings[area].tilesetKey;
+                mapData.mapKey = mappings[area].mapFileKey;
+                mapData.monsterListKey = mappings[area].monsterListKey;
             }
             
             return mapData;
         }
-        
-        //{
-            
-            //players will have various stats, these will be loaded from the rails data base
-            //for now all we have is the player's sprite, which is a phaser game object that handles drawing/movement, and other great stuff
-            //we don't actually need to put this since we can add it later
-            //sprite: 0,
-            
-            //we will also have other stats about the player, read for the data base. uncomment later as needed
-            /*
-            anything with @player should be embeded ruby, right now leave it unembed
-            
-            this.level = @player.level
-            this.health = ...
-            ...
-            ...
-            */
-        //};
         
         /*
         
@@ -220,52 +206,32 @@
             //place to load files
             preload: function() {
                 
-                //loading is done using the following function
-                //game.load.*   where * represents an object type to load
-                //IMPORTANT: LOOK AT HOW WE GET THE PATH TO RESOURCE FILES, WE HAVE TO USE EMBED RUBY TO GENERATE THE PATH TO IT
-                
                 //load test player sprite sheet
-                //remeber that the first parameter is always a hash key to refer to this object later
-                //look at the documentation for all the parameters
                 game.load.spritesheet('player', '<%= asset_path("roshan.png") %>', 32, 48);
                 
                 //load data that maps a real world GPS location to an ingame map file
                 game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
                 
-                //since a player's game map is dependent on thier real world location, the map we load will depend on their location
-                //so here is where we specify what map to load
-                //we will assume mapWorldToGame will take a real world coordinate, and return an ingame map ID
-                //we will also assume that all of our maps will be named mapI, where I is the map's id as a number
+                //the assets pipeline is garbage so we have to load all the tilemap data
+                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
                 
-                //var mapId = mapWorldToGame(@player.realWorldLocation.x, @player.realWorldLocation.y);
-                //var mapName = 'map' + mapId.toString();
+                //load all the tilesets
+                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
                 
-                //now we load the tile set
-                //tile maps will be created in the Tiled Level editor, which will give us a JSON file
-                //we should use mapName instead of map.json, but we haven't created the map funcitonality so for now just use a preset level
-                game.load.tilemap('level', '<%= asset_path("map.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                //load all the monster lists
+                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
+                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
+                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
                 
-                //we also want to load all the possible types of monsters in this level
-                //we can assume that the getMonstersInMap will receive the name of a map, and returns the name of the file containing an array of monster names that can spawn on that map
-                //These monster names will be used as keys into the mosnter database, and we will use it to retreive a given monster
-                
-                //var monsterListFile = getMonstersInMap(mapName)
-                
-                //now load this array for later use
-                game.load.json('monsterList', '<%= asset_path("monsterList.json") %>');
-                
-                //now we have to load the actual mosnter database
-                //this could also be stored in the server as a database, and we can use AJAX calls to receive the data
-                //but for now i've saved all the mosnter data into app/assets/monsters/monsters.json
+                //load the mosnter data base
                 game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
                 
+                //load spritesheets for all the monsters
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
-                //the above just loads the json file, but doens't load the tileSheet (the images used to draw every single tile)
-                //here we load the tile image
-                //again we would be using the mapName variable if it was set up
-                game.load.image('tileset', '<%= asset_path("TileSet.png") %>');
             },
             
             //create function creats the required object for this game state
@@ -302,12 +268,11 @@
         		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
-        		//right now the player will draw onto the screen since phaser automatically draws all new sprites
-        		//we want to not draw the player to the screen, so we remove him from phaser's rendering list
-        		//also once the Load state finishes, the player's sprite will automatically be destoryed by phaser, 
-        		//but we want to keep the sprite for the actual gameplay state
-        		//by removing player from the object list, we prevent him from being drawn, as well as being destoryed.
         		game.world.remove(player.sprite);
+        		
+        		//load keys to the map data
+                mapKeys = mapCoordinateToMap();
+                document.getElementById("additional").innerHTML = mapKeys.mapKey;
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');

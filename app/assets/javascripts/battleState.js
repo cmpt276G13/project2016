@@ -263,13 +263,8 @@ var battleState = {
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         
-        //here is where the monsters list we loaded previously, and the mosnter database come into play
-        //we want to randomly generate a mosnter, so we will randomly select the name of a mosnter that can spawn in this map
-        //generate the array of mosnter names
-        //the getJSON function uses a key to a previously loaded json file
-        //it then returns a java script object containing the data loaded in the file
-        //please look up how JSON works if you are unfamiliar with it
-        var monsterNames = game.cache.getJSON('monsterList');
+        //load all monsters that exist in this level
+        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey);
         
         //now turn the monster database to a javascript object, os we can find monsters in this database
         var monsterDatabase = game.cache.getJSON('monsterData');
