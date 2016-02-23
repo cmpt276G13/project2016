@@ -6,7 +6,7 @@
         "right": 49.0587,
         "bottom": -122.710553,
         "mapKey": "surrey",
-        "tilesetKeys": ["tileset1", "tileset1"],
+        "tilesetKeys": ["tileset1", "tileset1", "tileset2"],
         "monsterListKey": "surreyMonsters"
     },
     

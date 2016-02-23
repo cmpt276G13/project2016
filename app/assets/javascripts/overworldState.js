@@ -92,6 +92,11 @@ var overworldState = {
         
         game.add.existing(player.sprite);
         
+        
+        
+        //add a forewground layer
+        this.foreground = this.map.createLayer('foreground');
+        
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
         
