@@ -61,12 +61,12 @@
         //global variable that stores important keys used by different parts of the game
         //mapKey is the key to a tileset data thats been preloaded
         //monsterListKey is key to the preloaded list of monsters for this map
-        //tilesetKEy is key to the tileset used to draw this map
+        //tilesetKeys are keys to the tileset used to draw this map, a single tilemap can use multiple tilesets
         var mapKeys = {
             
             mapKey: "default",
             monsterListKey: "defaultMonsters",
-            tilesetKey: "tileset1"
+            tilesetKeys: ["tileset1"]
         }
         
         //define a global player variable
@@ -165,7 +165,7 @@
             //set to default data first
             mapData.mapKey = mappings["default"].mapKey;
             mapData.monsterListKey = mappings["default"].monsterListKey;
-            mapData.tilesetKey = mappings["default"].tilesetKey;
+            mapData.tilesetKeys = mappings["default"].tilesetKeys;
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
@@ -183,7 +183,7 @@
                     continue;
                 }
                 
-                mapData.tilesetKey = mappings[area].tilesetKey;
+                mapData.tilesetKeys = mappings[area].tilesetKeys;
                 mapData.mapKey = mappings[area].mapKey;
                 mapData.monsterListKey = mappings[area].monsterListKey;
                 

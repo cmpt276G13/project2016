@@ -64,7 +64,12 @@ var overworldState = {
         
         //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
         this.map = game.add.tilemap(mapKeys.mapKey);
-        this.map.addTilesetImage('tileset', mapKeys.tilesetKey);
+        
+        //add all tileset images to the tileset
+        for(var i = 1; i <= mapKeys.tilesetKeys.length; ++i) {
+            
+            this.map.addTilesetImage('tileset' + i.toString(), mapKeys.tilesetKeys[i - 1]);
+        }
         
         //backround layer
         this.background = this.map.createLayer('background');

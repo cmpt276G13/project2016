@@ -6,7 +6,7 @@
         "right": 49.0587,
         "bottom": -122.710553,
         "mapKey": "surrey",
-        "tilesetKey": "tileset1",
+        "tilesetKeys": ["tileset1", "tileset1"],
         "monsterListKey": "surreyMonsters"
     },
     
@@ -17,7 +17,7 @@
         "right": 49.217351,
         "bottom": -122.912563,
         "mapKey": "burnaby",
-        "tilesetKey": "tileset1",
+        "tilesetKeys": ["tileset1"],
         "monsterListKey": "burnabyMonsters"
     },
     
@@ -28,7 +28,7 @@
         "right": 0,
         "bottom": 0,
         "mapKey": "default",
-        "tilesetKey": "tileset1",
+        "tilesetKeys": ["tileset1"],
         "monsterListKey": "defaultMonsters"
     }
 }
