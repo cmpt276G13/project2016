@@ -2,9 +2,9 @@
     "surrey": {
         
         "left": 49.1747,
-        "top": -122.8813,
+        "top": -122.907187,
         "right": 49.0587,
-        "bottom": -122.7261,
+        "bottom": -122.710553,
         "mapKey": "surrey",
         "tilesetKey": "tileset1",
         "monsterListKey": "surreyMonsters"

@@ -169,21 +169,25 @@
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
+            //latitute increases to the left and down
+            //some weird coordinate system, don't chagne any of the inequalites below, even if it looks incorrect
             for(area in mappings) {
                 
-                if(playerPosX < mappings[area].left || playerPosX > mappings[area].right) {
+                if(playerPosX >= mappings[area].left || playerPosX < mappings[area].right) {
                     
                     continue;
                 }
                 
-                if(playerPosY < mappings[area].top || playerPosY > mappings[area].bottom) {
+                if(playerPosY <= mappings[area].top || playerPosY > mappings[area].bottom) {
                     
                     continue;
                 }
                 
                 mapData.tilesetKey = mappings[area].tilesetKey;
-                mapData.mapKey = mappings[area].mapFileKey;
+                mapData.mapKey = mappings[area].mapKey;
                 mapData.monsterListKey = mappings[area].monsterListKey;
+                
+                break;
             }
             
             return mapData;
