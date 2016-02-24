@@ -1,0 +1,12 @@
+{
+    "Small Potion": {
+        
+        "description": "A drink that restores 25 health.",
+        "effect": "restoreStats",
+        
+        "stats": {
+            
+            health: 25
+        }
+    }
+}
