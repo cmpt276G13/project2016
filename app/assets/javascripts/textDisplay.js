@@ -125,8 +125,7 @@ attributeDisplayTextTable.prototype.addParent = function(parent) {
 //x, y is the position to begin displaying the lisst of texts, each added text will be displayed underneath the one added before it
 //cellWidth is the width of the region each text is displayed
 //cellHeight is the height of the region each text is displayed
-//text style is the style to apply to each text
-function textList(x, y, cellWidth, cellHeight, textStyle) {
+function textList(x, y, cellWidth, cellHeight) {
     
     //parent object so its easy to set the parent of new text objects
     this.parentGraphics = game.add.graphics(x, y);
@@ -134,7 +133,6 @@ function textList(x, y, cellWidth, cellHeight, textStyle) {
     this.y = y;
     this.cellWidth = cellWidth;
     this.cellHeight = cellHeight;
-    this.textStyle = textStyle;
     
     //array of phaser texts to display
     this.texts = [];
@@ -142,21 +140,23 @@ function textList(x, y, cellWidth, cellHeight, textStyle) {
 
 //add the given array of texts to the list
 //each item in texts should be a string
-textList.prototype.addTexts = function(texts) {
+//text style is the style to apply to each text
+textList.prototype.addTexts = function(texts, textStyle) {
     
     for(var i = 0; i < texts.length; ++i) {
 
-        this.addText(texts[i]);
+        this.addText(texts[i], textStyle);
     }
 }
 
 //add the given text to the list
-textList.prototype.addText = function(text) {
+//text style is the style to apply to the text
+textList.prototype.addText = function(text, textStyle) {
     
     var xPos = this.x;
     var yPos = this.y + this.texts.length * this.cellHeight;
     
-    var newText = game.add.text(xPos, yPos, text, this.textStyle);
+    var newText = game.add.text(xPos, yPos, text, textStyle);
     this.parentGraphics.addChild(newText);
     
     this.texts.push(newText);
@@ -195,10 +195,10 @@ textTable.prototype.addText = function(columnName, text, textStyle) {
     //create the column as a text list, if the list hasn't been initialized yet
     if(typeof this.columns[columnName] === "undefined") {
         
-        this.createColumn(columnName, textStyle);
+        this.createColumn(columnName);
     }
     
-    this.columns[columnName].addText(text);
+    this.columns[columnName].addText(text, textStyle);
 }
 
 //texts should to an array of strings
@@ -207,13 +207,13 @@ textTable.prototype.addTexts = function(columnName, texts, textStyle) {
     //create the column as a text list, if the list hasn't been initialized yet
     if(typeof this.columns[columnName] === "undefined") {
         
-        this.createColumn(columnName, textStyle);
+        this.createColumn(columnName);
     }
     
-    this.columns[columnName].addTexts(texts);
+    this.columns[columnName].addTexts(texts, textStyle);
 }
 
-textTable.prototype.createColumn = function(columnName, textStyle) {
+textTable.prototype.createColumn = function(columnName) {
     
     //count number of columns the table has
     var columns = 0;
@@ -226,7 +226,7 @@ textTable.prototype.createColumn = function(columnName, textStyle) {
     var columnX = this.cellWidth * columns;
     var columnY = 0;
     
-    this.columns[columnName] = new textList(columnX, columnY, this.cellWidth, this.cellHeight, textStyle);
+    this.columns[columnName] = new textList(columnX, columnY, this.cellWidth, this.cellHeight);
     this.columns[columnName].addParent(this.parentGraphics);
 }
 
