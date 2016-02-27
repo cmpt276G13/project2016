@@ -199,16 +199,51 @@ scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) 
 
 scrollableObjectList.prototype.createMask = function() {
     
-    this.mask = game.add.graphics(this.configuration.x, this.configuration.y);
+    this.mask = game.add.graphics(0, 0);
     
     var maskWidth = this.configuration.cellWidth;
-    var maskHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
+    this.maskHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
     
     this.mask.beginFill(0xffffff, 1);
-    this.mask.drawRect(0, 0, maskWidth, maskHeight);
+    this.mask.drawRect(0, 0, maskWidth, this.maskHeight);
     this.mask.endFill();
     
     this.parentGraphics.addChild(this.mask);
+}
+
+scrollableObjectList.prototype.scrollDown = function() {
+    
+    //not enough objects to scroll
+    if(this.objects.length <= this.configuration.viewableObjects) {
+        
+        return;
+    }
+    
+    //prevent scrolling down beyond the last text
+    if( this.mask.y + this.maskHeight >= this.objects.length * this.configuration.cellHeight) {
+        
+        return;
+    }
+    
+    //move all the text up so it looks like it scrolled down
+    //scroll down by 1 text
+    this.parentGraphics.y -= this.configuration.cellHeight;
+    
+    //moving parent moves the mask up as well, so move the mask down
+    this.mask.y += this.configuration.cellHeight;
+    
+}
+
+scrollableObjectList.prototype.scrollUp = function() {
+    
+    //don't scroll up if you're already at the top
+    if(this.mask.y <= 0) {
+        
+        return;
+    }
+    
+    this.parentGraphics.y += this.configuration.cellHeight;
+    this.mask.y -= this.configuration.cellHeight;
 }
 
 //a table of objects, each column in this table is an objectList

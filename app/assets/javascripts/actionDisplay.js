@@ -17,7 +17,7 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.background.addChild(this.selectionDisplay);
     
     //the text that will be displayed
-    this.actionTextList = new objectList({x: 5, y: 5, cellWidth: width - 10, cellHeight: 28, objectCreationFunction: text}); //createActionTexts(actionTexts, this.background);
+    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: width - 10, cellHeight: 28, objectCreationFunction: text, viewableObjects: 4}); //createActionTexts(actionTexts, this.background);
     
     //add all the texts
     for(var i = 0; i < actionTexts.length; ++i) {

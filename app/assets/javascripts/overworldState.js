@@ -145,6 +145,12 @@ var overworldState = {
         asdf.addObject({text: "asdf2", textStyle: statDisplayStyle} );
         asdf.addObject({text: "asdf3", textStyle: statDisplayStyle} );
         asdf.addObject({text: "asdf4", textStyle: statDisplayStyle} );
+        asdf.scrollDown();
+        asdf.scrollDown();
+        asdf.scrollDown();
+        asdf.scrollDown();
+        asdf.scrollUp();
+        asdf.scrollUp();
         
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
