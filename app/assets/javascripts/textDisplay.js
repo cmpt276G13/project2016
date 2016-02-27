@@ -165,6 +165,52 @@ objectList.prototype.addParent = function(parent) {
     parent.addChild(this.parentGraphics);
 }
 
+//object list that limits the number of viewable objects, and allows you to scroll through the objects
+scrollableObjectList.prototype = Object.create(objectList.prototype);
+
+//additional configuration, along with its parent's configurations
+//viewableObjects: maximum number of objects that will be drawn at once
+function scrollableObjectList(configuration) {
+    
+    objectList.call(this, configuration);
+    
+    //create a mask for the view region, so all obejcts outside this region will not be drawn
+    this.createMask();
+    
+    this.parentGraphics.mask = this.mask;
+}
+
+scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) {
+    
+    var defaultConfig = {
+        
+        x: 0,
+        y: 0,
+        cellWidth: 0,
+        cellHeight: 0,
+        viewableObjects: 1,
+        objectCreationFunction: {}
+    };
+    
+    $.extend(defaultConfig, configuration);
+    
+    return defaultConfig;
+}
+
+scrollableObjectList.prototype.createMask = function() {
+    
+    this.mask = game.add.graphics(this.configuration.x, this.configuration.y);
+    
+    var maskWidth = this.configuration.cellWidth;
+    var maskHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
+    
+    this.mask.beginFill(0xffffff, 1);
+    this.mask.drawRect(0, 0, maskWidth, maskHeight);
+    this.mask.endFill();
+    
+    this.parentGraphics.addChild(this.mask);
+}
+
 //a table of objects, each column in this table is an objectList
 //this table behaves just like an objectList, except there are multiple named columns
 function objectTable(configuration) {
