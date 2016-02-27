@@ -44,7 +44,7 @@ function attributeDisplayText(configuration) {
     this.parentGraphics = game.add.graphics(this.config.x, this.config.y);
     
     this.name = game.add.text(0, 0, this.config.attributeName, this.config.textStyle);
-    this.value = game.add.text(this.config.width, 0, this.config.attributeValue, this.config.textStyle);
+    this.value = game.add.text(this.config.cellWidth, 0, this.config.attributeValue, this.config.textStyle);
     
     this.parentGraphics.addChild(this.name);
     this.parentGraphics.addChild(this.value);
@@ -61,8 +61,8 @@ attributeDisplayText.prototype.mergeConfigWithDefault = function(configuration) 
         attributeValue: "",
         x: 0,
         y: 0,
-        width: 0,
-        height: 0,
+        cellWidth: 0,
+        cellHeight: 0,
         textStyle: {}
     }
     
@@ -188,7 +188,7 @@ attributeDisplayTextTable.prototype.addParent = function(parent) {
 //used so texts and attributes can be created using a common interface
 function text(configuration) {
     
-    this.config = this.mergeConfigWithDefault(configuration);
+    this.configuration = this.mergeConfigWithDefault(configuration);
     
     this.text = game.add.text(this.configuration.x, this.configuration.y, this.configuration.text, this.configuration.textStyle);
 }
@@ -213,11 +213,7 @@ text.prototype.addParent = function(parent) {
     parent.addChild(this.text);
 }
 
-//displays a column of text
-//its like a single column of the attributedisplayTextTable, but its all text and not attributes
-//x, y is the position to begin displaying the lisst of texts, each added text will be displayed underneath the one added before it
-//cellWidth is the width of the region each text is displayed
-//cellHeight is the height of the region each text is displayed
+
 function textList(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
@@ -271,19 +267,11 @@ textList.prototype.addText = function(textConfig) {
     this.texts.push(newText);
 }
 
-//add given object as parent to all texts
-//function must be called everytime you add a new text, for now
 textList.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
 }
 
-//a table of text, like the table of attribute texts, but with normal texts instead
-//usefull for displaying skills, items, inventory, and other stuff that aren't attributes
-//internally it'll use an array of text lists
-//x ,y is the position of the tbale
-//cellwidth and cell height is the size of each cell in the table
-//textStyle is the style to applpy to each text
 function textTable(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
@@ -300,6 +288,7 @@ textTable.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         cellWidth: 0,
         cellHeight: 0,
+        columnSpacing: 0,
         textCreationFunction: {}
     }
     
@@ -307,11 +296,6 @@ textTable.prototype.mergeConfigWithDefault = function(configuration) {
     return defaultConfig;
 }
 
-//add the given text to the given column
-//column name is the name of the column to add the text to
-//text is the text to add
-//textStyle is the style to apply to the given attribute
-//it will automatically position the text in the table
 textTable.prototype.addText = function(columnName, textConfig) {
     
     //create the column as a text list, if the list hasn't been initialized yet
@@ -345,7 +329,7 @@ textTable.prototype.createColumn = function(columnName) {
         columns += 1;
     }
     
-    var columnX = this.configuration.cellWidth * columns;
+    var columnX = (this.configuration.cellWidth + this.configuration.columnSpacing) * columns;
     var columnY = 0;
     
     var config = this.configuration;
