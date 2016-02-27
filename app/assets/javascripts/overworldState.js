@@ -139,9 +139,10 @@ var overworldState = {
             this.stateManager.changeState("explore");
         }
         
-        this.text = new textTable({cellWidth: 100, cellHeight: 30, textCreationFunction: attributeDisplayText});
-        this.text.addText("left", {attributeName: "asdf", attributeValue: "20", textStyle: statDisplayStyle});
-        this.text.addText("right", {attributeName: "123", attributeValue: 456, textStyle: statDisplayStyle});
+        this.text = new objectTable({y: 10, cellWidth: 100, cellHeight: 30, objectCreationFunction: attributeDisplayText});
+        this.text.addObject("left", {attributeName: "asdf", attributeValue: "20", textStyle: statDisplayStyle});
+        this.text.addObject("right", {attributeName: "123", attributeValue: 456, textStyle: statDisplayStyle});
+        this.text.addObject("right", {attributeName: "sdfsdf", attributeValue: 456, textStyle: statDisplayStyle});
         
         
         //save player data here for now, mostly because external states make changes to player

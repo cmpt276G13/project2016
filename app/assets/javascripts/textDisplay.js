@@ -76,114 +76,6 @@ attributeDisplayText.prototype.addParent = function(parent) {
     parent.addChild(this.parentGraphics);
 }
 
-//displays a column of text
-//its like a single column of the attributedisplayTextTable, but its all text and not attributes
-//x, y is the position to begin displaying the lisst of texts, each added text will be displayed underneath the one added before it
-//cellWidth is the width of the region each text is displayed
-//cellHeight is the height of the region each text is displayed
-function attributeDisplayTextList(x, y, cellWidth, cellHeight) {
-    
-    //parent object so its easy to set the parent of new text objects
-    this.parentGraphics = game.add.graphics(x, y);
-    this.x = x;
-    this.y = y;
-    this.cellWidth = cellWidth;
-    this.cellHeight = cellHeight;
-    
-    //array of phaser texts to display
-    this.texts = [];
-};
-
-//add the given array of texts to the list
-//each item in texts should be a string
-//text style is the style to apply to each text
-attributeDisplayTextList.prototype.addTexts = function(texts, textStyle) {
-    
-    for(var i = 0; i < texts.length; ++i) {
-
-        this.addText(texts[i], textStyle);
-    }
-}
-
-//add the given text to the list
-//text style is the style to apply to the text
-attributeDisplayTextList.prototype.addText = function(text, textStyle) {
-    
-    var xPos = this.x;
-    var yPos = this.y + this.texts.length * this.cellHeight;
-    
-    var newText = game.add.text(xPos, yPos, text, textStyle);
-    this.parentGraphics.addChild(newText);
-    
-    this.texts.push(newText);
-}
-
-//add given object as parent to all texts
-//function must be called everytime you add a new text, for now
-attributeDisplayTextList.prototype.addParent = function(parent) {
-    
-    parent.addChild(this.parentGraphics);
-}
-
-//object that stores attribute text and displays them as a table with the specified number of columns
-
-//x,y are the top left position of the table
-//cellWidth and cellHeight are the dimensions of each attribute display text
-//columnSpacing is the horizontal gap between each cel
-//rowSpacing is the vertical gap between each cel
-function attributeDisplayTextTable(x, y, cellWidth, cellHeight, columnSpacing, rowSpacing) {
-    
-    this.parentGraphics = game.add.graphics(x, y);
-    // this.x = x;
-    // this.y = y;
-    this.cellWidth = cellWidth;
-    this.cellHeight = cellHeight;
-    this.columnSpacing = columnSpacing;
-    this.rowSpacing = rowSpacing;
-    
-    this.columns = {};
-}
-
-//add the given attributeText to the given column
-//column name is the name of the column to add the attribute to
-//attributeName is name of the attribute you want to add, value is the value
-//textStyle is the style to apply to the given attribute
-//it will automatically position the attribute in the table
-attributeDisplayTextTable.prototype.addAttribute = function(columnName, attributeName, attributeValue, textStyle) {
-    
-    //create the column as an array of attributes, if the array hasn't been initialized yet
-    if(typeof this.columns[columnName] === "undefined") {
-        
-        this.columns[columnName] = [];
-    }
-    
-    //you need to find the id of this column, that is, is this the first column, the second column, third...
-    var columnId = 0;
-    for(column in this.columns) {
-        
-        if(column == columnName) {
-            
-            break;
-        }
-        
-        columnId += 1;
-    }
-    
-    var xPos = columnId * (this.cellWidth + this.columnSpacing);
-    //add this to the bottom of the column
-    var yPos = this.columns[columnName].length * (this.cellHeight + this.rowSpacing);
-    
-    var attribute = new attributeDisplayText(attributeName, attributeValue, xPos, yPos, this.cellWidth, this.cellHeight, textStyle);
-    attribute.addParent(this.parentGraphics);
-    this.columns[columnName].push(attribute);
-}
-
-//set the parent of all the action display texts
-attributeDisplayTextTable.prototype.addParent = function(parent) {
-    
-    parent.addChild(this.parentGraphics);
-}
-
 //wrapper for phaser texts
 //used so texts and attributes can be created using a common interface
 function text(configuration) {
@@ -214,18 +106,16 @@ text.prototype.addParent = function(parent) {
 }
 
 
-function textList(configuration) {
+function objectList(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
     
-    //parent object so its easy to set the parent of new text objects
     this.parentGraphics = game.add.graphics(this.configuration.x, this.configuration.y);
     
-    //array of phaser texts to display
-    this.texts = [];
+    this.objects = [];
 };
 
-textList.prototype.mergeConfigWithDefault = function(configuration) {
+objectList.prototype.mergeConfigWithDefault = function(configuration) {
     
     var defaultConfig = {
         
@@ -233,7 +123,7 @@ textList.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         cellWidth: 0,
         cellHeight: 0,
-        textCreationFunction: {}
+        objectCreationFunction: {}
     };
     
     $.extend(defaultConfig, configuration);
@@ -241,38 +131,36 @@ textList.prototype.mergeConfigWithDefault = function(configuration) {
     return defaultConfig;
 }
 
-//use the given configurations to create texts 
-textList.prototype.addTexts = function(textConfigs) {
+objectList.prototype.addObjects = function(objectConfigs) {
     
-    for(var i = 0; i < texts.length; ++i) {
+    for(var i = 0; i < objectConfigs.length; ++i) {
 
-        this.addText(texts[i], textStyle);
+        this.addObject(objectConfigs[i]);
     }
 }
 
-//add the given text to the list
-textList.prototype.addText = function(textConfig) {
+objectList.prototype.addObject = function(objectConfig) {
     
-    var xPos = this.configuration.x;
-    var yPos = this.configuration.y + this.texts.length * this.configuration.cellHeight;
+    var xPos = 0;
+    var yPos = this.objects.length * this.configuration.cellHeight;
     
-    textConfig.x = xPos;
-    textConfig.y = yPos;
-    textConfig.cellWidth = this.configuration.cellWidth;
-    textConfig.cellHeight = this.configuration.cellHeight;
+    objectConfig.x = xPos;
+    objectConfig.y = yPos;
+    objectConfig.cellWidth = this.configuration.cellWidth;
+    objectConfig.cellHeight = this.configuration.cellHeight;
     
-    var newText = new this.configuration.textCreationFunction(textConfig);
-    newText.addParent(this.parentGraphics);
+    var newObject = new this.configuration.objectCreationFunction(objectConfig);
+    newObject.addParent(this.parentGraphics);
     
-    this.texts.push(newText);
+    this.objects.push(newObject);
 }
 
-textList.prototype.addParent = function(parent) {
+objectList.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
 }
 
-function textTable(configuration) {
+function objectTable(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
     this.parentGraphics = game.add.graphics(this.configuration.x, this.configuration.y);
@@ -280,7 +168,7 @@ function textTable(configuration) {
     this.columns = {};
 }
 
-textTable.prototype.mergeConfigWithDefault = function(configuration) {
+objectTable.prototype.mergeConfigWithDefault = function(configuration) {
     
     var defaultConfig = {
         
@@ -288,38 +176,36 @@ textTable.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         cellWidth: 0,
         cellHeight: 0,
-        columnSpacing: 0,
-        textCreationFunction: {}
+        columnSpacing: 20,
+        objectCreationFunction: {}
     }
     
     $.extend(defaultConfig, configuration);
     return defaultConfig;
 }
 
-textTable.prototype.addText = function(columnName, textConfig) {
+objectTable.prototype.addObject = function(columnName, objectConfig) {
     
-    //create the column as a text list, if the list hasn't been initialized yet
     if(typeof this.columns[columnName] === "undefined") {
         
         this.createColumn(columnName);
     }
     
-    this.columns[columnName].addText(textConfig);
+    this.columns[columnName].addObject(objectConfig);
 }
 
-//texts should to an array of strings
-textTable.prototype.addTexts = function(columnName, textConfigs) {
+objectTable.prototype.addObjects = function(columnName, objectConfigs) {
     
-    //create the column as a text list, if the list hasn't been initialized yet
+    //create the column as a object list, if the list hasn't been initialized yet
     if(typeof this.columns[columnName] === "undefined") {
         
         this.createColumn(columnName);
     }
     
-    this.columns[columnName].addTexts(textConfigs);
+    this.columns[columnName].addObjects(objectConfigs);
 }
 
-textTable.prototype.createColumn = function(columnName) {
+objectTable.prototype.createColumn = function(columnName) {
     
     //count number of columns the table has
     var columns = 0;
@@ -336,12 +222,11 @@ textTable.prototype.createColumn = function(columnName) {
     config.x = columnX;
     config.y = columnY;
     
-    this.columns[columnName] = new textList(config);
+    this.columns[columnName] = new objectList(config);
     this.columns[columnName].addParent(this.parentGraphics);
 }
 
-//set the parent of all the action display texts
-textTable.prototype.addParent = function(parent) {
+objectTable.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
 }
