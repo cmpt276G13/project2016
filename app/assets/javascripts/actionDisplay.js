@@ -17,8 +17,14 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.background.addChild(this.selectionDisplay);
     
     //the text that will be displayed
-    this.actionTextList = new textList(5, 5, width - 10, 28); //createActionTexts(actionTexts, this.background);
-    this.actionTextList.addTexts(actionTexts, actionStyle);
+    this.actionTextList = new objectList({x: 5, y: 5, cellWidth: width - 10, cellHeight: 28, objectCreationFunction: text}); //createActionTexts(actionTexts, this.background);
+    
+    //add all the texts
+    for(var i = 0; i < actionTexts.length; ++i) {
+        
+        this.actionTextList.addObject( {text: actionTexts[i], textStyle: actionStyle});
+    }
+    //this.actionTextList.addObjec(actionTexts, actionStyle);
     this.actionTextList.addParent(this.background);
 };
 
@@ -31,7 +37,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     this.selectionDisplay.clear();
     
     //don't draw anything if there is no text
-    if(this.selectedAction >= this.actionTextList.texts.length) {
+    if(this.selectedAction >= this.actionTextList.objects.length) {
         
         return;
     }
@@ -40,8 +46,8 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     this.selectionDisplay.lineStyle(2, 0x0000FF, 1);
     
     //now draw a new rectangle around the current selection
-    var xPosition = this.actionTextList.texts[this.selectedAction].x;
-    var yPosition = this.actionTextList.texts[this.selectedAction].y;
+    var xPosition = this.actionTextList.objects[this.selectedAction].configuration.x + this.actionTextList.configuration.x;
+    var yPosition = this.actionTextList.objects[this.selectedAction].configuration.y + this.actionTextList.configuration.y;
     
     this.selectionDisplay.drawRect(xPosition, yPosition, 100, 30);
 };
@@ -49,23 +55,24 @@ actionDisplay.prototype.highlightSelectedAction = function() {
 //users will be able to change their currently selected action
 actionDisplay.prototype.selectNext = function() {
     
-    this.selectedAction = (this.selectedAction + 1) % this.actionTextList.texts.length;
+    document.getElementById("additional").innerHTML = this.actionTextList.objects.length;
+    this.selectedAction = (this.selectedAction + 1) % this.actionTextList.objects.length;
 };
 
 actionDisplay.prototype.selectPrevious = function() {
     
-    this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTextList.texts.length - 1 : this.selectedAction - 1;
+    this.selectedAction = this.selectedAction - 1 < 0 ? this.actionTextList.objects.length - 1 : this.selectedAction - 1;
 };
 
 actionDisplay.prototype.getSelectedActionString = function() {
     
-    if(this.selectedAction >= this.actionTextList.texts.length) {
+    if(this.selectedAction >= this.actionTextList.objects.length) {
         
         return "";
     }
     
-    return this.actionTextList.texts[this.selectedAction].text;
-}
+    return this.actionTextList.objects[this.selectedAction].text.text;
+};
 
 //onKeyDown listener for action Display objects
 //this will assume the arrow keys is used to move, and it will move the current action selection for the given action display

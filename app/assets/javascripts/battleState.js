@@ -446,7 +446,7 @@ var battleState = {
         
         var barStyle = {
             
-            x: 153,
+            x: 285,
             y: 26,
             maxHealth: player.maxHealth,
             
@@ -463,10 +463,10 @@ var battleState = {
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
-        statContainer.attributeTable = new attributeDisplayTextTable(10, 10, 145, 15, 0, 0);
+        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 200, cellHeight: 15, objectCreationFunction: attributeDisplayText});
         
-        statContainer.attributeTable.addAttribute("name", player.name, "", statDisplayStyle);
-        statContainer.attributeTable.addAttribute("health", "HP:", player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        statContainer.attributeTable.addObject("name", {attributeName: "name:", attributeValue: player.name, textStyle: statDisplayStyle});
+        statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
         
         statContainer.attributeTable.addParent(statContainer.textBox.background);
         

@@ -139,11 +139,10 @@ var overworldState = {
             this.stateManager.changeState("explore");
         }
         
-        this.text = new objectTable({y: 10, cellWidth: 100, cellHeight: 30, objectCreationFunction: attributeDisplayText});
-        this.text.addObject("left", {attributeName: "asdf", attributeValue: "20", textStyle: statDisplayStyle});
-        this.text.addObject("right", {attributeName: "123", attributeValue: 456, textStyle: statDisplayStyle});
-        this.text.addObject("right", {attributeName: "sdfsdf", attributeValue: 456, textStyle: statDisplayStyle});
+        this.text = new objectList({y: 10, cellWidth: 100, cellHeight: 30, objectCreationFunction: text});
+        this.text.addObjects([{text: "asdf", textStyle: statDisplayStyle}, {text: "asdf1", textStyle: statDisplayStyle}, {text: "asdf2", textStyle: statDisplayStyle}, {text: "asdf3", textStyle: statDisplayStyle}]);
         
+        var list = new actionDisplay(0, 0, 300, 300, ["asdf", "gsdf"]);
         
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
