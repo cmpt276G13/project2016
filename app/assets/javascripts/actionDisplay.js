@@ -1,10 +1,12 @@
 //an action display is a rectangular display that lists a bunch of possible actions a player can make
 //it consists of a container that stores the text, and the texts that are supposed to be displayed
 //it also contains information about what action is currently being selected, and a way to indicate what action is selected
-function actionDisplay(x, y, width, height, actionTexts) {
+function actionDisplay(configuration, actionTexts) {
     
+    document.getElementById("additional").innerHTML = "asdf";
+    this.configuration = this.mergeConfigWithDefault(configuration);
     //background that is displayed behind all the text
-    this.background = createTextboxBackground(x, y, width, height);
+    this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, this.configuration.height);
     this.background.fixedToCamera = true;
     
     //index of currently selected action (corresponds to the array of action texts), used to get the string of the selected action
@@ -20,10 +22,8 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.selectionDisplay = game.add.graphics(0, 0);
     this.background.addChild(this.selectionDisplay);
     
-    this.viewableObjects = 6;
-    
     //the text that will be displayed
-    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: width - 10, cellHeight: 28, objectCreationFunction: text, viewableObjects: this.viewableObjects}); //createActionTexts(actionTexts, this.background);
+    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: 28, objectCreationFunction: text, viewableObjects: this.configuration.viewableObjects}); //createActionTexts(actionTexts, this.background);
     
     //add all the texts
     for(var i = 0; i < actionTexts.length; ++i) {
@@ -34,6 +34,22 @@ function actionDisplay(x, y, width, height, actionTexts) {
     this.actionTextList.addParent(this.background);
 };
 
+actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
+    
+    var config = {
+        
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        viewableObjects: 5
+    }
+    
+    $.extend(config, configuration);
+    
+    return config;
+}
+
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     
@@ -43,7 +59,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     this.selectionDisplay.clear();
     
     //don't draw anything if there is no text
-    if(this.idActionToHighlight >= Math.min(this.actionTextList.objects.length, this.viewableObjects)) {
+    if(this.idActionToHighlight >= Math.min(this.actionTextList.objects.length, this.configuration.viewableObjects)) {
         
         return;
     }
@@ -64,9 +80,9 @@ actionDisplay.prototype.selectNext = function() {
     this.idActionToHighlight += 1;
     this.idSelectedAction += 1;
     
-    if(this.idActionToHighlight >= Math.min(this.viewableObjects, this.actionTextList.objects.length)) {
+    if(this.idActionToHighlight >= Math.min(this.configuration.viewableObjects, this.actionTextList.objects.length)) {
         
-        this.idActionToHighlight = Math.min(this.viewableObjects, this.actionTextList.objects.length) - 1;
+        this.idActionToHighlight = Math.min(this.configuration.viewableObjects, this.actionTextList.objects.length) - 1;
         this.actionTextList.scrollDown();
     }
     

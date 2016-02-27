@@ -614,8 +614,8 @@ var battleState = {
         //create the ui that displays the player's stats
         this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
-        this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
-        this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
+        this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight}, ['fight', 'items', 'run']);
+        this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight - 20, width: game.scale.width / 3, height: actionBoxHeight}, ['attack', 'skills', 'cancel']);
         
         //again we want to add a listener for when the player presses on keys
         game.input.keyboard.callbackContext = this;

@@ -82,7 +82,7 @@ var pauseMenuState = {
     create: function() {
         
         //create a list of actions the player can select from
-        this.menuActions = new actionDisplay(0, 0, 150, 350, ['edit stats', 'items', 'skills', 'back']);
+        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, ['edit stats', 'items', 'skills', 'back']);
         
         this.statDisplay = this.createPlayerStatDisplay();
         
