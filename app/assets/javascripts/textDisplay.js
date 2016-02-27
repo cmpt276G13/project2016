@@ -32,11 +32,10 @@ var damageStyle = {
     strokeThickness: 4
 }
 
-//creates an attribute display text
-//it looks like the following:
-//'attributeName' 'some number of spaces' 'attributeValue'
-//it creates a text display that shows the value of an attribute
-//see mergeConfigWithDefault for possible data that can be provided in the configuration
+//attributeDisplayText displays an attribute along with its value, in teh following format:
+//attributeName     attributeValue
+//data in the configuration defines a rectangular cell where the attribute is displayed
+//the name is positioned at the left edge, and the value is positioned at the right edge
 function attributeDisplayText(configuration) {
     
     this.config = this.mergeConfigWithDefault(configuration);
@@ -49,7 +48,6 @@ function attributeDisplayText(configuration) {
     this.parentGraphics.addChild(this.name);
     this.parentGraphics.addChild(this.value);
     
-    //position the value text relative to its top right corner
     this.value.anchor.setTo(1.0, 0);
 }
 
@@ -105,7 +103,11 @@ text.prototype.addParent = function(parent) {
     parent.addChild(this.text);
 }
 
-
+//defines a list of objects that can be drawn onto the screen
+//an object list can be viewed as a column in a table
+//each cell in this table contains a single object
+//newly added objects are appended to the bottom of the column
+//in the configuration, the objectCreationFunction is an object constructor that is used to create new objects when the add object function is called
 function objectList(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
@@ -131,6 +133,8 @@ objectList.prototype.mergeConfigWithDefault = function(configuration) {
     return defaultConfig;
 }
 
+//objectConfigs must be an array of configurations
+//each elemement of the array defiens a configuration for a new object
 objectList.prototype.addObjects = function(objectConfigs) {
     
     for(var i = 0; i < objectConfigs.length; ++i) {
@@ -139,6 +143,7 @@ objectList.prototype.addObjects = function(objectConfigs) {
     }
 }
 
+//objectConfig must be a configuration
 objectList.prototype.addObject = function(objectConfig) {
     
     var xPos = 0;
@@ -160,6 +165,8 @@ objectList.prototype.addParent = function(parent) {
     parent.addChild(this.parentGraphics);
 }
 
+//a table of objects, each column in this table is an objectList
+//this table behaves just like an objectList, except there are multiple named columns
 function objectTable(configuration) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
