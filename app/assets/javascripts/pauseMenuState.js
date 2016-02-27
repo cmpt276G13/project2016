@@ -28,13 +28,13 @@ var pauseMenuState = {
         display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, statDisplayStyle);
         display.playerLevel.anchor.setTo(0.5, 0);
         
-        display.playerHealth = new attributeDisplayText('HP:', player.health + "/ " + player.maxHealth, textOffset, textOffset + 45, 145, 20, healthBarCaptionStyle);
-        display.playerExp = new attributeDisplayText("EXP:", player.experience + "/ " + player.experienceToNextLevel, textOffset + display.background.width / 3 * 2, textOffset + 45, 145, 20, healthBarCaptionStyle);
+        display.playerHealth = new attributeDisplayText({attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, x: textOffset, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
+        display.playerExp = new attributeDisplayText({attributeName: "EXP:", attributeValue: player.experience + "/ " + player.experienceToNextLevel, x: textOffset + display.background.width / 3 * 2, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
         
-        display.attributeTable = new attributeDisplayTextTable(display.background.width / 5, textOffset + 90, display.background.width / 4, 20, 80, 5);
-        display.attributeTable.addAttribute("left", "STR", player.strength, statDisplayStyle);
-        display.attributeTable.addAttribute("right", "DEF", player.defense, statDisplayStyle);
-        display.attributeTable.addAttribute("left", "GOLD", player.gold, statDisplayStyle);
+        display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 90, cellWidth: display.background.width / 4, cellHeight: 20, columnSpacing: 80, objectCreationFunction: attributeDisplayText} );
+        display.attributeTable.addObject("left", {attributeName: "STR", attributeValue: player.strength, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "DEF", attributeValue: player.defense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "GOLD", attributeValue: player.gold, textStyle: statDisplayStyle} );
         
         display.background.addChild(display.playerName);
         display.background.addChild(display.playerLevel);

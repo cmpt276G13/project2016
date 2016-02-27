@@ -446,8 +446,9 @@ var battleState = {
         
         var barStyle = {
             
-            x: 285,
+            x: 200,
             y: 26,
+            width: 170,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -463,7 +464,7 @@ var battleState = {
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
-        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 200, cellHeight: 15, objectCreationFunction: attributeDisplayText});
+        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 170, cellHeight: 15, objectCreationFunction: attributeDisplayText});
         
         statContainer.attributeTable.addObject("name", {attributeName: "name:", attributeValue: player.name, textStyle: statDisplayStyle});
         statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});

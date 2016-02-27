@@ -55,7 +55,6 @@ actionDisplay.prototype.highlightSelectedAction = function() {
 //users will be able to change their currently selected action
 actionDisplay.prototype.selectNext = function() {
     
-    document.getElementById("additional").innerHTML = this.actionTextList.objects.length;
     this.selectedAction = (this.selectedAction + 1) % this.actionTextList.objects.length;
 };
 
