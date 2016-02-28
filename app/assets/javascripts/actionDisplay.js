@@ -7,6 +7,7 @@
 function actionDisplay(configuration, actionTexts) {
     
     this.configuration = this.mergeConfigWithDefault(configuration);
+    
     //background that is displayed behind all the text
     this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, this.configuration.height);
     this.background.fixedToCamera = true;

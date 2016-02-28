@@ -38,12 +38,12 @@ var damageStyle = {
 //the name is positioned at the left edge, and the value is positioned at the right edge
 function attributeDisplayText(configuration) {
     
-    this.config = this.mergeConfigWithDefault(configuration);
+    this.configuration = this.mergeConfigWithDefault(configuration);
     
-    this.parentGraphics = game.add.graphics(this.config.x, this.config.y);
+    this.parentGraphics = game.add.graphics(this.configuration.x, this.configuration.y);
     
-    this.name = game.add.text(0, 0, this.config.attributeName, this.config.textStyle);
-    this.value = game.add.text(this.config.cellWidth, 0, this.config.attributeValue, this.config.textStyle);
+    this.name = game.add.text(0, 0, this.configuration.attributeName, this.configuration.textStyle);
+    this.value = game.add.text(this.configuration.cellWidth, 0, this.configuration.attributeValue, this.configuration.textStyle);
     
     this.parentGraphics.addChild(this.name);
     this.parentGraphics.addChild(this.value);
