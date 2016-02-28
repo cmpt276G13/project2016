@@ -475,7 +475,7 @@ var battleState = {
             animationDuration: 700,
             
             bg: {
-                color: '#222222'
+                color: 'darkred'
             }
         };
         
