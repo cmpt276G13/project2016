@@ -23,15 +23,11 @@ function selectMainActionKeyDown(key) {
         if(this.mainActionsDisplay.getSelectedActionString() == "run") {
             
             this.stateManager.changeState("playerRunAway");
-            //game.state.start('overworld');
         }
         
         if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
             
-            useItem(player, "Small Potion");
-            this.playerStatDisplay.playerHealthBar.setValue(player.health);
-            this.stateManager.changeState("cullDeadMonsters");
-            //this.stateManager.changeState("selectFightAction");
+            this.stateManager.changeState("selectFightAction");
         }
     }
 };
