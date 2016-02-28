@@ -69,6 +69,12 @@ actionDisplay.prototype.clearActions = function() {
     this.idSelectedAction = 0;
 }
 
+actionDisplay.prototype.resetSelection = function() {
+    
+    this.idActionToHighlight = 0;
+    this.idSelectedAction = 0;
+}
+
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     

@@ -1,6 +1,6 @@
 function menuHomeEnter() {
     
-    this.menuActions.selectedAction = 0;
+    this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
 };
 

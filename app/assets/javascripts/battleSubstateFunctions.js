@@ -1,6 +1,6 @@
 function selectMainActionEnter() {
     
-    this.mainActionsDisplay.selectedAction = 0;
+    this.mainActionsDisplay.resetSelection();
     this.mainActionsDisplay.selectionDisplay.visible = true;
             
     this.showMessage("Select an action");
@@ -44,7 +44,7 @@ function selectMainActionUpdate() {
 
 function selectFightActionEnter() {
     
-    this.fightActionsDisplay.selectedAction = 0;
+    this.fightActionsDisplay.resetSelection();
     this.fightActionsDisplay.background.visible = true;
             
     this.showMessage("Select an action");
@@ -88,6 +88,7 @@ function selectFightActionUpdate() {
 
 function selectItemActionEnter() {
     
+    this.itemsDisplay.resetSelection();
     this.itemsDisplay.background.visible = true;
     
     //items might change every turn if player uses an item
@@ -107,6 +108,7 @@ function selectItemActionEnter() {
 function selectItemActionExit() {
     
     this.itemsDisplay.background.visible = false;
+    this.hideMessage();
 }
 
 function selectItemActionKeyDown(key) {
@@ -121,10 +123,16 @@ function selectItemActionKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        if(this.itemsDisplay.getSelectedActionConfiguration().attributeName == "Cancel") {
+        if(this.itemsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
             
             this.stateManager.changeState("selectMainAction");
+            
+        } else {
+            
+            //player chooses to use an item
+            this.stateManager.changeState("playerUseItem");
         }
+        
     }
 }
 
@@ -238,7 +246,6 @@ function playerAttackUpdate() {
     }
 };
 
-
 function playerAttackResultsEnter() {
     
     //damage all the monsters
@@ -249,7 +256,7 @@ function playerAttackResultsEnter() {
         var damage = this.determineAttackResults(player.lastUsedAttack, this.monsters[indicesDamagedMonsters[i]]);
     
         //get damage received by this entity
-        this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage) );
+        this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage, damageStyle) );
     }
 };
 
@@ -299,6 +306,41 @@ function cullDeadMonstersUpdate() {
     }
 };
 
+function playerUseItemEnter() {
+    
+    this.finishedItemUseAnimation = false;
+    
+    document.getElementById("additional").innerHTML = "asdf";
+    
+    //apply item effect to player and show some kind of animation and message
+    var nameOfItemUsed = this.itemsDisplay.getSelectedActionConfiguration().attributeName;
+    this.showMessage("You use " + nameOfItemUsed);
+    
+    //apply effect depending on what type of item was used
+    if(player.items[nameOfItemUsed].effect === "restoreStats") {
+        
+        useItem(player, nameOfItemUsed);
+        game.time.events.add(1700, function(){this.finishedItemUseAnimation = true}, this);
+    }
+    
+    this.updatePlayerStatDisplay();
+}
+
+function playerUseItemExit() {
+    
+    this.hideMessage();
+}
+
+function playerUseItemUpdate() {
+    
+    var moveToNextState = this.finishedItemUseAnimation;
+    
+    if(moveToNextState) {
+        
+        this.stateManager.changeState("cullDeadMonsters");
+    }
+}
+
 function monsterTurnEnter() {
     
     //randomly determine what the monster should do
@@ -327,9 +369,11 @@ function monsterTurnUpdate() {
 function monsterAttackResultsEnter() {
     
     var damage = this.determineAttackResults(this.monsters[this.currentMonster].lastUsedAttack, player);
-    this.damageTexts.push(this.createDamageText(player, damage) );
+    this.damageTexts.push(this.createDamageText(player, damage, damageStyle) );
     
     this.playerStatDisplay.playerHealthBar.setValue(player.health);
+    
+    this.updatePlayerStatDisplay();
 };
 
 function monsterAttackResultsExit() {

@@ -91,6 +91,15 @@ var battleState = {
             }
         },
         
+        {name: "playerUseItem",
+            functions: {
+                
+                onEnter: playerUseItemEnter,
+                onExit: playerUseItemExit,
+                onUpdate: playerUseItemUpdate
+            }
+        },
+        
         {name: "monsterTurn",
             functions: {
                 
@@ -485,6 +494,14 @@ var battleState = {
         return statContainer;
     },
     
+    updatePlayerStatDisplay: function() {
+        
+        this.playerStatDisplay.playerHealthBar.setValue(player.health);
+        
+        //this.playerStatDisplay.attributeTable.columns["health"].clear();
+        //this.playerStatDisplay.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+    },
+    
     //saves the orientation of the player as it was in the overworld state, before the battle started
     //this is needed so we can restore the player back to his original position when the battle ends
     savePlayerOverworldOrientation: function() {
@@ -539,10 +556,10 @@ var battleState = {
     },
     
     //creates a damage text that displays the amount of damage the given entity received
-    createDamageText: function(entity, damageReceived) {
+    createDamageText: function(entity, damageReceived, textStyle) {
         
         var damageText = new Object();
-        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), damageStyle);
+        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), textStyle);
         damageText.text.alpha = 0.3;
         damageText.text.anchor.setTo(0.5, 0);
         
