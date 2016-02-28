@@ -616,8 +616,12 @@ var battleState = {
         
         this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight, viewableObjects: 4}, [
                                         {text: 'fight'}, {text: 'items'}, {text: 'run'}, {text: 'option4'}, {text: 'option5'}, {text: 'option6'}]);
-        this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight - 20, 
+        this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2 - 20, 
                                         width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'attack'}, {text: 'skills'}, {text: 'cancel'}]);
+                                        
+        //action list when user selects items
+        this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
+                                viewableObjects: 5, objectCreationFunction: attributeDisplayText}, []);
         
         //again we want to add a listener for when the player presses on keys
         game.input.keyboard.callbackContext = this;

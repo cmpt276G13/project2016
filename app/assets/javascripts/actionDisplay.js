@@ -56,6 +56,19 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
     return config;
 }
 
+actionDisplay.prototype.addAction = function(actionConfig) {
+    
+    actionConfig["textStyle"] = actionStyle;
+    this.actionTextList.addObject(actionConfig);
+}
+
+actionDisplay.prototype.clearActions = function() {
+    
+    this.actionTextList.clear();
+    this.idActionToHighlight = 0;
+    this.idSelectedAction = 0;
+}
+
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     
@@ -116,14 +129,14 @@ actionDisplay.prototype.selectPrevious = function() {
     }
 };
 
-actionDisplay.prototype.getSelectedActionString = function() {
+actionDisplay.prototype.getSelectedActionConfiguration = function() {
     
     if(this.idSelectedAction >= this.actionTextList.objects.length) {
         
         return "";
     }
     
-    return this.actionTextList.objects[this.idSelectedAction].text.text;
+    return this.actionTextList.objects[this.idSelectedAction].configuration;
 };
 
 //onKeyDown listener for action Display objects

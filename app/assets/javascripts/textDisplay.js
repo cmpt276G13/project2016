@@ -74,6 +74,11 @@ attributeDisplayText.prototype.addParent = function(parent) {
     parent.addChild(this.parentGraphics);
 }
 
+attributeDisplayText.prototype.destroy = function() {
+    
+    this.parentGraphics.destroy(true);
+}
+
 //wrapper for phaser texts
 //used so texts and attributes can be created using a common interface
 function text(configuration) {
@@ -101,6 +106,11 @@ text.prototype.mergeConfigWithDefault = function(configuration) {
 text.prototype.addParent = function(parent) {
     
     parent.addChild(this.text);
+}
+
+text.prototype.destroy = function() {
+    
+    this.parentGraphics.destroy(true);
 }
 
 //defines a list of objects that can be drawn onto the screen
@@ -163,6 +173,15 @@ objectList.prototype.addObject = function(objectConfig) {
 objectList.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
+}
+
+objectList.prototype.clear = function() {
+    
+    //destroying parent graphics will destroy the children
+    //which means all attached objects will be destroyed
+    this.parentGraphics.destroy();
+    
+    this.objects = [];
 }
 
 //object list that limits the number of viewable objects, and allows you to scroll through the objects
@@ -317,4 +336,14 @@ objectTable.prototype.createColumn = function(columnName) {
 objectTable.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
+}
+
+objectTable.prototype.clear = function() {
+    
+    for(column in this.columns) {
+        
+        this.columns[column].clear();
+    }
+    
+    this.columns = {};
 }

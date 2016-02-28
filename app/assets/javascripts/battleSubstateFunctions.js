@@ -20,12 +20,12 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.getSelectedActionString() == "run") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "run") {
             
             this.stateManager.changeState("playerRunAway");
         }
         
-        if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "fight") {
             
             this.stateManager.changeState("selectFightAction");
         }
@@ -58,12 +58,12 @@ function selectFightActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.fightActionsDisplay.getSelectedActionString() == "cancel") {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
         }
         
-        if(this.fightActionsDisplay.getSelectedActionString() == "attack" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
             
             player.useAttack(new basicAttack());
             this.stateManager.changeState("playerSelectTarget");
@@ -75,6 +75,16 @@ function selectFightActionKeyDown(key) {
         this.stateManager.changeState("selectMainAction");
     }
 };
+
+function selectItemActionEnter() {
+    
+    //items might change every turn if player uses an item
+    //so we gotta repopulate the item list
+    for(item in player.items) {
+        
+        
+    }
+}
 
 function playerRunAwayEnter() {
     
