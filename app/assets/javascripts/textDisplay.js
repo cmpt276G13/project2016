@@ -2,7 +2,7 @@
 var messageStyle = {
     
     fill: 'white',
-    fontSize: 21
+    fontSize: 18
 }
 
 var healthBarCaptionStyle = {

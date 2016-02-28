@@ -131,6 +131,22 @@ function selectItemActionKeyDown(key) {
 function selectItemActionUpdate() {
     
     this.itemsDisplay.highlightSelectedAction();
+    
+    //get the currentlly selected item and create a message that displays the items effects
+    var selectedAction = this.itemsDisplay.getSelectedActionConfiguration().attributeName;
+    
+    if(selectedAction == "") {
+        
+        return;
+    }
+    
+    if(selectedAction == "Cancel") {
+        
+        this.showMessage("Cancel");
+        return;
+    }
+    
+    this.showMessage(player.items[selectedAction].battleDescription);
 }
 
 function playerRunAwayEnter() {
