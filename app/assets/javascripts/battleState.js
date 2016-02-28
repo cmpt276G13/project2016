@@ -498,8 +498,8 @@ var battleState = {
         
         this.playerStatDisplay.playerHealthBar.setValue(player.health);
         
-        //this.playerStatDisplay.attributeTable.columns["health"].clear();
-        //this.playerStatDisplay.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+        this.playerStatDisplay.attributeTable.columns["health"].clear();
+        this.playerStatDisplay.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
     },
     
     //saves the orientation of the player as it was in the overworld state, before the battle started
