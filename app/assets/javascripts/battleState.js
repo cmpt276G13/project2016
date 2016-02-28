@@ -37,6 +37,13 @@ var battleState = {
             }
         },
         
+        {name: "playerRunAway",
+            functions: {
+                
+                onEnter: playerRunAwayEnter
+            }
+        },
+        
         {name: "playerSelectTarget",
             functions: {
                 
@@ -113,6 +120,21 @@ var battleState = {
                 onEnter: defeatEnter,
                 onExit: defeatExit,
                 onKeyDown: defeatKeyDown
+            }
+        },
+        
+        {name: "intro",
+            functions:{
+                
+                onEnter: introEnter,
+                onUpdate: introUpdate
+            }
+        },
+        
+        {name: "outro",
+            functions: {
+                
+                onEnter: outroEnter
             }
         }
         
@@ -241,13 +263,8 @@ var battleState = {
     //load the data of the monsters the player has to fight
     loadMonsters: function() {
         
-        //here is where the monsters list we loaded previously, and the mosnter database come into play
-        //we want to randomly generate a mosnter, so we will randomly select the name of a mosnter that can spawn in this map
-        //generate the array of mosnter names
-        //the getJSON function uses a key to a previously loaded json file
-        //it then returns a java script object containing the data loaded in the file
-        //please look up how JSON works if you are unfamiliar with it
-        var monsterNames = game.cache.getJSON('monsterList');
+        //load all monsters that exist in this level
+        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey);
         
         //now turn the monster database to a javascript object, os we can find monsters in this database
         var monsterDatabase = game.cache.getJSON('monsterData');
@@ -259,9 +276,6 @@ var battleState = {
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
-            //the object basiclaly has 1 element named monsters, which is an array of names
-            //these names are actually keys to the database, so we can use it directly
-            //randomly select monster name (for now just use the orc name since i haven't created the others)
             var id = 0;
             var monsterName = monsterNames.monsters[id];
             
@@ -272,9 +286,10 @@ var battleState = {
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             
-            //position the monster somewhere
-            monster.x = 200 - (40 * monstersToSpawn / 2) + i * 40;
-            monster.y = 200 + 50 * (i % num);
+            //position the monster somewhere offscreen
+            monster.x = getRandomInt(100, 300) * -1;
+            monster.y = getRandomInt(100, 300);
+            monster.finishedPositioning = false;//need to call move monsters to position at some point
             
             monsters.push(monster);
         }
@@ -297,6 +312,27 @@ var battleState = {
                 animation = monsters[i].animations[j];
                 monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
             }
+        }
+    },
+    
+    //once monster sprites have been created, begin a transition effect for hte monters
+    //this will make the monsters interpolate to their current position from an offscreen position
+    moveMonstersToPosition: function() {
+        
+        for(var i = 0; i < this.monsters.length; ++i) {
+            
+            var num = Math.max(Math.floor(this.monsters.length / 2), 2);
+            
+            //position the monster somewhere on the screen
+            var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
+            var yTarget = 200 + 50 * (i % num);
+            
+            this.monsters[i].sprite.position.y = yTarget;
+            
+            var tween = game.add.tween(this.monsters[i].sprite.position);
+            
+            tween.onComplete.add(function(){this.finishedPositioning = true;}, this.monsters[i]);
+            tween.to({x: xTarget}, getRandomInt(300, 450), null, true);
         }
     },
     
@@ -408,18 +444,10 @@ var battleState = {
         var statContainer = {};
         statContainer.textBox = new textBox(x, y, width, height);
         
-        var textStyle = {fontSize: 22};
-        
-        //text for the player name
-        statContainer.playerName = game.add.text(5, 10, player.name);
-        statContainer.playerName.fontSize = 22;
-        statContainer.playerName.fill = 'white';
-        statContainer.textBox.background.addChild(statContainer.playerName);
-        
         var barStyle = {
             
-            x: statContainer.playerName.width * 2,
-            y: statContainer.playerName.y + 7,
+            x: 153,
+            y: 26,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -434,6 +462,14 @@ var battleState = {
         statContainer.playerHealthBar = new HealthBar(game, barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+        
+        statContainer.attributeTable = new attributeDisplayTextTable(10, 10, 145, 15, 0, 0);
+        
+        statContainer.attributeTable.addAttribute("name", player.name, "", statDisplayStyle);
+        statContainer.attributeTable.addAttribute("health", "HP:", player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        
+        statContainer.attributeTable.addParent(statContainer.textBox.background);
+        
 
         return statContainer;
     },
@@ -495,7 +531,7 @@ var battleState = {
     createDamageText: function(entity, damageReceived) {
         
         var damageText = new Object();
-        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), {fill: 'red'});
+        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), damageStyle);
         damageText.text.alpha = 0.3;
         damageText.text.anchor.setTo(0.5, 0);
         
@@ -548,12 +584,8 @@ var battleState = {
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
 		
-        //first we have to create a background to display
-        //i haven't put in any background yet but just know that it has to be created first
-        
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural
-        //although right now it generates a single monster, later it might create an array of monsters
         this.monsters = this.loadMonsters();
         
         //we've only loaded the data for the mosnter, we now need to create an image so we can see them
@@ -574,8 +606,6 @@ var battleState = {
         //now we want to have some UI to display all the battle options
         
         //first we have to create the box where the UI is displayed
-        //if you look at final fantasy battles, there are blue rectangles that contain all the text
-        //first is the rectangle that contains all the actions the player can take
         
         var actionBoxWidth = game.scale.width / 3.5;
         var actionBoxHeight = 130;
@@ -603,7 +633,9 @@ var battleState = {
         this.stateManager = new stateManager();
         this.stateManager.addFromTemplate(this.subStates, this);
         this.stateManager.exitAll();
-        this.stateManager.changeState("selectMainAction");
+        this.stateManager.changeState("intro");
+        
+        lastState = "battle";
     },
     
     update: function() {
@@ -614,17 +646,6 @@ var battleState = {
     onKeyDown: function(key) {
         
         this.stateManager.onKeyDown(key);
-    },
-    
-    //this is a render (drawing) function
-    //phaser draws all of our game objects automatically, however we might want to do our own rendering calls
-    //in the render function we dont do any calculations at all
-    //all math, physics, updating, should be done in the update function
-    //only draw calls should be placed in this function
-    render: function() {
-        
-        //i want to draw the selection box as a rectangle, since phaser doesn't do it automatically
-        //we need to postiion the rectangle around the current selection, but in the render function we only draw, no calculations should be done here
     },
     
     shutdown: function() {

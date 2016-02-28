@@ -59,12 +59,13 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "run") {
+        if(this.mainActionsDisplay.getSelectedActionString() == "run") {
             
-            game.state.start('overworld');
+            this.stateManager.changeState("playerRunAway");
+            //game.state.start('overworld');
         }
         
-        if(this.mainActionsDisplay.actionTexts[this.mainActionsDisplay.selectedAction].text == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
             
             this.stateManager.changeState("selectFightAction");
         }
@@ -97,17 +98,33 @@ function selectFightActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "cancel") {
+        if(this.fightActionsDisplay.getSelectedActionString() == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
         }
         
-        if(this.fightActionsDisplay.actionTexts[this.fightActionsDisplay.selectedAction].text == "attack" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionString() == "attack" && this.monsters.length > 0) {
             
             player.useAttack(new basicAttack());
             this.stateManager.changeState("playerSelectTarget");
         }
     }
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectMainAction");
+    }
+};
+
+function playerRunAwayEnter() {
+    
+    //make player face away and run
+    player.sprite.animations.play("right");
+    
+    var tween = game.add.tween(player.sprite.position);
+    tween.onComplete.add(function(){this.stateManager.changeState("outro");}, this);
+    tween.to({x: game.scale.width + 100}, 400);
+    tween.start();
 };
 
 function selectFightActionUpdate() {
@@ -128,6 +145,11 @@ function playerSelectTargetExit() {
 };
 
 function playerSelectTargetKeyDown(key) {
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectFightAction");
+    }
     
     if(key.keyCode == Phaser.Keyboard.UP) {
         
@@ -183,7 +205,6 @@ function playerAttackUpdate() {
     
     //move onto the next state when the player's last used attack has finished
     if(player.lastUsedAttack.isFinished) {
-        
         
         this.stateManager.changeState("playerAttackResults");
     }
@@ -322,6 +343,7 @@ function playerDyingEnter() {
     
     player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
     player.sprite.animations.play("dying");
+    player.deaths += 1;
 }
 
 function victoryEnter() {
@@ -338,7 +360,8 @@ function victoryKeyDown(key) {
     //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        game.state.start('overworld');
+        //fade to black
+        this.stateManager.changeState("outro");
     }
 }
 
@@ -365,10 +388,37 @@ function defeatKeyDown(key) {
     
     if(this.fadeToBlack.finishedTransition && key.keyCode == Phaser.Keyboard.ENTER) {
         
-        //now make the deathmessage fade to black, and then go back to the overworld
-        var tween = game.add.tween(this.deathMessage.background);
-        tween.to({alpha: 0}, 300);
-        tween.onComplete.add(function(){game.state.start('overworld');}, this);
-        tween.start();
+        //now make the screen fade to black, and then go back to the overworld
+        this.stateManager.changeState("outro");
     }
+}
+
+function introEnter() {
+    
+    //fade in from a black screen
+    var fadeIn = new fadeFromBlack(350);
+    fadeIn.setOnExit(this.moveMonstersToPosition, this);
+    fadeIn.start();
+}
+
+function introUpdate() {
+    
+    for(var i = 0; i < this.monsters.length; ++i) {
+        
+        if(typeof this.monsters[i].finishedPositioning !== "undefined" && !this.monsters[i].finishedPositioning) {
+            
+            return;
+        }
+    }
+    
+    //all monsters have moved into position, begin battle
+    this.stateManager.changeState("selectMainAction");
+}
+
+function outroEnter() {
+    
+    var fade = new fadeToBlack(450);
+    
+    fade.setOnExit(function(){game.state.start("overworld")});
+    fade.start();
 }

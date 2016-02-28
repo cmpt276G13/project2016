@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219072030) do
+ActiveRecord::Schema.define(version: 20160221075530) do
 
   create_table "players", force: :cascade do |t|
     t.string   "username"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20160219072030) do
     t.datetime "updated_at",                            null: false
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
+    t.integer  "deaths",                   default: 0
   end
 
   add_index "players", ["username"], name: "index_players_on_username", unique: true

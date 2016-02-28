@@ -1,0 +1,34 @@
+{
+    "surrey": {
+        
+        "left": 49.1747,
+        "top": -122.907187,
+        "right": 49.0587,
+        "bottom": -122.710553,
+        "mapKey": "surrey",
+        "tilesetKeys": ["tileset1", "tileset1", "tileset2"],
+        "monsterListKey": "surreyMonsters"
+    },
+    
+    "burnaby": {
+        
+        "left": 49.2880,
+        "top": -123.053130,
+        "right": 49.217351,
+        "bottom": -122.912563,
+        "mapKey": "burnaby",
+        "tilesetKeys": ["tileset1"],
+        "monsterListKey": "burnabyMonsters"
+    },
+    
+    "default": {
+        
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "mapKey": "default",
+        "tilesetKeys": ["tileset1"],
+        "monsterListKey": "defaultMonsters"
+    }
+}

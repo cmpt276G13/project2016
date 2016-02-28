@@ -18,7 +18,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', user_path(@first_rank), text: @first_rank.username
     first_page_of_users.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.username
-      assert_select 'td', "Level: "+user.player.level.to_s , count: User.count('id')
+      assert_select 'td', "Points: " + (user.player.level - user.player.deaths).to_s , count: User.count('id')
       unless user == @admin
         assert_select 'a[href=?]', user_path(user), text: 'delete'
       end
