@@ -3,7 +3,6 @@
 //it also contains information about what action is currently being selected, and a way to indicate what action is selected
 function actionDisplay(configuration, actionTexts) {
     
-    document.getElementById("additional").innerHTML = "asdf";
     this.configuration = this.mergeConfigWithDefault(configuration);
     //background that is displayed behind all the text
     this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, this.configuration.height);

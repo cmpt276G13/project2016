@@ -28,7 +28,10 @@ function selectMainActionKeyDown(key) {
         
         if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
             
-            this.stateManager.changeState("selectFightAction");
+            useItem(player, "Small Potion");
+            this.playerStatDisplay.playerHealthBar.setValue(player.health);
+            this.stateManager.changeState("cullDeadMonsters");
+            //this.stateManager.changeState("selectFightAction");
         }
     }
 };

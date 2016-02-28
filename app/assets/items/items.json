@@ -6,7 +6,7 @@
         
         "stats": {
             
-            health: 25
+            "health": 1000
         }
     }
 }
