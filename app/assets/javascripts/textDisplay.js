@@ -177,9 +177,10 @@ objectList.prototype.addParent = function(parent) {
 
 objectList.prototype.clear = function() {
     
-    //destroying parent graphics will destroy the children
-    //which means all attached objects will be destroyed
-    this.parentGraphics.destroy();
+    for(var i = 0; i < this.objects.length; ++i) {
+        
+        this.objects[i].destroy();
+    }
     
     this.objects = [];
 }
@@ -338,6 +339,7 @@ objectTable.prototype.addParent = function(parent) {
     parent.addChild(this.parentGraphics);
 }
 
+//clears and removes all columns
 objectTable.prototype.clear = function() {
     
     for(column in this.columns) {

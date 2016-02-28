@@ -25,6 +25,11 @@ function selectMainActionKeyDown(key) {
             this.stateManager.changeState("playerRunAway");
         }
         
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "items") {
+            
+            this.stateManager.changeState("selectItemAction");
+        }
+        
         if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "fight") {
             
             this.stateManager.changeState("selectFightAction");
@@ -76,14 +81,56 @@ function selectFightActionKeyDown(key) {
     }
 };
 
+function selectFightActionUpdate() {
+    
+    this.fightActionsDisplay.highlightSelectedAction();
+};
+
 function selectItemActionEnter() {
+    
+    this.itemsDisplay.background.visible = true;
     
     //items might change every turn if player uses an item
     //so we gotta repopulate the item list
+    this.itemsDisplay.clearActions();
+    
     for(item in player.items) {
         
-        
+        var config = {attributeName: item, attributeValue: "x" + player.items[item].quantity};
+        this.itemsDisplay.addAction(config);
     }
+    
+    //now add a cancel option
+    this.itemsDisplay.addAction({attributeName: "Cancel"});
+}
+
+function selectItemActionExit() {
+    
+    this.itemsDisplay.background.visible = false;
+}
+
+function selectItemActionKeyDown(key) {
+    
+    //check if user cancled
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectMainAction");
+    }
+    
+    actionDisplayKeyDown(key, this.itemsDisplay);
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        if(this.itemsDisplay.getSelectedActionConfiguration().attributeName == "Cancel") {
+            
+            this.stateManager.changeState("selectMainAction");
+        }
+    }
+}
+
+function selectItemActionUpdate() {
+    
+    this.itemsDisplay.highlightSelectedAction();
 }
 
 function playerRunAwayEnter() {
@@ -95,11 +142,6 @@ function playerRunAwayEnter() {
     tween.onComplete.add(function(){this.stateManager.changeState("outro");}, this);
     tween.to({x: game.scale.width + 100}, 400);
     tween.start();
-};
-
-function selectFightActionUpdate() {
-    
-    this.fightActionsDisplay.highlightSelectedAction();
 };
 
 function playerSelectTargetEnter() {
