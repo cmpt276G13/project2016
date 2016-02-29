@@ -97,6 +97,18 @@
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
             
+            //for whatever reason json parse isn't working so use ruby to set the data
+            var items = {};
+            
+            <% @currentUser.player.items.each do |name, quantity| %>
+            
+                var name = '<%= name%>';
+                var quantity = '<%= quantity%>';
+                
+                items[name] = createItem(name, quantity);
+            <%end%>
+            
+            this.items = items;
             
             //player.items = ...
             //player.skills = ...
@@ -120,10 +132,8 @@
             
             for(item in this.items) {
                 
-                saveData[item] = this.items[item].quantity;
+                saveData.items[item] = this.items[item].quantity;
             }
-            
-            saveData.items["Samll Potion"] = 1;
             
             $.ajax( {
                 
@@ -278,10 +288,6 @@
                 
                 //load player data from server
                 player.load();
-                player.save();
-                
-                player.items["Small Potion"] = createItem("Small Potion", 10);
-                player.items["Medium Potion"] = createItem("Medium Potion", 5);
                 
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
