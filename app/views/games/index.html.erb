@@ -85,6 +85,8 @@
         
         player.load = function() {
             
+            document.getElementById("additional").innerHTML = '<%= escape_javascript @currentUser.player.to_json %>';
+            
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
@@ -112,8 +114,11 @@
                 experience: this.experience,
                 strength: this.strength,
                 defense: this.defense,
-                deaths: this.deaths
+                deaths: this.deaths,
+                items: {}
             };
+            
+            saveData.items["Samll Potion"] = 1;
             
             $.ajax( {
                 
@@ -268,6 +273,7 @@
                 
                 //load player data from server
                 player.load();
+                player.save();
                 
                 player.items["Small Potion"] = createItem("Small Potion", 10);
                 player.items["Medium Potion"] = createItem("Medium Potion", 5);
