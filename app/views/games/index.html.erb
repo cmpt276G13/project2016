@@ -33,6 +33,7 @@
     <%= javascript_include_tag "battleState" %>
     <%= javascript_include_tag "pauseMenuState" %>
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
+    <%= javascript_include_tag "items" %>
     
     <script>
     
@@ -78,10 +79,10 @@
         player.experienceToNextLevel = 1;
         player.gold = 0;
         player.strength = 2000;
-        player.items = [];
+        player.items = {};
         player.skills = [];
-        
         player.deaths = 0;
+        
         player.load = function() {
             
             this.level = <%= @currentUser.player.level%>;
@@ -233,6 +234,9 @@
                 //load the mosnter data base
                 game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
                 
+                //load item database
+                game.load.json('itemData', '<%= asset_path("items.json") %>');
+                
                 //load spritesheets for all the monsters
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
@@ -265,6 +269,9 @@
                 //load player data from server
                 player.load();
                 
+                player.items["Small Potion"] = createItem("Small Potion", 10);
+                player.items["Medium Potion"] = createItem("Medium Potion", 5);
+                
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
         		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
@@ -277,7 +284,7 @@
         		
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
-                document.getElementById("additional").innerHTML = mapKeys.mapKey;
+                //document.getElementById("additional").innerHTML = mapKeys.mapKey;
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');

@@ -1,45 +1,6 @@
-/*
-The following functions are meant to be added to the BATTLE STATE's subState manager for different states.
-the reason they are outside here is because i made a system in the battle state to easily add states and functions, but
-to do that you need to use premade functions
-functions delared as object properties are created at run time
-meaning i can't assign functions to objects if the functions are declared as object properties
-so i'm defining these functions outside here, instead of in teh battle state object
-
-These functions probably WILL NOT work outside of the battle state, because they all use properties declared inside the battle state object (using the this context reference)
-
-just pretend these functions are in the battle state, because when they're called, the context will be set to the battle state
-*/
-
-/*
-
-The current State order is as follows
-
-selectMainAction:  here player selects to fight, use items or run
-    selectFightAction: if player chooses to fight, this state allows players to choose to attack, or use skills
-    
-if player chooses to attack
-
-playerSelectTarget: choose an monster to attack (if we have multiple monsters)
-
-after an monster is chosen
-
-playerAttack: plays the player attacking animation, animate skills, etc, it will automatically leave this state because of a listener event attached to player animation
-playerAttackResults: this displays what happened with the player's attack, wether it hit or miss, how much damage it did
-cullDeadMonsters: here the game cecks if any monsters died, if they did then the game starts the enemeis' death animation, once their animation finishes it goes to next state, and removes monsters
-    
-    if all monsters are dead, it will go to the victory state, which displays some message, and then exits battle
-
-monsterTurn: the current monster, marked by curerntMonster, chooses an action
-monsterAttack: if monster chose to attack it will play attack animation, same as player
-monsterAttackResults: same as player
-
-then it goes back to selectMAinAction
-
-*/
 function selectMainActionEnter() {
     
-    this.mainActionsDisplay.selectedAction = 0;
+    this.mainActionsDisplay.resetSelection();
     this.mainActionsDisplay.selectionDisplay.visible = true;
             
     this.showMessage("Select an action");
@@ -59,13 +20,17 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.getSelectedActionString() == "run") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "run") {
             
             this.stateManager.changeState("playerRunAway");
-            //game.state.start('overworld');
         }
         
-        if(this.mainActionsDisplay.getSelectedActionString() == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "items") {
+            
+            this.stateManager.changeState("selectItemAction");
+        }
+        
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "fight") {
             
             this.stateManager.changeState("selectFightAction");
         }
@@ -79,7 +44,7 @@ function selectMainActionUpdate() {
 
 function selectFightActionEnter() {
     
-    this.fightActionsDisplay.selectedAction = 0;
+    this.fightActionsDisplay.resetSelection();
     this.fightActionsDisplay.background.visible = true;
             
     this.showMessage("Select an action");
@@ -98,12 +63,12 @@ function selectFightActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.fightActionsDisplay.getSelectedActionString() == "cancel") {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
         }
         
-        if(this.fightActionsDisplay.getSelectedActionString() == "attack" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
             
             player.useAttack(new basicAttack());
             this.stateManager.changeState("playerSelectTarget");
@@ -116,6 +81,82 @@ function selectFightActionKeyDown(key) {
     }
 };
 
+function selectFightActionUpdate() {
+    
+    this.fightActionsDisplay.highlightSelectedAction();
+};
+
+function selectItemActionEnter() {
+    
+    this.itemsDisplay.resetSelection();
+    this.itemsDisplay.background.visible = true;
+    
+    //items might change every turn if player uses an item
+    //so we gotta repopulate the item list
+    this.itemsDisplay.clearActions();
+    
+    for(item in player.items) {
+        
+        var config = {attributeName: item, attributeValue: "x" + player.items[item].quantity};
+        this.itemsDisplay.addAction(config);
+    }
+    
+    //now add a cancel option
+    this.itemsDisplay.addAction({attributeName: "Cancel"});
+}
+
+function selectItemActionExit() {
+    
+    this.itemsDisplay.background.visible = false;
+    this.hideMessage();
+}
+
+function selectItemActionKeyDown(key) {
+    
+    //check if user cancled
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectMainAction");
+    }
+    
+    actionDisplayKeyDown(key, this.itemsDisplay);
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        if(this.itemsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
+            
+            this.stateManager.changeState("selectMainAction");
+            
+        } else {
+            
+            //player chooses to use an item
+            this.stateManager.changeState("playerUseItem");
+        }
+        
+    }
+}
+
+function selectItemActionUpdate() {
+    
+    this.itemsDisplay.highlightSelectedAction();
+    
+    //get the currentlly selected item and create a message that displays the items effects
+    var selectedAction = this.itemsDisplay.getSelectedActionConfiguration().attributeName;
+    
+    if(selectedAction == "") {
+        
+        return;
+    }
+    
+    if(selectedAction == "Cancel") {
+        
+        this.showMessage("Cancel");
+        return;
+    }
+    
+    this.showMessage(player.items[selectedAction].battleDescription);
+}
+
 function playerRunAwayEnter() {
     
     //make player face away and run
@@ -125,11 +166,6 @@ function playerRunAwayEnter() {
     tween.onComplete.add(function(){this.stateManager.changeState("outro");}, this);
     tween.to({x: game.scale.width + 100}, 400);
     tween.start();
-};
-
-function selectFightActionUpdate() {
-    
-    this.fightActionsDisplay.highlightSelectedAction();
 };
 
 function playerSelectTargetEnter() {
@@ -210,7 +246,6 @@ function playerAttackUpdate() {
     }
 };
 
-
 function playerAttackResultsEnter() {
     
     //damage all the monsters
@@ -221,7 +256,7 @@ function playerAttackResultsEnter() {
         var damage = this.determineAttackResults(player.lastUsedAttack, this.monsters[indicesDamagedMonsters[i]]);
     
         //get damage received by this entity
-        this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage) );
+        this.damageTexts.push(this.createDamageText(this.monsters[indicesDamagedMonsters[i]], damage, damageStyle) );
     }
 };
 
@@ -271,6 +306,41 @@ function cullDeadMonstersUpdate() {
     }
 };
 
+function playerUseItemEnter() {
+    
+    this.finishedItemUseAnimation = false;
+    
+    document.getElementById("additional").innerHTML = "asdf";
+    
+    //apply item effect to player and show some kind of animation and message
+    var nameOfItemUsed = this.itemsDisplay.getSelectedActionConfiguration().attributeName;
+    this.showMessage("You use " + nameOfItemUsed);
+    
+    //apply effect depending on what type of item was used
+    if(player.items[nameOfItemUsed].effect === "restoreStats") {
+        
+        useItem(player, nameOfItemUsed);
+        game.time.events.add(1700, function(){this.finishedItemUseAnimation = true}, this);
+    }
+    
+    this.updatePlayerStatDisplay();
+}
+
+function playerUseItemExit() {
+    
+    this.hideMessage();
+}
+
+function playerUseItemUpdate() {
+    
+    var moveToNextState = this.finishedItemUseAnimation;
+    
+    if(moveToNextState) {
+        
+        this.stateManager.changeState("cullDeadMonsters");
+    }
+}
+
 function monsterTurnEnter() {
     
     //randomly determine what the monster should do
@@ -299,9 +369,11 @@ function monsterTurnUpdate() {
 function monsterAttackResultsEnter() {
     
     var damage = this.determineAttackResults(this.monsters[this.currentMonster].lastUsedAttack, player);
-    this.damageTexts.push(this.createDamageText(player, damage) );
+    this.damageTexts.push(this.createDamageText(player, damage, damageStyle) );
     
     this.playerStatDisplay.playerHealthBar.setValue(player.health);
+    
+    this.updatePlayerStatDisplay();
 };
 
 function monsterAttackResultsExit() {

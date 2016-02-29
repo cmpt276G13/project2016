@@ -50,6 +50,11 @@ rpgEntity.prototype.getHit = function(damageReceived) {
     this.health = clamp(this.health - damageReceived, 0, this.maxHealth);
 };
 
+rpgEntity.prototype.capStats = function() {
+    
+    this.health = Math.min(this.health, this.maxHealth);
+}
+
 function markForDeletion() {
     
     this.shouldDelete = true;
