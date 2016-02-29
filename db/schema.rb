@@ -31,6 +31,22 @@ ActiveRecord::Schema.define(version: 20160229023752) do
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
 
+  create_table "quests", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "level_req"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "shops", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "price"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "email"
