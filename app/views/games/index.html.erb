@@ -85,7 +85,6 @@
         
         player.load = function() {
             
-            document.getElementById("additional").innerHTML = '<%= escape_javascript @currentUser.player.to_json %>';
             
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
@@ -97,6 +96,7 @@
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
+            
             
             //player.items = ...
             //player.skills = ...
@@ -117,6 +117,11 @@
                 deaths: this.deaths,
                 items: {}
             };
+            
+            for(item in this.items) {
+                
+                saveData[item] = this.items[item].quantity;
+            }
             
             saveData.items["Samll Potion"] = 1;
             
