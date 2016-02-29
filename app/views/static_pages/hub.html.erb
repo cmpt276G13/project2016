@@ -2,7 +2,8 @@
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <center>
   <%= link_to "Start Game!", game_path, action: 'get'%>
-<h1><strong>You Are In: </strong> <%= @user_location[:country_name] %></h1>
+<h1><strong>You Are In: </strong> 
+  <%= @user_location[:country_name] %></h1>
 
 
 <div style='width: 1000px;'>
