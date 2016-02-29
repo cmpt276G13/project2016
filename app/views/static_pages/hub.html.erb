@@ -34,6 +34,34 @@ function displayOnMap(position){
     lng: position.coords.longitude
   });
   handler.map.centerOn(marker);
+  
+  var markers = handler.addMarker({
+    lat: 49.2827,
+    lng: -123.1207,
+    title: 'Vancouver',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+  handler.addMarker({
+    lat: 49.0546,
+    lng: -122.3280,
+    title: 'Abbotsford',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+  handler.addMarker({
+    lat: 49.1667,
+    lng: -123.1333,
+    title: 'Richmond',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
 };
+
 </script>
     
