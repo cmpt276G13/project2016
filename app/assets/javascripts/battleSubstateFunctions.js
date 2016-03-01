@@ -70,7 +70,7 @@ function selectFightActionKeyDown(key) {
         
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
             
-            player.lastUsedAttack = player.basicAttack;
+            player.lastUsedAttack = game.cache.getJSON("skillData")["fireball"];
             this.stateManager.changeState("playerSelectTarget");
         }
     }
@@ -227,7 +227,7 @@ function playerAttackEnter() {
     
     this.showMessage("You Attack!");
     
-    player.useAttack(this.monsterSelector.getSelectedMonsters(this.monsters), player.basicAttack);
+    player.useAttack(this.monsterSelector.getSelectedMonsters(this.monsters), player.lastUsedAttack);
     
     //when player finishes his attack animation we will damage the monster
     // player.useAttack(createAttack(player, this.monsterSelector.getSelectedMonsters(this.monsters)[0], player.basicAttack) );

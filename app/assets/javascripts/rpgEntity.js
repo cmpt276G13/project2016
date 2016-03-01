@@ -58,7 +58,7 @@ rpgEntity.prototype.useAttack = function(targets, attackData) {
         
     } else if(this.lastUsedAttack.attackType == "magic") {
         
-        //this.lastUsedAttack.power = attack.power + this.magicPower / 2;
+        this.lastUsedAttack.power = attack.power + this.strength / 2;
     }
 };
 
@@ -117,17 +117,37 @@ function createAttack(user, targetPosition, attackData) {
     }
     
     //load spritesheet for animation
-    var sprite = game.add.sprite(0, 0, attack.spriteKey, 0);
+    //set position to whereever the casted spell should start
+    var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, 0);
+    attack.sprite = sprite;
     
     //setup the animation
-    var create = sprite.add.animations.add("create", attack.animations["create"].frames, attack.animations["create"].speed);
-    var update = sprite.add.animations.add("update", attack.animations["update"].frames, attack.animations["update"].speed);
-    var destroy = sprite.add.animations.add("destroy", attack.animations["destroy"].frames, attack.animations["destroy"].speed);
+    var create = sprite.animations.add("create", attack.animations["create"].frames, attack.animations["create"].speed);
+    var update = sprite.animations.add("update", attack.animations["update"].frames, attack.animations["update"].speed);
+    var destroy = sprite.animations.add("destroy", attack.animations["destroy"].frames, attack.animations["destroy"].speed);
+    
+    create.onComplete.addOnce(function(){this.sprite.animations.play("update"); }, attack);
+    destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
+    
+    //setup behaviour 
+    if(attackData.behaviour == "projectile") {
+        
+        update.loop = true;
+        
+        //when fireball is created, fly towards target
+        var tween = game.add.tween(sprite);
+        
+        tween.to({x: targetPosition.x, y: targetPosition.y});
+        tween.onComplete.addOnce(function(){this.sprite.animations.play("destroy");}, attack);
+        attack.tween = tween;
+        
+        update.onStart.addOnce(function(){this.tween.start() }, attack);
+        
+        //begin creating fireball while user is doing his casting animation
+        user.sprite.animations.getAnimation(attack.userAnimation).onStart.addOnce(function(){this.sprite.animations.play("create") }, attack)
+    }
     
     //setup the animation call backs
-    create.onComplete.addOnce(function(){this.animations.play("update"); }, sprite);
-    update.onComplete.addOnce(function(){this.animations.play("destroy"); }, sprite);
-    destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
     
     attack.sprite = sprite;
     

@@ -30,10 +30,35 @@
     "fireball": {
         
         "power": 10,
-        "targetsHit": 2,
+        "targetsHit": 1,
         "manaCost": 3,
         "hasOwnAnimation": true,
         "attackType": "magic",
-        "userAnimation": "attack"
+        "userAnimation": "attack",
+        
+        "spriteKey": "fireball",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3],
+                "speed": 5
+            },
+            
+            "update": {
+                
+                "frames": [4, 5, 6, 7],
+                "speed": 5
+            },
+            
+            "destroy": {
+                
+                "frames": [8, 9, 10, 11],
+                "speed": 5
+            }
+        },
+        
+        "behaviour": "projectile"
     }
 }
