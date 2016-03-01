@@ -475,9 +475,9 @@ var battleState = {
         
         var barStyle = {
             
-            x: 200,
+            x: 180,
             y: 26,
-            width: 170,
+            width: 150,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -493,10 +493,20 @@ var battleState = {
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
-        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 170, cellHeight: 15, objectCreationFunction: attributeDisplayText});
+        barStyle.x += 170;
+        barStyle.maxHealth = player.maxMana;
+        barStyle.bg = {color: '#000033'};
+        barStyle.bar = {gradientStart: '#00cdcd'};
+        
+        statContainer.playerManaBar = new HealthBar(game, barStyle);
+        statContainer.playerManaBar.setValueNoTransition(player.mana);
+        statContainer.playerManaBar.addParent(statContainer.textBox.background);
+        
+        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 150, cellHeight: 15, objectCreationFunction: attributeDisplayText});
         
         statContainer.attributeTable.addObject("name", {attributeName: "name:", attributeValue: player.name, textStyle: statDisplayStyle});
         statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+        statContainer.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
         
         statContainer.attributeTable.addParent(statContainer.textBox.background);
         
@@ -507,9 +517,13 @@ var battleState = {
     updatePlayerStatDisplay: function() {
         
         this.playerStatDisplay.playerHealthBar.setValue(player.health);
+        this.playerStatDisplay.playerManaBar.setValue(player.mana);
         
         this.playerStatDisplay.attributeTable.columns["health"].clear();
         this.playerStatDisplay.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+    
+        this.playerStatDisplay.attributeTable.columns["mana"].clear();
+        this.playerStatDisplay.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
     },
     
     //saves the orientation of the player as it was in the overworld state, before the battle started

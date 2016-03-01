@@ -304,6 +304,7 @@ function playerAttackEnter() {
     this.showMessage(player.lastUsedAttack.playerUseMessage);
     
     player.useAttack(this.monsterSelector.getSelectedMonsters(this.monsters), player.lastUsedAttack);
+    this.updatePlayerStatDisplay();
 };
 
 function playerAttackExit() {

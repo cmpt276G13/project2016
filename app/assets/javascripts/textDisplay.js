@@ -15,7 +15,7 @@ var healthBarCaptionStyle = {
 var statDisplayStyle = {
     
     fill: 'white',
-    fontSize: 20
+    fontSize: 17
 }
 
 var actionStyle = {
