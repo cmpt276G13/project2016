@@ -421,10 +421,7 @@ function monsterTurnEnter() {
     //randomly determine what the monster should do
     //for now he just attacks
     this.monsters[this.currentMonster].useAttack([player], this.monsters[this.currentMonster].basicAttack);
-    // var attack = createAttack(this.monsters[this.currentMonster], player, new basicAttack());
-    // this.monsters[this.currentMonster].useAttack(attack);
-    // this.monsters[this.currentMonster].lastUsedAttack.onUse(this.monsters[this.currentMonster]);
-    
+  
     this.showMessage(this.monsters[this.currentMonster].name + this.monsters[this.currentMonster].lastUsedAttack.monsterUseMessage);
 };
 

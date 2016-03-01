@@ -90,7 +90,7 @@ actionDisplay.prototype.highlightSelectedAction = function() {
     }
     
     //clear resets line style, so set it again
-    this.selectionDisplay.lineStyle(2, 0x000000, 2);
+    this.selectionDisplay.lineStyle(2, 0xffff00, 2);
     
     //now draw a new rectangle around the current selection
     var xPosition = this.actionTextList.objects[this.idActionToHighlight].configuration.x + this.actionTextList.configuration.x;
