@@ -132,15 +132,18 @@ function selectSkillKeyDown(key) {
             //tell player he doesn't have enough manga
             //auto hide the message after a few seconds
             this.showMessage("Not Enough Mana.");
+            console.log("asadf");
             
             //if we already have a message hide event, erase it and create a new oen
             if(typeof this.displayMessageEvent === "undefined") {
                 
-                this.displayMessageEvent = game.time.events.add(2000, this.hideMessage(), this);
+                this.displayMessageEvent = game.time.events.add(2000, this.hideMessage, this);
             }
             
             this.displayMessageEvent.timer.stop();
             this.displayMessageEvent.timer.add(2000, this.hideMessage, this);
+            this.displayMessageEvent.timer.start();
+            
             return;
         }
         

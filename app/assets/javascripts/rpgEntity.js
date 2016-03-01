@@ -22,7 +22,7 @@ function rpgEntity() {
     this.maxHealth = 25;
     this.health = 25;
     this.maxMana = 25;
-    this.mana = 25;
+    this.mana = 0;
     this.magicPower = 10;
     this.magicDefense = 10;
     this.strength = 10;
@@ -49,9 +49,6 @@ rpgEntity.prototype.useAttack = function(targets, attackData) {
         pos.x += targets[i].sprite.x;
         pos.y += targets[i].sprite.y;
     }
-    
-    console.log(targets.length);
-    console.log(pos.x + "   " + pos.y);
     
     pos.x /= targets.length > 0 ? targets.length : 1;
     pos.y /= targets.length > 0 ? targets.length : 1;
@@ -131,8 +128,6 @@ function createAttack(user, targetPosition, attackData) {
     
     create.onComplete.addOnce(function(){this.sprite.animations.play("update"); }, attack);
     destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
-    
-    console.log(targetPosition.x + "    " + targetPosition.y);
     
     //setup behaviour 
     if(attackData.behaviour == "projectile") {
