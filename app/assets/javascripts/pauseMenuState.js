@@ -30,17 +30,20 @@ var pauseMenuState = {
         
         display.playerHealth = new attributeDisplayText({attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, x: textOffset, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
         display.playerExp = new attributeDisplayText({attributeName: "EXP:", attributeValue: player.experience + "/ " + player.experienceToNextLevel, x: textOffset + display.background.width / 3 * 2, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
+        display.playerMana = new attributeDisplayText({attributeName: "MP:", attributeValue: player.mana+"/ "+player.maxMana, x:textOffset + display.background.width / 3, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle} );
         
         display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 90, cellWidth: display.background.width / 4, cellHeight: 20, columnSpacing: 80, objectCreationFunction: attributeDisplayText} );
         display.attributeTable.addObject("left", {attributeName: "STR", attributeValue: player.strength, textStyle: statDisplayStyle} );
         display.attributeTable.addObject("right", {attributeName: "DEF", attributeValue: player.defense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "MDEF", attributeValue: player.magicDefense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "MATK", attributeValue: player.magicPower, textStyle: statDisplayStyle} );
         display.attributeTable.addObject("left", {attributeName: "GOLD", attributeValue: player.gold, textStyle: statDisplayStyle} );
         
         display.background.addChild(display.playerName);
         display.background.addChild(display.playerLevel);
         display.attributeTable.addParent(display.background);
         
-        barConfig = {
+        var barConfig = {
             
             maxHealth: player.maxHealth,
             x: textOffset,
@@ -73,8 +76,18 @@ var pauseMenuState = {
         display.expBar.setValueNoTransition(player.experience);
         display.expBar.addParent(display.background);
         
+        barConfig.maxHealth = player.maxMana;
+        barConfig.x = textOffset + display.background.width / 3;
+        barConfig.bar.gradientStart = '#00cdcd';
+        barConfig.bar.gradientEnd = '#7af5f5';
+        
+        display.manaBar = new HealthBar(game, barConfig);
+        display.manaBar.setValueNoTransition(player.mana);
+        display.manaBar.addParent(display.background);
+        
         display.playerHealth.addParent(display.background);
         display.playerExp.addParent(display.background);
+        display.playerMana.addParent(display.background);
         
         return display;
     },

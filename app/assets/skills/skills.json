@@ -1,0 +1,70 @@
+{
+    "Basic Attack": {
+        
+        "power": 5,
+        "targetsHit": 5,
+        "manaCost": 0,
+        "hasOwnAnimation": false,
+        "playerUseMessage": "You Attack!",
+        "monsterUseMessage": " Attacks!",
+        "attackType": "physical",
+        "userAnimation": "attack"
+        
+    },
+    
+    "Slash": {
+        
+        "power": 10,
+        "targetsHit": 1,
+        "manaCost": 4,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Slash!",
+        "monsterUseMessage": " uses Slash!",
+        "attackType": "physical",
+        "userAnimation": "attack",
+        "spriteKey": "slash",
+        "animations": {
+            
+            
+        },
+        
+        "behaviour": "stationary"
+    },
+    
+    "Fireball": {
+        
+        "power": 10,
+        "targetsHit": 1,
+        "manaCost": 3,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Fireball!",
+        "monsterUseMessage": " uses Fireball!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        
+        "spriteKey": "fireball",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3],
+                "speed": 5
+            },
+            
+            "update": {
+                
+                "frames": [4, 5, 6, 7],
+                "speed": 5
+            },
+            
+            "destroy": {
+                
+                "frames": [8, 9, 10, 11],
+                "speed": 5
+            }
+        },
+        
+        "behaviour": "projectile"
+    }
+}
