@@ -97,6 +97,10 @@
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
             
+            this.mana = 10;
+            this.health = 10;
+            this.experience = this.experienceToNextLevel - 1;
+            
             //for whatever reason json parse isn't working so use ruby to set the data
             var items = {};
             
@@ -169,6 +173,10 @@
             //for now just raise his stats
             this.maxHealth += 20;
             this.health = this.maxHealth;
+            this.maxMana += 10;
+            this.mana = this.maxMana;
+            this.magicPower += 5;
+            this.magicDefense += 5;
             this.strength += 5;
             this.defense += 5;
             this.experience -= this.experienceToNextLevel;

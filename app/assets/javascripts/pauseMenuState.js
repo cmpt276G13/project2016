@@ -34,6 +34,8 @@ var pauseMenuState = {
         display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 90, cellWidth: display.background.width / 4, cellHeight: 20, columnSpacing: 80, objectCreationFunction: attributeDisplayText} );
         display.attributeTable.addObject("left", {attributeName: "STR", attributeValue: player.strength, textStyle: statDisplayStyle} );
         display.attributeTable.addObject("right", {attributeName: "DEF", attributeValue: player.defense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "MDEF", attributeValue: player.magicDefense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "MATK", attributeValue: player.magicPower, textStyle: statDisplayStyle} );
         display.attributeTable.addObject("left", {attributeName: "GOLD", attributeValue: player.gold, textStyle: statDisplayStyle} );
         
         display.background.addChild(display.playerName);

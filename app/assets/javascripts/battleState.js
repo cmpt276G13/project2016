@@ -450,7 +450,7 @@ var battleState = {
             
             //start the level up effect, for now just display a message
             this.showMessage("You have leveled up!");
-            this.playerStatDisplay.playerHealthBar.setValueNoTransition(player.health);
+            this.updatePlayerStatDisplay();
         }
     },
     
