@@ -2,11 +2,12 @@
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <center>
   <%= link_to "Start Game!", game_path, action: 'get'%>
-<h1><strong>You Are In: </strong> <%= @user_location[:country_name] %></h1>
+<h1><strong>You Are In: </strong> 
+  <%= @user_location[:country_name] %></h1>
 
 
-<div style='width: 800px;'>
-  <div id="geolocation" style='width: 800px; height: 400px;'></div>
+<div style='width: 1000px;'>
+  <div id="geolocation" style='width: 1000px; height: 600px;'></div>
 </div>
 </center>
 
@@ -33,7 +34,63 @@ function displayOnMap(position){
     lat: position.coords.latitude,
     lng: position.coords.longitude
   });
-  handler.map.centerOn(marker);
+  //handler.map.centerOn(marker);
+  handler.getMap().setZoom(2);
+  
+  var markers = handler.addMarker({
+    lat: 49.2827,
+    lng: -123.1207,
+    title: 'Vancouver, Canada',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+  handler.addMarker({
+    lat: 48.8567,
+    lng: 2.3508,
+    title: 'Paris, France',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+  handler.addMarker({
+    lat: 35.6833,
+    lng: 139.6833,
+    title: 'Tokyo, Japan',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+    handler.addMarker({
+    lat: -33.8650,
+    lng: 151.2094,
+    title: 'Sydney, Australia',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+    handler.addMarker({
+    lat: 30.0500,
+    lng: 31.2333,
+    title: 'Cairo, Egypt',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
+  
+    handler.addMarker({
+    lat: -15.7939,
+    lng: -47.8828,
+    title: 'Brasilia, Brazil',
+    click: function(e) {
+      alert('You clicked in this marker');
+    }
+  });
 };
+
 </script>
     
