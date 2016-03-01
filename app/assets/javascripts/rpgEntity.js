@@ -107,6 +107,17 @@ function createAttack(user, targetPosition, attackData) {
     
     attack.onUse = function(user){user.sprite.animations.play(attack.userAnimation)};
     
+    //power of the attack is calculated based on what type of attack it is
+    //physical and magic attacks result in different power calculation
+    if(attack.attackType == "physical") {
+        
+        attack.power = attack.power + user.strength / 2;
+        
+    } else if(attack.attackType == "magic") {
+        
+        attack.power = attack.power + user.magicPower / 2;
+    }
+    
     //if the attack doesn't have an animation, no need to create its own animation
     //instead it uses the user's attack animation, and when the animaton finishes, the attack is finished
     if(attack.hasOwnAnimation == false) {
@@ -145,17 +156,6 @@ function createAttack(user, targetPosition, attackData) {
         
         //begin creating fireball while user is doing his casting animation
         user.sprite.animations.getAnimation(attack.userAnimation).onStart.addOnce(function(){this.sprite.animations.play("create") }, attack)
-    }
-    
-    //power of the attack is calculated based on what type of attack it is
-    //physical and magic attacks result in different power calculation
-    if(attack.attackType == "physical") {
-        
-        attack.power = attack.power + user.strength / 2;
-        
-    } else if(attack.attackType == "magic") {
-        
-        attack.power = attack.power + user.magicPower / 2;
     }
     
     return attack;

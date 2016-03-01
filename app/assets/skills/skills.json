@@ -5,6 +5,8 @@
         "targetsHit": 5,
         "manaCost": 0,
         "hasOwnAnimation": false,
+        "playerUseMessage": "You Attack!",
+        "monsterUseMessage": " Attacks!",
         "attackType": "physical",
         "userAnimation": "attack"
         
@@ -16,6 +18,8 @@
         "targetsHit": 1,
         "manaCost": 4,
         "hasOwnAnimation": true,
+        "playerUseMessage": "You use Slash!",
+        "monsterUseMessage": " uses Slash!",
         "attackType": "physical",
         "userAnimation": "attack",
         "spriteKey": "slash",
@@ -33,6 +37,8 @@
         "targetsHit": 1,
         "manaCost": 3,
         "hasOwnAnimation": true,
+        "playerUseMessage": "You use Fireball!",
+        "monsterUseMessage": " uses Fireball!",
         "attackType": "magic",
         "userAnimation": "attack",
         

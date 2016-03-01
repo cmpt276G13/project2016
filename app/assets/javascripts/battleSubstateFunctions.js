@@ -102,6 +102,11 @@ function selectSkillExit() {
     
     this.skillsDisplay.background.visible = false;
     this.hideMessage();
+    
+    if(typeof this.displayMessageEvent !== "undefined") {
+        
+        this.displayMessageEvent.timer.stop();
+    }
 }
 
 function selectSkillKeyDown(key) {
@@ -132,7 +137,6 @@ function selectSkillKeyDown(key) {
             //tell player he doesn't have enough manga
             //auto hide the message after a few seconds
             this.showMessage("Not Enough Mana.");
-            console.log("asadf");
             
             //if we already have a message hide event, erase it and create a new oen
             if(typeof this.displayMessageEvent === "undefined") {
@@ -296,8 +300,8 @@ function playerSelectTargetUpdate() {
 };
 
 function playerAttackEnter() {
-    
-    this.showMessage("You Attack!");
+
+    this.showMessage(player.lastUsedAttack.playerUseMessage);
     
     player.useAttack(this.monsterSelector.getSelectedMonsters(this.monsters), player.lastUsedAttack);
 };
@@ -420,7 +424,7 @@ function monsterTurnEnter() {
     // this.monsters[this.currentMonster].useAttack(attack);
     // this.monsters[this.currentMonster].lastUsedAttack.onUse(this.monsters[this.currentMonster]);
     
-    this.showMessage(this.monsters[this.currentMonster].name + " attacks!");
+    this.showMessage(this.monsters[this.currentMonster].name + this.monsters[this.currentMonster].lastUsedAttack.monsterUseMessage);
 };
 
 function monsterTurnExit() {
