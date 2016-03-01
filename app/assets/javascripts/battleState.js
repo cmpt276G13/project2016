@@ -37,6 +37,16 @@ var battleState = {
             }
         },
         
+        {name: "selectSkill",
+            functions: {
+                
+                onEnter: selectSkillEnter,
+                onExit: selectSkillExit,
+                onKeyDown: selectSkillKeyDown,
+                onUpdate: selectSkillUpdate
+            }
+        },
+        
         {name: "selectItemAction",
             functions: {
                 
@@ -270,9 +280,9 @@ var battleState = {
             
             var selected = [];
             
-            for(var i = 0; i < monsters.length; ++i) {
+            for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
                 
-                selected.push(monsters[i]);
+                selected.push(  monsters[this.selectedMonstersIndices[i]] );
             }
             
             return selected;
@@ -649,6 +659,13 @@ var battleState = {
         //action list when user selects items
         this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
                                 viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+        
+        this.skillsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+        
+        //add all of the player's skills to the display
+        this.skillsDisplay.addAction({attributeName: "Fireball", attributeValue: "4 MP"});
+        this.skillsDisplay.addAction({attributeName: "Cancel"});
         
         //again we want to add a listener for when the player presses on keys
         game.input.keyboard.callbackContext = this;

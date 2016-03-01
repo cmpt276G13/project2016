@@ -4,11 +4,11 @@
 //same applies for the defender
 //this is a general use function meant to calcualte damage for any time of object
 //this can be extended to incorporate a damage range so it can calculate a random damage
-function determineDamage(attack, defender, attackType) {
+function determineDamage(attack, defender) {
     
     var defense = defender.defense;
     
-    if(attackType == "magic") {
+    if(attack.attackType == "magic") {
         
         defense = defender.magicDefense;
     }
@@ -42,22 +42,27 @@ function rpgEntity() {
 rpgEntity.prototype.useAttack = function(targets, attackData) {
     
     //for skills that have mutliple targets, the targetPosition will be the average position
-    var x = 0;
-    var y = 0;
+    var pos = {x: 0, y: 0};
     
     for(var i = 0; i < targets.length; ++i) {
         
-        x += targets[i].sprite.x;
-        y += targets[i].sprite.y;
+        pos.x += targets[i].sprite.x;
+        pos.y += targets[i].sprite.y;
     }
     
-    x /= targets.length > 0 ? targets.length : 1;
-    y /= targets.length > 0 ? targets.length : 1;
+    console.log(targets.length);
+    console.log(pos.x + "   " + pos.y);
     
-    var attack = createAttack(this, {x: x, y: y}, attackData);
+    pos.x /= targets.length > 0 ? targets.length : 1;
+    pos.y /= targets.length > 0 ? targets.length : 1;
+    
+    var attack = createAttack(this, pos, attackData);
     attack.isFinished = false;
     this.lastUsedAttack = attack;
     attack.onUse(this);
+    
+    //use mana if needed
+    this.mana = Math.max(0, this.mana - attack.manaCost);
 };
 
 rpgEntity.prototype.getHit = function(damageReceived) {
@@ -126,6 +131,8 @@ function createAttack(user, targetPosition, attackData) {
     
     create.onComplete.addOnce(function(){this.sprite.animations.play("update"); }, attack);
     destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
+    
+    console.log(targetPosition.x + "    " + targetPosition.y);
     
     //setup behaviour 
     if(attackData.behaviour == "projectile") {

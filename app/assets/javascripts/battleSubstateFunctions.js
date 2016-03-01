@@ -70,8 +70,13 @@ function selectFightActionKeyDown(key) {
         
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
             
-            player.lastUsedAttack = game.cache.getJSON("skillData")["fireball"];
+            player.lastUsedAttack = player.basicAttack;
             this.stateManager.changeState("playerSelectTarget");
+        }
+        
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "skills" && this.monsters.length > 0) {
+            
+            this.stateManager.changeState("selectSkill");
         }
     }
     
@@ -85,6 +90,70 @@ function selectFightActionUpdate() {
     
     this.fightActionsDisplay.highlightSelectedAction();
 };
+
+function selectSkillEnter() {
+    
+    this.skillsDisplay.background.visible = true;
+    this.skillsDisplay.resetSelection();
+    
+}
+
+function selectSkillExit() {
+    
+    this.skillsDisplay.background.visible = false;
+    this.hideMessage();
+}
+
+function selectSkillKeyDown(key) {
+    
+    //check if user cancled
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        this.stateManager.changeState("selectFightAction");
+    }
+    
+    actionDisplayKeyDown(key, this.skillsDisplay);
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        if(this.skillsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
+            
+            this.stateManager.changeState("selectFightAction");
+            return;
+        }
+        
+        //player tried ot use a skill
+        //if player doesn't have enough mana, tell him he needs more mana
+        //otherwise use the skill and let player select targets
+        var skillName = this.skillsDisplay.getSelectedActionConfiguration().attributeName;
+        
+        if(player.mana < game.cache.getJSON("skillData")[skillName].manaCost ) {
+            
+            //tell player he doesn't have enough manga
+            //auto hide the message after a few seconds
+            this.showMessage("Not Enough Mana.");
+            
+            //if we already have a message hide event, erase it and create a new oen
+            if(typeof this.displayMessageEvent === "undefined") {
+                
+                this.displayMessageEvent = game.time.events.add(2000, this.hideMessage(), this);
+            }
+            
+            this.displayMessageEvent.timer.stop();
+            this.displayMessageEvent.timer.add(2000, this.hideMessage, this);
+            return;
+        }
+        
+        //player has enough mana, use skill
+        player.lastUsedAttack = game.cache.getJSON("skillData")[skillName];
+        this.stateManager.changeState("playerSelectTarget");
+    }
+}
+
+function selectSkillUpdate() {
+    
+    this.skillsDisplay.highlightSelectedAction();
+}
 
 function selectItemActionEnter() {
     
@@ -228,10 +297,6 @@ function playerAttackEnter() {
     this.showMessage("You Attack!");
     
     player.useAttack(this.monsterSelector.getSelectedMonsters(this.monsters), player.lastUsedAttack);
-    
-    //when player finishes his attack animation we will damage the monster
-    // player.useAttack(createAttack(player, this.monsterSelector.getSelectedMonsters(this.monsters)[0], player.basicAttack) );
-    // player.lastUsedAttack.onUse(player);
 };
 
 function playerAttackExit() {

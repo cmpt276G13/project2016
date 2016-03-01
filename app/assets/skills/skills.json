@@ -27,7 +27,7 @@
         "behaviour": "stationary"
     },
     
-    "fireball": {
+    "Fireball": {
         
         "power": 10,
         "targetsHit": 1,
