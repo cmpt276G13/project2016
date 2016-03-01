@@ -22,12 +22,13 @@ function rpgEntity() {
     this.maxHealth = 25;
     this.health = 25;
     this.maxMana = 25;
-    this.mana = 0;
+    this.mana = 25;
     this.magicPower = 10;
     this.magicDefense = 10;
     this.strength = 10;
     this.defense = 10;
     this.level = 1;
+    this.skills = [];
     this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database
     this.shouldDelete = false;
     

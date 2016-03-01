@@ -80,7 +80,7 @@
         player.gold = 0;
         player.strength = 2000;
         player.items = {};
-        player.skills = [];
+        player.skills = ["Fireball"];
         player.deaths = 0;
         
         player.load = function() {
@@ -121,12 +121,17 @@
                 level: this.level,
                 max_health: this.maxHealth,
                 health: this.health,
+                max_mana: this.maxMana,
+                mana: this.mana,
+                magic_power: this.magicPower,
+                magic_defense: this.magicDefense,
                 gold: this.gold,
                 experience_to_next_level: this.experienceToNextLevel,
                 experience: this.experience,
                 strength: this.strength,
                 defense: this.defense,
                 deaths: this.deaths,
+                skills: this.skills,
                 items: {}
             };
             

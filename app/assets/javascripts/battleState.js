@@ -664,7 +664,13 @@ var battleState = {
                                 viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
         
         //add all of the player's skills to the display
-        this.skillsDisplay.addAction({attributeName: "Fireball", attributeValue: "4 MP"});
+        for(var i = 0; i < player.skills.length; ++i) {
+            
+            var name = player.skills[i];
+            var cost = game.cache.getJSON("skillData")[name].manaCost;
+            this.skillsDisplay.addAction({attributeName: name, attributeValue: cost + " MP"}  );
+        }
+    
         this.skillsDisplay.addAction({attributeName: "Cancel"});
         
         //again we want to add a listener for when the player presses on keys
