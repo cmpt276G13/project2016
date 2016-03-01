@@ -4,9 +4,16 @@
 //same applies for the defender
 //this is a general use function meant to calcualte damage for any time of object
 //this can be extended to incorporate a damage range so it can calculate a random damage
-function determineDamage(attackPower, defenderDefense) {
+function determineDamage(attack, defender, attackType) {
     
-    return Math.floor(clamp(attackPower - defenderDefense / 2, 1, attackPower));
+    var defense = defender.defense;
+    
+    if(attackType == "magic") {
+        
+        defense = defender.magicDefense;
+    }
+    
+    return Math.floor(clamp(attack.power - defense / 2, 1, attack.power));
 }
 
 function rpgEntity() {
@@ -16,6 +23,8 @@ function rpgEntity() {
     this.health = 25;
     this.maxMana = 25;
     this.mana = 25;
+    this.magicPower = 10;
+    this.magicDefense = 10;
     this.strength = 10;
     this.defense = 10;
     this.level = 1;
@@ -49,17 +58,6 @@ rpgEntity.prototype.useAttack = function(targets, attackData) {
     attack.isFinished = false;
     this.lastUsedAttack = attack;
     attack.onUse(this);
-    
-    //power of the attack is calculated based on what type of attack it is
-    //physical and magic attacks result in different power calculation
-    if(this.lastUsedAttack.attackType == "physical") {
-        
-        this.lastUsedAttack.power = attack.power + this.strength / 2;
-        
-    } else if(this.lastUsedAttack.attackType == "magic") {
-        
-        this.lastUsedAttack.power = attack.power + this.strength / 2;
-    }
 };
 
 rpgEntity.prototype.getHit = function(damageReceived) {
@@ -147,22 +145,16 @@ function createAttack(user, targetPosition, attackData) {
         user.sprite.animations.getAnimation(attack.userAnimation).onStart.addOnce(function(){this.sprite.animations.play("create") }, attack)
     }
     
-    //setup the animation call backs
-    
-    attack.sprite = sprite;
-    
-    //setup the onUse function
-    //attack.onUse = function(user){user.sprite.animati}
-    
-    //setup the behaviour
-    /*
-    We can worry about this stuff once we have skills
-    if(attack.behaviour == skillBehaviour.PROJECTILE) {
+    //power of the attack is calculated based on what type of attack it is
+    //physical and magic attacks result in different power calculation
+    if(attack.attackType == "physical") {
         
+        attack.power = attack.power + user.strength / 2;
         
+    } else if(attack.attackType == "magic") {
+        
+        attack.power = attack.power + user.magicPower / 2;
     }
-    
-    */
     
     return attack;
 };

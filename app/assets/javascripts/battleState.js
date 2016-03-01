@@ -550,7 +550,7 @@ var battleState = {
     //determines damage dealt
     determineAttackResults: function(attack, defender) {
         
-        var damage = determineDamage(attack.power, defender.defense);
+        var damage = determineDamage(attack, defender);
         defender.getHit(damage);
         return damage;
     },
