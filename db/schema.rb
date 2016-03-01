@@ -21,12 +21,12 @@ ActiveRecord::Schema.define(version: 20160229034706) do
     t.integer  "level",                    default: 1
     t.integer  "experience",               default: 0
     t.integer  "gold",                     default: 0
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items"
+    t.text     "items",                    default: "--- []\n"
     t.text     "ongoing_quests"
     t.text     "completed_quests"
   end
