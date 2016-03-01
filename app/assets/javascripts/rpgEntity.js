@@ -14,6 +14,8 @@ function rpgEntity() {
     //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
     this.maxHealth = 25;
     this.health = 25;
+    this.maxMana = 25;
+    this.mana = 25;
     this.strength = 10;
     this.defense = 10;
     this.level = 1;
@@ -26,20 +28,35 @@ function rpgEntity() {
     this.lastUsedAttack = {};
 };
 
-//sets the last used attack to the given attack
-//The attack should be created with createAttack()
-//calculates the power of the attack based on the entities stats
-rpgEntity.prototype.useAttack = function(attack) {
+//uses the given attackData to create an attack, and sets lastUsedAttack to the created attack
+//when the attack animations finishes, lastUSedAttack will have a flag that to indicate the attack display is complete
+rpgEntity.prototype.useAttack = function(targets, attackData) {
     
+    //for skills that have mutliple targets, the targetPosition will be the average position
+    var x = 0;
+    var y = 0;
+    
+    for(var i = 0; i < targets.length; ++i) {
+        
+        x += targets[i].sprite.x;
+        y += targets[i].sprite.y;
+    }
+    
+    x /= targets.length > 0 ? targets.length : 1;
+    y /= targets.length > 0 ? targets.length : 1;
+    
+    var attack = createAttack(this, {x: x, y: y}, attackData);
+    attack.isFinished = false;
     this.lastUsedAttack = attack;
+    attack.onUse(this);
     
     //power of the attack is calculated based on what type of attack it is
     //physical and magic attacks result in different power calculation
-    if(this.lastUsedAttack.attackType == attackType.PHYSICAL) {
+    if(this.lastUsedAttack.attackType == "physical") {
         
         this.lastUsedAttack.power = attack.power + this.strength / 2;
         
-    } else if(this.lastUsedAttack.attackType == attackType.MAGIC) {
+    } else if(this.lastUsedAttack.attackType == "magic") {
         
         //this.lastUsedAttack.power = attack.power + this.magicPower / 2;
     }
@@ -78,48 +95,59 @@ function startDeathAnimation(dyingEntity) {
 //all skills should also have a onUse function, that defines what happens whwen it is called
 //this would just put the skill at its starting location, and begin the appropriate animation
 //the on use function will take in the user rpg entity as an argument
-function createAttack(user, target, attackData) {
+function createAttack(user, targetPosition, attackData) {
+    
+    var attack = {};
+    
+    //create a copy of attackData because you don't want to modify the original skill
+    for(trait in attackData) {
+        
+        attack[trait] = attackData[trait];
+    }
+    
+    attack.onUse = function(user){user.sprite.animations.play(attack.userAnimation)};
     
     //if the attack doesn't have an animation, no need to create its own animation
     //instead it uses the user's attack animation, and when the animaton finishes, the attack is finished
-    if(attackData.hasOwnAnimation == false) {
+    if(attack.hasOwnAnimation == false) {
         
-        user.sprite.animations.getAnimation("attack").onComplete.addOnce(function(){this.isFinished = true;}, attackData);
-        attackData.onUse = function(user){user.sprite.animations.play('attack')};
+        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.isFinished = true;}, attack);
         
-        return attackData;
+        return attack;
     }
     
     //load spritesheet for animation
-    var sprite = game.add.sprite(0, 0, attackData.spriteKey, 0);
+    var sprite = game.add.sprite(0, 0, attack.spriteKey, 0);
     
     //setup the animation
-    var create = sprite.add.animations.add("create", attackData.animations["create"].frames, attackData.animations["create"].speed);
-    var update = sprite.add.animations.add("update", attackData.animations["update"].frames, attackData.animations["update"].speed);
-    var destroy = sprite.add.animations.add("destroy", attackData.animations["destroy"].frames, attackData.animations["destroy"].speed);
+    var create = sprite.add.animations.add("create", attack.animations["create"].frames, attack.animations["create"].speed);
+    var update = sprite.add.animations.add("update", attack.animations["update"].frames, attack.animations["update"].speed);
+    var destroy = sprite.add.animations.add("destroy", attack.animations["destroy"].frames, attack.animations["destroy"].speed);
     
     //setup the animation call backs
     create.onComplete.addOnce(function(){this.animations.play("update"); }, sprite);
     update.onComplete.addOnce(function(){this.animations.play("destroy"); }, sprite);
-    destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attackData);
+    destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
     
-    attackData.sprite = sprite;
+    attack.sprite = sprite;
     
     //setup the onUse function
-    //attackData.onUse = function(user){user.sprite.animati}
+    //attack.onUse = function(user){user.sprite.animati}
     
     //setup the behaviour
     /*
     We can worry about this stuff once we have skills
-    if(attackData.behaviour == skillBehaviour.PROJECTILE) {
+    if(attack.behaviour == skillBehaviour.PROJECTILE) {
         
         
     }
     
     */
     
-    return attackData;
+    return attack;
 };
+
+
 
 //attack type determines what stats to use for damage calculation
 //it also determines which animation frame to use
@@ -232,3 +260,4 @@ function fireball() {
     
     this.behaviour = skillBehaviour.PROJECTILE;
 };
+

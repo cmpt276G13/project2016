@@ -261,6 +261,9 @@
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
+                //load skill data, and animations
+                game.load.json('skillData', '<%= asset_path("skills.json") %>');
+                
             },
             
             //create function creats the required object for this game state
@@ -288,6 +291,9 @@
                 
                 //load player data from server
                 player.load();
+                
+                //add basic attack skill to all rpg entities
+                rpgEntity.prototype.basicAttack = game.cache.getJSON("skillData")["Basic Attack"];
                 
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
