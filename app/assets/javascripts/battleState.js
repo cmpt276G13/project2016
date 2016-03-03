@@ -313,6 +313,9 @@ var battleState = {
             var monster = new rpgEntity();
             $.extend(monster, monsterDatabase[monsterName]);
             
+            //now scale monster to player's level
+            scaleMonsterToPlayer(monster, player.level);
+            
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             
             //position the monster somewhere offscreen

@@ -16,9 +16,51 @@ function determineDamage(attack, defender) {
     return Math.floor(clamp(attack.power - defense / 2, 1, attack.power));
 }
 
+function scaleMonsterToPlayer(monster, playerLevel) {
+    
+    scaleMonsterLevelToPlayer(monster, playerLevel);
+    scaleMonsterStatsToLevel(monster);
+}
+
+//takes the given monster and sets its level to something close to the player's level
+function scaleMonsterLevelToPlayer(monster, playerLevel) {
+    
+    //get a level range for the monster
+    var rangeMin = Math.clamp(playerLevel - monster.levelRange, 0, playerLevel);
+    var rangeMax = playerLevel + monster.levelRange;
+    
+    monster.level = getRandomInt(rangeMin, rangeMax);
+}
+
+function scaleMonsterStatsToLevel(monster) {
+    
+    //determine total stat points the monster has to allocate
+    var statPoints = monster.level * monster.statPointsPerLevel;
+    
+    var attributes = ["maxHealth", "maxMana", "strength", "defense", "magicPower", "magicDefense"]
+    
+    //get random percentage for each stat
+    for(var i = 0; i < attributes.length; ++i) {
+        
+        monster[attributes] = determineRandomStatAsPercent(monster[attributes], monster.statRange);
+        
+        //turn percent into actual stat
+        monster[attributes] = (monster[attributes] / 100) * statPoints;
+    }
+    
+    monster.health = monster.maxHealth;
+    monster.mana = monster.maxMana;
+}
+
+function determineRandomStatAsPercent(statAsPercent, statRange) {
+    
+    return getRandomInt(Math.clamp(statAsPercent - statRange, 0, statAsPercent + statRange), statAsPercent + statRange);
+}
+
 function rpgEntity() {
     
     //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
+    this.statPointsPerLevel = 10;
     this.maxHealth = 25;
     this.health = 25;
     this.maxMana = 25;
@@ -71,6 +113,7 @@ rpgEntity.prototype.getHit = function(damageReceived) {
 rpgEntity.prototype.capStats = function() {
     
     this.health = Math.min(this.health, this.maxHealth);
+    this.mana = Math.min(this.mana, this.maxMana);
 }
 
 function markForDeletion() {
