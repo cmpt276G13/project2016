@@ -153,6 +153,7 @@
         player.respawn = function(spawnPoint) {
             
             this.health = this.maxHealth;
+            this.mana = this.maxMana;
             this.sprite.x = spawnPoint.x;
             this.sprite.y = spawnPoint.y;
             this.sprite.animations.stop();
