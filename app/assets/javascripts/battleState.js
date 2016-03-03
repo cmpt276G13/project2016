@@ -311,10 +311,16 @@ var battleState = {
             //now we can use this key to load the monster data
             //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
             var monster = new rpgEntity();
-            $.extend(monster, monsterDatabase[monsterName]);
+            jQuery.extend(monster, monsterDatabase[monsterName]);
+            
+            //copy rewards seperately because the above extend function creates a reference to the original rewards
+            //and when the copy is modified, so is the original, and i don't want that
+            monster.rewards = {};
+            jQuery.extend(monster.rewards, monsterDatabase[monsterName].rewards);
             
             //now scale monster to player's level
             scaleMonsterToPlayer(monster, player.level);
+            scaleMonsterRewardsToLevel(monster, monsterDatabase[monsterName].rewards );
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             

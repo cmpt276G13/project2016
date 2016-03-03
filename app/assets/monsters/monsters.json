@@ -4,16 +4,15 @@
         "imageKey": "orc",
         "name": "orc",
         "levelRange": 4,
-        "statRange": 5,
-        "maxHealth": 20,
-        "maxMana": 10,
-        "magicPower": 5,
+        "maxHealth": 5,
+        "maxMana": 5,
+        "magicPower": 1,
         "magicDefense": 0,
-        "defense": 20,
-        "strength": 40,
+        "defense": 4,
+        "strength": 5,
         "startingFrame": 8,
         "animations": [
-            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5},
+            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 8},
             {"name": "dying", "frames": [8, 12, 0, 4, 8, 12, 0, 4], "speed": 5}
         ],
         

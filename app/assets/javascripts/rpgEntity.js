@@ -13,20 +13,27 @@ function determineDamage(attack, defender) {
         defense = defender.magicDefense;
     }
     
-    return Math.floor(clamp(attack.power - defense / 2, 1, attack.power));
+    return Math.floor(clamp(attack.power - defense / 3, 1, attack.power));
 }
 
 function scaleMonsterToPlayer(monster, playerLevel) {
     
     scaleMonsterLevelToPlayer(monster, playerLevel);
+    
+    if(playerLevel < 4) {
+        
+        monster.level = 1;
+    }
+    
     scaleMonsterStatsToLevel(monster);
+    //scaleMonsterRewardsToLevel(monster);
 }
 
 //takes the given monster and sets its level to something close to the player's level
 function scaleMonsterLevelToPlayer(monster, playerLevel) {
     
     //get a level range for the monster
-    var rangeMin = clamp(playerLevel - monster.levelRange, 0, playerLevel);
+    var rangeMin = clamp(playerLevel - monster.levelRange, 1, playerLevel);
     var rangeMax = playerLevel + monster.levelRange;
     
     monster.level = getRandomInt(rangeMin, rangeMax);
@@ -34,36 +41,31 @@ function scaleMonsterLevelToPlayer(monster, playerLevel) {
 
 function scaleMonsterStatsToLevel(monster) {
     
-    //determine total stat points the monster has to allocate
-    var statPoints = monster.level * monster.statPointsPerLevel;
-    
     var attributes = ["maxHealth", "maxMana", "strength", "defense", "magicPower", "magicDefense"]
+    
+    console.log(monster.level);
     
     //get random percentage for each stat
     for(var i = 0; i < attributes.length; ++i) {
         
-        monster[attributes[i] ] = determineRandomStatAsPercent(monster[attributes[i] ], monster.statRange);
-        
-        //turn percent into actual stat
-        monster[attributes[i] ] = (monster[attributes[i] ] / 100) * statPoints;
-        
-        console.log(attributes[i] + monster[attributes[i]]);
+        //base stat plus scaled stat
+        monster[attributes[i] ] = monster[attributes[i]] * (monster.level - 1) + 7;
     }
     
-    monster.maxHealth = Math.max(monster.statRange, monster.maxHealth);
     monster.health = monster.maxHealth;
     monster.mana = monster.maxMana;
 }
 
-function determineRandomStatAsPercent(statAsPercent, statRange) {
+function scaleMonsterRewardsToLevel(monster, originalRewards) {
     
-    return getRandomInt(clamp(statAsPercent - statRange, 0, statAsPercent + statRange), statAsPercent + statRange);
+    monster.rewards.experience = monster.level * originalRewards.experience;
+    monster.rewards.gold = getRandomInt(0, originalRewards.gold * monster.level + originalRewards.gold);
+    console.log(monster.level + "  " + monster.rewards.experience);
 }
 
 function rpgEntity() {
     
     //all stats here are defaults, they will all be overridden when data is loaded from the database, or monster json files.
-    this.statPointsPerLevel = 30;
     this.maxHealth = 25;
     this.health = 25;
     this.maxMana = 25;
