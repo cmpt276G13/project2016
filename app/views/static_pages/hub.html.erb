@@ -2,7 +2,7 @@
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <center>
   <%= link_to "Start Game!", game_path, action: 'get'%>
-<h1><strong>You Are In: </strong> 
+<h1><strong>You Are In: </strong>
   <%= @user_location[:country_name] %></h1>
 
 
@@ -11,6 +11,9 @@
 </div>
 </center>
 
+<div id="boxText" style='width: 100px; height: 200px;'>
+  
+</div>
 <div class="container">
   <ul class="setup_links center">
     <li><%= link_to "Quests", "#" %></li>
@@ -36,8 +39,8 @@ function displayOnMap(position){
   });
   //handler.map.centerOn(marker);
   handler.getMap().setZoom(2);
-  
-  var markers = handler.addMarker({
+
+  handler.addMarker({
     lat: 49.2827,
     lng: -123.1207,
     title: 'Vancouver, Canada',
@@ -90,6 +93,9 @@ function displayOnMap(position){
       alert('You clicked in this marker');
     }
   });
+
+
+
 };
 
 </script>
