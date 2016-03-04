@@ -89,10 +89,4 @@ function displayOnMap(position){
     }
   });
 };
-
-function gmaps4rails_callback() { 
-  function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
-      google.maps.event.addListener(Gmaps4Rails.marker.google_object, 'click', say_yo(i));
-    
-}
 </script>
