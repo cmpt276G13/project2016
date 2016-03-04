@@ -1,9 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  player_id: 
-  quest_id: 
+  player: michael
+  quest: one
 
 two:
-  player_id: 
-  quest_id: 
+  player_id: michael
+  quest: 2
+  
+three:
+  player_id: archer
+  quest: one

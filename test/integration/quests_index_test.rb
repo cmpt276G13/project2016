@@ -13,8 +13,10 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     first_page_of_quests = Quest.paginate(page: 1)
     first_page_of_quests.each do |quest|
       assert_select 'a[href=?]', quest_path(quest), text: quest.name
-      # assert_select 'a[href=?]', , text: 'Accept'
       assert_select 'a[href=?]', quest_path(quest), text: 'delete'
+      if quest.name == "Example"
+        assert_select 'td', "Accepted"
+      end
     end
   end
 end
