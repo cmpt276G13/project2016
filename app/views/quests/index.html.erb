@@ -15,7 +15,7 @@
       </td>
       <td><%= quest.description.split("\n")[0] %></td>
       <% if !current_user.player.quest_acceptances.find_by(quest_id: quest[:id]) %>
-        <td><%= link_to "Accept", onclick: current_user.player.accept(quest), id: "accept_quest" %></td>
+        <td><%= link_to "Accept", quests_accept_path(quest[:id]) %></td>
       <% else %>
         <td id="accepted">Accepted</td>
       <% end %>

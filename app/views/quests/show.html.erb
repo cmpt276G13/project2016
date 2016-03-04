@@ -6,7 +6,7 @@
 
 <%= link_to "Back", :back %>
 <% if !current_user.player.quest_acceptances.find_by(quest_id: @quest[:id]) %>
-  <%= link_to "Accept", onclick: current_user.player.accept(@quest) %>
+  <%= link_to "Accept", quests_accept_path(@quest[:id]) %>
   <%= link_to "Decline", :back %>
 <% else %>
   <td id="accepted">Accepted</td>
