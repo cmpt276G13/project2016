@@ -13,4 +13,10 @@ class PlayerTest < ActiveSupport::TestCase
     @user.player.user_id = nil
     assert_not @user.player.valid?
   end
+  
+  test "quest should be accepted" do
+    assert_difference 'QuestAcceptance.count', 1 do
+      @user.player.accept(quests(:one))
+    end
+  end
 end

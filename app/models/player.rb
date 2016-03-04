@@ -8,4 +8,13 @@ class Player < ActiveRecord::Base
   #   @player.ongoing_quests << 2
   # Don't forget to use @player.save
   serialize :items
+  
+  # Accept the quest given
+  def accept(quest)
+    self.quests << quest
+  end
+  
+  def accepted?(quest)
+    
+  end
 end
