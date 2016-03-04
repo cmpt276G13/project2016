@@ -7,5 +7,6 @@ class CreateQuestAcceptances < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :quest_acceptances, [:quest_id, :completed]
   end
 end

@@ -8,5 +8,4 @@ class Player < ActiveRecord::Base
   #   @player.ongoing_quests << 2
   # Don't forget to use @player.save
   serialize :items
-  serialize :completed_quests, Array
 end
