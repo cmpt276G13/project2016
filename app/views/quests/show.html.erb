@@ -4,10 +4,14 @@
 
 <p><%= @quest.description %></p>
 
-<%= link_to "Back", :back %>
-<% if !current_user.player.quest_acceptances.find_by(quest_id: @quest[:id]) %>
-  <%= link_to "Accept", quests_accept_path(@quest[:id]) %>
-  <%= link_to "Decline", :back %>
-<% else %>
-  <td id="accepted">Accepted</td>
-<% end %>
+<div class="container">
+  <ul class="setup_links center">
+    <li><%= link_to "Back", :back %></li>
+    <% if current_user.player.can_accept?(@quest) %>
+      <li><%= link_to "Accept", quests_accept_path(@quest[:id]) %></li>
+      <li><%= link_to "Decline", :back %></li>
+    <% else %>
+      <li><td id="accepted">Accepted</td></li>
+    <% end %>
+  </ul>
+</div>

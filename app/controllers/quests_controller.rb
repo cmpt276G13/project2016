@@ -30,7 +30,7 @@ class QuestsController < ApplicationController
     # Prevent accepting the quest more than once.
     def accept_once
       quest = Quest.find(params[:id])
-      if current_user.player.quest_acceptances.find_by(quest_id: quest[:id])
+      unless current_user.player.can_accept?(quest)
         redirect_to quests_url
       end
     end

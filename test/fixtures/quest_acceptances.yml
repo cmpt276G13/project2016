@@ -6,7 +6,7 @@ one:
 
 two:
   player_id: michael
-  quest: 2
+  quest: two
   
 three:
   player_id: archer

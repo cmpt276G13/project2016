@@ -5,6 +5,4 @@ class QuestsControllerTest < ActionController::TestCase
     @user = users(:michael)
     @other_user = users(:archer)
   end
-  
-  
 end

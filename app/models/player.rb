@@ -9,6 +9,11 @@ class Player < ActiveRecord::Base
   # Don't forget to use @player.save
   serialize :items
   
-  def accepted?(quest)
+  # Checks if the requirements are met and prevents duplicates
+  def can_accept?(quest)
+    # req_met = self.quest_acceptances
+    not_duplicate = !self.quest_acceptances.find_by(quest_id: quest[:id])
+    
+    # req_met && not_duplicate
   end
 end
