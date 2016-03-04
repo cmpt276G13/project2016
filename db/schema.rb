@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20160304050136) do
     t.datetime "updated_at",                 null: false
   end
 
+  add_index "quest_acceptances", ["player_id", "quest_id"], name: "index_quest_acceptances_on_player_id_and_quest_id", unique: true
   add_index "quest_acceptances", ["player_id"], name: "index_quest_acceptances_on_player_id"
   add_index "quest_acceptances", ["quest_id", "completed"], name: "index_quest_acceptances_on_quest_id_and_completed"
   add_index "quest_acceptances", ["quest_id"], name: "index_quest_acceptances_on_quest_id"
