@@ -36,14 +36,6 @@
     <%= javascript_include_tag "items" %>
     
     <script>
-    
-        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
-        if(typeof overworldState === "undefined") {
-            
-            location.reload();
-        };
-        
-        
         //Returns a random integer between min (inclusive) and max (inclusive)
         function getRandomInt(min, max) {
             
