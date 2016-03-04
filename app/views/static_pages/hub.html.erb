@@ -11,8 +11,6 @@
 </div>
 </center>
 
-<div id="boxText" style='width: 100px; height: 200px;'>
-  
 </div>
 <div class="container">
   <ul class="setup_links center">
@@ -39,64 +37,62 @@ function displayOnMap(position){
   });
   //handler.map.centerOn(marker);
   handler.getMap().setZoom(2);
-
-  handler.addMarker{(
-    lat: 49.2827,
-    lng: -123.1207,
+  
+  var vancouver = handler.addMarker({
+    lat: <%= @vancouver_lat %>,
+    lng: <%= @vancouver_lng %>,
     title: 'Vancouver, Canada',
-    click: function(e) {
+    click: function() {
       alert('You clicked in this marker');
     }
   });
   
-  handler.addMarker({
-    lat: 48.8567,
-    lng: 2.3508,
+  var paris = handler.addMarker({
+    lat: <%= @paris_lat %>,
+    lng: <%= @paris_lng %>,
     title: 'Paris, France',
-    click: function(e) {
-      alert('You clicked in this marker');
-    }
   });
-  
-  handler.addMarker({
-    lat: 35.6833,
-    lng: 139.6833,
+        
+  var tokyo = handler.addMarker({
+    lat: <%= @tokyo_lat %>,
+    lng: <%= @tokyo_lng %>,
     title: 'Tokyo, Japan',
     click: function(e) {
       alert('You clicked in this marker');
     }
   });
   
-    handler.addMarker({
-    lat: -33.8650,
-    lng: 151.2094,
+    var sydney = handler.addMarker({
+    lat: <%= @sydney_lat %>,
+    lng: <%= @sydney_lng %>,
     title: 'Sydney, Australia',
     click: function(e) {
       alert('You clicked in this marker');
     }
   });
   
-    handler.addMarker({
-    lat: 30.0500,
-    lng: 31.2333,
+    var cairo = handler.addMarker({
+    lat: <%= @cairo_lat %>,
+    lng: <%= @cairo_lng %>,
     title: 'Cairo, Egypt',
     click: function(e) {
       alert('You clicked in this marker');
     }
   });
   
-    handler.addMarker({
-    lat: -15.7939,
-    lng: -47.8828,
+    var brasilia = handler.addMarker({
+    lat: <%= @brasilia_lat %>,
+    lng: <%= @brasilia_lng %>,
     title: 'Brasilia, Brazil',
     click: function(e) {
       alert('You clicked in this marker');
     }
   });
-
-
-
 };
 
-</script>
+function gmaps4rails_callback() { 
+  function say_yo(arg) { return function(){alert('yo '+ arg + '!' );};};
+      google.maps.event.addListener(Gmaps4Rails.marker.google_object, 'click', say_yo(i));
     
+}
+</script>
