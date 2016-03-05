@@ -14,7 +14,7 @@
 ActiveRecord::Schema.define(version: 20160221075530) do
 
   create_table "players", force: :cascade do |t|
-    t.string   "username"
+    t.integer  "user_id"
     t.integer  "health",                   default: 50
     t.integer  "strength",                 default: 10
     t.integer  "defense",                  default: 10
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20160221075530) do
     t.integer  "deaths",                   default: 0
   end
 
-  add_index "players", ["username"], name: "index_players_on_username", unique: true
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "username"
