@@ -15,7 +15,7 @@ function determineDamage(attack, defender) {
     
     var damageBase = attack.power - defense / 3;
     
-    var variance = 0.15;
+    var variance = 0.17;
     var damageRangeMin = Math.floor(damageBase - damageBase * variance);
     var damageRangeMax = Math.ceil(damageBase + damageBase * variance);
     
@@ -80,8 +80,8 @@ function rpgEntity() {
     this.mana = 25;
     this.magicPower = 10;
     this.magicDefense = 10;
-    this.strength = 10;
-    this.defense = 10;
+    this.strength = 8;
+    this.defense = 8;
     this.level = 1;
     this.skills = [];
     this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database
