@@ -33,16 +33,9 @@
     <%= javascript_include_tag "battleState" %>
     <%= javascript_include_tag "pauseMenuState" %>
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
+    <%= javascript_include_tag "items" %>
     
     <script>
-    
-        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
-        if(typeof overworldState === "undefined") {
-            
-            location.reload();
-        };
-        
-        
         //Returns a random integer between min (inclusive) and max (inclusive)
         function getRandomInt(min, max) {
             
@@ -78,12 +71,12 @@
         player.experienceToNextLevel = 1;
         player.gold = 0;
         player.strength = 2000;
-        player.items = [];
-        player.skills = [];
-        
+        player.items = {};
+        player.skills = ["Fireball"];
         player.deaths = 0;
+        
         player.load = function() {
-            
+
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
@@ -94,6 +87,19 @@
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
+            
+            //for whatever reason json parse isn't working so use ruby to set the data
+            var items = {};
+            
+            <% @currentUser.player.items.each do |name, quantity| %>
+            
+                var name = '<%= name%>';
+                var quantity = '<%= quantity%>';
+                
+                items[name] = createItem(name, quantity);
+            <%end%>
+            
+            this.items = items;
             
             //player.items = ...
             //player.skills = ...
@@ -106,13 +112,24 @@
                 level: this.level,
                 max_health: this.maxHealth,
                 health: this.health,
+                max_mana: this.maxMana,
+                mana: this.mana,
+                magic_power: this.magicPower,
+                magic_defense: this.magicDefense,
                 gold: this.gold,
                 experience_to_next_level: this.experienceToNextLevel,
                 experience: this.experience,
                 strength: this.strength,
                 defense: this.defense,
-                deaths: this.deaths
+                deaths: this.deaths,
+                skills: this.skills,
+                items: {}
             };
+            
+            for(item in this.items) {
+                
+                saveData.items[item] = this.items[item].quantity;
+            }
             
             $.ajax( {
                 
@@ -143,6 +160,10 @@
             //for now just raise his stats
             this.maxHealth += 20;
             this.health = this.maxHealth;
+            this.maxMana += 10;
+            this.mana = this.maxMana;
+            this.magicPower += 5;
+            this.magicDefense += 5;
             this.strength += 5;
             this.defense += 5;
             this.experience -= this.experienceToNextLevel;
@@ -233,10 +254,17 @@
                 //load the mosnter data base
                 game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
                 
+                //load item database
+                game.load.json('itemData', '<%= asset_path("items.json") %>');
+                
                 //load spritesheets for all the monsters
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
+                //load skill data, and animations
+                game.load.json('skillData', '<%= asset_path("skills.json") %>');
+                
+                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
             },
             
             //create function creats the required object for this game state
@@ -265,6 +293,9 @@
                 //load player data from server
                 player.load();
                 
+                //add basic attack skill to all rpg entities
+                rpgEntity.prototype.basicAttack = game.cache.getJSON("skillData")["Basic Attack"];
+                
                 //add all of the player's animations
         		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
         		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
@@ -277,7 +308,7 @@
         		
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
-                document.getElementById("additional").innerHTML = mapKeys.mapKey;
+                //document.getElementById("additional").innerHTML = mapKeys.mapKey;
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');

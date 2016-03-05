@@ -2,21 +2,23 @@
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <center>
   <%= link_to "Start Game!", game_path, action: 'get'%>
-<h1><strong>You Are In: </strong> <%= @user_location[:country_name] %></h1>
+<h1><strong>You Are In: </strong>
+  <%= @user_location[:country_name] %></h1>
 
 
-<div style='width: 800px;'>
-  <div id="geolocation" style='width: 800px; height: 400px;'></div>
+<div style='width: 1000px;'>
+  <div id="geolocation" style='width: 1000px; height: 600px;'></div>
 </div>
 </center>
 
+</div>
 <div class="container">
   <ul class="setup_links center">
-    <li><%= link_to "Equipment", "#" %></li>
     <li><%= link_to "Quests", "#" %></li>
     <li><%= link_to "Shop", "#" %></li>
   </ul>
 </div>
+
 
 <script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script> 
 <script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
@@ -34,7 +36,48 @@ function displayOnMap(position){
     lat: position.coords.latitude,
     lng: position.coords.longitude
   });
-  handler.map.centerOn(marker);
+  //handler.map.centerOn(marker);
+  handler.getMap().setZoom(2);
+  
+  var vancouver = handler.addMarker({
+    lat: <%= @vancouver_lat %>,
+    lng: <%= @vancouver_lng %>,
+    "infowindow": "<%= @vancouver_title  %> [<%= @vancouver_lat  %>, <%= @vancouver_lng  %>]"
+  });
+  
+  var paris = handler.addMarker({
+    lat: <%= @paris_lat %>,
+    lng: <%= @paris_lng %>,
+    title: 'Paris, France',
+    "infowindow": "<%= @paris_title  %> [<%= @paris_lat  %>, <%= @paris_lng  %>]"
+  });
+  
+  var tokyo = handler.addMarker({
+    lat: <%= @tokyo_lat %>,
+    lng: <%= @tokyo_lng %>,
+    title: 'Tokyo, Japan',
+    "infowindow": "lat: <%= @tokyo_lat  %> | lng:<%= @tokyo_lng  %>"
+  });
+  
+  var sydney = handler.addMarker({
+    lat: <%= @sydney_lat %>,
+    lng: <%= @sydney_lng %>,
+    title: 'Sydney, Australia',
+    "infowindow": "lat: <%= @sydney_lat  %> | lng:<%= @sydney_lng  %>"
+  });
+  
+  var cairo = handler.addMarker({
+    lat: <%= @cairo_lat %>,
+    lng: <%= @cairo_lng %>,
+    title: 'Cairo, Egypt',
+    "infowindow": "lat: <%= @cairo_lat  %> | lng:<%= @cairo_lng  %>"
+  });
+  
+  var brasilia = handler.addMarker({
+    lat: <%= @brasilia_lat %>,
+    lng: <%= @brasilia_lng %>,
+    title: 'Brasilia, Brazil',
+    "infowindow": "lat: <%= @brasilia_lat  %> | lng:<%= @brasilia_lng  %>"
+  });
 };
 </script>
-    

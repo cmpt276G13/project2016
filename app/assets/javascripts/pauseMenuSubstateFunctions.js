@@ -1,6 +1,6 @@
 function menuHomeEnter() {
     
-    this.menuActions.selectedAction = 0;
+    this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
 };
 
@@ -25,7 +25,7 @@ function menuHomeKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
     
-        if(this.menuActions.getSelectedActionString() == "back") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "back") {
             
             game.state.start("overworld");
         }

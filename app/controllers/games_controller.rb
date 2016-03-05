@@ -20,10 +20,17 @@ class GamesController < ApplicationController
     def save 
        
        current_user.player.update_attributes(player_params)
+       
+       puts "FOAFJALKDFJ:KALFJ:AJDF:LKJA:LDFJAL:DKFJ: LAKDJFLKAJF:LKAJF:LK AJDF:LAKDJF:LAKDFJL:AKDJF:LAKDJF:LADKFJ:ALKDFJ:LADKAKFJA:LKFJLADJFLKADJFLJ"
+       puts params[:items]
+       current_user.player.items = params[:items] #permit keeps removing items even though its specified, access items directly from parameters
+       current_user.player.save
+       #current_user.player.items ||= [1, 2, 3]
+       #current_user.player.save
     end
     
     def player_params
        
-       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths) 
+       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths, :items) 
     end
 end

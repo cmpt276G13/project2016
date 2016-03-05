@@ -28,19 +28,22 @@ var pauseMenuState = {
         display.playerLevel = game.add.text(display.background.width / 2, textOffset + 17, "LV   " + player.level, statDisplayStyle);
         display.playerLevel.anchor.setTo(0.5, 0);
         
-        display.playerHealth = new attributeDisplayText('HP:', player.health + "/ " + player.maxHealth, textOffset, textOffset + 45, 145, 20, healthBarCaptionStyle);
-        display.playerExp = new attributeDisplayText("EXP:", player.experience + "/ " + player.experienceToNextLevel, textOffset + display.background.width / 3 * 2, textOffset + 45, 145, 20, healthBarCaptionStyle);
+        display.playerHealth = new attributeDisplayText({attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, x: textOffset, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
+        display.playerExp = new attributeDisplayText({attributeName: "EXP:", attributeValue: player.experience + "/ " + player.experienceToNextLevel, x: textOffset + display.background.width / 3 * 2, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
+        display.playerMana = new attributeDisplayText({attributeName: "MP:", attributeValue: player.mana+"/ "+player.maxMana, x:textOffset + display.background.width / 3, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle} );
         
-        display.attributeTable = new attributeDisplayTextTable(display.background.width / 5, textOffset + 90, display.background.width / 4, 20, 80, 5);
-        display.attributeTable.addAttribute("left", "STR", player.strength, statDisplayStyle);
-        display.attributeTable.addAttribute("right", "DEF", player.defense, statDisplayStyle);
-        display.attributeTable.addAttribute("left", "GOLD", player.gold, statDisplayStyle);
+        display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 90, cellWidth: display.background.width / 4, cellHeight: 20, columnSpacing: 80, objectCreationFunction: attributeDisplayText} );
+        display.attributeTable.addObject("left", {attributeName: "STR", attributeValue: player.strength, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "DEF", attributeValue: player.defense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "MDEF", attributeValue: player.magicDefense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "MATK", attributeValue: player.magicPower, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "GOLD", attributeValue: player.gold, textStyle: statDisplayStyle} );
         
         display.background.addChild(display.playerName);
         display.background.addChild(display.playerLevel);
         display.attributeTable.addParent(display.background);
         
-        barConfig = {
+        var barConfig = {
             
             maxHealth: player.maxHealth,
             x: textOffset,
@@ -73,8 +76,18 @@ var pauseMenuState = {
         display.expBar.setValueNoTransition(player.experience);
         display.expBar.addParent(display.background);
         
+        barConfig.maxHealth = player.maxMana;
+        barConfig.x = textOffset + display.background.width / 3;
+        barConfig.bar.gradientStart = '#00cdcd';
+        barConfig.bar.gradientEnd = '#7af5f5';
+        
+        display.manaBar = new HealthBar(game, barConfig);
+        display.manaBar.setValueNoTransition(player.mana);
+        display.manaBar.addParent(display.background);
+        
         display.playerHealth.addParent(display.background);
         display.playerExp.addParent(display.background);
+        display.playerMana.addParent(display.background);
         
         return display;
     },
@@ -82,7 +95,7 @@ var pauseMenuState = {
     create: function() {
         
         //create a list of actions the player can select from
-        this.menuActions = new actionDisplay(0, 0, 150, 350, ['edit stats', 'items', 'skills', 'back']);
+        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'edit stats'}, {text: 'items'}, {text: 'skills'}, {text: 'back'}]);
         
         this.statDisplay = this.createPlayerStatDisplay();
         

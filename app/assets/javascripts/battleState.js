@@ -37,6 +37,26 @@ var battleState = {
             }
         },
         
+        {name: "selectSkill",
+            functions: {
+                
+                onEnter: selectSkillEnter,
+                onExit: selectSkillExit,
+                onKeyDown: selectSkillKeyDown,
+                onUpdate: selectSkillUpdate
+            }
+        },
+        
+        {name: "selectItemAction",
+            functions: {
+                
+                onEnter: selectItemActionEnter,
+                onExit: selectItemActionExit,
+                onKeyDown: selectItemActionKeyDown,
+                onUpdate: selectItemActionUpdate
+            }
+        },
+        
         {name: "playerRunAway",
             functions: {
                 
@@ -78,6 +98,15 @@ var battleState = {
                 onEnter: cullDeadMonstersEnter,
                 onExit: cullDeadMonstersExit,
                 onUpdate: cullDeadMonstersUpdate
+            }
+        },
+        
+        {name: "playerUseItem",
+            functions: {
+                
+                onEnter: playerUseItemEnter,
+                onExit: playerUseItemExit,
+                onUpdate: playerUseItemUpdate
             }
         },
         
@@ -251,9 +280,9 @@ var battleState = {
             
             var selected = [];
             
-            for(var i = 0; i < monsters.length; ++i) {
+            for(var i = 0; i < this.selectedMonstersIndices.length; ++i) {
                 
-                selected.push(monsters[i]);
+                selected.push(  monsters[this.selectedMonstersIndices[i]] );
             }
             
             return selected;
@@ -421,7 +450,7 @@ var battleState = {
             
             //start the level up effect, for now just display a message
             this.showMessage("You have leveled up!");
-            this.playerStatDisplay.playerHealthBar.setValueNoTransition(player.health);
+            this.updatePlayerStatDisplay();
         }
     },
     
@@ -446,8 +475,9 @@ var battleState = {
         
         var barStyle = {
             
-            x: 153,
+            x: 180,
             y: 26,
+            width: 150,
             maxHealth: player.maxHealth,
             
             isFixedToCamera: true,
@@ -455,7 +485,7 @@ var battleState = {
             animationDuration: 700,
             
             bg: {
-                color: '#222222'
+                color: 'darkred'
             }
         };
         
@@ -463,15 +493,37 @@ var battleState = {
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
-        statContainer.attributeTable = new attributeDisplayTextTable(10, 10, 145, 15, 0, 0);
+        barStyle.x += 170;
+        barStyle.maxHealth = player.maxMana;
+        barStyle.bg = {color: '#000033'};
+        barStyle.bar = {gradientStart: '#00cdcd'};
         
-        statContainer.attributeTable.addAttribute("name", player.name, "", statDisplayStyle);
-        statContainer.attributeTable.addAttribute("health", "HP:", player.health + "/ " + player.maxHealth, healthBarCaptionStyle);
+        statContainer.playerManaBar = new HealthBar(game, barStyle);
+        statContainer.playerManaBar.setValueNoTransition(player.mana);
+        statContainer.playerManaBar.addParent(statContainer.textBox.background);
+        
+        statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 150, cellHeight: 15, objectCreationFunction: attributeDisplayText});
+        
+        statContainer.attributeTable.addObject("name", {attributeName: "name:", attributeValue: player.name, textStyle: statDisplayStyle});
+        statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+        statContainer.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
         
         statContainer.attributeTable.addParent(statContainer.textBox.background);
         
 
         return statContainer;
+    },
+    
+    updatePlayerStatDisplay: function() {
+        
+        this.playerStatDisplay.playerHealthBar.setValue(player.health);
+        this.playerStatDisplay.playerManaBar.setValue(player.mana);
+        
+        this.playerStatDisplay.attributeTable.columns["health"].clear();
+        this.playerStatDisplay.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
+    
+        this.playerStatDisplay.attributeTable.columns["mana"].clear();
+        this.playerStatDisplay.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
     },
     
     //saves the orientation of the player as it was in the overworld state, before the battle started
@@ -522,16 +574,16 @@ var battleState = {
     //determines damage dealt
     determineAttackResults: function(attack, defender) {
         
-        var damage = determineDamage(attack.power, defender.defense);
+        var damage = determineDamage(attack, defender);
         defender.getHit(damage);
         return damage;
     },
     
     //creates a damage text that displays the amount of damage the given entity received
-    createDamageText: function(entity, damageReceived) {
+    createDamageText: function(entity, damageReceived, textStyle) {
         
         var damageText = new Object();
-        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), damageStyle);
+        damageText.text = game.add.text(entity.sprite.width / 2, 0, damageReceived.toString(), textStyle);
         damageText.text.alpha = 0.3;
         damageText.text.anchor.setTo(0.5, 0);
         
@@ -613,8 +665,27 @@ var battleState = {
         //create the ui that displays the player's stats
         this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
-        this.mainActionsDisplay = new actionDisplay(0, game.scale.height - actionBoxHeight, actionBoxWidth, actionBoxHeight, ['fight', 'items', 'run']);
-        this.fightActionsDisplay = new actionDisplay(game.scale.width / 3, game.scale.height - actionBoxHeight - 20, game.scale.width / 3, actionBoxHeight, ['attack', 'skills', 'cancel']);
+        this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight, viewableObjects: 4}, [
+                                        {text: 'fight'}, {text: 'items'}, {text: 'run'}, {text: 'option4'}, {text: 'option5'}, {text: 'option6'}]);
+        this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2 - 20, 
+                                        width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'attack'}, {text: 'skills'}, {text: 'cancel'}]);
+                                        
+        //action list when user selects items
+        this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+        
+        this.skillsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+        
+        //add all of the player's skills to the display
+        for(var i = 0; i < player.skills.length; ++i) {
+            
+            var name = player.skills[i];
+            var cost = game.cache.getJSON("skillData")[name].manaCost;
+            this.skillsDisplay.addAction({attributeName: name, attributeValue: cost + " MP"}  );
+        }
+    
+        this.skillsDisplay.addAction({attributeName: "Cancel"});
         
         //again we want to add a listener for when the player presses on keys
         game.input.keyboard.callbackContext = this;

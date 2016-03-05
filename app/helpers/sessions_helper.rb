@@ -52,6 +52,7 @@ module SessionsHelper
   # Gets all user location info including
   # :ip, :country_name, :city, :latitude, :longitude, etc.
   def get_user_location
+    # https://github.com/jeroenj/geo_ip
     # http://www.rubydoc.info/gems/geo_ip
     #return: hash w/ location info
     GeoIp.geolocation(request.remote_ip)
