@@ -6,6 +6,7 @@
 }
 #Game{
     padding: 50px;
+    display:inline-block;
 }
 
 </style>
@@ -14,319 +15,329 @@
 
 <p id="additional" style="font-size: 20px; color: red; text-align: center"> </p>
 
-<!-- Style the game display canvas however you wish by syling the 'Game' id -->
-<div id="Game">
-    
-    <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
-        to be available in every single page of our application.-->
-    <%= javascript_include_tag "textDisplay" %>
-    <%= javascript_include_tag "screenTransitionEffects"%>
-    <%= javascript_include_tag "rpgEntity" %>
-    <%= javascript_include_tag "stateManager" %>
-    <%= javascript_include_tag "objectHighlighter" %>
-    <%= javascript_include_tag "textbox" %>
-    <%= javascript_include_tag "actionDisplay" %>
-    <%= javascript_include_tag "bootState"%>
-    <%= javascript_include_tag "overworldSubstateFunctions" %>
-    <%= javascript_include_tag "overworldState"%>
-    <%= javascript_include_tag "battleSubstateFunctions"%>
-    <%= javascript_include_tag "battleState" %>
-    <%= javascript_include_tag "pauseMenuState" %>
-    <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
-    <%= javascript_include_tag "items" %>
-    
-    <script>
-        //Returns a random integer between min (inclusive) and max (inclusive)
-        function getRandomInt(min, max) {
-            
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
-        
-        function clamp(number, min, max) {
-            
-            return Math.max(min, Math.min(number, max));
-        };
-        
-        //create instance of the game engine.
-        //This creates the canvas for the game to display, and allows you to use the Phaser engine
-        var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Game');
-        
-        //global variable that stores important keys used by different parts of the game
-        //mapKey is the key to a tileset data thats been preloaded
-        //monsterListKey is key to the preloaded list of monsters for this map
-        //tilesetKeys are keys to the tileset used to draw this map, a single tilemap can use multiple tilesets
-        var mapKeys = {
-            
-            mapKey: "default",
-            monsterListKey: "defaultMonsters",
-            tilesetKeys: ["tileset1"]
-        }
-        
-        //define a global player variable
-        //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
-        //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
-        var player = new rpgEntity();
-        
-        player.experience = 0;
-        player.experienceToNextLevel = 1;
-        player.gold = 0;
-        player.strength = 2000;
-        player.items = {};
-        player.skills = ["Fireball"];
-        player.deaths = 0;
-        
-        player.load = function() {
 
-            this.level = <%= @currentUser.player.level%>;
-            this.name = '<%= @currentUser.username%>';
-            this.maxHealth = <%= @currentUser.player.max_health%>;
-            this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //if some how the health exceeded max health
-            this.gold = <%= @currentUser.player.gold%>;
-            this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
-            this.experience = <%= @currentUser.player.experience%>;
-            this.strength = <%= @currentUser.player.strength%>;
-            this.defense = <%= @currentUser.player.defense%>;
-            this.deaths = <%= @currentUser.player.deaths%>;
-            
-            //for whatever reason json parse isn't working so use ruby to set the data
-            var items = {};
-            
-            <% @currentUser.player.items.each do |name, quantity| %>
-            
-                var name = '<%= name%>';
-                var quantity = '<%= quantity%>';
-                
-                items[name] = createItem(name, quantity);
-            <%end%>
-            
-            this.items = items;
-            
-            //player.items = ...
-            //player.skills = ...
-        };
-        
-        player.save = function() {
-            
-            var saveData = {
-                
-                level: this.level,
-                max_health: this.maxHealth,
-                health: this.health,
-                max_mana: this.maxMana,
-                mana: this.mana,
-                magic_power: this.magicPower,
-                magic_defense: this.magicDefense,
-                gold: this.gold,
-                experience_to_next_level: this.experienceToNextLevel,
-                experience: this.experience,
-                strength: this.strength,
-                defense: this.defense,
-                deaths: this.deaths,
-                skills: this.skills,
-                items: {}
-            };
-            
-            for(item in this.items) {
-                
-                saveData.items[item] = this.items[item].quantity;
-            }
-            
-            $.ajax( {
-                
-                type: "POST",
-                url: "/game/save",
-                data: JSON.stringify(saveData),
-                contentType: "application/json",
-                dataType: "json"
-            });
-        };
-        
-        player.respawn = function(spawnPoint) {
-            
-            this.health = this.maxHealth;
-            this.sprite.x = spawnPoint.x;
-            this.sprite.y = spawnPoint.y;
-            this.sprite.animations.stop();
-            this.sprite.animations.frame = 0;
-        };
-        
-        //increases player's level
-        //uses up the currente exp, theres no need to subtract it after this function is called
-        player.levelUp = function() {
-            
-            this.level += 1;
-            
-            //normally we'd give the player some stat points that he can use
-            //for now just raise his stats
-            this.maxHealth += 20;
-            this.health = this.maxHealth;
-            this.maxMana += 10;
-            this.mana = this.maxMana;
-            this.magicPower += 5;
-            this.magicDefense += 5;
-            this.strength += 5;
-            this.defense += 5;
-            this.experience -= this.experienceToNextLevel;
-            this.experienceToNextLevel += 5 * this.level;
-        };
-        
-        //function cann't be called before you preload the coordinateMapping.json file
-        //returns an object containing 3 attributes
-        //the first attribute called 'mapKey' is a string containing a key to a preloaded tilemap for this level
-        //2nd attribute called 'monsterListKey' is a key to a preloaded monster list for this level
-        //3rd attribute called 'tilesetKey' is a key to a preloaded tileset image for this level
-        function mapCoordinateToMap() {
-            
-            mapData = {};
-            
-            var mappings = game.cache.getJSON("coordinateMapping");
-            var playerPosX = <%=@latitude%>;
-            var playerPosY = <%=@longitude%>;
-            
-            //set to default data first
-            mapData.mapKey = mappings["default"].mapKey;
-            mapData.monsterListKey = mappings["default"].monsterListKey;
-            mapData.tilesetKeys = mappings["default"].tilesetKeys;
-            
-            //object will contain a list of areas
-            //each area has a bounding box that defines what coordinates map to that area
-            //latitute increases to the left and down
-            //some weird coordinate system, don't chagne any of the inequalites below, even if it looks incorrect
-            for(area in mappings) {
-                
-                if(playerPosX >= mappings[area].left || playerPosX < mappings[area].right) {
-                    
-                    continue;
-                }
-                
-                if(playerPosY <= mappings[area].top || playerPosY > mappings[area].bottom) {
-                    
-                    continue;
-                }
-                
-                mapData.tilesetKeys = mappings[area].tilesetKeys;
-                mapData.mapKey = mappings[area].mapKey;
-                mapData.monsterListKey = mappings[area].monsterListKey;
-                
-                break;
-            }
-            
-            return mapData;
-        }
-        
-        /*
-        
-        i put the loadState here because it loads assets using the asset pipeline.
-        to do that it needs to call ruby functions, which it can't do in its own javascript file
-        
-        
-        */
-        
-        //loading state should load ALL of the game's resources
-        //this will cache (store in memory) all of the required pictures, sounds, level data for later use
-        //this state is also where we generate the game world based on the players location
-        //cached data will be saved to the global game object, so we can use it in later states
-        var loadState = {
-            
-            //place to load files
-            preload: function() {
-                
-                //load test player sprite sheet
-                game.load.spritesheet('player', '<%= asset_path("roshan.png") %>', 32, 48);
-                
-                //load data that maps a real world GPS location to an ingame map file
-                game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
-                
-                //the assets pipeline is garbage so we have to load all the tilemap data
-                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                
-                //load all the tilesets
-                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
-                game.load.image('tileset2', '<%= asset_path("trees.png") %>');
-                
-                //load all the monster lists
-                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
-                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
-                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
-                
-                //load the mosnter data base
-                game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
-                
-                //load item database
-                game.load.json('itemData', '<%= asset_path("items.json") %>');
-                
-                //load spritesheets for all the monsters
-                //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
-                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
-                
-                //load skill data, and animations
-                game.load.json('skillData', '<%= asset_path("skills.json") %>');
-                
-                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
-            },
-            
-            //create function creats the required object for this game state
-            create: function() {
-                
-                lastState = "load";
-                
-                //create a text that says loading
-                //very simple loading screen
-                var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
-        		this.text = game.add.text(0, 0, "loading", style);
-                
-                //HERE IS WHERE WE WILL LOAD THE PLAYER
-                //the player is created here and used in all later states
-                player.sprite = game.add.sprite(0, 0, 'player', 0);
-                
-                //we want player to actually collide with stuff, so add a physcis body
-                game.physics.arcade.enable(player.sprite);
-                
-                //modify the player's hitbox so it doesn't look like he is collidig with thin air
-                player.sprite.body.setSize(26, 18, 3, 30);
-                
-                //prevent the player from leaving the world bounds, this means that player's can't walk off the edge of teh screen
-                player.sprite.body.collideWorldBounds = true;
-                
-                //load player data from server
-                player.load();
-                
-                //add basic attack skill to all rpg entities
-                rpgEntity.prototype.basicAttack = game.cache.getJSON("skillData")["Basic Attack"];
-                
-                //add all of the player's animations
-        		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
-        		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
-        		player.sprite.animations.add('up', [12, 13, 14, 15], 10, true);
-        		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
-        		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
-        		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
-        		
-        		game.world.remove(player.sprite);
-        		
-        		//load keys to the map data
-                mapKeys = mapCoordinateToMap();
-                //document.getElementById("additional").innerHTML = mapKeys.mapKey;
-        		
-        		//all obejcts have been loaded and created, so now we can start the game
-        		game.state.start('overworld');
-            }
-        };
-        
-        //register all of the gameplay states
-        game.state.add('boot', bootState);
-        game.state.add('load', loadState);
-        game.state.add('overworld', overworldState);
-        game.state.add('pauseMenu', pauseMenuState);
-        game.state.add('battle', battleState);
-        
-        //keep track of the last used state
-        lastState = "null";
-        
-        //now run the boot state, which will call load and overworld as needed
-        game.state.start('boot');
+<div class="row">
+  <div class="col-md-6"><%= render 'shared/ranking_table' %></div>
+  <div class="col-md-6">
+  
+  
+  
 
-    </script>
+            <!-- Style the game display canvas however you wish by syling the 'Game' id -->
+            <div id="Game">
+                
+                <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
+                    to be available in every single page of our application.-->
+                <%= javascript_include_tag "textDisplay" %>
+                <%= javascript_include_tag "screenTransitionEffects"%>
+                <%= javascript_include_tag "rpgEntity" %>
+                <%= javascript_include_tag "stateManager" %>
+                <%= javascript_include_tag "objectHighlighter" %>
+                <%= javascript_include_tag "textbox" %>
+                <%= javascript_include_tag "actionDisplay" %>
+                <%= javascript_include_tag "bootState"%>
+                <%= javascript_include_tag "overworldSubstateFunctions" %>
+                <%= javascript_include_tag "overworldState"%>
+                <%= javascript_include_tag "battleSubstateFunctions"%>
+                <%= javascript_include_tag "battleState" %>
+                <%= javascript_include_tag "pauseMenuState" %>
+                <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
+                <%= javascript_include_tag "items" %>
+                
+                <script>
+                    //Returns a random integer between min (inclusive) and max (inclusive)
+                    function getRandomInt(min, max) {
+                        
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    };
+                    
+                    function clamp(number, min, max) {
+                        
+                        return Math.max(min, Math.min(number, max));
+                    };
+                    
+                    //create instance of the game engine.
+                    //This creates the canvas for the game to display, and allows you to use the Phaser engine
+                    var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Game');
+                    
+                    //global variable that stores important keys used by different parts of the game
+                    //mapKey is the key to a tileset data thats been preloaded
+                    //monsterListKey is key to the preloaded list of monsters for this map
+                    //tilesetKeys are keys to the tileset used to draw this map, a single tilemap can use multiple tilesets
+                    var mapKeys = {
+                        
+                        mapKey: "default",
+                        monsterListKey: "defaultMonsters",
+                        tilesetKeys: ["tileset1"]
+                    }
+                    
+                    //define a global player variable
+                    //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
+                    //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
+                    var player = new rpgEntity();
+                    
+                    player.experience = 0;
+                    player.experienceToNextLevel = 1;
+                    player.gold = 0;
+                    player.strength = 2000;
+                    player.items = {};
+                    player.skills = ["Fireball"];
+                    player.deaths = 0;
+                    
+                    player.load = function() {
+            
+                        this.level = <%= @currentUser.player.level%>;
+                        this.name = '<%= @currentUser.username%>';
+                        this.maxHealth = <%= @currentUser.player.max_health%>;
+                        this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //if some how the health exceeded max health
+                        this.gold = <%= @currentUser.player.gold%>;
+                        this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
+                        this.experience = <%= @currentUser.player.experience%>;
+                        this.strength = <%= @currentUser.player.strength%>;
+                        this.defense = <%= @currentUser.player.defense%>;
+                        this.deaths = <%= @currentUser.player.deaths%>;
+                        
+                        //for whatever reason json parse isn't working so use ruby to set the data
+                        var items = {};
+                        
+                        <% @currentUser.player.items.each do |name, quantity| %>
+                        
+                            var name = '<%= name%>';
+                            var quantity = '<%= quantity%>';
+                            
+                            items[name] = createItem(name, quantity);
+                        <%end%>
+                        
+                        this.items = items;
+                        
+                        //player.items = ...
+                        //player.skills = ...
+                    };
+                    
+                    player.save = function() {
+                        
+                        var saveData = {
+                            
+                            level: this.level,
+                            max_health: this.maxHealth,
+                            health: this.health,
+                            max_mana: this.maxMana,
+                            mana: this.mana,
+                            magic_power: this.magicPower,
+                            magic_defense: this.magicDefense,
+                            gold: this.gold,
+                            experience_to_next_level: this.experienceToNextLevel,
+                            experience: this.experience,
+                            strength: this.strength,
+                            defense: this.defense,
+                            deaths: this.deaths,
+                            skills: this.skills,
+                            items: {}
+                        };
+                        
+                        for(item in this.items) {
+                            
+                            saveData.items[item] = this.items[item].quantity;
+                        }
+                        
+                        $.ajax( {
+                            
+                            type: "POST",
+                            url: "/game/save",
+                            data: JSON.stringify(saveData),
+                            contentType: "application/json",
+                            dataType: "json"
+                        });
+                    };
+                    
+                    player.respawn = function(spawnPoint) {
+                        
+                        this.health = this.maxHealth;
+                        this.sprite.x = spawnPoint.x;
+                        this.sprite.y = spawnPoint.y;
+                        this.sprite.animations.stop();
+                        this.sprite.animations.frame = 0;
+                    };
+                    
+                    //increases player's level
+                    //uses up the currente exp, theres no need to subtract it after this function is called
+                    player.levelUp = function() {
+                        
+                        this.level += 1;
+                        
+                        //normally we'd give the player some stat points that he can use
+                        //for now just raise his stats
+                        this.maxHealth += 20;
+                        this.health = this.maxHealth;
+                        this.maxMana += 10;
+                        this.mana = this.maxMana;
+                        this.magicPower += 5;
+                        this.magicDefense += 5;
+                        this.strength += 5;
+                        this.defense += 5;
+                        this.experience -= this.experienceToNextLevel;
+                        this.experienceToNextLevel += 5 * this.level;
+                    };
+                    
+                    //function cann't be called before you preload the coordinateMapping.json file
+                    //returns an object containing 3 attributes
+                    //the first attribute called 'mapKey' is a string containing a key to a preloaded tilemap for this level
+                    //2nd attribute called 'monsterListKey' is a key to a preloaded monster list for this level
+                    //3rd attribute called 'tilesetKey' is a key to a preloaded tileset image for this level
+                    function mapCoordinateToMap() {
+                        
+                        mapData = {};
+                        
+                        var mappings = game.cache.getJSON("coordinateMapping");
+                        var playerPosX = <%=@latitude%>;
+                        var playerPosY = <%=@longitude%>;
+                        
+                        //set to default data first
+                        mapData.mapKey = mappings["default"].mapKey;
+                        mapData.monsterListKey = mappings["default"].monsterListKey;
+                        mapData.tilesetKeys = mappings["default"].tilesetKeys;
+                        
+                        //object will contain a list of areas
+                        //each area has a bounding box that defines what coordinates map to that area
+                        //latitute increases to the left and down
+                        //some weird coordinate system, don't chagne any of the inequalites below, even if it looks incorrect
+                        for(area in mappings) {
+                            
+                            if(playerPosX >= mappings[area].left || playerPosX < mappings[area].right) {
+                                
+                                continue;
+                            }
+                            
+                            if(playerPosY <= mappings[area].top || playerPosY > mappings[area].bottom) {
+                                
+                                continue;
+                            }
+                            
+                            mapData.tilesetKeys = mappings[area].tilesetKeys;
+                            mapData.mapKey = mappings[area].mapKey;
+                            mapData.monsterListKey = mappings[area].monsterListKey;
+                            
+                            break;
+                        }
+                        
+                        return mapData;
+                    }
+                    
+                    /*
+                    
+                    i put the loadState here because it loads assets using the asset pipeline.
+                    to do that it needs to call ruby functions, which it can't do in its own javascript file
+                    
+                    
+                    */
+                    
+                    //loading state should load ALL of the game's resources
+                    //this will cache (store in memory) all of the required pictures, sounds, level data for later use
+                    //this state is also where we generate the game world based on the players location
+                    //cached data will be saved to the global game object, so we can use it in later states
+                    var loadState = {
+                        
+                        //place to load files
+                        preload: function() {
+                            
+                            //load test player sprite sheet
+                            game.load.spritesheet('player', '<%= asset_path("roshan.png") %>', 32, 48);
+                            
+                            //load data that maps a real world GPS location to an ingame map file
+                            game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
+                            
+                            //the assets pipeline is garbage so we have to load all the tilemap data
+                            game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                            game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                            game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                            
+                            //load all the tilesets
+                            game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
+                            game.load.image('tileset2', '<%= asset_path("trees.png") %>');
+                            
+                            //load all the monster lists
+                            game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
+                            game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
+                            game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
+                            
+                            //load the mosnter data base
+                            game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
+                            
+                            //load item database
+                            game.load.json('itemData', '<%= asset_path("items.json") %>');
+                            
+                            //load spritesheets for all the monsters
+                            //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
+                            game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
+                            
+                            //load skill data, and animations
+                            game.load.json('skillData', '<%= asset_path("skills.json") %>');
+                            
+                            game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+                        },
+                        
+                        //create function creats the required object for this game state
+                        create: function() {
+                            
+                            lastState = "load";
+                            
+                            //create a text that says loading
+                            //very simple loading screen
+                            var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
+                    		this.text = game.add.text(0, 0, "loading", style);
+                            
+                            //HERE IS WHERE WE WILL LOAD THE PLAYER
+                            //the player is created here and used in all later states
+                            player.sprite = game.add.sprite(0, 0, 'player', 0);
+                            
+                            //we want player to actually collide with stuff, so add a physcis body
+                            game.physics.arcade.enable(player.sprite);
+                            
+                            //modify the player's hitbox so it doesn't look like he is collidig with thin air
+                            player.sprite.body.setSize(26, 18, 3, 30);
+                            
+                            //prevent the player from leaving the world bounds, this means that player's can't walk off the edge of teh screen
+                            player.sprite.body.collideWorldBounds = true;
+                            
+                            //load player data from server
+                            player.load();
+                            
+                            //add basic attack skill to all rpg entities
+                            rpgEntity.prototype.basicAttack = game.cache.getJSON("skillData")["Basic Attack"];
+                            
+                            //add all of the player's animations
+                    		player.sprite.animations.add('left', [4, 5, 6, 7], 10, true);
+                    		player.sprite.animations.add('right', [8, 9, 10, 11], 10, true);
+                    		player.sprite.animations.add('up', [12, 13, 14, 15], 10, true);
+                    		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
+                    		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
+                    		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
+                    		
+                    		game.world.remove(player.sprite);
+                    		
+                    		//load keys to the map data
+                            mapKeys = mapCoordinateToMap();
+                            //document.getElementById("additional").innerHTML = mapKeys.mapKey;
+                    		
+                    		//all obejcts have been loaded and created, so now we can start the game
+                    		game.state.start('overworld');
+                        }
+                    };
+                    
+                    //register all of the gameplay states
+                    game.state.add('boot', bootState);
+                    game.state.add('load', loadState);
+                    game.state.add('overworld', overworldState);
+                    game.state.add('pauseMenu', pauseMenuState);
+                    game.state.add('battle', battleState);
+                    
+                    //keep track of the last used state
+                    lastState = "null";
+                    
+                    //now run the boot state, which will call load and overworld as needed
+                    game.state.start('boot');
+            
+                </script>
+            </div>
+    </div>
 </div>

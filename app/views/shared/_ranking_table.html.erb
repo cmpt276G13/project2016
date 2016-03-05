@@ -4,7 +4,7 @@
     <% @users.each_with_index do |user, i| %>
         <tr>
           <td class="num center"><%= i + 1 %></td>
-          <td><%= link_to user.username, user %></td>
+          <td id="UsernameInTable"><%= link_to user.username, user %></td>
           <td>Points: <%= user.player.level - user.player.deaths %></td>
           <td>Experience: <%= user.player.experience %>/<%= user.player.experience_to_next_level %></td>
         </tr>
