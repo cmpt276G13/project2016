@@ -14,9 +14,9 @@
     
     "Slash": {
         
-        "power": 10,
-        "targetsHit": 1,
-        "manaCost": 4,
+        "power": 15,
+        "targetsHit": 2,
+        "manaCost": 5,
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Slash!",
         "monsterUseMessage": " uses Slash!",
