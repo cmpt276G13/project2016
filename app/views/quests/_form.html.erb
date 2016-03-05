@@ -11,7 +11,7 @@
   <%= f.number_field :level_req, class: 'form-control' %>
 
   <%= f.label "Pre-requisites" %>
-  <%= f.password_field :password_confirmation, class: 'form-control' %>
+  <%= f.text_field :pre_req, class: 'form-control' %>
 
   <%= f.submit yield(:button_text), class: "btn btn-primary" %>
 <% end %>
