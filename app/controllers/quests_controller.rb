@@ -1,8 +1,8 @@
 class QuestsController < ApplicationController
   # logged_in_user is defined in sessions_helper.rb
-  before_action :logged_in_user, only: [:index, :show, :destroy]
-  before_action :accept_once, only: :accept
-  # before_action :admin, only: [:new, :create]
+  before_action :logged_in_user
+  before_action :req_check, only: :accept
+  before_action :admin, only: [:new, :create, :edit, :update, :destroy]
   
   def index
     # Change to only show ones that level_req are met
@@ -18,15 +18,27 @@ class QuestsController < ApplicationController
   end
   
   def create
-  
+    @quest = Quest.new(quest_params)
+    if @quest.save
+      flash[:success] = "Quest successfully created!"
+      redirect_to @quest
+    else
+      render 'new'
+    end
   end
   
   def edit
-    @user = Quest.find(params[:id])
+    @quest = Quest.find(params[:id])
   end
   
   def update
-    
+    @quest = Quest.find(params[:id])
+    if @quest.update_attributes(quest_params)
+      flash[:success] = "Quest successfully updated."
+      redirect_to @quest
+    else
+      render 'edit'
+    end
   end
   
   def destroy
@@ -39,13 +51,20 @@ class QuestsController < ApplicationController
   def accept
     quest = Quest.find(params[:id])
     current_user.player.quests << quest
-    redirect_to quests_url
+    index
+    render 'index'
   end
   
   private
+    
+    def quest_params
+      params.require(:quest).permit(:name, :description, :level_req, :pre_req, :other_req)
+    end
   
-    # Prevent accepting the quest more than once.
-    def accept_once
+    # Before methods
+  
+    # Prevent accepting the quest when conditions are not met.
+    def req_check
       quest = Quest.find(params[:id])
       unless current_user.player.can_accept?(quest)
         redirect_to quests_url
