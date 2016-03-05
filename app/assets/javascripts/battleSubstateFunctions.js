@@ -419,8 +419,25 @@ function playerUseItemUpdate() {
 function monsterTurnEnter() {
     
     //randomly determine what the monster should do
-    //for now he just attacks
-    this.monsters[this.currentMonster].useAttack([player], this.monsters[this.currentMonster].basicAttack);
+    //weigthed random based on monster's stats
+    var rangeMin = 0;
+    var rangeMax = this.monsters[this.currentMonster].strength + this.monsters[this.currentMonster].magicPower;
+    var num = getRandomInt(rangeMin, rangeMax);
+    
+    var attackName = "Basic Attack";
+    
+    if(num > this.monsters[this.currentMonster].strength && this.monsters[this.currentMonster].skills.length > 0) {
+        
+        //magic attack, get random magic attack from monster
+        var magicAttackId = getRandomInt(0, this.monsters[this.currentMonster].skills.length - 1);
+        
+        var skillName = this.monsters[this.currentMonster].skills[magicAttackId];
+        var skillCost = game.cache.getJSON("skillData")[skillName].manaCost;
+        
+        attackName = this.monsters[this.currentMonster].mana >= skillCost ? skillName : attackName;
+    }
+    
+    this.monsters[this.currentMonster].useAttack([player], game.cache.getJSON("skillData")[attackName]);
   
     this.showMessage(this.monsters[this.currentMonster].name + this.monsters[this.currentMonster].lastUsedAttack.monsterUseMessage);
 };
