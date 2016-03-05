@@ -13,7 +13,15 @@ function determineDamage(attack, defender) {
         defense = defender.magicDefense;
     }
     
-    return Math.floor(clamp(attack.power - defense / 3, 1, attack.power));
+    var damageBase = attack.power - defense / 3;
+    
+    var variance = 0.15;
+    var damageRangeMin = Math.floor(damageBase - damageBase * variance);
+    var damageRangeMax = Math.ceil(damageBase + damageBase * variance);
+    
+    var damage = getRandomInt(damageRangeMin, damageRangeMax);
+    
+    return Math.max(1, damage);
 }
 
 function scaleMonsterToPlayer(monster, playerLevel) {
