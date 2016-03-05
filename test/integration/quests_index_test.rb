@@ -6,6 +6,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @quest = quests(:one)
     @quest2 = quests(:two)
+    @quest3 = quests(:three)
   end
   
   test "index as admin" do
@@ -26,6 +27,10 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     # Previously accepted quest should not be accepted.
     assert_no_difference "QuestAcceptance.count" do
       get quests_accept_path(@quest)
+    end
+    # Should accept new quest
+    assert_difference "QuestAcceptance.count", 1 do
+      get quests_accept_path(@quest3)
     end
     assert_redirected_to quests_path
     follow_redirect!
