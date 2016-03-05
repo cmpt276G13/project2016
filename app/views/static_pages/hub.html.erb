@@ -34,7 +34,8 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
 function displayOnMap(position){
   var marker = handler.addMarker({
     lat: position.coords.latitude,
-    lng: position.coords.longitude
+    lng: position.coords.longitude,
+    "infowindow": "You are here!"
   });
   //handler.map.centerOn(marker);
   handler.getMap().setZoom(2);
@@ -48,35 +49,30 @@ function displayOnMap(position){
   var paris = handler.addMarker({
     lat: <%= @paris[:lat] %>,
     lng: <%= @paris[:lng] %>,
-    title: 'Paris, France',
     "infowindow": "<%= @paris[:title]  %> [<%= @paris[:lat]  %>, <%= @paris[:lng]  %>]"
   });
   
   var tokyo = handler.addMarker({
     lat: <%= @tokyo[:lat] %>,
     lng: <%= @tokyo[:lng] %>,
-    title: 'Tokyo, Japan',
     "infowindow": "<%= @tokyo[:title]  %> [<%= @tokyo[:lat]  %>, <%= @tokyo[:lng]  %>]"
   });
   
   var sydney = handler.addMarker({
     lat: <%= @sydney[:lat] %>,
     lng: <%= @sydney[:lng] %>,
-    title: 'Sydney, Australia',
     "infowindow": "<%= @sydney[:title]  %> [<%= @sydney[:lat]  %>, <%= @sydney[:lng]  %>]"
   });
   
   var cairo = handler.addMarker({
     lat: <%= @cairo[:lat] %>,
     lng: <%= @cairo[:lng] %>,
-    title: 'Cairo, Egypt',
     "infowindow": "<%= @cairo[:title]  %> [<%= @cairo[:lat]  %>, <%= @cairo[:lng]  %>]"
   });
   
   var brasilia = handler.addMarker({
     lat: <%= @brasilia[:lat] %>,
     lng: <%= @brasilia[:lng] %>,
-    title: 'Brasilia, Brazil',
     "infowindow": "<%= @brasilia[:title]  %> [<%= @brasilia[:lat]  %>, <%= @brasilia[:lng]  %>]"
   });
 };
