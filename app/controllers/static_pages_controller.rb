@@ -7,57 +7,12 @@ class StaticPagesController < ApplicationController
   def hub
     @user_location = get_user_location
     
-    @vancouver_title = "Vancouver, Canada"
-    @vancouver_lat = 49.2827
-    @vancouver_lng = -123.1207
-    
-    @paris_title = "Paris, France"
-    @paris_lat = 48.8567
-    @paris_lng = 2.3508
-    
-    @tokyo_title = "Tokyo, Japan"
-    @tokyo_lat = 35.6833
-    @tokyo_lng = 139.6833
-    
-    @sydney_title = "Sydney, Australia"
-    @sydney_lat = -33.8650
-    @sydney_lng = 151.2094
-    
-    @cairo_title = "Cairo, Egypt"
-    @cairo_lat = 30.0500
-    @cairo_lng = 31.2333
-    
-    @brasilia_title = "Brasilia, Brazil"
-    @brasilia_lat = -15.7939
-    @brasilia_lng = -47.8828
-    
-=begin
-    how to put in a hash:
-    @locations = {
-      :vancouver_title => "Vancouver, Canada", 
-      :vancouver_lat => 49.2827, 
-      :vancouver_lng => -123.1207,
-      
-      :paris_title => "Paris, France",
-      :paris_lat => 48.8567,
-      :paris_lng => 2.3508,
-      
-      :tokyo_title => "Tokyo, Japan",
-      :tokyo_lat => 35.6833,
-      :tokyo_lng => 139.6833,
-      
-      :sydney_title => "Sydney, Australia",
-      :sydney_lat => -33.8650,
-      :sydney_lng => 151.2094,
-      
-      :cairo_title => "Cairo, Egypt",
-      :cairo_lat => 30.0500,
-      :cairo_lng => 31.2333,
-    
-      :brasilia_title => "Brasilia, Brazil",
-      :brasilia_lat => -15.7939,
-      :brasilia_lng => -47.8828
-    }
-=end
+    @vancouver = {:title => "Vancouver, Canada", :lat => 49.2827, :lng => -123.1207}
+    @paris = {:title => "Paris, France", :lat => 48.8567, :lng => 2.3508}
+    @tokyo = {:title => "Tokyo, Japan", :lat => 35.6833, :lng => 139.6833}
+    @cairo = {:title => "Cairo, Egypt", :lat => 30.0500, :lng => 31.2333}
+    @sydney = {:title => "Sydney, Australia", :lat => -33.8650, :lng => 151.2094}
+    @brasilia = {:title => "Brasilia, Brazil", :lat => -15.7939, :lng => -47.8828}
+
   end
 end

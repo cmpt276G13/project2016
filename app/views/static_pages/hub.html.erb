@@ -40,44 +40,44 @@ function displayOnMap(position){
   handler.getMap().setZoom(2);
   
   var vancouver = handler.addMarker({
-    lat: <%= @vancouver_lat %>,
-    lng: <%= @vancouver_lng %>,
-    "infowindow": "<%= @vancouver_title  %> [<%= @vancouver_lat  %>, <%= @vancouver_lng  %>]"
+    lat: <%= @vancouver[:lat] %>,
+    lng: <%= @vancouver[:lng] %>,
+    "infowindow": "<%= @vancouver[:title]  %> [<%= @vancouver[:lat]  %>, <%= @vancouver[:lng]  %>]"
   });
   
   var paris = handler.addMarker({
-    lat: <%= @paris_lat %>,
-    lng: <%= @paris_lng %>,
+    lat: <%= @paris[:lat] %>,
+    lng: <%= @paris[:lng] %>,
     title: 'Paris, France',
-    "infowindow": "<%= @paris_title  %> [<%= @paris_lat  %>, <%= @paris_lng  %>]"
+    "infowindow": "<%= @paris[:title]  %> [<%= @paris[:lat]  %>, <%= @paris[:lng]  %>]"
   });
   
   var tokyo = handler.addMarker({
-    lat: <%= @tokyo_lat %>,
-    lng: <%= @tokyo_lng %>,
+    lat: <%= @tokyo[:lat] %>,
+    lng: <%= @tokyo[:lng] %>,
     title: 'Tokyo, Japan',
-    "infowindow": "lat: <%= @tokyo_lat  %> | lng:<%= @tokyo_lng  %>"
+    "infowindow": "<%= @tokyo[:title]  %> [<%= @tokyo[:lat]  %>, <%= @tokyo[:lng]  %>]"
   });
   
   var sydney = handler.addMarker({
-    lat: <%= @sydney_lat %>,
-    lng: <%= @sydney_lng %>,
+    lat: <%= @sydney[:lat] %>,
+    lng: <%= @sydney[:lng] %>,
     title: 'Sydney, Australia',
-    "infowindow": "lat: <%= @sydney_lat  %> | lng:<%= @sydney_lng  %>"
+    "infowindow": "<%= @sydney[:title]  %> [<%= @sydney[:lat]  %>, <%= @sydney[:lng]  %>]"
   });
   
   var cairo = handler.addMarker({
-    lat: <%= @cairo_lat %>,
-    lng: <%= @cairo_lng %>,
+    lat: <%= @cairo[:lat] %>,
+    lng: <%= @cairo[:lng] %>,
     title: 'Cairo, Egypt',
-    "infowindow": "lat: <%= @cairo_lat  %> | lng:<%= @cairo_lng  %>"
+    "infowindow": "<%= @cairo[:title]  %> [<%= @cairo[:lat]  %>, <%= @cairo[:lng]  %>]"
   });
   
   var brasilia = handler.addMarker({
-    lat: <%= @brasilia_lat %>,
-    lng: <%= @brasilia_lng %>,
+    lat: <%= @brasilia[:lat] %>,
+    lng: <%= @brasilia[:lng] %>,
     title: 'Brasilia, Brazil',
-    "infowindow": "lat: <%= @brasilia_lat  %> | lng:<%= @brasilia_lng  %>"
+    "infowindow": "<%= @brasilia[:title]  %> [<%= @brasilia[:lat]  %>, <%= @brasilia[:lng]  %>]"
   });
 };
 </script>
