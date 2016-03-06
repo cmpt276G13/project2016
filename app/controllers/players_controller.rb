@@ -8,11 +8,9 @@ class PlayersController < ApplicationController
     item[params[:item_name]] = amount
     if @player.update_items!(item, gold: params[:gold].to_i * amount)
       flash[:success] = "Purchase Successful"
-      redirect_to items_url
     else
-      file = File.read("app/assets/items/items.json")
-      @items = JSON.parse file
-      render 'items/index'
+      flash[:danger] = "Not enough gold."
     end
+    redirect_to items_url
   end
 end

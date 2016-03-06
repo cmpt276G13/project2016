@@ -20,14 +20,4 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
       assert_select 'td', "Price: " + array["price"].to_s + " G"
     end
   end
-  
-  test "should not buy item when not enough gold" do
-    log_in_as(@broke_user)
-    assert_no_difference '@broke_player.reload.gold' do
-      patch player_path(@broke_player), { player: { items: 1 }, item_name: @items.keys[0], gold: @item["price"], id: @broke_user }
-    end
-    assert_select 'div#error_explanation'
-    assert_select 'div.alert-danger'
-    assert_template 'items/index'
-  end
 end

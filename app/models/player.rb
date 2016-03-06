@@ -14,7 +14,6 @@ class Player < ActiveRecord::Base
       if self.gold >= gold
         self.update_attributes(gold: (self.gold - gold))
       else
-        self.errors.add(:base, "Not enough gold")
         return false
       end
     end
