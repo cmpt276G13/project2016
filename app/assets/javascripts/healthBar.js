@@ -19,13 +19,15 @@
 
 var HealthBar = function(providedConfig) {
     this.game = game;
-
+    
+    this.parentGraphics = game.add.graphics(0, 0);
     this.setupConfiguration(providedConfig);
     this.setPosition(this.config.x, this.config.y);
     this.drawBackground();
     this.drawHealthBar();
     this.setFixedToCamera(this.config.isFixedToCamera);
 };
+
 HealthBar.prototype.constructor = HealthBar;
 
 HealthBar.prototype.setupConfiguration = function (providedConfig) {
@@ -122,7 +124,8 @@ HealthBar.prototype.drawBackground = function() {
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
     //this.bgSprite.anchor.set(0.5);
-
+    
+    this.parentGraphics.addChild(this.bgSprite);
     if(this.flipped){
         this.bgSprite.scale.x = -1;
     }
@@ -154,11 +157,17 @@ HealthBar.prototype.drawHealthBar = function() {
 
     this.barSprite = this.game.add.sprite(this.x /*- this.bgSprite.width/2*/, this.y, bmd);
     //this.barSprite.anchor.y = 0.5;
-
+    
+    this.parentGraphics.addChild(this.barSprite);
     if(this.flipped){
         this.barSprite.scale.x = -1;
     }
 };
+
+HealthBar.prototype.destroy = function() {
+    
+    this.parentGraphics.destroy();
+}
 
 HealthBar.prototype.setPosition = function (x, y) {
     this.x = x;

@@ -86,6 +86,25 @@ actionDisplay.prototype.resetSelection = function() {
     this.idSelectedAction = 0;
 }
 
+actionDisplay.prototype.replaceAction = function(idOfAction, attributeToUse) {
+    
+    if(idOfAction >= this.actionTextList.objects.length) {
+        
+        return;
+    }
+    
+    //destroy old action
+    this.actionTextList.objects[idOfAction].destroy();
+    
+    //replace with new one
+    this.actionTextList.objects[idOfAction] = new this.configuration.objectCreationFunction(attributeToUse);
+}
+
+actionDisplay.prototype.replaceSelectedAction = function(attributeToUse) {
+    
+    this.replaceAction(this.idSelectedAction, attributeToUse);
+}
+
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text
 actionDisplay.prototype.highlightSelectedAction = function() {
     
