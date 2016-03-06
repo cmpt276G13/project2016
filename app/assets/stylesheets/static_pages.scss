@@ -18,35 +18,13 @@ a {
 
 
 
-  @keyframes stretch {
-  from {
-    margin-left:100%;
-    width:300%
-  }
-  
-  to {
-    margin-left:0%;
-    width:100%;
-  }
-}
 
 
     
 // Place padding for the header to go in.
 body {
   padding: 50px;
-  
-  background-size:100% auto;
-  
-  background: url(Forest-Green-Wallpaper.jpg);
-  animation-name: stretch;
-  animation-duration: 2s; 
-  animation-timing-function: linear; 
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: none;
-  animation-play-state: running;
+
 }
 
 
@@ -164,8 +142,16 @@ footer {
 /* table Typography */
 
 .ranking_table{
+  animation-name: stretch;
+  animation-duration: 1s; 
+  animation-timing-function: linear; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: none;
+  animation-play-state: running;
   margin: 0;
-  background-color: white;
+  background-color: #808080;
   td {
     overflow: auto;
     padding: 0.5em 2em;
@@ -187,9 +173,13 @@ footer {
 #UsernameInTable{
    width: 50px;
     height: 50px;
-    -webkit-transition: width 1s, height 1s; /* For Safari 3.1 to 6.0 */
-    transition: width 1s, height 1s;
+
     
 }
+
+
+
+
+
 
 

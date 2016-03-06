@@ -24,16 +24,62 @@
 .button1:hover {
     background-color: black;
     color: white;
+   
 }
+
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes example {
+    0%   { -webkit-transform: translate(-50px,0px)}
+    /*25%  {background-color:yellow; left:200px; top:0px;}*/
+    /*50%  {background-color:blue; left:200px; top:200px;}*/
+    /*75%  {background-color:green; left:0px; top:200px;}*/
+    100% { -webkit-transform: translate(0px,0px);}
+	
+}
+
+/*BouncedDown Class*/
+.BouncedDown{
+    font-size: 200%;
+    display: inline-block;
+    -webkit-animation-name: example; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 1s; /* Chrome, Safari, Opera */
+    -webkit-animation-iteration-count: 3; /* Chrome, Safari, Opera */
+    -webkit-animation-direction: reverse; /* Chrome, Safari, Opera */
+    
+}
+
+#Welcome{
+    height: 500px;
+    display: inline-block;
+}
+
+
+
+
 </style>
 
-<div class="center jumbotron">
-  <p style="font-size: 50px"><font face="ravie">Welcome to GeoHunter!</font></p>
-  <p>This is the main page of the game GeoHunter</p>
+<div class="container" id="Welcome">
+  <!--This is for the animated verison of "Welcome to GeoHunter"-->
+  <div class="row text-center">
+      <span id="Welcome">
+          <p class="BouncedDown">W</p>
+          <!--<span class="BouncedDown">e</span>-->
+          <!--<span class="BouncedDown">l</span>-->
+          <!--<span class="BouncedDown">c</span>-->
+          <!--<span class="BouncedDown">o</span>-->
+          <!--<span class="BouncedDown">m</span>-->
+          <!--<span class="BouncedDown">e</span>-->
+      </span>
+    </div>
   
-  <%= render 'shared/ranking_table' %>
-  <p style="font-size: 50px">Gameplay Demo</p>
-      <div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/nCkpzqqog4k"></iframe>
-</div>
+  
+  
+  <!--<p>This is the main page of the game GeoHunter</p>-->
+  
+  <!--<%= render 'shared/ranking_table' %>-->
+  <!--<p style="font-size: 50px">Gameplay Demo</p>-->
+  <!--      <div class="embed-responsive embed-responsive-16by9">-->
+  <!--            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/nCkpzqqog4k"></iframe>-->
+  <!--      </div>-->
 </div>
