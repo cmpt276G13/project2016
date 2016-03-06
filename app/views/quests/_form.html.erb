@@ -10,12 +10,6 @@
   <%= f.label :level_req %>
   <%= f.number_field :level_req, class: 'form-control' %>
 
-  <!--<%= f.label "Pre-requisites" %>-->
-  <!--<%= f.text_field :pre_req, class: 'form-control' %>-->
-  
-  <!--<%= f.label "Other pre-requisites" %>-->
-  <!--<%= f.text_field :other_req, class: 'form-control' %>-->
-
   <%= f.submit yield(:button_text), class: "btn btn-primary" %>
 <% end %>
 <p style="margin-top:2em"><%= link_to "Back", quests_path %></p>
