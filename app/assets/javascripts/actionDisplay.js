@@ -93,11 +93,8 @@ actionDisplay.prototype.replaceAction = function(idOfAction, attributeToUse) {
         return;
     }
     
-    //destroy old action
-    this.actionTextList.objects[idOfAction].destroy();
-    
-    //replace with new one
-    this.actionTextList.objects[idOfAction] = new this.configuration.objectCreationFunction(attributeToUse);
+    attributeToUse.textStyle = actionStyle;
+    this.actionTextList.replaceObject(idOfAction, attributeToUse);
 }
 
 actionDisplay.prototype.replaceSelectedAction = function(attributeToUse) {

@@ -170,6 +170,24 @@ objectList.prototype.addObject = function(objectConfig) {
     this.objects.push(newObject);
 }
 
+objectList.prototype.replaceObject = function(idObjectToReplace, configToReplaceWith) {
+    
+    if(idObjectToReplace >= this.objects.length) {
+        
+        return;
+    }
+    
+    //remove objects that come after the replaced objects
+    //remove the replaced object
+    //add old objects back
+    var objectsFollowingReplaced = this.objects.splice(idObjectToReplace + 1, this.objects.length);
+    this.objects[idObjectToReplace].destroy();
+    this.objects.pop();
+    
+    this.addObject(configToReplaceWith);
+    this.objects = this.objects.concat(objectsFollowingReplaced);
+}
+
 objectList.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
