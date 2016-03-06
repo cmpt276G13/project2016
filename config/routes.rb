@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   delete 'logout'  => 'sessions#destroy'
   get 'hub' => 'static_pages#hub'
   resources :users
+  resources :quests
+  get 'quests/:id/accept' => 'quests#accept', as: :quests_accept
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

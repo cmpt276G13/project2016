@@ -1,9 +1,23 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
+  name: Example
   description: MyText
-
+  level_req: 1
+  
 two:
   name: MyString
   description: MyText
+  level_req: 1
+  
+three:
+  name: MyString
+  description: MyText
+  level_req: 1
+
+<% 30.times do |n| %>
+quest_<%= n %>:
+  name: quest_<%= n %>
+  description: Description
+  level_req: 2
+<% end %>
