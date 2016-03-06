@@ -9,6 +9,11 @@ class Player < ActiveRecord::Base
   
   def update_items!(params)
     params.each do |key, value|
+      if value == "" || value == '0'
+        self.errors.add(:base, "Please enter a non-zero amount")
+        return false
+      end
+      
       if self.items[key]
         self.items[key] = self.items[key].to_i + value.to_i
       else
@@ -17,6 +22,16 @@ class Player < ActiveRecord::Base
     end
     
     self.save
+  end
+  
+  # Subtract the gold with an error message if failed
+  def subtract_gold(gold)
+    if self.gold >= gold
+      self.update_attributes(gold: (self.gold - gold))
+    else
+      self.errors.add(:base, "Not enough gold")
+      return false
+    end
   end
   
   # Checks if the requirements are met and prevents duplicates
