@@ -1,0 +1,10 @@
+<% provide(:title, params[:name]) %>
+<h1><%= params[:name] %></h1>
+
+<p><%= simple_format @item["description"] %></p>
+
+<div class="container">
+  <ul class="setup_links center">
+    <li><%= link_to "Back", items_path %></li>
+  </ul>
+</div>

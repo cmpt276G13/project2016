@@ -1,0 +1,13 @@
+<% provide(:title, 'Shop') %>
+<h1>Shop</h1>
+
+<table class="users">
+  <% @items.each do |name, array| %>
+    <tr>
+      <td><%= link_to name, item_path(name) %></td>
+      <!-- The split at the the newline is to make it so the first part of the description -->
+      <!-- is the short description to go in the index -->
+      <td><%= array["description"].split("\n")[0] %></td>
+    </tr>
+  <% end %>
+</table>
