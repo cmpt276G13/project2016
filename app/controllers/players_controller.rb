@@ -4,7 +4,7 @@ class PlayersController < ApplicationController
     item = {}
     amount = params[:player][:items].to_i
     item[params[:item_name]] = amount
-    if @player.update_items!(item) && @player.subtract_gold(params[:gold].to_i * amount)
+    if @player.update_items!(item, gold: params[:gold].to_i * amount)
       flash[:success] = "Purchase Successful"
       redirect_to items_url
     else

@@ -10,9 +10,11 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
   test "index" do
     log_in_as(@admin)
     get items_path
+    assert_select 'p', "Gold: " + @admin.player.gold.to_s
     assert_template 'items/index'
     @items.each do |name, array|
       assert_select 'a[href=?]', item_path(name), text: name
+      assert_select 'td', "Price: " + array["price"].to_s + " G"
     end
   end
 end
