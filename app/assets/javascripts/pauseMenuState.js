@@ -20,6 +20,16 @@ var pauseMenuState = {
                 onUpdate: viewItemsUpdate,
                 onKeyDown: viewItemsKeyDown
             }
+        },
+        
+        {name: "viewSkills",
+            functions: {
+                
+                onEnter: viewSkillsEnter,
+                onExit: viewSkillsExit,
+                onUpdate: viewSkillsUpdate,
+                onKeyDown: viewSkillsKeyDown
+            }
         }
     ],
     
@@ -29,6 +39,18 @@ var pauseMenuState = {
         display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
         
         display.title = game.add.text(display.background.width / 2, 15, "Items", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
+    
+    createPlayerSkillDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Skills", actionStyle);
         display.title.anchor.x = 0.5;
         display.background.addChild(display.title);
         
@@ -132,6 +154,7 @@ var pauseMenuState = {
         
         this.statDisplay = this.createPlayerStatDisplay();
         this.itemDisplay = this.createPlayerItemDisplay();
+        this.skillDisplay = this.createPlayerSkillDisplay();
         
         this.messageBox = new textBox(0, game.scale.height - 75, game.scale.width, 75, false);
         

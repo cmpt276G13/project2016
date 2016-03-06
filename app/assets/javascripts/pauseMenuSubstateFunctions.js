@@ -3,14 +3,12 @@ function menuHomeEnter() {
     this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
     this.statDisplay = this.createPlayerStatDisplay();
-    this.showMessage("Select an Action");
 };
 
 function menuHomeExit() {
     
     this.menuActions.selectionDisplay.visible = false;
     this.statDisplay.background.destroy();
-    this.hideMessage();
 };
 
 function menuHomeUpdate() {
@@ -38,6 +36,11 @@ function menuHomeKeyDown(key) {
             
             this.stateManager.changeState("viewItems");
         }
+        
+        if(this.menuActions.getSelectedActionConfiguration().text == "skills") {
+            
+            this.stateManager.changeState("viewSkills");
+        }
     }
 }
 
@@ -63,6 +66,12 @@ function viewItemsEnter() {
     this.selectionOptionsDisplay = new actionDisplay({x: this.itemDisplay.background.width / 2.5, y: 100, width: 150, height: 110, objectCreationFunction: text}, [{text: "Use"}, {text: "Discard"}, {text: "Cancel"}]);
     this.selectionOptionsDisplay.addParent(this.itemDisplay.background);
     this.selectionOptionsDisplay.background.visible = false;
+}
+
+function viewItemsExit() {
+    
+    this.itemDisplay.background.destroy();
+    this.hideMessage();
 }
 
 function viewItemsUpdate() {
@@ -157,9 +166,58 @@ function viewItemsKeyDown(key) {
     }
 }
 
-function viewItemsExit() {
+function viewSkillsEnter() {
     
-    this.itemDisplay.background.destroy();
+   this.skillDisplay = this.createPlayerSkillDisplay();
+    
+    //create an action text display to show all of the player's actions
+    this.skillActionDisplay = new actionDisplay({x: 15, y: 60, width: this.skillDisplay.background.width / 2.5, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
+    
+    for(var i = 0; i < player.skills.length; ++i) {
+        
+        var skillName = player.skills[i]
+        this.skillActionDisplay.addAction({attributeName: skillName, attributeValue: game.cache.getJSON("skillData")[skillName].manaCost + " MP"} );
+    }
+    
+    this.skillActionDisplay.addAction({attributeName: "Back"} );
+    this.skillActionDisplay.eraseBackground();
+    this.skillActionDisplay.addParent(this.skillDisplay.background);
+}
+
+function viewSkillsUpdate() {
+    
+    this.skillActionDisplay.highlightSelectedAction();
+    
+    if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
+        
+        this.hideMessage();
+        return;
+    }
+    
+    this.showMessage(game.cache.getJSON("skillData")[this.skillActionDisplay.getSelectedActionConfiguration().attributeName].description);
+}
+
+function viewSkillsKeyDown(key) {
+    
+    actionDisplayKeyDown(key, this.skillActionDisplay);
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+    
+        this.stateManager.changeState("menuHome");
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
+            
+            this.stateManager.changeState("menuHome");
+            return;
+        } 
+    }
+}
+
+function viewSkillsExit() {
+    
+    this.skillDisplay.background.destroy();
     this.hideMessage();
-    
 }
