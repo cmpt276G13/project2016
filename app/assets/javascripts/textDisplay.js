@@ -64,7 +64,7 @@ attributeDisplayText.prototype.mergeConfigWithDefault = function(configuration) 
         textStyle: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -98,7 +98,7 @@ text.prototype.mergeConfigWithDefault = function(configuration) {
         textStyle: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -138,7 +138,7 @@ objectList.prototype.mergeConfigWithDefault = function(configuration) {
         objectCreationFunction: {}
     };
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -212,7 +212,7 @@ scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) 
         objectCreationFunction: {}
     };
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -288,7 +288,7 @@ objectTable.prototype.mergeConfigWithDefault = function(configuration) {
         objectCreationFunction: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     return defaultConfig;
 }
 

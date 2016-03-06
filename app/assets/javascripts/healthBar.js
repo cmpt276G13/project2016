@@ -17,7 +17,7 @@
  SOFTWARE.
  */
 
-var HealthBar = function(game, providedConfig) {
+var HealthBar = function(providedConfig) {
     this.game = game;
 
     this.setupConfiguration(providedConfig);
@@ -43,7 +43,9 @@ HealthBar.prototype.setupConfiguration = function (providedConfig) {
 HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
     var defaultConfig= {
         width: 145,
+        cellWidth: 145,
         height: 11,
+        cellHeight: 11,
         radius: 6,//defines how curved the bar is
         maxHealth: 100,
         x: 0,
@@ -65,14 +67,27 @@ HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
         flipped: false,
         isFixedToCamera: false
     };
-
-    return mergeObjetcs(defaultConfig, newConfig);
+    
+    //cellWidth overwrites width if width is not given, or width is bigger than cellwidth
+    if(typeof newConfig !== "undefined" && typeof newConfig.cellWidth !== "undefined") {
+        
+        if(typeof newConfig.width === "undefined") {
+            
+            defaultConfig.width = newConfig.cellWidth;
+            
+        } else {
+            
+            defaultConfig.width = Math.min(newConfig.width, newConfig.cellWidth);
+        }
+    }
+    
+    return mergeObjects(defaultConfig, newConfig);
 };
 
-function mergeObjetcs(targetObj, newObj) {
+function mergeObjects(targetObj, newObj) {
     for (var p in newObj) {
         try {
-            targetObj[p] = newObj[p].constructor==Object ? mergeObjetcs(targetObj[p], newObj[p]) : newObj[p];
+            targetObj[p] = newObj[p].constructor==Object ? mergeObjects(targetObj[p], newObj[p]) : newObj[p];
         } catch(e) {
             targetObj[p] = newObj[p];
         }

@@ -62,7 +62,7 @@ var pauseMenuState = {
             }
         };
         
-        display.healthBar = new HealthBar(game, barConfig);
+        display.healthBar = new HealthBar(barConfig);
         display.healthBar.setValueNoTransition(player.health);
         display.healthBar.addParent(display.background);
         
@@ -72,7 +72,7 @@ var pauseMenuState = {
         barConfig.bar.gradientStart = '#ffff00';
         barConfig.bar.gradientEnd = '#7af588';
         
-        display.expBar = new HealthBar(game, barConfig);
+        display.expBar = new HealthBar(barConfig);
         display.expBar.setValueNoTransition(player.experience);
         display.expBar.addParent(display.background);
         
@@ -81,7 +81,7 @@ var pauseMenuState = {
         barConfig.bar.gradientStart = '#00cdcd';
         barConfig.bar.gradientEnd = '#7af5f5';
         
-        display.manaBar = new HealthBar(game, barConfig);
+        display.manaBar = new HealthBar(barConfig);
         display.manaBar.setValueNoTransition(player.mana);
         display.manaBar.addParent(display.background);
         

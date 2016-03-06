@@ -498,7 +498,7 @@ var battleState = {
             }
         };
         
-        statContainer.playerHealthBar = new HealthBar(game, barStyle);
+        statContainer.playerHealthBar = new HealthBar(barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
@@ -507,7 +507,7 @@ var battleState = {
         barStyle.bg = {color: '#000033'};
         barStyle.bar = {gradientStart: '#00cdcd'};
         
-        statContainer.playerManaBar = new HealthBar(game, barStyle);
+        statContainer.playerManaBar = new HealthBar(barStyle);
         statContainer.playerManaBar.setValueNoTransition(player.mana);
         statContainer.playerManaBar.addParent(statContainer.textBox.background);
         
