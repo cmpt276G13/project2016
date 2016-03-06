@@ -139,10 +139,6 @@ var overworldState = {
             this.stateManager.changeState("explore");
         }
         
-        barList = new objectTable({cellWidth: 145, cellHeight: 30, objectCreationFunction: HealthBar});
-        barList.addObject("left", {});barList.addObject("left", {});
-        barList.addObject("right", {});barList.addObject("right", {});
-        
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
         player.save();

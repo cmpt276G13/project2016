@@ -10,8 +10,30 @@ var pauseMenuState = {
                 onUpdate: menuHomeUpdate,
                 onKeyDown: menuHomeKeyDown
             }
+        },
+        
+        {name: "viewItems",
+            functions: {
+                
+                onEnter: viewItemsEnter,
+                onExit: viewItemsExit,
+                onUpdate: viewItemsUpdate,
+                onKeyDown: viewItemsKeyDown
+            }
         }
     ],
+    
+    createPlayerItemDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Items", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
     
     //create a box that displays the player's stats
     //this only shows basic stats, and doesn't isn't used to edit hte user's stats
@@ -92,12 +114,26 @@ var pauseMenuState = {
         return display;
     },
     
+    showMessage: function(message) {
+        
+        this.messageBox.setText(message);
+        this.messageBox.show();
+    },
+    
+    hideMessage: function() {
+        
+        this.messageBox.hide();
+    },
+    
     create: function() {
         
         //create a list of actions the player can select from
-        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'edit stats'}, {text: 'items'}, {text: 'skills'}, {text: 'back'}]);
+        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'items'}, {text: 'skills'}, {text: 'back'}]);
         
         this.statDisplay = this.createPlayerStatDisplay();
+        this.itemDisplay = this.createPlayerItemDisplay();
+        
+        this.messageBox = new textBox(0, game.scale.height - 75, game.scale.width, 75, false);
         
         game.input.keyboard.addCallbacks(this, this.handleKeyDown);
         

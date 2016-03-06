@@ -99,6 +99,7 @@
             
             //for whatever reason json parse isn't working so use ruby to set the data
             var items = {};
+            items["Small Potion"] = 4;
             
             <% @currentUser.player.items.each do |name, quantity| %>
             

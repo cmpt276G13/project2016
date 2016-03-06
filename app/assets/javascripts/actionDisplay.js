@@ -29,6 +29,7 @@ function actionDisplay(configuration, actionTexts) {
         actionTexts[i]["textStyle"] = actionStyle;
         this.actionTextList.addObject(actionTexts[i]);
     }
+    
     //this.actionTextList.addObjec(actionTexts, actionStyle);
     this.actionTextList.addParent(this.background);
     
@@ -54,6 +55,16 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
     $.extend(config, configuration);
     
     return config;
+}
+
+actionDisplay.prototype.addParent = function(parent) {
+    
+    parent.addChild(this.background);
+}
+
+actionDisplay.prototype.eraseBackground = function() {
+    
+    this.background.clear();
 }
 
 actionDisplay.prototype.addAction = function(actionConfig) {
