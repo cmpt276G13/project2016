@@ -1,4 +1,6 @@
 class PlayersController < ApplicationController
+  before_action :logged_in_user
+  
   def update
     @player = current_user.player
     item = {}

@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
   attr_accessor :file
   before_action :get_items_file
+  before_action :logged_in_user
   
   def index
     @items = JSON.parse self.file
