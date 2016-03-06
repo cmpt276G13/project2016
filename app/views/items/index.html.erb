@@ -8,6 +8,11 @@
       <!-- The split at the the newline is to make it so the first part of the description -->
       <!-- is the short description to go in the index -->
       <td><%= array["description"].split("\n")[0] %></td>
+      <%= form_for(@player) do |f| %>
+        <td><%= hidden_field_tag :items, name %></td>
+        <td style="width:5%" class="center"><%= f.number_field :items, class: 'form-contorl' %></td>
+        <td><%= f.submit "Buy", class: "btn btn-primary" %></td>
+      <% end %>
     </tr>
   <% end %>
 </table>

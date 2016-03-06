@@ -7,6 +7,14 @@ class Player < ActiveRecord::Base
   # Don't forget to use @player.save
   serialize :items, Hash
   
+  def update_items!(params)
+    params.each do |key, value|
+      self.items[key] += value
+    end
+    
+    self.save
+  end
+  
   # Checks if the requirements are met and prevents duplicates
   def can_accept?(quest)
     # req_met = self.quest_acceptances
