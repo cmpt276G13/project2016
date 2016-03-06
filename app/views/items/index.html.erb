@@ -9,8 +9,8 @@
       <!-- is the short description to go in the index -->
       <td><%= array["description"].split("\n")[0] %></td>
       <%= form_for(@player) do |f| %>
-        <td><%= hidden_field_tag :items, name %></td>
-        <td style="width:5%" class="center"><%= f.number_field :items, class: 'form-contorl' %></td>
+        <%= hidden_field_tag :item_name, name %>
+        <td style="width:5em" class="center"><%= f.number_field :items, class: 'form-control' %></td>
         <td><%= f.submit "Buy", class: "btn btn-primary" %></td>
       <% end %>
     </tr>

@@ -9,7 +9,11 @@ class Player < ActiveRecord::Base
   
   def update_items!(params)
     params.each do |key, value|
-      self.items[key] += value
+      if self.items[key]
+        self.items[key] = self.items[key].to_i + value.to_i
+      else
+        self.items[key] = value
+      end
     end
     
     self.save

@@ -1,17 +1,11 @@
 class PlayersController < ApplicationController
-  attr_accessor :player
-  
   def update
     @player = current_user.player
-    self.player[params[:player[:item_name]]] = params[:player[:item_amount]]
-    if @player.update_items(player_params)
-      
+    item = {}
+    item[params[:item_name]] = params[:player][:items]
+    if @player.update_items!(item)
+      flash[:success] = "Purchase Successful"
+      redirect_to items_url
     end
   end
-  
-  private
-    
-    def player_params
-      params.require(self.player).permit(:item_name)
-    end
 end
