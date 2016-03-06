@@ -34,6 +34,16 @@ function useItem(entity, itemName) {
     }
 }
 
+function discardItem(entity, itemName) {
+    
+    entity.items[itemName].quantity -= 1;
+    
+    if(entity.items[itemName].quantity <= 0) {
+        
+        delete entity.items[itemName];
+    }
+}
+
 //call when a stat restoration item is used
 function restoreStatsOnUse(entity, statsToRestore) {
     

@@ -134,14 +134,20 @@ function viewItemsKeyDown(key) {
             
             //player uses an item
             useItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
-            
-            //replace text
-            var itemName = this.itemActionDisplay.getSelectedActionConfiguration().attributeName;
-            var itemQuantityString = this.itemActionDisplay.getSelectedActionConfiguration().attributeValue.substring(1);
-            var itemQuantity = parseInt(itemQuantityString) - 1;
-            itemQuantity = "x" + itemQuantity;
-            this.itemActionDisplay.replaceSelectedAction({attributeName: itemName, attributeValue: itemQuantity});
         }
+        
+        if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Discard") {
+            
+            //player uses an item
+            discardItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
+        }
+        
+        //replace text
+        var itemName = this.itemActionDisplay.getSelectedActionConfiguration().attributeName;
+        var itemQuantityString = this.itemActionDisplay.getSelectedActionConfiguration().attributeValue.substring(1);
+        var itemQuantity = parseInt(itemQuantityString) - 1;
+        itemQuantity = "x" + itemQuantity;
+        this.itemActionDisplay.replaceSelectedAction({attributeName: itemName, attributeValue: itemQuantity});
         
         //if the previously used item has no quantity left, then re-enter item menu
         if(this.itemActionDisplay.getSelectedActionConfiguration().attributeValue == "x0") {
