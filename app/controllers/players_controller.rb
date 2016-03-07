@@ -1,6 +1,7 @@
 class PlayersController < ApplicationController
   before_action :logged_in_user
   
+  # It's a little convoluted when trying to add a hash
   def update
     @player = current_user.player
     item = {}

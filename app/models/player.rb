@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
   validates :user_id, presence: true
-  # Use eg. @player.items << 'name'
+  # Use eg. @player.items << 'name': amount
   # Don't forget to use @player.save
   serialize :items, Hash
   
