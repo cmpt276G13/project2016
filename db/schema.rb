@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304050136) do
+ActiveRecord::Schema.define(version: 20160307013037) do
+
+  create_table "places", force: :cascade do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "address"
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -21,12 +30,14 @@ ActiveRecord::Schema.define(version: 20160304050136) do
     t.integer  "level",                    default: 1
     t.integer  "experience",               default: 0
     t.integer  "gold",                     default: 0
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items",                    default: "--- []\n"
+    t.text     "items"
+    t.text     "ongoing_quests"
+    t.text     "completed_quests"
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"

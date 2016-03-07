@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   get 'hub' => 'static_pages#hub'
   resources :users
   resources :quests
+  #get 'places' => 'static_pages#hub'
+  resources :places
   get 'quests/:id/accept' => 'quests#accept', as: :quests_accept
 
   # Example of regular route:
