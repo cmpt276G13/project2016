@@ -1,0 +1,46 @@
+{
+    "q1": {
+        
+        "name": "Kill 5 Orcs",
+        "description": "Kill 5 Orcs",
+        "type": "kill",
+        "targetName": "orc",
+        "targetAmount": 5,
+        "reward": {
+            
+            "items": {
+                
+                "Small Potion": 2,
+                "Medium Potion": 1
+            },
+            
+            "stats": {
+                
+                "experience": 500
+            }
+        }
+    },
+    
+    "q2": {
+        
+        "name": "Collect 3 Small Potions",
+        "description": "Gather 3 small potions.",
+        "type": "gather",
+        "targetName": "Small Potion",
+        "targetAmount": 3,
+        "reward": {
+            
+            "items": {
+                
+                "Small Potion": 5,
+                "Medium Potion": 2
+            },
+            
+            "stats": {
+                
+                "experience": 500,
+                "gold": 100
+            }
+        }
+    }
+}
