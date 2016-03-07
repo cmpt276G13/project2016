@@ -1,4 +1,7 @@
 class PlacesController < ApplicationController
+  # logged_in_user is defined in sessions_helper.rb
+  before_action :logged_in_user
+  before_action :req_check, only: :accept
   before_action :set_place, only: [:show, :edit, :update, :destroy]
 
   # GET /places
