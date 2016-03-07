@@ -20,7 +20,7 @@ function actionDisplay(configuration, actionTexts) {
     this.idActionToHighlight = 0;
     
     //the text that will be displayed
-    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: 28,
+    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: this.configuration.cellHeight,
                                                     objectCreationFunction: this.configuration.objectCreationFunction, viewableObjects: this.configuration.viewableObjects}); //createActionTexts(actionTexts, this.background);
     
     //add all the texts
@@ -48,6 +48,7 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         width: 0,
         height: 0,
+        cellHeight: 28,
         viewableObjects: 5,
         objectCreationFunction: text
     }

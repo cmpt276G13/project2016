@@ -14,50 +14,46 @@ function assignQuest(questID) {
     return quest;
 }
 
-//object that displays a quest
-//base class for other quests
+//object that displays a quest summary
 //basic formatting is as follows
 /*
 Title
 "In Progress"/"Completed"
 
-Description
-
-additional info, like monsters killed, or items collected
-
 */
-var questDisplay = function(config) {
+var questDisplaySummary = function(config) {
     
     this.configuration = this.mergeConfigWithDefault(config);
     
     this.parentGraphics = game.add.graphics(this.configuration.x, this.configuration.y);
     this.questName = game.add.text(0, 0, this.configuration.quest.name, questTitleStyle);
     
-    var completionConfig = {};
-    var completionString = "";
-    
-    if(this.configuration.quest.completed) {
+    if(this.configuration.quest.type != "null") {
+            
+        var completionConfig = {};
+        var completionString = "";
         
-        completionString = "Complete";
-        completionConfig = questCompletedStyle;
+        if(this.configuration.quest.completed) {
+            
+            completionString = "Complete";
+            completionConfig = questCompletedStyle;
+            
+        } else {
+            
+            completionString = "In Progress";
+            completionConfig = questInProgressStyle;
+        }
         
-    } else {
-        
-        completionString = "In Progress";
-        completionConfig = questInProgressStyle;
+        this.questProgress = game.add.text(0, this.questName.height / 1.7, completionString, completionConfig);
+        this.parentGraphics.addChild(this.questProgress);
     }
     
-    this.questProgress = game.add.text(0, this.questName.height / 1.7, completionString, completionConfig);
-    this.questDescription = game.add.text(0, this.questName.height * 1.2, this.configuration.quest.description, questDescriptionStyle);
-    
     this.parentGraphics.addChild(this.questName);
-    this.parentGraphics.addChild(this.questDescription);
-    this.parentGraphics.addChild(this.questProgress);
     
     //create the quest titl
 }
 
-questDisplay.prototype.mergeConfigWithDefault = function(config) {
+questDisplaySummary.prototype.mergeConfigWithDefault = function(config) {
     
    var defaultConfig = {
         
@@ -72,26 +68,14 @@ questDisplay.prototype.mergeConfigWithDefault = function(config) {
     return defaultConfig;
 }
 
-questDisplay.addParent = function(parent) {
+questDisplaySummary.prototype.addParent = function(parent) {
     
     parent.addChild(this.parentGraphics);
 }
 
-questDisplay.destroy = function() {
+questDisplaySummary.prototype.destroy = function() {
     
     this.parentGraphics.destroy();
-}
-
-//quest dispaly for quests that involve keeping track of a number of targets
-questDisplayTargetCounter.prototype = Object.create(questDisplay.prototype);
-
-function questDisplayTargetCounter(config) {
-    
-    questDisplay.call(this, config);
-    
-    //track the number of monsters killed
-    var targetCount = this.configuration.quest.targetName + ":  " + this.configuration.quest.targetsAcquired + "/" + this.configuration.quest.targetAmount;
-    this.questTarget = game.add.text(0, this.questDescription.y + this.questDescription.height, targetCount, healthBarCaptionStyle);
 }
 
 //functions that should be called when the player does stuff that could change his progress on a quest

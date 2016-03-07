@@ -30,8 +30,28 @@ var pauseMenuState = {
                 onUpdate: viewSkillsUpdate,
                 onKeyDown: viewSkillsKeyDown
             }
+        },
+        
+        {name: "viewQuests",
+            functions: {
+                
+                onEnter: viewQuestsEnter,
+                onExit: viewQuestsExit
+            }
         }
     ],
+    
+    createPlayerQuestDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Quests", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
     
     createPlayerItemDisplay: function() {
         
@@ -155,6 +175,7 @@ var pauseMenuState = {
         this.statDisplay = this.createPlayerStatDisplay();
         this.itemDisplay = this.createPlayerItemDisplay();
         this.skillDisplay = this.createPlayerSkillDisplay();
+        this.questDisplay = this.createPlayerQuestDisplay();
         
         this.messageBox = new textBox(0, game.scale.height - 75, game.scale.width, 75, false);
         

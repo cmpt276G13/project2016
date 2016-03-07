@@ -41,6 +41,11 @@ function menuHomeKeyDown(key) {
             
             this.stateManager.changeState("viewSkills");
         }
+        
+        if(this.menuActions.getSelectedActionConfiguration().text == "quests") {
+            
+            this.stateManager.changeState("viewQuests");
+        }
     }
 }
 
@@ -220,4 +225,28 @@ function viewSkillsExit() {
     
     this.skillDisplay.background.destroy();
     this.hideMessage();
+}
+
+function viewQuestsEnter() {
+    
+    this.questDisplay = this.createPlayerQuestDisplay();
+    
+    //create an action text display to show all of the player's quests
+    this.questActionDisplay = new actionDisplay({x: 15, y: 60, width: this.questDisplay.background.width / 2.5, height: this.questDisplay.background.height - 100, cellHeight: 40, objectCreationFunction: questDisplaySummary}, []);
+    
+    for(questID in player.quests) {
+        
+        this.questActionDisplay.addAction({quest: player.quests[questID]} );
+    }
+    
+    var backQuest = {name: "Back", type: "null"};
+    this.questActionDisplay.addAction({quest: backQuest});
+    this.questActionDisplay.eraseBackground();
+    this.questActionDisplay.addParent(this.questDisplay.background);
+    
+}
+
+function viewQuestsExit() {
+    
+    this.questDisplay.background.destroy();
 }
