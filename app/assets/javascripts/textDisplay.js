@@ -32,6 +32,30 @@ var damageStyle = {
     strokeThickness: 4
 }
 
+var questTitleStyle = {
+    
+    fill: 'white',
+    fontSize: 23
+}
+
+var questDescriptionStyle = {
+    
+    fill: 'white',
+    fontSize: 16
+}
+
+var questCompletedStyle = {
+    
+    fill: 'green',
+    fontSize: 15
+}
+
+var questInProgressStyle = {
+    
+    fill: '#660000',
+    fontSize: 15
+}
+
 //attributeDisplayText displays an attribute along with its value, in teh following format:
 //attributeName     attributeValue
 //data in the configuration defines a rectangular cell where the attribute is displayed

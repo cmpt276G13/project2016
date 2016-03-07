@@ -1,7 +1,7 @@
 {
     "q1": {
         
-        "name": "Kill 5 Orcs",
+        "name": "The first hunt",
         "description": "Kill 5 Orcs",
         "type": "kill",
         "targetName": "orc",

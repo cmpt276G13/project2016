@@ -101,8 +101,6 @@
             
             //for whatever reason json parse isn't working so use ruby to set the data
             var items = {};
-            items["Small Potion"] = createItem("Small Potion", 4);
-            items["Medium Potion"] = createItem("Medium Potion", 4);
             
             <% @currentUser.player.items.each do |name, quantity| %>
             
@@ -111,6 +109,8 @@
                 
                 items[name] = createItem(name, quantity);
             <%end%>
+            items["Small Potion"] = createItem("Small Potion", 4);
+            items["Medium Potion"] = createItem("Medium Potion", 4);
             
             this.items = items;
             
