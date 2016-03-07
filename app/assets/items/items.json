@@ -1,4 +1,5 @@
 {
+    "_comment": "The items implementation supports a short description and a long description. Template: short desc\nextra desc. The short desc is displayed on the items index. Please make it short ~50 char.",
     "Small Potion": {
         
         "description": "A drink that restores 25 health.",
