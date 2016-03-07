@@ -26,7 +26,9 @@ ActiveRecord::Schema.define(version: 20160304050136) do
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items",                    default: "--- {}\n"
+    t.text     "items",                    default: "--- []\n"
+    t.text     "ongoing_quests"
+    t.text     "completed_quests"
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
@@ -52,6 +54,14 @@ ActiveRecord::Schema.define(version: 20160304050136) do
     t.datetime "updated_at",  null: false
     t.text     "pre_req"
     t.text     "other_req"
+  end
+
+  create_table "shops", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "price"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "users", force: :cascade do |t|
