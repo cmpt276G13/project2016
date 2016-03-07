@@ -34,6 +34,7 @@
     <%= javascript_include_tag "pauseMenuState" %>
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     <%= javascript_include_tag "items" %>
+    <%= javascript_include_tag "questManager" %>
     
     <script>
     
@@ -82,6 +83,7 @@
         player.items = {};
         player.skills = ["Fireball"];
         player.deaths = 0;
+        player.quests = {};
         
         player.load = function() {
             
@@ -111,6 +113,12 @@
             <%end%>
             
             this.items = items;
+            
+            var quests = {};
+            
+            quests["q1"] = assignQuest("q1");
+            this.quests = quests;
+            //do something to load quests
             
             //player.items = ...
             //player.skills = ...
@@ -272,6 +280,9 @@
                 //load spritesheets for all the monsters
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
+                
+                //load quests
+                game.load.json('questData', '<%= asset_path("quests.json") %>');
                 
                 //load skill data, and animations
                 game.load.json('skillData', '<%= asset_path("skills.json") %>');

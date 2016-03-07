@@ -51,8 +51,6 @@ function scaleMonsterStatsToLevel(monster) {
     
     var attributes = ["maxHealth", "maxMana", "strength", "defense", "magicPower", "magicDefense"]
     
-    console.log(monster.level);
-    
     //get random percentage for each stat
     for(var i = 0; i < attributes.length; ++i) {
         
@@ -68,7 +66,6 @@ function scaleMonsterRewardsToLevel(monster, originalRewards) {
     
     monster.rewards.experience = monster.level * originalRewards.experience;
     monster.rewards.gold = getRandomInt(0, originalRewards.gold * monster.level + originalRewards.gold);
-    console.log(monster.level + "  " + monster.rewards.experience);
 }
 
 function rpgEntity() {

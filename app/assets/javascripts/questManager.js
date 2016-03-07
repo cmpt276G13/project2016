@@ -1,27 +1,25 @@
-//assign the quest with the given ID to the player
-function assignQuest(player, questID) {
-    
-    if(typeof player.quests[questID] !== "undefined") {
-        
-        //quest already exists
-        return;
-    }
+//create the quest with the given ID to the player
+function assignQuest(questID) {
     
     //player doesn't have quest yet, so give him the quest
-    player.quests[questID] = game.cache.getJSON("questData")[questID];
+    quest = game.cache.getJSON("questData")[questID];
         
     //now create a progress variable according to the type of quest it it
-    if(player.quests[questID].type == "kill" || player.quests[questID].type == "gather") {
+    if(quest.type == "kill" || quest.type == "gather") {
         
-        player.quests[questID].targetsAcquired = 0;
+        quest.targetsAcquired = 4;
     }
     
-    player.quests[questID].completed = false;
+    quest.completed = false;
+    return quest;
 }
 
 //functions that should be called when the player does stuff that could change his progress on a quest
 var questManager = {
     
+    //array of strings
+    //each string corresponds to the name of a quest
+    recentlyCompletedQuests: []
     // onGetItem(itemName, quantity) {
         
     //     //go through the player's items and update any quest progress that requires that item
@@ -55,7 +53,7 @@ var questManager = {
 }
 
 //when player kills a monster, call this function to update his quests
-questManager.prototype.onKillMonster = function(monsterName, quantity) {
+questManager.onKillMonster = function(monsterName, quantity) {
     
     for(questName in player.quests) {
         
@@ -85,7 +83,7 @@ questManager.prototype.onKillMonster = function(monsterName, quantity) {
             
             //optionally for later
             //queue completed quests to display message to player
-            //this.recentlyCompletedQuests.push(quest);
+            this.recentlyCompletedQuests.push(quest.name);
         }
     }
 }

@@ -406,6 +406,13 @@ var battleState = {
                 return false;
             }
             
+            //monster was killed, add to list of defeated monsters
+            if(typeof this.defeatedMonsters[entities[i].name] === "undefined") {
+                
+                this.defeatedMonsters[entities[i].name ] = 0;
+            }
+            this.defeatedMonsters[entities[i].name] += 1;
+            
             entities[i].sprite.destroy();
             entities.splice(i, 1);
             
@@ -648,6 +655,10 @@ var battleState = {
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural
         this.monsters = this.loadMonsters();
+        
+        //keeps track of all the monsters that the player has defeated
+        //this object will contain, "monsterNAme": numberKilled
+        this.defeatedMonsters = {};
         
         //we've only loaded the data for the mosnter, we now need to create an image so we can see them
         this.generateMonsterSprites(this.monsters);

@@ -515,6 +515,12 @@ function victoryEnter() {
     this.createRewardsText();
     
     this.applyRewardsToPlayer();
+    
+    //let quest manager know that player killed monsters
+    for(name in this.defeatedMonsters) {
+        
+        questManager.onKillMonster(name, this.defeatedMonsters[name]);
+    }
 };
 
 function victoryKeyDown(key) {
