@@ -11,9 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20160306233331) do
-=======
 ActiveRecord::Schema.define(version: 20160307013037) do
 
   create_table "places", force: :cascade do |t|
@@ -24,7 +21,6 @@ ActiveRecord::Schema.define(version: 20160307013037) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
->>>>>>> 6f78558c8f2e6e8b4cb5c4688a2fb2b43fc478c0
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -34,18 +30,12 @@ ActiveRecord::Schema.define(version: 20160307013037) do
     t.integer  "level",                    default: 1
     t.integer  "experience",               default: 0
     t.integer  "gold",                     default: 0
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-<<<<<<< HEAD
     t.text     "items",                    default: "--- {}\n"
-=======
-    t.text     "items"
-    t.text     "ongoing_quests"
-    t.text     "completed_quests"
->>>>>>> 6f78558c8f2e6e8b4cb5c4688a2fb2b43fc478c0
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
@@ -70,8 +60,13 @@ ActiveRecord::Schema.define(version: 20160307013037) do
     t.datetime "updated_at",      null: false
   end
 
-# Could not dump table "quests" because of following NoMethodError
-#   undefined method `[]' for nil:NilClass
+  create_table "quests", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "level_req"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

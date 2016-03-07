@@ -1,7 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  quests_id: 
+  quest_parent_id: 2
+  quest_child_id: 1
 
 two:
-  quests_id: 
+  quest_parent_id: 2
+  quest_child_id: 3
