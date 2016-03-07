@@ -141,6 +141,8 @@ var overworldState = {
         //so instead of saving player in every single state, we will just save the player when he returns to the map
         player.save();
         
+        var quest = new questDisplay({quest: player.quests["q1"], cellWidth: 350, cellHeight: 300});
+        
         lastState = "overworld";
     },
     

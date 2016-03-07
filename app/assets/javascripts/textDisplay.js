@@ -56,6 +56,18 @@ var questInProgressStyle = {
     fontSize: 15
 }
 
+var questProgressStyle = {
+    
+    fill: '#bbbbbb',
+    fontSize: 16
+}
+
+var questRewardsHeadingStyle = {
+    
+    fill: '#009900',
+    fontSize: 15
+}
+
 //attributeDisplayText displays an attribute along with its value, in teh following format:
 //attributeName     attributeValue
 //data in the configuration defines a rectangular cell where the attribute is displayed

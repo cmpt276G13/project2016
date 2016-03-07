@@ -6,7 +6,7 @@
         "type": "kill",
         "targetName": "orc",
         "targetAmount": 5,
-        "reward": {
+        "rewards": {
             
             "items": {
                 
@@ -16,7 +16,8 @@
             
             "stats": {
                 
-                "experience": 500
+                "experience": 500,
+                "gold": 100
             }
         }
     },

@@ -78,6 +78,81 @@ questDisplaySummary.prototype.destroy = function() {
     this.parentGraphics.destroy();
 }
 
+questDisplay.prototype = Object.create(questDisplaySummary.prototype);
+
+//displays entire quest info
+/*
+title
+in progress / completed
+description
+
+progress info (items gathered, or mosnters killed, or whatever the object requires)
+
+rewards
+*/
+function questDisplay(config) {
+    
+    questDisplaySummary.call(this, config);
+    this.questName.x = this.configuration.cellWidth / 2;
+    this.questName.anchor.x = 0.5;
+    this.questProgress.x = this.configuration.cellWidth / 2;
+    this.questProgress.anchor.x = 0.5;
+    
+    //create description
+    this.questDescription = game.add.text(this.configuration.cellWidth / 2, this.questProgress.y + this.questProgress.height, this.configuration.quest.description, questDescriptionStyle);
+    this.questDescription.anchor.x = 0.5;
+    this.parentGraphics.addChild(this.questDescription);
+    
+    this.createProgressReport();
+    
+    this.createRewardsReport();
+}
+
+questDisplay.prototype.createProgressReport = function() {
+    
+    if(this.configuration.quest.type == "kill") {
+        
+        var progressString = this.configuration.quest.targetName + ":   " + this.configuration.quest.targetsAcquired + "/" + this.configuration.quest.targetAmount;
+        this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
+        this.progressReport.anchor.x = 0.5;
+        this.parentGraphics.addChild(this.progressReport);
+    }
+}
+
+questDisplay.prototype.createRewardsReport = function() {
+    
+    this.rewardsHeading = game.add.text(this.configuration.cellWidth / 2, this.progressReport.y + this.progressReport.height, "Rewards", questRewardsHeadingStyle);
+    this.parentGraphics.addChild(this.rewardsHeading);
+    this.rewardsHeading.anchor.x = 0.5;
+    
+    this.rewards = [];
+    var rewardsCreated = 0;
+    
+    //list all the items
+    for(item in this.configuration.quest.rewards.items) {
+        
+        var rewardString = item + "   x" + this.configuration.quest.rewards.items[item];
+        var text = game.add.text(this.configuration.cellWidth / 2, this.rewardsHeading.y + this.rewardsHeading.height + 15 * rewardsCreated, rewardString, questProgressStyle);
+        text.anchor.x = 0.5;
+        rewardsCreated += 1;
+        this.rewards.push(text);
+        
+        this.parentGraphics.addChild(text);
+    }
+    
+    //list all the stats
+    for(stat in this.configuration.quest.rewards.stats) {
+        
+        var rewardString = this.configuration.quest.rewards.stats[stat] + "     " + stat;
+        var text = game.add.text(this.configuration.cellWidth / 2, this.rewardsHeading.y + this.rewardsHeading.height + 5 + 15 * rewardsCreated, rewardString, questProgressStyle);
+        text.anchor.x = 0.5;
+        rewardsCreated += 1;
+        this.rewards.push(text);
+        
+        this.parentGraphics.addChild(text);
+    }
+}
+
 //functions that should be called when the player does stuff that could change his progress on a quest
 var questManager = {
     
