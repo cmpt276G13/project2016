@@ -2,6 +2,7 @@
     "Small Potion": {
         
         "description": "A drink that restores 25 health.",
+        "price": 10,
         "battleDescription": "Restores 25 health",
         "effect": "restoreStats",
         
@@ -14,6 +15,7 @@
     "Medium Potion": {
         
         "description": "A drink that restores 70 health.",
+        "price": 30,
         "battleDescription": "Restores 70 health",
         "effect": "restoreStats",
         

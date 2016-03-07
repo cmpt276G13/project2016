@@ -10,7 +10,6 @@ class QuestsShowTest < ActionDispatch::IntegrationTest
   
   test "quest display accepted and as admin" do
     log_in_as(@admin)
-    request.env["HTTP_REFERER"] = quests_path
     get quest_path(@quest)
     assert_template 'quests/show'
     assert_select 'title', full_title(@quest.name)

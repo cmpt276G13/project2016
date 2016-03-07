@@ -9,7 +9,8 @@ michael:
   defense: 10
   level: 1
   experience: 2
-  gold: 0
+  gold: 100
+  items: {}
 
 archer:
   user: archer
@@ -19,6 +20,7 @@ archer:
   level: 2
   experience: 50
   gold: 0
+  items: {}
 
 # This player should be at the top of the rankings
 # Make sure the level is equal to player4, but experience is higher
@@ -30,6 +32,7 @@ lana:
   level: 5
   experience: 20
   gold: 0
+  items: {}
 
 malory:
   user: malory
@@ -39,6 +42,7 @@ malory:
   level: 5
   experience: 1
   gold: 0
+  items: {}
 
 <% 30.times do |n| %>
 player_<%= n %>:
@@ -49,4 +53,5 @@ player_<%= n %>:
   level: 1
   experience: 0
   gold: 0
+  items: {}
 <% end %>

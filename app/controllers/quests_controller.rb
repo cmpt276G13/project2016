@@ -58,7 +58,7 @@ class QuestsController < ApplicationController
   private
     
     def quest_params
-      params.require(:quest).permit(:name, :description, :level_req, :pre_req, :other_req)
+      params.require(:quest).permit(:name, :description, :level_req)
     end
   
     # Before methods

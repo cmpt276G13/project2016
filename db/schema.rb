@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304050136) do
+ActiveRecord::Schema.define(version: 20160306233331) do
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20160304050136) do
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items",                    default: "--- []\n"
+    t.text     "items",                    default: "--- {}\n"
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
@@ -44,23 +44,15 @@ ActiveRecord::Schema.define(version: 20160304050136) do
   add_index "quest_acceptances", ["quest_id", "completed"], name: "index_quest_acceptances_on_quest_id_and_completed"
   add_index "quest_acceptances", ["quest_id"], name: "index_quest_acceptances_on_quest_id"
 
-  create_table "quests", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "level_req"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.text     "pre_req"
-    t.text     "other_req"
+  create_table "quest_pre_requisites", force: :cascade do |t|
+    t.integer  "quest_parent_id", null: false
+    t.integer  "quest_child_id",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  create_table "shops", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "price"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
+# Could not dump table "quests" because of following NoMethodError
+#   undefined method `[]' for nil:NilClass
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

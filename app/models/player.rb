@@ -3,11 +3,31 @@ class Player < ActiveRecord::Base
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
   validates :user_id, presence: true
-  # Use eg. @player.items = ['name', 'id']
-  # Or append the array 
-  #   @player.ongoing_quests << 2
+  # Use eg. @player.items << 'name': amount
   # Don't forget to use @player.save
-  serialize :items
+  serialize :items, Hash
+  
+  def update_items!(params, options = {})
+    # Update gold, if necessary
+    gold = options[:gold] || nil
+    if gold
+      if self.gold >= gold
+        self.update_attributes(gold: (self.gold - gold))
+      else
+        return false
+      end
+    end
+    
+    params.each do |key, value|
+      if self.items[key]
+        self.items[key] = self.items[key].to_i + value.to_i
+      else
+        self.items[key] = value
+      end
+    end
+    
+    self.save
+  end
   
   # Checks if the requirements are met and prevents duplicates
   def can_accept?(quest)
