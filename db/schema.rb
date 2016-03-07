@@ -26,7 +26,9 @@ ActiveRecord::Schema.define(version: 20160306233331) do
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items",                    default: "--- {}\n"
+    t.text     "items",                    default: "--- []\n"
+    t.text     "ongoing_quests"
+    t.text     "completed_quests"
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"

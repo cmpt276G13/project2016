@@ -42,11 +42,12 @@
 # Could use the gem populate in order to populate the db instead of seeding.
 # Could use the gem migration_data in order to squash migrations and/or populate.
 
-Quest.create!(name: "Kill Quest!",
+q_orc1 = Quest.create!(name: "Kill Quest!",
               description: "Kill 5 Orcs.\n
                             The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
               level_req: 1)
-Quest.create!(name: "Orc Killer",
+q_orc2 = Quest.create!(name: "Orc Killer",
               description: "Kill 10 Orcs.\n
                             Please continue to kill the Orcs. You will be handsomely rewarded.",
               level_req: 1)
+q_orc2.quests << q_orc1
