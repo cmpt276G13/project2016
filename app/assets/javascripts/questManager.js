@@ -44,7 +44,7 @@ var questDisplaySummary = function(config) {
             completionConfig = questInProgressStyle;
         }
         
-        this.questProgress = game.add.text(0, this.questName.height / 1.7, completionString, completionConfig);
+        this.questProgress = game.add.text(0, this.questName.height / 1.4, completionString, completionConfig);
         this.parentGraphics.addChild(this.questProgress);
     }
     

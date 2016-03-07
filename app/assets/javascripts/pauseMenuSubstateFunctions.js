@@ -244,6 +244,9 @@ function viewQuestsEnter() {
     this.questActionDisplay.eraseBackground();
     this.questActionDisplay.addParent(this.questDisplay.background);
     
+    //background for detailed quest description
+    this.detailedQuestDescriptionBackground = createTextboxBackground(300, 200, 300, 300, false);
+    this.detailedQuestDescriptionBackground.visible = false;
 }
 
 function viewQuestsUpdate() {
@@ -253,24 +256,53 @@ function viewQuestsUpdate() {
 
 function viewQuestsKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.questActionDisplay);
-    
-    if(key.keyCode == Phaser.Keyboard.ESC) {
-    
-        this.stateManager.changeState("menuHome");
+    if(!this.detailedQuestDescriptionBackground.visible) {
+        
+        actionDisplayKeyDown(key, this.questActionDisplay);
     }
     
-    if(key.keyCode == Phaser.Keyboard.ENTER) {
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        if(!this.detailedQuestDescriptionBackground.visible) {
+            
+            this.stateManager.changeState("menuHome");
+            return;
+        }
+        
+        this.detailedQuestDescriptionBackground.visible = false;
+        return;
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER && !this.detailedQuestDescriptionBackground.visible) {
         
         if(this.questActionDisplay.getSelectedActionConfiguration().quest.name == "Back") {
             
             this.stateManager.changeState("menuHome");
             return;
-        } 
+        }
+        
+        //selected a quest, show a detailed description of it
+        this.detailedQuestDescription = new questDisplay({quest: this.questActionDisplay.getSelectedActionConfiguration().quest, 
+            cellWidth: 300, cellHeight: 300
+        });
+        
+        this.detailedQuestDescription.addParent(this.detailedQuestDescriptionBackground);
+        this.detailedQuestDescriptionBackground.visible = true;
+        return;
+        
+    } else if(key.keyCode == Phaser.Keyboard.ENTER && this.detailedQuestDescriptionBackground.visible) {
+        
+        this.detailedQuestDescriptionBackground.visible = false;
+        this.detailedQuestDescription.destroy();
     }
 }
 
 function viewQuestsExit() {
     
     this.questDisplay.background.destroy();
+    
+    if(typeof this.detailedQuestDescriptionBackground !== "undefined") {
+        
+        this.detailedQuestDescriptionBackground.destroy();
+    }
 }
