@@ -20,7 +20,12 @@ Rails.application.routes.draw do
   resources :users
   resources :players, only: [:update]
   resources :quests
+<<<<<<< HEAD
   resources :items, param: :name, only: [:index, :show]
+=======
+  #get 'places' => 'static_pages#hub'
+  resources :places
+>>>>>>> 6f78558c8f2e6e8b4cb5c4688a2fb2b43fc478c0
   get 'quests/:id/accept' => 'quests#accept', as: :quests_accept
 
   # Example of regular route:
