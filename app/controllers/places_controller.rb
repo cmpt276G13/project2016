@@ -7,6 +7,15 @@ class PlacesController < ApplicationController
     @places = Place.all
     @user_location = get_user_location
     init_markers
+    @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
+      marker.lat place.latitude
+      marker.lng place.longitude
+      marker.infowindow place.title
+      marker.picture({
+        "url" => "http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-32.png",
+        "width" => 32,
+        "height" => 32})
+    end
   end
 
   # GET /places/1
