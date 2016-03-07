@@ -232,7 +232,7 @@ function viewQuestsEnter() {
     this.questDisplay = this.createPlayerQuestDisplay();
     
     //create an action text display to show all of the player's quests
-    this.questActionDisplay = new actionDisplay({x: 15, y: 60, width: this.questDisplay.background.width / 2.5, height: this.questDisplay.background.height - 100, cellHeight: 40, objectCreationFunction: questDisplaySummary}, []);
+    this.questActionDisplay = new actionDisplay({x: 15, y: 60, width: this.questDisplay.background.width / 2.5, height: this.questDisplay.background.height - 100, cellHeight: 43, objectCreationFunction: questDisplaySummary}, []);
     
     for(questID in player.quests) {
         
@@ -244,6 +244,30 @@ function viewQuestsEnter() {
     this.questActionDisplay.eraseBackground();
     this.questActionDisplay.addParent(this.questDisplay.background);
     
+}
+
+function viewQuestsUpdate() {
+    
+    this.questActionDisplay.highlightSelectedAction();
+}
+
+function viewQuestsKeyDown(key) {
+    
+    actionDisplayKeyDown(key, this.questActionDisplay);
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+    
+        this.stateManager.changeState("menuHome");
+    }
+    
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        if(this.questActionDisplay.getSelectedActionConfiguration().quest.name == "Back") {
+            
+            this.stateManager.changeState("menuHome");
+            return;
+        } 
+    }
 }
 
 function viewQuestsExit() {

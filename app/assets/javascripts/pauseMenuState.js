@@ -36,7 +36,9 @@ var pauseMenuState = {
             functions: {
                 
                 onEnter: viewQuestsEnter,
-                onExit: viewQuestsExit
+                onExit: viewQuestsExit,
+                onUpdate: viewQuestsUpdate,
+                onKeyDown: viewQuestsKeyDown
             }
         }
     ],
