@@ -30,11 +30,55 @@
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes example {
-    0%   { -webkit-transform: translate(-50px,0px)}
-    /*25%  {background-color:yellow; left:200px; top:0px;}*/
-    /*50%  {background-color:blue; left:200px; top:200px;}*/
-    /*75%  {background-color:green; left:0px; top:200px;}*/
-    100% { -webkit-transform: translate(0px,0px);}
+    /*0%   { -webkit-transform: translate(0px,0px)}*/
+    /*60%  { -webkit-transform: translate(0px,100px)}*/
+    /*80%  { -webkit-transform: translate(0px,120px)}*/
+    /*100% { -webkit-transform: translate(0px,100px)}*/
+    
+
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -3000px, 0);
+        transform: translate3d(0, -3000px, 0);
+      }
+    
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 25px, 0);
+        transform: translate3d(0, 25px, 0);
+      }
+    
+      75% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 5px, 0);
+      }
+  /*  0% {*/
+  /*  opacity: 0;*/
+  /*  -webkit-transform: translate2d(-100px, -1000px);*/
+  /*  transform: translate2d(-100px, -1000px);*/
+  /*}*/
+
+  /*60% {*/
+  /*  opacity: 1;*/
+  /*  -webkit-transform: translate2d(0, 25px);*/
+  /*  transform: translate2d(0, 25px);*/
+  /*}*/
+
+  /*75% {*/
+  /*  -webkit-transform: translate2d(0, -10px);*/
+  /*  transform: translate2d(0, -10px);*/
+  /*}*/
+
+  /*90% {*/
+  /*  -webkit-transform: translate2d(0, 5px);*/
+  /*  transform: translate2d(0, 5px);*/
+  /*}*/
+
 	
 }
 
@@ -43,9 +87,9 @@
     font-size: 200%;
     display: inline-block;
     -webkit-animation-name: example; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 1s; /* Chrome, Safari, Opera */
-    -webkit-animation-iteration-count: 3; /* Chrome, Safari, Opera */
-    -webkit-animation-direction: reverse; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 1.5s; /* Chrome, Safari, Opera */
+    -webkit-animation-iteration-count: 1; /* Chrome, Safari, Opera */
+    animation-delay:0.2s; -moz-animation-delay:0.2s; -webkit-animation-delay:0.2s;
     
 }
 
@@ -63,13 +107,13 @@
   <!--This is for the animated verison of "Welcome to GeoHunter"-->
   <div class="row text-center">
       <span id="Welcome">
-          <p class="BouncedDown">W</p>
-          <!--<span class="BouncedDown">e</span>-->
-          <!--<span class="BouncedDown">l</span>-->
-          <!--<span class="BouncedDown">c</span>-->
-          <!--<span class="BouncedDown">o</span>-->
-          <!--<span class="BouncedDown">m</span>-->
-          <!--<span class="BouncedDown">e</span>-->
+          <span class="BouncedDown">W</span>
+          <span class="BouncedDown">e</span>
+          <span class="BouncedDown">l</span>
+          <span class="BouncedDown">c</span>
+          <span class="BouncedDown">o</span>
+          <span class="BouncedDown">m</span>
+          <span class="BouncedDown">e</span>
       </span>
     </div>
   
