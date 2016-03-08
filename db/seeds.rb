@@ -50,4 +50,4 @@ q_orc2 = Quest.create!(name: "Orc Killer",
               description: "Kill 10 Orcs\n
                             Please continue to kill the Orcs. You will be handsomely rewarded.",
               level_req: 1)
-q_orc2.quests << q_orc1
+q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2
