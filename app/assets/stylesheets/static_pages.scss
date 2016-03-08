@@ -142,14 +142,7 @@ footer {
 /* table Typography */
 
 .ranking_table{
-  animation-name: stretch;
-  animation-duration: 1s; 
-  animation-timing-function: linear; 
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
-  animation-fill-mode: none;
-  animation-play-state: running;
+  
   margin: 0;
   background-color: #808080;
   td {
@@ -173,12 +166,41 @@ footer {
 #UsernameInTable{
    width: 50px;
     height: 50px;
-
-    
 }
 
 
+//                   Animation for header to come in from left to right
+@-webkit-keyframes HeaderFromLeft {
+      0% {
+        /*opacity: 0;*/
+        -webkit-transform: translate3d(-3000px, 0, 0);
+        transform: translate3d(-3000px, 0, 0);
+      }
+    
+      60% {
+        /*opacity: 1;*/
+        -webkit-transform: translate3d(25px, 0, 0);
+        transform: translate3d(25px, 0, 0);
+      }
+    
+      75% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0);
+      }
+  
+}
 
+.navbar{
+   -webkit-animation-name: HeaderFromLeft; /* Chrome, Safari, Opera */
+    animation-name: HeaderFromLeft;
+    -webkit-animation-duration: 2s; /* Chrome, Safari, Opera */
+    animation-duration: 2s;
+}
 
 
 
