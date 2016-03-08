@@ -16,10 +16,6 @@ a {
 }
 
 
-
-
-
-
     
 // Place padding for the header to go in.
 body {
@@ -144,7 +140,13 @@ footer {
 .ranking_table{
   
   margin: 0;
-  background-color: #808080;
+  //             Animation for the table
+  
+  -webkit-animation-name: RankTableFromright; /* Chrome, Safari, Opera */
+  animation-name: RankTableFromright;
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
+  float: right;
   td {
     overflow: auto;
     padding: 0.5em 2em;
@@ -157,28 +159,28 @@ footer {
 }
 
 
-#UsernameInTable:hover{
-  background-color: #FFFFFF ;
-  width: 100px;
-  height: 80px;
+// #UsernameInTable:hover{
+//   background-color: #FFFFFF ;
+//   width: 100px;
+//   height: 80px;
   
-}
-#UsernameInTable{
-   width: 50px;
-    height: 50px;
-}
+// }
+// #UsernameInTable{
+//   width: 50px;
+//     height: 50px;
+// }
 
 
 //                   Animation for header to come in from left to right
 @-webkit-keyframes HeaderFromLeft {
       0% {
-        /*opacity: 0;*/
+        opacity: 0;
         -webkit-transform: translate3d(-3000px, 0, 0);
         transform: translate3d(-3000px, 0, 0);
       }
-    
+      
       60% {
-        /*opacity: 1;*/
+        opacity: 1;
         -webkit-transform: translate3d(25px, 0, 0);
         transform: translate3d(25px, 0, 0);
       }
@@ -187,7 +189,7 @@ footer {
         -webkit-transform: translate3d(-10px, 0, 0);
         transform: translate3d(-10px, 0, 0);
       }
-    
+     
       90% {
         -webkit-transform: translate3d(5px, 0, 0);
         transform: translate3d(5px, 0, 0);
@@ -203,5 +205,30 @@ footer {
 }
 
 
-
+@-webkit-keyframes RankTableFromright {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-5000px, 0, 0);
+      }
+      50%{
+        opacity: 0;
+      }
+      
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(25px, 0, 0);
+        transform: translate3d(25px, 0, 0);
+      }
+    
+      75% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0);
+      }
+  
+}
 
