@@ -8,7 +8,7 @@
     <p class="center"><%= link_to "Create New Quest", new_quest_path %></p>
   <% end %>
   <% @quests.each do |quest| %>
-    <% unless current_user.player.quest_req_met?(quest) %>
+    <% if current_user.player.quest_req_met?(quest) %>
       <tr>
         <td>
           <%= link_to quest.name, quest %>

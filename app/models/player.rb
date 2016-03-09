@@ -34,7 +34,7 @@ class Player < ActiveRecord::Base
   
   # Returns true if the player can accept the quest.
   def can_accept?(quest)
-    quest_req_met?(quest) && !accepted?(quest)
+    self.quest_req_met?(quest) && !self.accepted?(quest)
   end
   
   # Returns true if the quest is already accepted.
@@ -44,7 +44,11 @@ class Player < ActiveRecord::Base
   
   # Returns true if the quest requirements are met.
   def quest_req_met?(quest)
-    self.quest_acceptances.where(completed: true).
+    if !quest.quests.empty?
+      self.quest_acceptances.where(completed: true).
               exists?(quest_id: quest.quest_pre_requisites.pluck(:quest_child_id))
+    else
+      true
+    end
   end
 end

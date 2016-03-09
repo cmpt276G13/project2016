@@ -6,6 +6,7 @@ class PlayerTest < ActiveSupport::TestCase
     @quest = quests(:one)
     @quest2 = quests(:two)
     @quest3 = quests(:three)
+    @quest6 = quests(:quest_2)
   end
   
   test "should be valid" do
@@ -32,6 +33,7 @@ class PlayerTest < ActiveSupport::TestCase
   
   test "should be able to accept quest or not" do
     assert @user.player.can_accept?(@quest2)
+    assert @user.player.can_accept?(@quest6)
     assert_not @user.player.can_accept?(@quest)
   end
 end
