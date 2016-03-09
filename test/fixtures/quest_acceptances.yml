@@ -3,10 +3,7 @@
 one:
   player: michael
   quest: one
-
-two:
-  player_id: michael
-  quest: two
+  completed: true
   
 three:
   player_id: archer
