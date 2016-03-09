@@ -7,6 +7,9 @@ class Player < ActiveRecord::Base
   # Don't forget to use @player.save
   serialize :items, Hash
   
+  # Run this method to update the items. You can add additional options for gold.
+  # If gold is not put in, it will update items without the need for price.
+  # params should be like this {item_name: amount, item_name: ...}
   def update_items!(params, options = {})
     # Update gold, if necessary
     gold = options[:gold] || nil
@@ -31,7 +34,7 @@ class Player < ActiveRecord::Base
   
   # Returns true if the player can accept the quest.
   def can_accept?(quest)
-    self.quest_req_met?(quest) && !self.accepted?(quest)
+    quest_req_met?(quest) && !accepted?(quest)
   end
   
   # Returns true if the quest is already accepted.
