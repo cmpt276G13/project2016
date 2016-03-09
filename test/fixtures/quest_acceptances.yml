@@ -5,7 +5,7 @@ michael_one:
   quest_id: 1
   completed: true
   
-michael_quest_0:
+michael_quest_1:
   player: michael
   quest_id: 5
   completed: true

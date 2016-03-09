@@ -29,12 +29,19 @@ class Player < ActiveRecord::Base
     self.save
   end
   
-  # Checks if the requirements are met and prevents duplicates
+  # Returns true if the player can accept the quest.
   def can_accept?(quest)
-    req_met = self.quest_acceptances.where(completed: true).
+    self.quest_req_met?(quest) && !self.accepted?(quest)
+  end
+  
+  # Returns true if the quest is already accepted.
+  def accepted?(quest)
+    self.quest_acceptances.find_by(quest_id: quest[:id])
+  end
+  
+  # Returns true if the quest requirements are met.
+  def quest_req_met?(quest)
+    self.quest_acceptances.where(completed: true).
               exists?(quest_id: quest.quest_pre_requisites.pluck(:quest_child_id))
-    not_duplicate = !self.quest_acceptances.find_by(quest_id: quest[:id])
-    
-    req_met && not_duplicate
   end
 end

@@ -6,6 +6,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @quest = quests(:one)
     @quest2 = quests(:two)
+    @quest5 = quests(:quest_1)
   end
   
   test "index as admin" do
@@ -18,11 +19,16 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'td', "Accepted", count: accepted_quests
     first_page_of_quests = Quest.paginate(page: 1)
     first_page_of_quests.each do |quest|
-      assert_select 'a[href=?]', quest_path(quest), text: quest.name
-      assert_select 'a[href=?]', edit_quest_path(quest), text: 'edit'
-      assert_select 'a[href=?]', quest_path(quest), text: 'delete'
-      unless quest == @quest || @quest2
-        assert_select 'a[href=?]', quests_accept_path(quest), text: 'Accept'
+      # Quest that player has no quest pre-req
+      if quest == @quest2
+        assert_select 'a[href=?]', quests_accept_path(quest), text: 'Accept', count: 0
+      else
+        assert_select 'a[href=?]', quest_path(quest), text: quest.name
+        assert_select 'a[href=?]', edit_quest_path(quest), text: 'edit'
+        assert_select 'a[href=?]', quest_path(quest), text: 'delete'
+        unless quest == @quest || @quest5
+          assert_select 'a[href=?]', quests_accept_path(quest), text: 'Accept'
+        end
       end
     end
   end
