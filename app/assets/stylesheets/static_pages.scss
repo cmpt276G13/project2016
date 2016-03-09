@@ -89,11 +89,14 @@ p {
   &:hover {
     color: white;
     text-decoration: underline;
+    transform: scale(1.1);
   }
 }
 .navbar{
   margin-bottom: 50px;
+  transform: scale(1.1);
 }
+
 /* Footer */
 
 footer {
@@ -120,7 +123,7 @@ footer {
       margin-left: 15px;
     }
   }
-  
+
 }
 
 /* Hub */
@@ -139,14 +142,19 @@ footer {
 
 .ranking_table{
   
-  margin: 0;
+  margin-top: 20px;
   //             Animation for the table
   
   -webkit-animation-name: RankTableFromright; /* Chrome, Safari, Opera */
   animation-name: RankTableFromright;
-  -webkit-animation-duration: 5s;
-  animation-duration: 5s;
-  float: right;
+  -webkit-animation-duration: 4s;
+  animation-duration: 4s;
+  float: left;
+  
+   table {
+   border: 1px solid $gray-medium-light;
+   }
+  
   td {
     overflow: auto;
     padding: 0.5em 2em;
@@ -159,19 +167,11 @@ footer {
 }
 
 
-// #UsernameInTable:hover{
-//   background-color: #FFFFFF ;
-//   width: 100px;
-//   height: 80px;
-  
-// }
-// #UsernameInTable{
-//   width: 50px;
-//     height: 50px;
-// }
 
 
-//                   Animation for header to come in from left to right
+
+
+// Animation for header to show up from left to right
 @-webkit-keyframes HeaderFromLeft {
       0% {
         opacity: 0;
@@ -180,19 +180,24 @@ footer {
       }
       
       60% {
-        opacity: 1;
+        opacity: 0.3;
         -webkit-transform: translate3d(25px, 0, 0);
         transform: translate3d(25px, 0, 0);
       }
     
       75% {
+        opacity: 0.6;
         -webkit-transform: translate3d(-10px, 0, 0);
         transform: translate3d(-10px, 0, 0);
       }
      
       90% {
+        opacity: 0.8;
         -webkit-transform: translate3d(5px, 0, 0);
         transform: translate3d(5px, 0, 0);
+      }
+      100%{
+        opacity: 1;
       }
   
 }
@@ -231,4 +236,6 @@ footer {
       }
   
 }
+
+
 
