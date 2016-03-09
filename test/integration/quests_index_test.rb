@@ -6,7 +6,6 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @quest = quests(:one)
     @quest2 = quests(:two)
-    @quest3 = quests(:three)
   end
   
   test "index as admin" do
@@ -38,7 +37,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
   test "should accept new quest" do
     log_in_as(@admin) 
     assert_difference "QuestAcceptance.count", 1 do
-      get quests_accept_path(@quest3)
+      get quests_accept_path(@quest2)
     end
     assert_template 'quests/index'
   end

@@ -31,9 +31,10 @@ class Player < ActiveRecord::Base
   
   # Checks if the requirements are met and prevents duplicates
   def can_accept?(quest)
-    # req_met = self.quest_acceptances
+    req_met = self.quest_acceptances.where(completed: true).
+              exists?(quest_id: quest.quest_pre_requisites.pluck(:quest_child_id))
     not_duplicate = !self.quest_acceptances.find_by(quest_id: quest[:id])
     
-    # req_met && not_duplicate
+    req_met && not_duplicate
   end
 end

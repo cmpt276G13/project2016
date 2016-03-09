@@ -14,8 +14,16 @@ class PlayerTest < ActiveSupport::TestCase
     assert_not @user.player.valid?
   end
   
-  test "should be able to or not accept quest" do
+  test "should be able to accept new but not existing quest" do
     assert @user.player.can_accept?(quests(:two))
     assert_not @user.player.can_accept?(quests(:one))
+  end
+  
+  test "should be able to accept quest with pre requisites" do
+    assert @user.player.can_accept?(quests(:two))
+  end
+  
+  test "should not be able to accept quest without pre requisites" do
+    assert_not @user.player.can_accept?(quests(:three))
   end
 end
