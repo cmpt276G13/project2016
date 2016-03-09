@@ -9,7 +9,7 @@ class Player < ActiveRecord::Base
   
   # Run this method to update the items. You can add additional options for gold.
   # If gold is not put in, it will update items without the need for price.
-  # params should be like this {item_name: amount, item_name: ...}
+  # params should be like this {item_name:amount, item_name:amount,...}
   def update_items!(params, options = {})
     # Update gold, if necessary
     gold = options[:gold] || nil
