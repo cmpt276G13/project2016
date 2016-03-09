@@ -4,9 +4,8 @@ class UsersController < ApplicationController
   before_action :correct_user_or_admin,   only: [:edit, :update, :destroy]
   
   def index
-    # Change order of users.
-    # User.joins(:user => :player).select("users.id").group("users.id").order("player.experience DESC")
-    @users = User.order_by_points.paginate(page: params[:page], :per_page => User.per_page)
+    # Users are now by default ordered by points. Check user.rb.
+    @users = User.paginate(page: params[:page], :per_page => User.per_page)
   end
   
   def show
