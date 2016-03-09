@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+michael_one:
+  player: michael
+  quest_id: 1
+  completed: true
+  
+michael_quest_1:
+  player: michael
+  quest_id: 5
+  completed: true
+  
+three:
+  player_id: archer
+  quest_id: 1

@@ -33,18 +33,10 @@
     <%= javascript_include_tag "battleState" %>
     <%= javascript_include_tag "pauseMenuState" %>
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
-    <%= javascript_include_tag "items" %>
     <%= javascript_include_tag "questManager" %>
+    <%= javascript_include_tag "itemManager" %>
     
     <script>
-    
-        //for whatever reason the overworldState object is not created unless the screen is refreshed, so forcibly refresh the screen
-        if(typeof overworldState === "undefined") {
-            
-            location.reload();
-        };
-        
-        
         //Returns a random integer between min (inclusive) and max (inclusive)
         function getRandomInt(min, max) {
             
@@ -86,8 +78,7 @@
         player.quests = {};
         
         player.load = function() {
-            
-            
+
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;

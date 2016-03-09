@@ -1,7 +1,9 @@
 {
     "Small Potion": {
+        "_comment": "The items implementation supports a short description and a long description. Template: short desc\nextra desc. The short desc is displayed on the items index. Please make it short ~50 char.",
         
         "description": "A drink that restores 25 health.",
+        "price": 10,
         "battleDescription": "Restores 25 health",
         "effect": "restoreStats",
         
@@ -14,6 +16,7 @@
     "Medium Potion": {
         
         "description": "A drink that restores 70 health.",
+        "price": 30,
         "battleDescription": "Restores 70 health",
         "effect": "restoreStats",
         
