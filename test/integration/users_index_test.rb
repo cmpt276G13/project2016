@@ -6,7 +6,6 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @first_rank = users(:lana)
     @second_rank = users(:malory)
-    @user = users(:user_14)
   end
   
   test "index including pagination and delete links and rankings" do
@@ -18,6 +17,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     first_page_of_users = User.paginate(page: 1)
     all = User.all
     assert_equal all.index(@first_rank), 0 # first position
+    assert_equal all.index(@second_rank), 1 # second position
     first_page_of_users.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.username
       assert_select 'td', "Points: " + (user.player.level - user.player.deaths).to_s , count: User.count('id')
