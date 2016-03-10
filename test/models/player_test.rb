@@ -6,7 +6,9 @@ class PlayerTest < ActiveSupport::TestCase
     @quest = quests(:one)
     @quest2 = quests(:two)
     @quest3 = quests(:three)
-    @quest6 = quests(:quest_2)
+    @quest_complete = quests(:quest_5)
+    @quest6 = quests(:quest_6)
+    @quest_new = quests(:quest_20)
   end
   
   test "should be valid" do
@@ -29,6 +31,23 @@ class PlayerTest < ActiveSupport::TestCase
   
   test "should not be able to accept quest without quest pre requisites" do
     assert_not @user.player.quest_req_met?(@quest3)
+  end
+  
+  test "should be turned in" do
+    assert @user.player.turned_in?(@quest)
+  end
+  
+  test "should not be turned in" do
+    assert_not @user.player.turned_in?(@quest_complete)
+  end
+  
+  test "should be complete" do
+    assert @user.player.completed?(@quest_complete)
+    assert @user.player.completed?(@quest)
+  end
+  
+  test "should not be complete" do
+    assert_not @user.player.completed?(@quest_new)
   end
   
   test "should be able to accept quest or not" do

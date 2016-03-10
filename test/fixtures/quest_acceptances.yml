@@ -6,11 +6,15 @@ michael_one:
   completed: true
   turned_in: true
   
-michael_quest_1:
+michael_quest_5:
   player: michael
   quest_id: 5
   completed: true
-  turned_in: true
+  turned_in: false
+  
+michael_quest_20:
+  player: michael
+  quest_id: 20
   
 three:
   player_id: archer

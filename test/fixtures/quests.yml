@@ -9,23 +9,28 @@ one:
   
 two:
   id: 2
-  name: MyString
-  description: MyText
-  level_req: 1
-  
-three:
-  id: 3
   name: kill orcs
-  description: MyText
+  description: kill 2 orcs
   level_req: 1
   type: KillQuest
   rewards: { "Small Potion": 1 }
   target: { orc: 2 }
+  
+three:
+  id: 3
+  name: another quest
+  description: MyText
+  level_req: 1
 
 <% 30.times do |n| %>
-quest_<%= n %>:
+quest_<%= n + 4 %>:
   id: <%= n + 4 %>
   name: quest_<%= n %>
   description: Description
-  level_req: 2
+  level_req: 1
 <% end %>
+
+high_level:
+  name: high level quest
+  description: Too high level can't accept quest!!!
+  level_req: 5

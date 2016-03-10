@@ -54,7 +54,7 @@ q_orc1.save
 q_orc2 = KillQuest.new(name: "Orc Killer",
               description: "Kill 10 Orcs\n
                             Please continue to kill the Orcs. You will be handsomely rewarded.",
-              level_req: 1)
+              level_req: 2)
 q_orc2.rewards[:items] = { "Small Potion": 3 }
 q_orc2.rewards[:stats] = { experience: 50, gold: 120 }
 q_orc2.target[:orc] = 10

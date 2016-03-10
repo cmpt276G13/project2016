@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310071344) do
+ActiveRecord::Schema.define(version: 20160310224300) do
 
   create_table "places", force: :cascade do |t|
     t.float    "latitude"
@@ -44,9 +44,10 @@ ActiveRecord::Schema.define(version: 20160310071344) do
     t.integer  "player_id"
     t.integer  "quest_id"
     t.boolean  "completed",  default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.boolean  "turned_in"
+    t.text     "progress",   default: "--- {}\n"
   end
 
   add_index "quest_acceptances", ["player_id", "quest_id"], name: "index_quest_acceptances_on_player_id_and_quest_id", unique: true

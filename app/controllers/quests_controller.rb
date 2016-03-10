@@ -5,7 +5,6 @@ class QuestsController < ApplicationController
   before_action :admin, only: [:new, :create, :edit, :update, :destroy]
   
   def index
-    # Change to only show ones that level_req are met
     @quests = Quest.paginate(page: params[:page], per_page: User.per_page)
   end
   

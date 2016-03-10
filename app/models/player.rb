@@ -34,12 +34,17 @@ class Player < ActiveRecord::Base
   
   # Returns true if the player can accept the quest.
   def can_accept?(quest)
-    self.quest_req_met?(quest) && !self.accepted?(quest)
+    quest_req_met?(quest) && !accepted?(quest) && level_met?(quest)
   end
   
-  # Returns true if the quest is already accepted.
+  # Returns the quest_acceptance record if the quest is already accepted. Nil otherwise.
   def accepted?(quest)
     self.quest_acceptances.find_by(quest_id: quest[:id])
+  end
+  
+  # Returns true if the level requirement is met.
+  def level_met?(quest)
+    self.level >= quest.level_req
   end
   
   # Returns true if the quest requirements are met.
@@ -50,5 +55,13 @@ class Player < ActiveRecord::Base
     else
       true
     end
+  end
+  
+  def completed?(quest)
+    accepted?(quest).completed?
+  end
+  
+  def turned_in?(quest)
+    accepted?(quest).turned_in?
   end
 end
