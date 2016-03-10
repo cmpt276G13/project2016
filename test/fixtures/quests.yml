@@ -6,6 +6,7 @@ one:
   description: MyText
   level_req: 1
   
+  
 two:
   id: 2
   name: MyString
@@ -17,6 +18,9 @@ three:
   name: kill orcs
   description: MyText
   level_req: 1
+  type: KillQuest
+  rewards: { "Small Potion": 1 }
+  target: { orc: 2 }
 
 <% 30.times do |n| %>
 quest_<%= n %>:

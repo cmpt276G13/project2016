@@ -4,11 +4,13 @@ michael_one:
   player: michael
   quest_id: 1
   completed: true
+  turned_in: true
   
 michael_quest_1:
   player: michael
   quest_id: 5
   completed: true
+  turned_in: true
   
 three:
   player_id: archer

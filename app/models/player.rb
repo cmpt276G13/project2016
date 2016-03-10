@@ -45,7 +45,7 @@ class Player < ActiveRecord::Base
   # Returns true if the quest requirements are met.
   def quest_req_met?(quest)
     if !quest.quests.empty?
-      self.quest_acceptances.where(completed: true).
+      self.quest_acceptances.where(turned_in: true).
               exists?(quest_id: quest.quest_pre_requisites.pluck(:quest_child_id))
     else
       true
