@@ -1,0 +1,25 @@
+<% provide(:title, 'Shop') %>
+<h1>Shop</h1>
+<p class="center">Gold: <%= @player.gold %></p>
+
+<table class="users">
+  <%= render 'shared/error_messages', object: @player %>
+  <% @items.each do |name, array| %>
+    <tr>
+      <td><%= link_to name, item_path(name) %></td>
+      <!-- The split at the the newline is to make it so the first part of the description -->
+      <!-- is the short description to go in the index -->
+      <td><%= array["description"].split("\n")[0] %></td>
+      <td>Price: <%= array["price"] %> G</td>
+      <%= form_for(@player) do |f| %>
+        <%= hidden_field_tag :item_name, name %>
+        <%= hidden_field_tag :gold, array["price"] %>
+        <td style="width:5em" class="center">
+          <%= f.label "Amount" %>
+          <%= f.number_field :items, min: 1, value: 1, class: 'form-control' %>
+        </td>
+        <td><%= f.submit "Buy", class: "btn btn-primary", id: "shop" %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

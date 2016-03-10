@@ -1,0 +1,10 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  player: michael
+  quest: one
+  completed: true
+  
+three:
+  player_id: archer
+  quest: one

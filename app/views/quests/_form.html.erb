@@ -1,0 +1,15 @@
+<%= form_for(@quest) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <%= f.label :name %>
+  <%= f.text_field :name, class: 'form-control' %>
+
+  <%= f.label :description %>
+  <%= f.text_area :description, class: 'form-control' %>
+
+  <%= f.label :level_req %>
+  <%= f.number_field :level_req, class: 'form-control' %>
+
+  <%= f.submit yield(:button_text), class: "btn btn-primary" %>
+<% end %>
+<p style="margin-top:2em"><%= link_to "Back", quests_path %></p>

@@ -1,0 +1,18 @@
+// Place all the styles related to the Quests controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+/* Quests Index */
+
+.quests {
+  margin: 0;
+  width: 100%;
+  td {
+    overflow: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid $gray-lighter;
+  }
+}

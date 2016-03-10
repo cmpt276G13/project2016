@@ -1,0 +1,17 @@
+<% provide(:title, @quest.name) %>
+
+<h1><%= @quest.name %></h1>
+
+<p><%= simple_format @quest.description %></p>
+
+<div class="container">
+  <ul class="setup_links center">
+    <li><%= link_to "Back", quests_path %></li>
+    <% if current_user.player.can_accept?(@quest) %>
+      <li><%= link_to "Accept", quests_accept_path(@quest[:id]) %></li>
+      <li><%= link_to "Decline", quests_path %></li>
+    <% else %>
+      <li><td id="accepted">Accepted</td></li>
+    <% end %>
+  </ul>
+</div>

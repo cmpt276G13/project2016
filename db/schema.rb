@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160229034706) do
+ActiveRecord::Schema.define(version: 20160307013037) do
+
+  create_table "places", force: :cascade do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "address"
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -32,6 +41,26 @@ ActiveRecord::Schema.define(version: 20160229034706) do
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
+
+  create_table "quest_acceptances", force: :cascade do |t|
+    t.integer  "player_id"
+    t.integer  "quest_id"
+    t.boolean  "completed",  default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "quest_acceptances", ["player_id", "quest_id"], name: "index_quest_acceptances_on_player_id_and_quest_id", unique: true
+  add_index "quest_acceptances", ["player_id"], name: "index_quest_acceptances_on_player_id"
+  add_index "quest_acceptances", ["quest_id", "completed"], name: "index_quest_acceptances_on_quest_id_and_completed"
+  add_index "quest_acceptances", ["quest_id"], name: "index_quest_acceptances_on_quest_id"
+
+  create_table "quest_pre_requisites", force: :cascade do |t|
+    t.integer  "quest_parent_id", null: false
+    t.integer  "quest_child_id",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "quests", force: :cascade do |t|
     t.string   "name"

@@ -7,7 +7,6 @@ class GamesController < ApplicationController
         #note that Player is assumed to be a model
         
         #@player = Player.find(name of player, or some other way to identify him)
-        @users = User.order_by_points.first(10)
         @currentUser = current_user
         
         if request.referer != (hub_url || game_url)
