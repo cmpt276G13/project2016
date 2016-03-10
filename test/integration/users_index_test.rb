@@ -5,6 +5,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     @admin     = users(:michael)
     @non_admin = users(:archer)
     @first_rank = users(:lana)
+    @second_rank = users(:malory)
   end
   
   test "index including pagination and delete links and rankings" do
@@ -14,8 +15,9 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_select 'div.pagination'
     first_page_of_users = User.paginate(page: 1)
-    # Check if first_rank is in the first page.
-    assert_select 'a[href=?]', user_path(@first_rank), text: @first_rank.username
+    all = User.all
+    assert_equal all.index(@first_rank), 0 # first position
+    assert_equal all.index(@second_rank), 1 # second position
     first_page_of_users.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.username
       assert_select 'td', "Points: " + (user.player.level - user.player.deaths).to_s , count: User.count('id')
