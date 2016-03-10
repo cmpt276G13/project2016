@@ -43,11 +43,9 @@
 # Could use the gem migration_data in order to squash migrations and/or populate.
 
 q_orc1 = Quest.create!(name: "Kill Quest!",
-              description: "Kill 5 Orcs\n
-                            The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
+              description: "Kill 5 Orcs.~The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
               level_req: 1)
 q_orc2 = Quest.create!(name: "Orc Killer",
-              description: "Kill 10 Orcs\n
-                            Please continue to kill the Orcs. You will be handsomely rewarded.",
+              description: "Kill 10 Orcs~Please continue to kill the Orcs. You will be handsomely rewarded.",
               level_req: 1)
 q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2

@@ -225,6 +225,31 @@
             return mapData;
         }
         
+        var str;
+        function loadQuests() {
+            
+            <% quests = @currentUser.player.quests %>
+            
+            <% quests.each do |quest| %>
+            
+                quest = {};
+                quest.name = "<%= quest.name.to_s %>"
+                quest.description = "<%= quest.description.to_s %>".replace("~", "\n");
+                
+                //different types of quests
+                quest.type = "kill";
+                
+                if(quest.type == "kill" || quest.type == "gather") {
+                    
+                    //load target names/quantity
+                }
+            
+            <%end%>
+            
+        }
+        
+        loadQuests();
+        
         /*
         
         i put the loadState here because it loads assets using the asset pipeline.
