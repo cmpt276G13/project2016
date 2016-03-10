@@ -7,7 +7,8 @@
 
 // We can decide on the colours later, just use this for a template.
 
-/*All code involve -webkit is defined for Chrome, Safari, Opera */
+// All code involve -webkit is defined for Chrome, Safari, Opera 
+// All code involve -moz is defined for Firefox
 
 $gray-medium-light: #eaeaea;
 
@@ -139,15 +140,17 @@ footer {
   }
 }
 
-/* table Typography */
+/* table  */
 
 .ranking_table{
   
-  margin-top: 20px;
+  margin: 20px;
   float: left;
   //             Animation for the table
+  -moz-animation-name: RankTableFromright;
   -webkit-animation-name: RankTableFromright;
   animation-name: RankTableFromright;
+  -moz-animation-duration: 4s;
   -webkit-animation-duration: 4s;
   animation-duration: 4s;
    table {
@@ -222,6 +225,28 @@ footer {
       }
 }
 
+//             Bouncing Letters
+#WW { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s;}
+#WE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#WL { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#WC { animation-delay: 1s;  -webkit-animation-delay: 1s; -moz-animation-delay: 1s;}
+#WO { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#WM { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#WE { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; -moz-animation-delay: 0.7s;}
+#TT { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s;}
+#TO { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; -moz-animation-delay: 0.7s;}
+#GG { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#GE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#GO {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; -moz-animation-delay: 0.4s;}
+#GH {animation-delay: 1s;  -webkit-animation-delay: 1s; -moz-animation-delay: 1s;}
+#GU {animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#GN {animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#GT {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; -moz-animation-delay: 0.4s;}
+#GE {animation-delay: 0.9s;  -webkit-animation-delay: 0.9s; -moz-animation-delay: 0.9s;}
+#GR {animation-delay: 1.1s;  -webkit-animation-delay: 1.1s; -moz-animation-delay: 1.1s;}
+
+
+
 
 #WelcomeHeader{
   text-align: center;
@@ -242,13 +267,56 @@ span{
 .BouncedDown,#Welcome,#To,#GeoHunter{
 
     font-size: 150%;
+    -moz-animation-name: WelcomeMessage;
     animation-name: WelcomeMessage;
-    -webkit-animation-name: WelcomeMessage; /* Chrome, Safari, Opera */
+    -webkit-animation-name: WelcomeMessage; 
     animation-duration: 2s;
-    -webkit-animation-duration: 2s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 2s; 
+    -moz-animation-duration: 2s;
 }
 
-/* styles on home page*/
+
+
+//             Video's Animation
+@-webkit-keyframes GameplayDemo {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 3000px, 0);
+        transform: translate3d(0, 3000px, 0);
+      }
+      30%{
+        opacity: 0;
+      }
+      60% {
+        opacity: 0.4;
+        -webkit-transform: translate3d(0, -25px, 0);
+        transform: translate3d(0, -25px, 0);
+      }
+    
+      75% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(0, -5px, 0);
+        transform: translate3d(0, -5px, 0);
+      }
+}
+#video{
+    -moz-animation-name: GameplayDemo;
+    -webkit-animation-name: GameplayDemo; /* Chrome, Safari, Opera */
+    animation-name: GameplayDemo;
+    -moz-animation-duration: 5.5s;
+    -webkit-animation-duration: 5.5s; /* Chrome, Safari, Opera */
+    animation-duration: 5.5s;
+}
+
+
+
+
+/* Buttons Style*/
 
 .button {
     background-color: black;
@@ -292,60 +360,4 @@ span{
     color: black;
 
 }
-
-#WW { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; }
-#WE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; }
-#WL { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; }
-#WC { animation-delay: 1s;  -webkit-animation-delay: 1s; }
-#WO { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; }
-#WM { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; }
-#WE { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; }
-#TT { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; }
-#TO { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; }
-#GG { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; }
-#GE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; }
-#GO {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; }
-#GH {animation-delay: 1s;  -webkit-animation-delay: 1s; }
-#GU {animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; }
-#GN {animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; }
-#GT {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; }
-#GE {animation-delay: 0.9s;  -webkit-animation-delay: 0.9s; }
-#GR {animation-delay: 1.1s;  -webkit-animation-delay: 1.1s; }
-
-
-//             Video's Animation
-@-webkit-keyframes GameplayDemo {
-      0% {
-        opacity: 0;
-        -webkit-transform: translate3d(0, 3000px, 0);
-        transform: translate3d(0, 3000px, 0);
-      }
-      30%{
-        opacity: 0;
-      }
-      60% {
-        opacity: 0.4;
-        -webkit-transform: translate3d(0, -25px, 0);
-        transform: translate3d(0, -25px, 0);
-      }
-    
-      75% {
-        opacity: 1;
-        -webkit-transform: translate3d(0, 10px, 0);
-        transform: translate3d(0, 10px, 0);
-      }
-    
-      90% {
-        -webkit-transform: translate3d(0, -5px, 0);
-        transform: translate3d(0, -5px, 0);
-      }
-}
-#video{
-    -webkit-animation-name: GameplayDemo; /* Chrome, Safari, Opera */
-    animation-name: GameplayDemo;
-    -webkit-animation-duration: 5.5s; /* Chrome, Safari, Opera */
-    animation-duration: 5.5s;
-}
-
-
 
