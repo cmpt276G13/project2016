@@ -15,7 +15,11 @@ michael_quest_5:
 michael_quest_20:
   player: michael
   quest_id: 20
+  completed: false
+  turned_in: false
   
 three:
   player_id: archer
   quest_id: 1
+  completed: false
+  completed: false

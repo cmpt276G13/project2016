@@ -8,8 +8,9 @@
     <p class="center"><%= link_to "Create New Quest", new_quest_path %></p>
   <% end %>
   <% @quests.each do |quest| %>
-    <% if current_user.player.quest_req_met?(quest) && 
-          current_user.player.level_met?(quest) %>
+    <% if current_player.quest_req_met?(quest) && 
+          current_player.level_met?(quest) &&
+          !current_player.turned_in?(quest) %>
       <tr>
         <td>
           <%= link_to quest.name, quest %>
@@ -20,8 +21,12 @@
           <% end %>
         </td>
         <td><%= quest.description.split("\n")[0] %></td>
-        <% if current_user.player.accepted?(quest) %>
-          <td id="accepted">Accepted</td>
+        <% if current_player.accepted?(quest) %>
+          <% if current_player.completed?(quest) %>
+            <td><%= link_to "Turn in", "#" %></td>
+          <% else %>
+            <td id="accepted">Accepted</td>
+          <% end %>
         <% else %>
           <td><%= link_to "Accept", quests_accept_path(quest[:id]) %></td>
         <% end %>

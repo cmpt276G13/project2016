@@ -30,6 +30,13 @@ module SessionsHelper
     end
   end
   
+  # Returns the current player, if any.
+  def current_player
+    if current_user
+      current_user.player
+    end
+  end
+  
   # Returns true if the user is logged in, false otherwise.
   def logged_in?
     !current_user.nil?

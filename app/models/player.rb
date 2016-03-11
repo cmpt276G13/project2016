@@ -37,7 +37,7 @@ class Player < ActiveRecord::Base
     quest_req_met?(quest) && !accepted?(quest) && level_met?(quest)
   end
   
-  # Returns the quest_acceptance record if the quest is already accepted. Nil otherwise.
+  # Returns the quest_acceptance record, if any. Returns Nil, otherwise.
   def accepted?(quest)
     self.quest_acceptances.find_by(quest_id: quest[:id])
   end
@@ -58,10 +58,10 @@ class Player < ActiveRecord::Base
   end
   
   def completed?(quest)
-    accepted?(quest).completed?
+    accepted?(quest).completed? if accepted?(quest)
   end
   
   def turned_in?(quest)
-    accepted?(quest).turned_in?
+    accepted?(quest).turned_in? if accepted?(quest)
   end
 end

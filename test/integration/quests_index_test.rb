@@ -6,6 +6,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @quest_turned_in = quests(:one)
     @quest2 = quests(:two)
+    # Quests 3 and 4 have requirements that admin does not have.
     @quest3 = quests(:three)
     @quest4 = quests(:quest_4)
     @quest_complete = quests(:quest_5)
@@ -19,8 +20,9 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_template 'quests/index'
     assert_select 'a[href=?]', new_quest_path, text: "Create New Quest"
     assert_select 'div.pagination'
-    accepted_quests = @admin.player.quest_acceptances.count
+    accepted_quests = @admin.player.quest_acceptances.where(completed: true, turned_in: false).count
     assert_select 'td', "Accepted", count: accepted_quests
+    assert_select 'a', text: @quest_turned_in.name, count: 0
     first_page_of_quests = Quest.paginate(page: 1)
     first_page_of_quests.each do |quest|
       unless quest == @quest3 || @quest4 || @quest_turned_in
