@@ -11,17 +11,17 @@ class Player < ActiveRecord::Base
   # If gold is not put in, it will update items without the need for price.
   # params should be like this {item_name:amount, item_name:amount,...}
   def update_items!(params, options = {})
-    # Update gold, if necessary
-    gold = options[:gold] || nil
-    if gold
-      if self.gold >= gold
-        self.update_attributes(gold: (self.gold - gold))
-      else
-        return false
-      end
-    end
+    price = options[:price].to_i || nil
     
     params.each do |key, value|
+      if price # Update gold, if necessary
+        if self.gold >= price * value.to_i
+          self.gold = self.gold - price
+        else
+          return false
+        end
+      end
+      
       if self.items[key]
         self.items[key] = self.items[key].to_i + value.to_i
       else
@@ -30,6 +30,27 @@ class Player < ActiveRecord::Base
     end
     
     self.save
+  end
+  
+  # Handles level ups.
+  def level_up
+    while self.experience >= self.experience_to_next_level
+      self.level += 1
+      
+      self.max_health += 20
+      self.health = self.max_health
+      self.strength += 5
+      self.defense += 5
+      self.experience -= self.experience_to_next_level
+      self.experience_to_next_level += 5 * self.level
+    end
+    
+    self.save
+  end
+  
+  # Turns in the quest given the quest_id
+  def turn_in(quest_id)
+    self.quest_acceptances.find_by(quest_id: quest_id).update(turned_in: true)
   end
   
   # Returns true if the player can accept the quest.

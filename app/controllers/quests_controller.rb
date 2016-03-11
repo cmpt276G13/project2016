@@ -50,8 +50,7 @@ class QuestsController < ApplicationController
   def accept
     quest = Quest.find(params[:id])
     current_user.player.quests << quest
-    index
-    render 'index'
+    redirect_to quests_url
   end
   
   private

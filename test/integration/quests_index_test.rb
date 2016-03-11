@@ -20,7 +20,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_template 'quests/index'
     assert_select 'a[href=?]', new_quest_path, text: "Create New Quest"
     assert_select 'div.pagination'
-    accepted_quests = @admin.player.quest_acceptances.where(completed: true, turned_in: false).count
+    accepted_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false).count
     assert_select 'td', "Accepted", count: accepted_quests
     assert_select 'a', text: @quest_turned_in.name, count: 0
     first_page_of_quests = Quest.paginate(page: 1)
@@ -65,7 +65,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_difference "QuestAcceptance.count", 1 do
       get quests_accept_path(@quest2)
     end
-    assert_template 'quests/index'
+    assert_redirected_to quests_url
   end
   
   test "should accept new quest with no pre-req" do
@@ -73,7 +73,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_difference "QuestAcceptance.count", 1 do
       get quests_accept_path(@quest6)
     end
-    assert_template 'quests/index'
+    assert_redirected_to quests_url
   end
   
   test 'index as non-admin' do

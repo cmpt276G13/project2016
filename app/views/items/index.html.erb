@@ -12,11 +12,10 @@
       <td><%= array["description"].split("\n")[0] %></td>
       <td>Price: <%= array["price"] %> G</td>
       <%= form_for(@player) do |f| %>
-        <%= hidden_field_tag :item_name, name %>
-        <%= hidden_field_tag :gold, array["price"] %>
+        <%= hidden_field_tag :price, array["price"] %>
         <td style="width:5em" class="center">
           <%= f.label "Amount" %>
-          <%= f.number_field :items, min: 1, value: 1, class: 'form-control' %>
+          <%= f.number_field [:items, name, :amount], min: 1, value: 1, class: 'form-control' %>
         </td>
         <td><%= f.submit "Buy", class: "btn btn-primary", id: "shop" %></td>
       <% end %>

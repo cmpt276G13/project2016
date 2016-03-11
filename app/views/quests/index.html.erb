@@ -22,8 +22,19 @@
         </td>
         <td><%= quest.description.split("\n")[0] %></td>
         <% if current_player.accepted?(quest) %>
+        
           <% if current_player.completed?(quest) %>
-            <td><%= link_to "Turn in", "#" %></td>
+            <%= form_for(current_player) do |f| %>
+              <%= f.hidden_field :quest, value: quest.id %>
+              <% quest.rewards[:items].each do |key, value| %>
+                <%= f.hidden_field "items[#{key}]", value: value %>
+              <% end %>
+              <% quest.rewards[:stats].each do |key, value| %>
+                <%= f.hidden_field key, value: value %>
+              <% end %>
+              <td><%= f.submit "Turn in", class: "btn btn-primary" %></td>
+            <% end %>
+            
           <% else %>
             <td id="accepted">Accepted</td>
           <% end %>
