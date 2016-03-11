@@ -28,6 +28,9 @@ quest_<%= n + 4 %>:
   name: quest_<%= n %>
   description: Description
   level_req: 1
+  type: KillQuest
+  rewards: { "Small Potion": 1 }
+  target: { orc: 3 }
 <% end %>
 
 high_level:
