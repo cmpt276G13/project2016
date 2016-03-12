@@ -237,6 +237,9 @@
             
             <% quests.each do |quest| %>
             
+                //skip turned in quests
+                <% next if @currentUser.player.accepted?(quest).turned_in%>
+                
                 quest = <%=quest.to_json.html_safe%>
                 quest.type = "<%= quest.type%>"
                 quest.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
