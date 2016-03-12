@@ -8,6 +8,7 @@ class PlacesController < ApplicationController
   # GET /places.json
   def index
     @places = Place.all
+    @chosen = {:title => "TEST PLACE (index method)", :lat => 49.2827, :lng => -123.1207}
     @user_location = get_user_location
     init_markers
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
@@ -74,7 +75,11 @@ class PlacesController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
+  def choose
+    @chosen = Place.find(params[:id])
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_place
