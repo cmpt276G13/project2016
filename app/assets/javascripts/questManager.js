@@ -110,7 +110,7 @@ function questDisplay(config) {
 
 questDisplay.prototype.createProgressReport = function() {
     
-    if(this.configuration.quest.type.toLowerCase() == "killquest") {
+    if(this.configuration.quest.type.toLowerCase() == "killquest" || this.configuration.quest.type.toLowerCase() == "gatherquest") {
         
         for(targetName in this.configuration.quest.target) {
             
