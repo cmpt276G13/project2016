@@ -2,7 +2,7 @@ class Player < ActiveRecord::Base
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
-  has_many :places
+  
   validates :user_id, presence: true
   # Use eg. @player.items = ['name', 'id']
   # Or append the array 
