@@ -15,7 +15,7 @@ class PlacesController < ApplicationController
       marker.lng place.longitude
       marker.infowindow place.title
       marker.picture({
-        "url" => "http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-32.png",
+        "url" => "https://cdn3.iconfinder.com/data/icons/location-vol-2/128/location-15-32.png",
         "width" => 32,
         "height" => 32})
     end
