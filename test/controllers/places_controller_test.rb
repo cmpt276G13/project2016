@@ -1,51 +1,38 @@
 require 'test_helper'
 
 class PlacesControllerTest < ActionController::TestCase
-=begin
-  setup do
+  def setup
     @place = places(:one)
   end
-
-  test "should get index" do
+  test "should redirect index when not logged in" do
     get :index
-    assert_response :success
-    assert_not_nil assigns(:places)
+    assert_not flash.empty?
+    assert_redirected_to login_url
   end
-
-  test "should get new" do
+  
+  test "should redirect new when not logged in" do
     get :new
-    assert_response :success
+    assert_not flash.empty?
+    assert_redirected_to login_url
   end
 
-  test "should create place" do
-    assert_difference('Place.count') do
-      post :create, place: { address: @place.address, latitude: @place.latitude, longitude: @place.longitude, title: @place.title }
-    end
-
-    assert_redirected_to place_path(assigns(:place))
-  end
-
-  test "should show place" do
+  test "should redirect show when not logged in" do
     get :show, id: @place
-    assert_response :success
+    assert_not flash.empty?
+    assert_redirected_to login_url
   end
 
-  test "should get edit" do
+  test "should redirect edit when not logged in" do
     get :edit, id: @place
-    assert_response :success
+    assert_not flash.empty?
+    assert_redirected_to login_url
   end
-
-  test "should update place" do
-    patch :update, id: @place, place: { address: @place.address, latitude: @place.latitude, longitude: @place.longitude, title: @place.title }
-    assert_redirected_to place_path(assigns(:place))
-  end
-
-  test "should destroy place" do
-    assert_difference('Place.count', -1) do
+  
+  test "should redirect destroy when not logged in" do
+    assert_no_difference 'Place.count' do
       delete :destroy, id: @place
     end
-
-    assert_redirected_to places_path
+    assert_redirected_to login_url
   end
-=end
+
 end
