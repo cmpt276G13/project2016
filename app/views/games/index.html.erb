@@ -105,9 +105,7 @@
             
             this.items = items;
             
-            var quests = {};
-            
-            quests["q1"] = assignQuest("q1");
+            loadQuests();
             //this.quests = quests;
             //do something to load quests
             
@@ -250,6 +248,7 @@
                 player.quests[quest.id] = quest;
             <%end%>
             
+            questManager.onInventoryCheck();
         }
         
         loadQuests();
@@ -348,8 +347,7 @@
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
         		game.world.remove(player.sprite);
-        		
-        		loadQuests();
+        
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
                 //document.getElementById("additional").innerHTML = mapKeys.mapKey;

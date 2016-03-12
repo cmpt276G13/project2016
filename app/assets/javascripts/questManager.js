@@ -229,3 +229,45 @@ questManager.onKillMonster = function(monsterName, quantity) {
         }
     }
 }
+
+//check player's inventory for quest completion items
+questManager.onInventoryCheck = function() {
+    
+    for(quest in player.quests) {
+        
+        if(player.quests[quest].type.toLowerCase() == "gatherquest") {
+            
+            questManager.checkInventoryForQuestRequirements(player.quests[quest]);
+        }
+    }
+}
+
+questManager.checkInventoryForQuestRequirements = function(quest) {
+    
+    var playerHasRequiredItems = true;
+    
+    for(target in quest.target) {
+        
+        if(typeof player.items[target] === "undefined") {
+            
+            playerHasRequiredItems = false;
+            continue;
+        }
+        
+        //player has this item, update how many he has
+        quest.progress[target] = player.items[target].quantity;
+        
+        if(player.items[target].quantity < quest.target[target]) {
+            
+            playerHasRequiredItems = false;
+        }
+    }
+    
+    if(!quest.completed && playerHasRequiredItems) {
+        
+        questManager.recentlyCompletedQuests.push(quest.name);
+    }
+    
+    quest.completed = playerHasRequiredItems;
+    
+}
