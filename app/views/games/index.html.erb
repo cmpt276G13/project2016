@@ -131,8 +131,16 @@
                 defense: this.defense,
                 deaths: this.deaths,
                 skills: this.skills,
-                items: {}
+                items: {},
+                quest_progress: {}
             };
+            
+            for(quest in player.quests) {
+                
+                saveData.quest_progress[quest] = {};
+                saveData.quest_progress[quest].progress = player.quests[quest].progress;
+                saveData.quest_progress[quest].completed = player.quests[quest].completed;
+            }
             
             for(item in this.items) {
                 
@@ -232,6 +240,7 @@
                 quest = <%=quest.to_json.html_safe%>
                 quest.type = "<%= quest.type%>"
                 quest.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
+                quest.completed = <%= @currentUser.player.accepted?(quest).completed %>
                 
                 //check if no progress is provided
                 if(jQuery.isEmptyObject(quest.progress)) {
