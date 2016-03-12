@@ -10,7 +10,7 @@ michael:
   level: 1
   experience: 2
   gold: 100
-  items: {}
+  items: { "Small Potion": 1 }
 
 archer:
   user: archer

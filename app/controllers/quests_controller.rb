@@ -5,7 +5,6 @@ class QuestsController < ApplicationController
   before_action :admin, only: [:new, :create, :edit, :update, :destroy]
   
   def index
-    # Change to only show ones that level_req are met
     @quests = Quest.paginate(page: params[:page], per_page: User.per_page)
   end
   
@@ -50,9 +49,9 @@ class QuestsController < ApplicationController
   # Accepts the given quest.
   def accept
     quest = Quest.find(params[:id])
-    current_user.player.quests << quest
-    index
-    render 'index'
+    current_player.quests << quest
+    current_player.init_progress(quest)
+    redirect_to quests_url
   end
   
   private

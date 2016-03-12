@@ -10,5 +10,7 @@ class Quest < ActiveRecord::Base
   has_many :quests, through: :quest_pre_requisites, source: :quest_child
   has_many :quest_acceptances
   has_many :players, through: :quest_acceptances
-  serialize [:pre_req, :other_req], Array
+  serialize :rewards, Hash
+  serialize :other_req, Hash
+  serialize :target, Hash
 end

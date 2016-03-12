@@ -1,23 +1,42 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  id: 1
   name: Example
   description: MyText
   level_req: 1
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
+  
   
 two:
-  name: MyString
-  description: MyText
+  id: 2
+  name: kill orcs
+  description: kill 2 orcs
   level_req: 1
+  type: KillQuest
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
+  target: <%= { orc: 2 }.to_yaml.inspect %>
   
 three:
-  name: MyString
+  id: 3
+  name: another quest
   description: MyText
   level_req: 1
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
 
 <% 30.times do |n| %>
-quest_<%= n %>:
+quest_<%= n + 4 %>:
+  id: <%= n + 4 %>
   name: quest_<%= n %>
   description: Description
-  level_req: 2
+  level_req: 1
+  type: KillQuest
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
+  target: <%= { orc: 3 }.to_yaml.inspect %>
 <% end %>
+
+high_level:
+  name: high level quest
+  description: Too high level can't accept quest!!!
+  level_req: 5
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>

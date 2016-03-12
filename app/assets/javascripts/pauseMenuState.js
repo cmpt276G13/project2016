@@ -10,8 +10,74 @@ var pauseMenuState = {
                 onUpdate: menuHomeUpdate,
                 onKeyDown: menuHomeKeyDown
             }
+        },
+        
+        {name: "viewItems",
+            functions: {
+                
+                onEnter: viewItemsEnter,
+                onExit: viewItemsExit,
+                onUpdate: viewItemsUpdate,
+                onKeyDown: viewItemsKeyDown
+            }
+        },
+        
+        {name: "viewSkills",
+            functions: {
+                
+                onEnter: viewSkillsEnter,
+                onExit: viewSkillsExit,
+                onUpdate: viewSkillsUpdate,
+                onKeyDown: viewSkillsKeyDown
+            }
+        },
+        
+        {name: "viewQuests",
+            functions: {
+                
+                onEnter: viewQuestsEnter,
+                onExit: viewQuestsExit,
+                onUpdate: viewQuestsUpdate,
+                onKeyDown: viewQuestsKeyDown
+            }
         }
     ],
+    
+    createPlayerQuestDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Quests", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
+    
+    createPlayerItemDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Items", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
+    
+    createPlayerSkillDisplay: function() {
+        
+        var display = {};
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        
+        display.title = game.add.text(display.background.width / 2, 15, "Skills", actionStyle);
+        display.title.anchor.x = 0.5;
+        display.background.addChild(display.title);
+        
+        return display;
+    },
     
     //create a box that displays the player's stats
     //this only shows basic stats, and doesn't isn't used to edit hte user's stats
@@ -62,7 +128,7 @@ var pauseMenuState = {
             }
         };
         
-        display.healthBar = new HealthBar(game, barConfig);
+        display.healthBar = new HealthBar(barConfig);
         display.healthBar.setValueNoTransition(player.health);
         display.healthBar.addParent(display.background);
         
@@ -72,7 +138,7 @@ var pauseMenuState = {
         barConfig.bar.gradientStart = '#ffff00';
         barConfig.bar.gradientEnd = '#7af588';
         
-        display.expBar = new HealthBar(game, barConfig);
+        display.expBar = new HealthBar(barConfig);
         display.expBar.setValueNoTransition(player.experience);
         display.expBar.addParent(display.background);
         
@@ -81,7 +147,7 @@ var pauseMenuState = {
         barConfig.bar.gradientStart = '#00cdcd';
         barConfig.bar.gradientEnd = '#7af5f5';
         
-        display.manaBar = new HealthBar(game, barConfig);
+        display.manaBar = new HealthBar(barConfig);
         display.manaBar.setValueNoTransition(player.mana);
         display.manaBar.addParent(display.background);
         
@@ -92,12 +158,28 @@ var pauseMenuState = {
         return display;
     },
     
+    showMessage: function(message) {
+        
+        this.messageBox.setText(message);
+        this.messageBox.show();
+    },
+    
+    hideMessage: function() {
+        
+        this.messageBox.hide();
+    },
+    
     create: function() {
         
         //create a list of actions the player can select from
-        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'edit stats'}, {text: 'items'}, {text: 'skills'}, {text: 'back'}]);
+        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'items'}, {text: 'skills'}, {text: 'quests'}, {text: 'back'}]);
         
         this.statDisplay = this.createPlayerStatDisplay();
+        this.itemDisplay = this.createPlayerItemDisplay();
+        this.skillDisplay = this.createPlayerSkillDisplay();
+        this.questDisplay = this.createPlayerQuestDisplay();
+        
+        this.messageBox = new textBox(0, game.scale.height - 75, game.scale.width, 75, false);
         
         game.input.keyboard.addCallbacks(this, this.handleKeyDown);
         

@@ -7,6 +7,9 @@ function exploreEnter() {
 function exploreExit() {
     
     //currently nothing to be done
+    //stop player moving 
+    player.sprite.animations.stop(null, true);
+    player.sprite.body.velocity.setTo(0, 0);
 };
 
 function exploreUpdate() {

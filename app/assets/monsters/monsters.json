@@ -2,20 +2,21 @@
     "orc": {
         
         "imageKey": "orc",
-        "name": "orc",
-        "maxHealth": 14,
-        "health": 14,
-        "maxMana": 10,
-        "mana": 10,
-        "magicPower": 6,
+        "name": "Orc",
+        "levelRange": 4,
+        "maxHealth": 5,
+        "maxMana": 5,
+        "magicPower": 1,
         "magicDefense": 0,
-        "defense": 6,
-        "strength": 6,
+        "defense": 4,
+        "strength": 5,
         "startingFrame": 8,
         "animations": [
-            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 5},
+            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 8},
             {"name": "dying", "frames": [8, 12, 0, 4, 8, 12, 0, 4], "speed": 5}
         ],
+        
+        "skills": ["Fireball"],
         
         "rewards": {
             

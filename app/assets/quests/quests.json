@@ -1,0 +1,47 @@
+{
+    "q1": {
+        
+        "name": "The first hunt",
+        "description": "Kill 5 Orcs",
+        "type": "killQuest",
+        "targetName": "orc",
+        "targetAmount": 5,
+        "rewards": {
+            
+            "items": {
+                
+                "Small Potion": 2,
+                "Medium Potion": 1
+            },
+            
+            "stats": {
+                
+                "experience": 500,
+                "gold": 100
+            }
+        }
+    },
+    
+    "q2": {
+        
+        "name": "Collect 3 Small Potions",
+        "description": "Gather 3 small potions.",
+        "type": "gatherQuest",
+        "targetName": "Small Potion",
+        "targetAmount": 3,
+        "reward": {
+            
+            "items": {
+                
+                "Small Potion": 5,
+                "Medium Potion": 2
+            },
+            
+            "stats": {
+                
+                "experience": 500,
+                "gold": 100
+            }
+        }
+    }
+}

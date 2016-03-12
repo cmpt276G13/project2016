@@ -92,8 +92,6 @@ var overworldState = {
         
         game.add.existing(player.sprite);
         
-        
-        
         //add a forewground layer
         this.foreground = this.map.createLayer('foreground');
         
@@ -142,6 +140,7 @@ var overworldState = {
         //save player data here for now, mostly because external states make changes to player
         //so instead of saving player in every single state, we will just save the player when he returns to the map
         player.save();
+        questManager.onInventoryCheck();
         
         lastState = "overworld";
     },

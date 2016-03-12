@@ -42,12 +42,27 @@
 # Could use the gem populate in order to populate the db instead of seeding.
 # Could use the gem migration_data in order to squash migrations and/or populate.
 
-q_orc1 = Quest.create!(name: "Kill Quest!",
-              description: "Kill 5 Orcs\n
-                            The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
+q_orc1 = KillQuest.new(name: "Kill Quest!",
+              description: "Kill 5 Orcs\nThe Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
               level_req: 1)
-q_orc2 = Quest.create!(name: "Orc Killer",
-              description: "Kill 10 Orcs\n
-                            Please continue to kill the Orcs. You will be handsomely rewarded.",
-              level_req: 1)
+q_orc1.rewards[:items] = { "Small Potion": "1" }
+q_orc1.rewards[:stats] = { experience: 30, gold: 100 }
+q_orc1.target[:Orc] = 5
+q_orc1.save
+
+q_orc2 = KillQuest.new(name: "Orc Killer",
+              description: "Kill 10 Orcs\nPlease continue to kill the Orcs. You will be handsomely rewarded.",
+              level_req: 2)
+q_orc2.rewards[:items] = { "Small Potion": 3 }
+q_orc2.rewards[:stats] = { experience: 50, gold: 120 }
+q_orc2.target[:Orc] = 10
 q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2
+q_orc2.save
+
+q_s_potion = GatherQuest.new(name: "Gather Quest!",
+                                  description: "Gather 3 Small Potions\nI have discovered a new brewing method! I can take Small Potions and increase their potency. Please gather some.",
+                                  level_req: 1)
+q_s_potion.rewards[:items] = { "Small Potion": 4, "Medium Potion": 2 }
+q_s_potion.rewards[:stats] = { experience: 30, gold: 50 }
+q_s_potion.target["Small Potion"] = 3
+q_s_potion.save

@@ -33,6 +33,7 @@
     <%= javascript_include_tag "battleState" %>
     <%= javascript_include_tag "pauseMenuState" %>
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
+    <%= javascript_include_tag "questManager" %>
     <%= javascript_include_tag "itemManager" %>
     
     <script>
@@ -74,6 +75,7 @@
         player.items = {};
         player.skills = ["Fireball"];
         player.deaths = 0;
+        player.quests = {};
         
         player.load = function() {
 
@@ -98,8 +100,14 @@
                 
                 items[name] = createItem(name, quantity);
             <%end%>
+            items["Small Potion"] = createItem("Small Potion", 4);
+            items["Medium Potion"] = createItem("Medium Potion", 4);
             
             this.items = items;
+            
+            loadQuests();
+            //this.quests = quests;
+            //do something to load quests
             
             //player.items = ...
             //player.skills = ...
@@ -123,8 +131,16 @@
                 defense: this.defense,
                 deaths: this.deaths,
                 skills: this.skills,
-                items: {}
+                items: {},
+                quest_progress: {}
             };
+            
+            for(quest in player.quests) {
+                
+                saveData.quest_progress[quest] = {};
+                saveData.quest_progress[quest].progress = player.quests[quest].progress;
+                saveData.quest_progress[quest].completed = player.quests[quest].completed;
+            }
             
             for(item in this.items) {
                 
@@ -144,6 +160,7 @@
         player.respawn = function(spawnPoint) {
             
             this.health = this.maxHealth;
+            this.mana = this.maxMana;
             this.sprite.x = spawnPoint.x;
             this.sprite.y = spawnPoint.y;
             this.sprite.animations.stop();
@@ -214,6 +231,40 @@
             return mapData;
         }
         
+        function loadQuests() {
+            
+            <% quests = @currentUser.player.quests %>
+            
+            <% quests.each do |quest| %>
+            
+                //skip turned in quests
+                <% next if @currentUser.player.accepted?(quest).turned_in%>
+                
+                quest = <%=quest.to_json.html_safe%>
+                quest.type = "<%= quest.type%>"
+                quest.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
+                quest.completed = <%= @currentUser.player.accepted?(quest).completed %>
+                
+                //check if no progress is provided
+                if(jQuery.isEmptyObject(quest.progress)) {
+                    
+                    if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
+                        
+                        for(name in quest.target) {
+                            
+                            quest.progress[name] = 0;
+                        }
+                    }
+                }
+                
+                player.quests[quest.id] = quest;
+            <%end%>
+            
+            questManager.onInventoryCheck();
+        }
+        
+        loadQuests();
+        
         /*
         
         i put the loadState here because it loads assets using the asset pipeline.
@@ -261,6 +312,9 @@
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
+                //load quests
+                game.load.json('questData', '<%= asset_path("quests.json") %>');
+                
                 //load skill data, and animations
                 game.load.json('skillData', '<%= asset_path("skills.json") %>');
                 
@@ -305,7 +359,7 @@
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
         		game.world.remove(player.sprite);
-        		
+        
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
                 //document.getElementById("additional").innerHTML = mapKeys.mapKey;

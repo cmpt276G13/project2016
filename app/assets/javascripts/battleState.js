@@ -311,7 +311,16 @@ var battleState = {
             //now we can use this key to load the monster data
             //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
             var monster = new rpgEntity();
-            $.extend(monster, monsterDatabase[monsterName]);
+            jQuery.extend(monster, monsterDatabase[monsterName]);
+            
+            //copy rewards seperately because the above extend function creates a reference to the original rewards
+            //and when the copy is modified, so is the original, and i don't want that
+            monster.rewards = {};
+            jQuery.extend(monster.rewards, monsterDatabase[monsterName].rewards);
+            
+            //now scale monster to player's level
+            scaleMonsterToPlayer(monster, player.level);
+            scaleMonsterRewardsToLevel(monster, monsterDatabase[monsterName].rewards );
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
             
@@ -396,6 +405,13 @@ var battleState = {
                 
                 return false;
             }
+            
+            //monster was killed, add to list of defeated monsters
+            if(typeof this.defeatedMonsters[entities[i].name] === "undefined") {
+                
+                this.defeatedMonsters[entities[i].name ] = 0;
+            }
+            this.defeatedMonsters[entities[i].name] += 1;
             
             entities[i].sprite.destroy();
             entities.splice(i, 1);
@@ -489,7 +505,7 @@ var battleState = {
             }
         };
         
-        statContainer.playerHealthBar = new HealthBar(game, barStyle);
+        statContainer.playerHealthBar = new HealthBar(barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
         statContainer.playerHealthBar.addParent(statContainer.textBox.background);
         
@@ -498,7 +514,7 @@ var battleState = {
         barStyle.bg = {color: '#000033'};
         barStyle.bar = {gradientStart: '#00cdcd'};
         
-        statContainer.playerManaBar = new HealthBar(game, barStyle);
+        statContainer.playerManaBar = new HealthBar(barStyle);
         statContainer.playerManaBar.setValueNoTransition(player.mana);
         statContainer.playerManaBar.addParent(statContainer.textBox.background);
         
@@ -639,6 +655,10 @@ var battleState = {
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural
         this.monsters = this.loadMonsters();
+        
+        //keeps track of all the monsters that the player has defeated
+        //this object will contain, "monsterNAme": numberKilled
+        this.defeatedMonsters = {};
         
         //we've only loaded the data for the mosnter, we now need to create an image so we can see them
         this.generateMonsterSprites(this.monsters);

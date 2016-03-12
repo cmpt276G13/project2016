@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class QuestsNewTest < ActionDispatch::IntegrationTest
-   def setup
+  def setup
     @user = users(:michael)
   end
   
