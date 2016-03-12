@@ -112,10 +112,13 @@ questDisplay.prototype.createProgressReport = function() {
     
     if(this.configuration.quest.type.toLowerCase() == "killquest") {
         
-        var progressString = this.configuration.quest.targetName + ":   " + this.configuration.quest.targetsAcquired + "/" + this.configuration.quest.targetAmount;
-        this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
-        this.progressReport.anchor.x = 0.5;
-        this.parentGraphics.addChild(this.progressReport);
+        for(targetName in this.configuration.quest.target) {
+            
+            var progressString = targetName + ":   " + this.configuration.quest.progress[targetName] + "/" + this.configuration.quest.target[targetName];
+            this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
+            this.progressReport.anchor.x = 0.5;
+            this.parentGraphics.addChild(this.progressReport);
+        }
     }
 }
 
@@ -206,19 +209,19 @@ questManager.onKillMonster = function(monsterName, quantity) {
         }
         
         //killing quest, but wrong target, skip
-        if(quest.targetName.toLowerCase() != monsterName.toLowerCase()) {
+        if(typeof quest.target[monsterName] === "undefined") {
             
             continue;
         }
         
         //killed the monster for this quest, make player progress on the quest
-        quest.targetsAcquired += quantity;
+        quest.progress[monsterName] += quantity;
         
         //don't let player's progress exceed required number of monster
-        if(quest.targetsAcquired >= quest.targetAmount) {
+        if(quest.progress[monsterName] >= quest.target[monsterName]) {
             
             quest.completed = true;
-            quest.targetsAcquired = quest.targetAmount;
+            quest.progress[monsterName] = quest.target[monsterName];
             
             //optionally for later
             //queue completed quests to display message to player

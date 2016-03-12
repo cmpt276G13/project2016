@@ -108,7 +108,7 @@
             var quests = {};
             
             quests["q1"] = assignQuest("q1");
-            this.quests = quests;
+            //this.quests = quests;
             //do something to load quests
             
             //player.items = ...
@@ -270,8 +270,23 @@
                 //load progress
                 var jsonString = <%=@currentUser.player.accepted?(quest).to_json.html_safe%>;
                 
-                player.quests["q2"] = quest;
                 
+                str = <%=quest.to_json.html_safe%>
+                str.type = "<%= quest.type%>"
+                str.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
+                
+                //check if no progress is provided
+                if(jQuery.isEmptyObject(str.progress)) {
+                    
+                    if(str.type.toLowerCase() == "killquest" || str.type.toLowerCase() == "gatherquest") {
+                        
+                        for(name in str.target) {
+                            
+                            str.progress[name] = 0;
+                        }
+                    }
+                }
+                player.quests["q2"] = str;
             <%end%>
             
         }
