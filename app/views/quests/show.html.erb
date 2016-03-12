@@ -6,22 +6,24 @@
 
 <div class="container">
   <ul class="setup_links center">
-    <li><%= link_to "Back", quests_path %></li>
     <% if current_user.player.accepted?(@quest) %>
-      <% if current_player.completed?(@quest) %>
-        <%= form_for(current_player) do |f| %>
-          <%= f.hidden_field :quest, value: @quest.id %>
-          <%= f.object.items, value: @quest.rewards[:items] %>
-          <!--<% @quest.rewards[:items].each do |key, value| %>-->
-          <!--  <%= f.hidden_field "items[#{key}]", value: value %>-->
-          <!--<% end %>-->
-          <% @quest.rewards[:stats].each do |key, value| %>
-            <%= f.hidden_field key, value: value %>
-          <% end %>
-          <td><%= f.submit "Turn in", class: "btn btn-primary" %></td>
+      <%= form_for(current_player) do |f| %>
+        <%= f.hidden_field :quest, value: @quest.id %>
+        <h2>Rewards:</h2>
+        <% @quest.rewards[:items].each do |key, value| %>
+          <%= simple_format(pluralize(value, key.to_s) + "\n") %>
+          <%= f.hidden_field "items[#{key}]", value: value %>
         <% end %>
-      <% else %>
-        <li><td id="accepted">Accepted</td></li>
+        <% @quest.rewards[:stats].each do |key, value| %>
+          <%= simple_format(value.to_s + " " + key.to_s + "\n") %>
+          <%= f.hidden_field key, value: value %>
+        <% end %>
+        <li><%= link_to "Back", quests_path %></li>
+        <% if current_player.completed?(@quest) %>
+          <td><%= f.submit "Turn in", class: "btn btn-primary", id: "shop" %></td>
+        <% else %>
+          <li><td id="accepted">Accepted</td></li>
+        <% end %>
       <% end %>
     <% else %>
       <li><%= link_to "Accept", quests_accept_path(@quest[:id]) %></li>
