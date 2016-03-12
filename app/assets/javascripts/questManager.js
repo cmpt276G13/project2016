@@ -5,7 +5,7 @@ function assignQuest(questID) {
     quest = game.cache.getJSON("questData")[questID];
         
     //now create a progress variable according to the type of quest it it
-    if(quest.type == "kill" || quest.type == "gather") {
+    if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
         
         quest.targetsAcquired = 4;
     }
@@ -110,7 +110,7 @@ function questDisplay(config) {
 
 questDisplay.prototype.createProgressReport = function() {
     
-    if(this.configuration.quest.type == "kill") {
+    if(this.configuration.quest.type.toLowerCase() == "killquest") {
         
         var progressString = this.configuration.quest.targetName + ":   " + this.configuration.quest.targetsAcquired + "/" + this.configuration.quest.targetAmount;
         this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
@@ -200,13 +200,13 @@ questManager.onKillMonster = function(monsterName, quantity) {
         
         //this isn't a killing quest, no need to update it
         //or quest is already complete so no need to handle it again
-        if(quest.type != "kill" || quest.completed == true) {
+        if(quest.type.toLowerCase() != "killquest" || quest.completed == true) {
             
             continue;
         }
         
         //killing quest, but wrong target, skip
-        if(quest.targetName != monsterName) {
+        if(quest.targetName.toLowerCase() != monsterName.toLowerCase()) {
             
             continue;
         }

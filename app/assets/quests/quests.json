@@ -3,7 +3,7 @@
         
         "name": "The first hunt",
         "description": "Kill 5 Orcs",
-        "type": "kill",
+        "type": "killQuest",
         "targetName": "orc",
         "targetAmount": 5,
         "rewards": {
@@ -26,7 +26,7 @@
         
         "name": "Collect 3 Small Potions",
         "description": "Gather 3 small potions.",
-        "type": "gather",
+        "type": "gatherQuest",
         "targetName": "Small Potion",
         "targetAmount": 3,
         "reward": {

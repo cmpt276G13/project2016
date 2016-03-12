@@ -42,18 +42,8 @@
 # Could use the gem populate in order to populate the db instead of seeding.
 # Could use the gem migration_data in order to squash migrations and/or populate.
 
-<<<<<<< HEAD
-q_orc1 = Quest.create!(name: "Kill Quest!",
-              description: "Kill 5 Orcs.~The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
-              level_req: 1)
-q_orc2 = Quest.create!(name: "Orc Killer",
-              description: "Kill 10 Orcs~Please continue to kill the Orcs. You will be handsomely rewarded.",
-              level_req: 1)
-q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2
-=======
 q_orc1 = KillQuest.new(name: "Kill Quest!",
-              description: "Kill 5 Orcs\n
-                            The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
+              description: "Kill 5 Orcs~The Orcs have been terrorizing the village for several decades. Any Orcs you kill will be much appreciated.",
               level_req: 1)
 q_orc1.rewards[:items] = { "Small Potion": "1" }
 q_orc1.rewards[:stats] = { experience: 30, gold: 100 }
@@ -61,7 +51,7 @@ q_orc1.target[:orc] = 5
 q_orc1.save
 
 q_orc2 = KillQuest.new(name: "Orc Killer",
-              description: "Kill 10 Orcs\n
+              description: "Kill 10 Orcs~
                             Please continue to kill the Orcs. You will be handsomely rewarded.",
               level_req: 2)
 q_orc2.rewards[:items] = { "Small Potion": 3 }
@@ -77,4 +67,3 @@ q_s_potion.rewards[:items] = { "Small Potion": 4, "Medium Potion": 2 }
 q_s_potion.rewards[:stats] = { experience: 30, gold: 50 }
 q_s_potion.target["Small Potion"] = 3
 q_s_potion.save
->>>>>>> 16a1390c3d960f553166692903162a0b707b5d1a
