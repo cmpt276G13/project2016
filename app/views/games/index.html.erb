@@ -232,61 +232,23 @@
             
             <% quests.each do |quest| %>
             
-                quest = {};
-                quest.name = "<%= quest.name.to_s %>"
-                quest.description = "<%= quest.description.to_s %>".replace("~", "\n");
-                quest.completed = false;
-                
-                //different types of quests
-                quest.type = "<%= quest.type.to_s %>";
-                
-                if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
-                    
-                    //load target names/quantitys
-                    <% quest.target.each do |targetName, targetQuantity|%>
-                    
-                        quest.targetName = "<%= targetName.to_s%>";
-                        quest.targetAmount = Number("<%= targetQuantity.to_s%>");
-                    
-                    <%end%>
-                    
-                    quest.targetsAcquired = 0;
-                }
-                
-                //load the rewards
-                quest.rewards = {};
-                <%quest.rewards.each do |rewardType, rewardedObjects| %>
-                    
-                    quest.rewards["<%=rewardType%>"] = {};
-                    var currentRewardType = quest.rewards["<%=rewardType%>"];
-                    <%rewardedObjects.each do |objectName, objectQuantity|%>
-                        
-                        currentRewardType["<%=objectName%>"] = Number("<%=objectQuantity%>");
-                        
-                    <%end%>
-                
-                <%end%>
-                
-                //load progress
-                var jsonString = <%=@currentUser.player.accepted?(quest).to_json.html_safe%>;
-                
-                
-                str = <%=quest.to_json.html_safe%>
-                str.type = "<%= quest.type%>"
-                str.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
+                quest = <%=quest.to_json.html_safe%>
+                quest.type = "<%= quest.type%>"
+                quest.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
                 
                 //check if no progress is provided
-                if(jQuery.isEmptyObject(str.progress)) {
+                if(jQuery.isEmptyObject(quest.progress)) {
                     
-                    if(str.type.toLowerCase() == "killquest" || str.type.toLowerCase() == "gatherquest") {
+                    if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
                         
-                        for(name in str.target) {
+                        for(name in quest.target) {
                             
-                            str.progress[name] = 0;
+                            quest.progress[name] = 0;
                         }
                     }
                 }
-                player.quests["q2"] = str;
+                
+                player.quests[quest.id] = quest;
             <%end%>
             
         }
