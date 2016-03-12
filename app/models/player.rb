@@ -85,4 +85,12 @@ class Player < ActiveRecord::Base
   def turned_in?(quest)
     accepted?(quest).turned_in? if accepted?(quest)
   end
+  
+  def init_progress(quest)
+    q_acceptance = accepted?(quest)
+    quest.target.each_key do |target|
+      q_acceptance.progress[target] = 0
+    end
+    q_acceptance.save
+  end
 end

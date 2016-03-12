@@ -49,7 +49,8 @@ class QuestsController < ApplicationController
   # Accepts the given quest.
   def accept
     quest = Quest.find(params[:id])
-    current_user.player.quests << quest
+    current_player.quests << quest
+    current_player.init_progress(quest)
     redirect_to quests_url
   end
   

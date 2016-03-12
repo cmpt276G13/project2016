@@ -6,7 +6,7 @@ class PlayersController < ApplicationController
     @player = current_user.player
     message_success = "Quest Complete!"
     message_fail = "Cannot finish quest."
-    if params[:commit] == "Turn in" 
+    if params[:commit] == "Turn in" # From button text
       @player.turn_in(params[:player][:quest])
       @player.update(player_params)
       @player.level_up
