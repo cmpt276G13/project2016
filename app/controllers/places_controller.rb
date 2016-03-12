@@ -8,8 +8,8 @@ class PlacesController < ApplicationController
   # GET /places.json
   def index
     @places = Place.all
-    @chosen = {:title => "TEST PLACE (index method)", :lat => 49.2827, :lng => -123.1207}
     @user_location = get_user_location
+    @chosen = {:title => 'Vancouver'}
     init_markers
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
@@ -25,6 +25,7 @@ class PlacesController < ApplicationController
   # GET /places/1
   # GET /places/1.json
   def show
+    @chosen = {:title => "TEST PLACE", :lat => 49.2827, :lng => -123.1207}
   end
 
   # GET /places/new
