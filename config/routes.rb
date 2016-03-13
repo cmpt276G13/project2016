@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :quests
   #get 'places' => 'static_pages#hub'
   resources :places 
+  get 'places/:id/choose' => 'places#choose', as: :places_choose
   get 'quests/:id/accept' => 'quests#accept', as: :quests_accept
 
   # Example of regular route:

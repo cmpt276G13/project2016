@@ -25,7 +25,7 @@
             <td><%= place.longitude %></td> -->
             <td><%= place.address %></td>
             <td><%= place.title %></td>
-            <td><%= link_to 'Choose Location', place, {:controller => 'places', :action => 'choose', data: { confirm: 'Choose this location?' }} %></td>
+            <td><%= link_to 'Go here', places_choose_path(place[:id]) %></td>
             <!-- <td><%= link_to 'Show', place %></td> -->
             <td><%= link_to 'Edit', edit_place_path(place) %></td>
             <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -34,7 +34,7 @@
       </tbody>
     </table>
     <button><%= link_to 'New Place', new_place_path %></button>
-    <h3>You selected: <%= @chosen[:title] %></h3>
+    <!-- <h3>You selected: <= @chosen[:title] %></h3> -->
     </center>
   </div>
 </div>
