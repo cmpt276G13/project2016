@@ -1,4 +1,5 @@
 class Player < ActiveRecord::Base
+  
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
@@ -59,6 +60,7 @@ class Player < ActiveRecord::Base
   
   # Turns in the quest given the quest_id
   def turn_in(quest_id)
+    # Add checking for gather quest and appropriately take away items.
     self.quest_acceptances.find_by(quest_id: quest_id).update(turned_in: true)
   end
   
