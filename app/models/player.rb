@@ -27,7 +27,7 @@ class Player < ActiveRecord::Base
     params.each do |key, value|
       if price # Update gold, if necessary
         if self.gold >= price * value.to_i
-          self.gold = self.gold - price
+          self.gold = self.gold - price * value.to_i
         else
           return false
         end
