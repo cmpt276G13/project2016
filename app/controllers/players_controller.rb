@@ -8,7 +8,9 @@ class PlayersController < ApplicationController
     message_fail = "Cannot finish quest."
     if params[:commit] == "Turn in" # From button text
       @player.turn_in(params[:player][:quest])
-      @player.update(player_params)
+      player_params.each do |key, value|
+        @player.increment(key, value.to_i)
+      end
       @player.level_up
     else # Else it is a purchase from the shop
       message_success = "Purchase Successful"

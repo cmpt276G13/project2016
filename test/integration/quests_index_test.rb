@@ -3,6 +3,7 @@ require 'test_helper'
 class QuestsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @admin     = users(:michael)
+    @player = @admin.player
     @non_admin = users(:archer)
     @quest_turned_in = quests(:one)
     @quest2 = quests(:two)
@@ -18,11 +19,11 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     log_in_as(@admin)
     get quests_path
     assert_template 'quests/index'
-    assert_select 'a[href=?]', new_quest_path, text: "Create New Quest"
     assert_select 'div.pagination'
     accepted_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false).count
     assert_select 'td', "Accepted", count: accepted_quests
     assert_select 'a', text: @quest_turned_in.name, count: 0
+    assert_select 'input[type=?]', "submit", count: 1
     first_page_of_quests = Quest.paginate(page: 1)
     first_page_of_quests.each do |quest|
       unless quest == @quest3 || @quest4 || @quest_turned_in

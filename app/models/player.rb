@@ -3,6 +3,14 @@ class Player < ActiveRecord::Base
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
   validates :user_id, presence: true
+  validates :experience, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :gold, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :strength, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :defense, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :health, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :deaths, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :experience_to_next_level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   # Use eg. @player.items << 'name': amount
   # Don't forget to use @player.save
   serialize :items, Hash
