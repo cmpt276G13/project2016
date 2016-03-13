@@ -3,6 +3,7 @@ require 'test_helper'
 class PlayerTest < ActiveSupport::TestCase
   def setup
     @user = users(:michael)
+    @player = @user.player
     @quest = quests(:one)
     @quest2 = quests(:two)
     @quest3 = quests(:three)
@@ -54,5 +55,12 @@ class PlayerTest < ActiveSupport::TestCase
     assert @user.player.can_accept?(@quest2)
     assert @user.player.can_accept?(@quest6)
     assert_not @user.player.can_accept?(@quest)
+  end
+  
+  test "should level up" do
+    @player.update(experience: @player.experience_to_next_level)
+    assert_difference "@player.reload.level", 1 do
+      @player.level_up
+    end
   end
 end
