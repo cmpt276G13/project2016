@@ -22,4 +22,4 @@ three:
   player_id: archer
   quest_id: 1
   completed: false
-  completed: false
+  turned_in: false

@@ -15,7 +15,7 @@
         <%= hidden_field_tag :price, array["price"] %>
         <td style="width:5em" class="center">
           <%= f.label "Amount" %>
-          <%= f.number_field [:items, name, :amount], min: 1, value: 1, class: 'form-control' %>
+          <%= f.number_field "items[" + name + "]", min: 1, value: 1, class: 'form-control' %>
         </td>
         <td><%= f.submit "Buy", class: "btn btn-primary", id: "shop" %></td>
       <% end %>

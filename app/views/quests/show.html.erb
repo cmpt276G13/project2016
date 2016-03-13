@@ -6,7 +6,6 @@
 
 <div class="container">
   <ul class="setup_links center">
-    <% if current_user.player.accepted?(@quest) %>
       <%= form_for(current_player) do |f| %>
         <%= f.hidden_field :quest, value: @quest.id %>
         <h2>Rewards:</h2>
@@ -18,16 +17,23 @@
           <%= simple_format(value.to_s + " " + key.to_s + "\n") %>
           <%= f.hidden_field key, value: value %>
         <% end %>
+        
         <li><%= link_to "Back", quests_path %></li>
-        <% if current_player.completed?(@quest) %>
-          <td><%= f.submit "Turn in", class: "btn btn-primary", id: "shop" %></td>
+        <% if current_user.player.accepted?(@quest) %>
+          <% if current_player.completed?(@quest) %>
+            <% if current_player.turned_in?(@quest) %>
+              <li>Turned in</li>
+            <% else %>
+              <td><%= f.submit "Turn in", class: "btn btn-primary", id: "shop" %></td>
+            <% end %>
+          <% else %>
+            <li><td id="accepted">Accepted</td></li>
+          <% end %>
         <% else %>
-          <li><td id="accepted">Accepted</td></li>
+          <li><%= link_to "Accept", quests_accept_path(@quest[:id]) %></li>
+          <li><%= link_to "Decline", quests_path %></li>
         <% end %>
+        
       <% end %>
-    <% else %>
-      <li><%= link_to "Accept", quests_accept_path(@quest[:id]) %></li>
-      <li><%= link_to "Decline", quests_path %></li>
-    <% end %>
   </ul>
 </div>
