@@ -585,6 +585,7 @@ function introUpdate() {
 
 function outroEnter() {
     
+    questManager.onInventoryCheck();
     var fade = new fadeToBlack(450);
     
     fade.setOnExit(function(){game.state.start("overworld")});

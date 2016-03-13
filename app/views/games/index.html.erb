@@ -105,10 +105,8 @@
             
             this.items = items;
             
-            var quests = {};
-            
-            quests["q1"] = assignQuest("q1");
-            this.quests = quests;
+            loadQuests();
+            //this.quests = quests;
             //do something to load quests
             
             //player.items = ...
@@ -133,8 +131,16 @@
                 defense: this.defense,
                 deaths: this.deaths,
                 skills: this.skills,
-                items: {}
+                items: {},
+                quest_progress: {}
             };
+            
+            for(quest in player.quests) {
+                
+                saveData.quest_progress[quest] = {};
+                saveData.quest_progress[quest].progress = player.quests[quest].progress;
+                saveData.quest_progress[quest].completed = player.quests[quest].completed;
+            }
             
             for(item in this.items) {
                 
@@ -224,6 +230,40 @@
             
             return mapData;
         }
+        
+        function loadQuests() {
+            
+            <% quests = @currentUser.player.quests %>
+            
+            <% quests.each do |quest| %>
+            
+                //skip turned in quests
+                <% next if @currentUser.player.accepted?(quest).turned_in%>
+                
+                quest = <%=quest.to_json.html_safe%>
+                quest.type = "<%= quest.type%>"
+                quest.progress = <%= @currentUser.player.accepted?(quest).progress.to_json.html_safe%>
+                quest.completed = <%= @currentUser.player.accepted?(quest).completed %>
+                
+                //check if no progress is provided
+                if(jQuery.isEmptyObject(quest.progress)) {
+                    
+                    if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
+                        
+                        for(name in quest.target) {
+                            
+                            quest.progress[name] = 0;
+                        }
+                    }
+                }
+                
+                player.quests[quest.id] = quest;
+            <%end%>
+            
+            questManager.onInventoryCheck();
+        }
+        
+        loadQuests();
         
         /*
         
@@ -319,7 +359,7 @@
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
         		game.world.remove(player.sprite);
-        		
+        
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
                 //document.getElementById("additional").innerHTML = mapKeys.mapKey;

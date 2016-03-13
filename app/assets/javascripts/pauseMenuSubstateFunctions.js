@@ -1,5 +1,6 @@
 function menuHomeEnter() {
     
+    questManager.onInventoryCheck();
     this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
     this.statDisplay = this.createPlayerStatDisplay();
@@ -229,6 +230,7 @@ function viewSkillsExit() {
 
 function viewQuestsEnter() {
     
+    questManager.onInventoryCheck();
     this.questDisplay = this.createPlayerQuestDisplay();
     
     //create an action text display to show all of the player's quests

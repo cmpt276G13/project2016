@@ -2,7 +2,7 @@
     "orc": {
         
         "imageKey": "orc",
-        "name": "orc",
+        "name": "Orc",
         "levelRange": 4,
         "maxHealth": 5,
         "maxMana": 5,

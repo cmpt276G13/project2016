@@ -23,7 +23,7 @@ archer:
   items: {}
 
 # This player should be at the top of the rankings
-# Make sure the level is equal to player4, but experience is higher
+# Make sure the level is equal to malory, but experience is higher
 lana:
   user: lana
   health: 50

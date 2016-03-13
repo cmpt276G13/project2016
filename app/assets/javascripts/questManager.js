@@ -5,7 +5,7 @@ function assignQuest(questID) {
     quest = game.cache.getJSON("questData")[questID];
         
     //now create a progress variable according to the type of quest it it
-    if(quest.type == "kill" || quest.type == "gather") {
+    if(quest.type.toLowerCase() == "killquest" || quest.type.toLowerCase() == "gatherquest") {
         
         quest.targetsAcquired = 4;
     }
@@ -110,12 +110,15 @@ function questDisplay(config) {
 
 questDisplay.prototype.createProgressReport = function() {
     
-    if(this.configuration.quest.type == "kill") {
+    if(this.configuration.quest.type.toLowerCase() == "killquest" || this.configuration.quest.type.toLowerCase() == "gatherquest") {
         
-        var progressString = this.configuration.quest.targetName + ":   " + this.configuration.quest.targetsAcquired + "/" + this.configuration.quest.targetAmount;
-        this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
-        this.progressReport.anchor.x = 0.5;
-        this.parentGraphics.addChild(this.progressReport);
+        for(targetName in this.configuration.quest.target) {
+            
+            var progressString = targetName + ":   " + this.configuration.quest.progress[targetName] + "/" + this.configuration.quest.target[targetName];
+            this.progressReport = game.add.text(this.configuration.cellWidth / 2, this.questDescription.y + this.questDescription.height, progressString, questProgressStyle);
+            this.progressReport.anchor.x = 0.5;
+            this.parentGraphics.addChild(this.progressReport);
+        }
     }
 }
 
@@ -200,29 +203,71 @@ questManager.onKillMonster = function(monsterName, quantity) {
         
         //this isn't a killing quest, no need to update it
         //or quest is already complete so no need to handle it again
-        if(quest.type != "kill" || quest.completed == true) {
+        if(quest.type.toLowerCase() != "killquest" || quest.completed == true) {
             
             continue;
         }
         
         //killing quest, but wrong target, skip
-        if(quest.targetName != monsterName) {
+        if(typeof quest.target[monsterName] === "undefined") {
             
             continue;
         }
         
         //killed the monster for this quest, make player progress on the quest
-        quest.targetsAcquired += quantity;
+        quest.progress[monsterName] += quantity;
         
         //don't let player's progress exceed required number of monster
-        if(quest.targetsAcquired >= quest.targetAmount) {
+        if(quest.progress[monsterName] >= quest.target[monsterName]) {
             
             quest.completed = true;
-            quest.targetsAcquired = quest.targetAmount;
+            quest.progress[monsterName] = quest.target[monsterName];
             
             //optionally for later
             //queue completed quests to display message to player
             this.recentlyCompletedQuests.push(quest.name);
         }
     }
+}
+
+//check player's inventory for quest completion items
+questManager.onInventoryCheck = function() {
+    
+    for(quest in player.quests) {
+        
+        if(player.quests[quest].type.toLowerCase() == "gatherquest") {
+            
+            questManager.checkInventoryForQuestRequirements(player.quests[quest]);
+        }
+    }
+}
+
+questManager.checkInventoryForQuestRequirements = function(quest) {
+    
+    var playerHasRequiredItems = true;
+    
+    for(target in quest.target) {
+        
+        if(typeof player.items[target] === "undefined") {
+            
+            playerHasRequiredItems = false;
+            continue;
+        }
+        
+        //player has this item, update how many he has
+        quest.progress[target] = player.items[target].quantity;
+        
+        if(player.items[target].quantity < quest.target[target]) {
+            
+            playerHasRequiredItems = false;
+        }
+    }
+    
+    if(!quest.completed && playerHasRequiredItems) {
+        
+        questManager.recentlyCompletedQuests.push(quest.name);
+    }
+    
+    quest.completed = playerHasRequiredItems;
+    
 }

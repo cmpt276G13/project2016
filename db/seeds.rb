@@ -47,7 +47,7 @@ q_orc1 = KillQuest.new(name: "Kill Quest!",
               level_req: 1)
 q_orc1.rewards[:items] = { "Small Potion": "1" }
 q_orc1.rewards[:stats] = { experience: 30, gold: 100 }
-q_orc1.target[:orc] = 5
+q_orc1.target[:Orc] = 5
 q_orc1.save
 
 q_orc2 = KillQuest.new(name: "Orc Killer",
@@ -55,7 +55,7 @@ q_orc2 = KillQuest.new(name: "Orc Killer",
               level_req: 2)
 q_orc2.rewards[:items] = { "Small Potion": 3 }
 q_orc2.rewards[:stats] = { experience: 50, gold: 120 }
-q_orc2.target[:orc] = 10
+q_orc2.target[:Orc] = 10
 q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2
 q_orc2.save
 
