@@ -32,6 +32,42 @@ var damageStyle = {
     strokeThickness: 4
 }
 
+var questTitleStyle = {
+    
+    fill: 'white',
+    fontSize: 23
+}
+
+var questDescriptionStyle = {
+    
+    fill: 'white',
+    fontSize: 16
+}
+
+var questCompletedStyle = {
+    
+    fill: 'green',
+    fontSize: 15
+}
+
+var questInProgressStyle = {
+    
+    fill: '#660000',
+    fontSize: 15
+}
+
+var questProgressStyle = {
+    
+    fill: '#bbbbbb',
+    fontSize: 16
+}
+
+var questRewardsHeadingStyle = {
+    
+    fill: '#009900',
+    fontSize: 15
+}
+
 //attributeDisplayText displays an attribute along with its value, in teh following format:
 //attributeName     attributeValue
 //data in the configuration defines a rectangular cell where the attribute is displayed
@@ -64,7 +100,7 @@ attributeDisplayText.prototype.mergeConfigWithDefault = function(configuration) 
         textStyle: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -98,7 +134,7 @@ text.prototype.mergeConfigWithDefault = function(configuration) {
         textStyle: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -138,7 +174,7 @@ objectList.prototype.mergeConfigWithDefault = function(configuration) {
         objectCreationFunction: {}
     };
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -168,6 +204,24 @@ objectList.prototype.addObject = function(objectConfig) {
     newObject.addParent(this.parentGraphics);
     
     this.objects.push(newObject);
+}
+
+objectList.prototype.replaceObject = function(idObjectToReplace, configToReplaceWith) {
+    
+    if(idObjectToReplace >= this.objects.length) {
+        
+        return;
+    }
+    
+    //remove objects that come after the replaced objects
+    //remove the replaced object
+    //add old objects back
+    var objectsFollowingReplaced = this.objects.splice(idObjectToReplace + 1, this.objects.length);
+    this.objects[idObjectToReplace].destroy();
+    this.objects.pop();
+    
+    this.addObject(configToReplaceWith);
+    this.objects = this.objects.concat(objectsFollowingReplaced);
 }
 
 objectList.prototype.addParent = function(parent) {
@@ -212,7 +266,7 @@ scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) 
         objectCreationFunction: {}
     };
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     
     return defaultConfig;
 }
@@ -288,7 +342,7 @@ objectTable.prototype.mergeConfigWithDefault = function(configuration) {
         objectCreationFunction: {}
     }
     
-    $.extend(defaultConfig, configuration);
+    mergeObjects(defaultConfig, configuration);
     return defaultConfig;
 }
 

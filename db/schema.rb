@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307013037) do
+ActiveRecord::Schema.define(version: 20160310224300) do
 
   create_table "places", force: :cascade do |t|
     t.float    "latitude"
@@ -30,14 +30,12 @@ ActiveRecord::Schema.define(version: 20160307013037) do
     t.integer  "level",                    default: 1
     t.integer  "experience",               default: 0
     t.integer  "gold",                     default: 0
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "max_health",               default: 50
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
-    t.text     "items"
-    t.text     "ongoing_quests"
-    t.text     "completed_quests"
+    t.text     "items",                    default: "--- {}\n"
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"
@@ -46,8 +44,10 @@ ActiveRecord::Schema.define(version: 20160307013037) do
     t.integer  "player_id"
     t.integer  "quest_id"
     t.boolean  "completed",  default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "turned_in"
+    t.text     "progress",   default: "--- {}\n"
   end
 
   add_index "quest_acceptances", ["player_id", "quest_id"], name: "index_quest_acceptances_on_player_id_and_quest_id", unique: true
@@ -55,23 +55,25 @@ ActiveRecord::Schema.define(version: 20160307013037) do
   add_index "quest_acceptances", ["quest_id", "completed"], name: "index_quest_acceptances_on_quest_id_and_completed"
   add_index "quest_acceptances", ["quest_id"], name: "index_quest_acceptances_on_quest_id"
 
+  create_table "quest_pre_requisites", force: :cascade do |t|
+    t.integer  "quest_parent_id", null: false
+    t.integer  "quest_child_id",  null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
   create_table "quests", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
     t.integer  "level_req"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.text     "pre_req"
-    t.text     "other_req"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.text     "rewards",     default: "--- {}\n"
+    t.string   "type"
+    t.text     "target",      default: "--- {}\n"
   end
 
-  create_table "shops", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "price"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
+  add_index "quests", ["name"], name: "index_quests_on_name", unique: true
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

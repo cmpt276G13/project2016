@@ -20,7 +20,7 @@ function actionDisplay(configuration, actionTexts) {
     this.idActionToHighlight = 0;
     
     //the text that will be displayed
-    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: 28,
+    this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: this.configuration.cellHeight,
                                                     objectCreationFunction: this.configuration.objectCreationFunction, viewableObjects: this.configuration.viewableObjects}); //createActionTexts(actionTexts, this.background);
     
     //add all the texts
@@ -29,6 +29,7 @@ function actionDisplay(configuration, actionTexts) {
         actionTexts[i]["textStyle"] = actionStyle;
         this.actionTextList.addObject(actionTexts[i]);
     }
+    
     //this.actionTextList.addObjec(actionTexts, actionStyle);
     this.actionTextList.addParent(this.background);
     
@@ -47,6 +48,7 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         width: 0,
         height: 0,
+        cellHeight: 28,
         viewableObjects: 5,
         objectCreationFunction: text
     }
@@ -54,6 +56,16 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
     $.extend(config, configuration);
     
     return config;
+}
+
+actionDisplay.prototype.addParent = function(parent) {
+    
+    parent.addChild(this.background);
+}
+
+actionDisplay.prototype.eraseBackground = function() {
+    
+    this.background.clear();
 }
 
 actionDisplay.prototype.addAction = function(actionConfig) {
@@ -73,6 +85,22 @@ actionDisplay.prototype.resetSelection = function() {
     
     this.idActionToHighlight = 0;
     this.idSelectedAction = 0;
+}
+
+actionDisplay.prototype.replaceAction = function(idOfAction, attributeToUse) {
+    
+    if(idOfAction >= this.actionTextList.objects.length) {
+        
+        return;
+    }
+    
+    attributeToUse.textStyle = actionStyle;
+    this.actionTextList.replaceObject(idOfAction, attributeToUse);
+}
+
+actionDisplay.prototype.replaceSelectedAction = function(attributeToUse) {
+    
+    this.replaceAction(this.idSelectedAction, attributeToUse);
 }
 
 //the actionBox will have a selected text that needs to be highlighted, and this function positions the highlight so that it's surroundign the selected text

@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
   has_one :player, dependent: :destroy # Relations to players table
   has_many :places
   
+  # This makes it so that by default the users will be ordered by points.
+  default_scope -> { includes(:player).order("players.level - players.deaths DESC, players.experience DESC") }
+  
   before_save {
     # Ensures entries are unique in the database.
     username.downcase!
@@ -49,10 +52,5 @@ class User < ActiveRecord::Base
   # Specifies the amount of users per page. Goes in unison with will_paginate.
   def per_page
     30
-  end
-  
-  # Rankings for users
-  def self.order_by_points
-    includes(:player).order("players.level - players.deaths DESC, players.experience DESC")
   end
 end

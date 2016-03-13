@@ -2,29 +2,14 @@ class QuestsController < ApplicationController
   # logged_in_user is defined in sessions_helper.rb
   before_action :logged_in_user
   before_action :req_check, only: :accept
-  before_action :admin, only: [:new, :create, :edit, :update, :destroy]
+  before_action :admin, only: [:edit, :update, :destroy]
   
   def index
-    # Change to only show ones that level_req are met
     @quests = Quest.paginate(page: params[:page], per_page: User.per_page)
   end
   
   def show
     @quest = Quest.find(params[:id])
-  end
-  
-  def new
-    @quest = Quest.new
-  end
-  
-  def create
-    @quest = Quest.new(quest_params)
-    if @quest.save
-      flash[:success] = "Quest successfully created!"
-      redirect_to @quest
-    else
-      render 'new'
-    end
   end
   
   def edit
@@ -50,15 +35,15 @@ class QuestsController < ApplicationController
   # Accepts the given quest.
   def accept
     quest = Quest.find(params[:id])
-    current_user.player.quests << quest
-    index
-    render 'index'
+    current_player.quests << quest
+    current_player.init_progress(quest)
+    redirect_to quests_url
   end
   
   private
     
     def quest_params
-      params.require(:quest).permit(:name, :description, :level_req, :pre_req, :other_req)
+      params.require(:quest).permit(:name, :description, :level_req)
     end
   
     # Before methods

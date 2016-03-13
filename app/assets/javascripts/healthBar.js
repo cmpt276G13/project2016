@@ -17,15 +17,17 @@
  SOFTWARE.
  */
 
-var HealthBar = function(game, providedConfig) {
+var HealthBar = function(providedConfig) {
     this.game = game;
-
+    
+    this.parentGraphics = game.add.graphics(0, 0);
     this.setupConfiguration(providedConfig);
     this.setPosition(this.config.x, this.config.y);
     this.drawBackground();
     this.drawHealthBar();
     this.setFixedToCamera(this.config.isFixedToCamera);
 };
+
 HealthBar.prototype.constructor = HealthBar;
 
 HealthBar.prototype.setupConfiguration = function (providedConfig) {
@@ -43,7 +45,9 @@ HealthBar.prototype.setupConfiguration = function (providedConfig) {
 HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
     var defaultConfig= {
         width: 145,
+        cellWidth: 145,
         height: 11,
+        cellHeight: 11,
         radius: 6,//defines how curved the bar is
         maxHealth: 100,
         x: 0,
@@ -65,14 +69,27 @@ HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
         flipped: false,
         isFixedToCamera: false
     };
-
-    return mergeObjetcs(defaultConfig, newConfig);
+    
+    //cellWidth overwrites width if width is not given, or width is bigger than cellwidth
+    if(typeof newConfig !== "undefined" && typeof newConfig.cellWidth !== "undefined") {
+        
+        if(typeof newConfig.width === "undefined") {
+            
+            defaultConfig.width = newConfig.cellWidth;
+            
+        } else {
+            
+            defaultConfig.width = Math.min(newConfig.width, newConfig.cellWidth);
+        }
+    }
+    
+    return mergeObjects(defaultConfig, newConfig);
 };
 
-function mergeObjetcs(targetObj, newObj) {
+function mergeObjects(targetObj, newObj) {
     for (var p in newObj) {
         try {
-            targetObj[p] = newObj[p].constructor==Object ? mergeObjetcs(targetObj[p], newObj[p]) : newObj[p];
+            targetObj[p] = newObj[p].constructor==Object ? mergeObjects(targetObj[p], newObj[p]) : newObj[p];
         } catch(e) {
             targetObj[p] = newObj[p];
         }
@@ -107,7 +124,8 @@ HealthBar.prototype.drawBackground = function() {
 
     this.bgSprite = this.game.add.sprite(this.x, this.y, bmd);
     //this.bgSprite.anchor.set(0.5);
-
+    
+    this.parentGraphics.addChild(this.bgSprite);
     if(this.flipped){
         this.bgSprite.scale.x = -1;
     }
@@ -139,11 +157,17 @@ HealthBar.prototype.drawHealthBar = function() {
 
     this.barSprite = this.game.add.sprite(this.x /*- this.bgSprite.width/2*/, this.y, bmd);
     //this.barSprite.anchor.y = 0.5;
-
+    
+    this.parentGraphics.addChild(this.barSprite);
     if(this.flipped){
         this.barSprite.scale.x = -1;
     }
 };
+
+HealthBar.prototype.destroy = function() {
+    
+    this.parentGraphics.destroy();
+}
 
 HealthBar.prototype.setPosition = function (x, y) {
     this.x = x;

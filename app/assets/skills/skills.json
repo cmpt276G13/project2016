@@ -7,6 +7,7 @@
         "hasOwnAnimation": false,
         "playerUseMessage": "You Attack!",
         "monsterUseMessage": " Attacks!",
+        "description": "A basic physical attack",
         "attackType": "physical",
         "userAnimation": "attack"
         
@@ -14,12 +15,13 @@
     
     "Slash": {
         
-        "power": 10,
-        "targetsHit": 1,
-        "manaCost": 4,
+        "power": 15,
+        "targetsHit": 2,
+        "manaCost": 5,
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Slash!",
         "monsterUseMessage": " uses Slash!",
+        "description": "",
         "attackType": "physical",
         "userAnimation": "attack",
         "spriteKey": "slash",
@@ -37,6 +39,7 @@
         "targetsHit": 1,
         "manaCost": 3,
         "hasOwnAnimation": true,
+        "description": "Shoots a fireball at the target to inflict magic damage.",
         "playerUseMessage": "You use Fireball!",
         "monsterUseMessage": " uses Fireball!",
         "attackType": "magic",

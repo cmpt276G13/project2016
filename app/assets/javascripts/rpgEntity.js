@@ -13,7 +13,59 @@ function determineDamage(attack, defender) {
         defense = defender.magicDefense;
     }
     
-    return Math.floor(clamp(attack.power - defense / 2, 1, attack.power));
+    var damageBase = attack.power - defense / 3;
+    
+    var variance = 0.17;
+    var damageRangeMin = Math.floor(damageBase - damageBase * variance);
+    var damageRangeMax = Math.ceil(damageBase + damageBase * variance);
+    
+    var damage = getRandomInt(damageRangeMin, damageRangeMax);
+    
+    return Math.max(1, damage);
+}
+
+function scaleMonsterToPlayer(monster, playerLevel) {
+    
+    scaleMonsterLevelToPlayer(monster, playerLevel);
+    
+    if(playerLevel < 4) {
+        
+        monster.level = 1;
+    }
+    
+    scaleMonsterStatsToLevel(monster);
+    //scaleMonsterRewardsToLevel(monster);
+}
+
+//takes the given monster and sets its level to something close to the player's level
+function scaleMonsterLevelToPlayer(monster, playerLevel) {
+    
+    //get a level range for the monster
+    var rangeMin = clamp(playerLevel - monster.levelRange, 1, playerLevel);
+    var rangeMax = playerLevel + monster.levelRange;
+    
+    monster.level = getRandomInt(rangeMin, rangeMax);
+}
+
+function scaleMonsterStatsToLevel(monster) {
+    
+    var attributes = ["maxHealth", "maxMana", "strength", "defense", "magicPower", "magicDefense"]
+    
+    //get random percentage for each stat
+    for(var i = 0; i < attributes.length; ++i) {
+        
+        //base stat plus scaled stat
+        monster[attributes[i] ] = monster[attributes[i]] * (monster.level - 1) + 7;
+    }
+    
+    monster.health = monster.maxHealth;
+    monster.mana = monster.maxMana;
+}
+
+function scaleMonsterRewardsToLevel(monster, originalRewards) {
+    
+    monster.rewards.experience = monster.level * originalRewards.experience;
+    monster.rewards.gold = getRandomInt(0, originalRewards.gold * monster.level + originalRewards.gold);
 }
 
 function rpgEntity() {
@@ -25,8 +77,8 @@ function rpgEntity() {
     this.mana = 25;
     this.magicPower = 10;
     this.magicDefense = 10;
-    this.strength = 10;
-    this.defense = 10;
+    this.strength = 8;
+    this.defense = 8;
     this.level = 1;
     this.skills = [];
     this.name = "Player";//default name is set to player. monster data loaded from json files will set thier name, player will load his name from database
@@ -71,6 +123,7 @@ rpgEntity.prototype.getHit = function(damageReceived) {
 rpgEntity.prototype.capStats = function() {
     
     this.health = Math.min(this.health, this.maxHealth);
+    this.mana = Math.min(this.mana, this.maxMana);
 }
 
 function markForDeletion() {

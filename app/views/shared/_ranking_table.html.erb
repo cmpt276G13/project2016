@@ -1,6 +1,6 @@
 <center>
   <table class="ranking_table">
-    <h1>Top 10 Players</h1>
+    <p style="font-size: 50px"><font face="Cooper Black">Top 10 Players</p>
     <% @users.each_with_index do |user, i| %>
         <tr>
           <td class="num center"><%= i + 1 %></td>
@@ -10,5 +10,7 @@
         </tr>
     <% end %>
   </table>
-  <%= link_to "Rankings", users_path %>
+  <br>
+  <br>
+  <%= link_to "Rankings", users_path,:class=>'button button1' %>
 </center>

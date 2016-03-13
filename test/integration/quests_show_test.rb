@@ -6,17 +6,24 @@ class QuestsShowTest < ActionDispatch::IntegrationTest
     @non_admin = users(:archer)
     @quest = quests(:one)
     @quest2 = quests(:two)
+    @quest_complete = quests(:quest_5)
+    @quest20 = quests(:quest_20)
   end
   
   test "quest display accepted and as admin" do
     log_in_as(@admin)
-    request.env["HTTP_REFERER"] = quests_path
-    get quest_path(@quest)
+    get quest_path(@quest20)
     assert_template 'quests/show'
-    assert_select 'title', full_title(@quest.name)
-    assert_select 'h1', text: @quest.name
+    assert_select 'title', full_title(@quest20.name)
+    assert_select 'h1', text: @quest20.name
     assert_select 'td', 'Accepted', count: 1
     assert_select 'a[href=?]', quests_path, text: "Back", count: 1
+  end
+  
+  test "quest display completed" do
+    log_in_as(@admin)
+    get quest_path(@quest_complete)
+    assert_select 'input[type=?]', "submit", count: 1
   end
   
   test "quest display not accepted and not as admin" do
@@ -25,6 +32,12 @@ class QuestsShowTest < ActionDispatch::IntegrationTest
     assert_template 'quests/show'
     assert_select 'title', full_title(@quest2.name)
     assert_select 'h1', text: @quest2.name
+    @quest.rewards[:items].each do |key, value|
+      assert_select 'p', value.to_s + " " + key.to_s
+    end
+    @quest.rewards[:stats].each do |key, value|
+      assert_select 'p', value.to_s + " " + key.to_s
+    end
     assert_select 'a[href=?]', quests_accept_path(@quest2), text: 'Accept'
     assert_select 'a[href=?]', quests_path, text: "Back", count: 1
     # Could change decline to actually do something

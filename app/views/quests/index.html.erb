@@ -4,26 +4,42 @@
 <%= will_paginate %>
 
 <table class="quests">
-  <% if current_user.admin? %>
-    <p class="center"><%= link_to "Create New Quest", new_quest_path %></p>
-  <% end %>
   <% @quests.each do |quest| %>
-    <tr>
-      <td>
-        <%= link_to quest.name, quest %>
-        <% if current_user.admin? %>
-        | <%= link_to "edit", edit_quest_path(quest) %>
-        | <%= link_to "delete", quest, method: :delete,
-                                data: { confirm: "As an Admin, are you sure you want to delete this quest?" } %>
+    <% if current_player.quest_req_met?(quest) && 
+          current_player.level_met?(quest) &&
+          !current_player.turned_in?(quest) %>
+      <tr>
+        <td>
+          <%= link_to quest.name, quest %>
+          <% if current_user.admin? %>
+          | <%= link_to "edit", edit_quest_path(quest) %>
+          | <%= link_to "delete", quest, method: :delete,
+                                  data: { confirm: "As an Admin, are you sure you want to delete this quest?" } %>
+          <% end %>
+        </td>
+        <td><%= quest.description.split("\n")[0] %></td>
+        <% if current_player.accepted?(quest) %>
+        
+          <% if current_player.completed?(quest) %>
+            <%= form_for(current_player) do |f| %>
+              <%= f.hidden_field :quest, value: quest.id %>
+              <% quest.rewards[:items].each do |key, value| %>
+                <%= f.hidden_field "items[#{key}]", value: value %>
+              <% end %>
+              <% quest.rewards[:stats].each do |key, value| %>
+                <%= f.hidden_field key, value: value %>
+              <% end %>
+              <td><%= f.submit "Turn in", class: "btn btn-primary" %></td>
+            <% end %>
+            
+          <% else %>
+            <td id="accepted">Accepted</td>
+          <% end %>
+        <% else %>
+          <td><%= link_to "Accept", quests_accept_path(quest[:id]) %></td>
         <% end %>
-      </td>
-      <td><%= quest.description.split("\n")[0] %></td>
-      <% if current_user.player.can_accept?(quest) %>
-        <td><%= link_to "Accept", quests_accept_path(quest[:id]) %></td>
-      <% else %>
-        <td id="accepted">Accepted</td>
-      <% end %>
-    </tr>
+      </tr>
+    <% end %>
   <% end %>
 </table>
 
