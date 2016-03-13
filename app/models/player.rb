@@ -8,6 +8,7 @@ class Player < ActiveRecord::Base
   validates :strength, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :defense, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :health, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :max_health, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :deaths, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :experience_to_next_level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
