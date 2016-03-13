@@ -1,4 +1,4 @@
-<!--Not finished yet.. will fix up later, by Kelvin-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,13 +9,16 @@
   <%= render 'layouts/shim' %>
 </head>
 <body>
+  
   <%= render 'layouts/header' %>
   <div class="container">
-    <% flash.each do |message_type, message| %>
-      <div class="alert alert-<%= message_type %>"><%= message %></div>
-    <% end %>
-    <%= yield %>
-    <%= render 'layouts/footer' %>
+    
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
+      <%= yield %>
+      <%= render 'layouts/footer' %>
+    </div>
   </div>
 </body>
 </html>

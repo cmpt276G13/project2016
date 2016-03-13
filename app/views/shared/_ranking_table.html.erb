@@ -1,16 +1,19 @@
-<center>
-  <table class="ranking_table">
-    <p style="font-size: 50px"><font face="Cooper Black">Top 10 Players</p>
-    <% @users.each_with_index do |user, i| %>
-        <tr>
-          <td class="num center"><%= i + 1 %></td>
-          <td><%= link_to user.username, user %></td>
-          <td>Points: <%= user.player.level - user.player.deaths %></td>
-          <td>Experience: <%= user.player.experience %>/<%= user.player.experience_to_next_level %></td>
-        </tr>
-    <% end %>
-  </table>
-  <br>
-  <br>
-  <%= link_to "Rankings", users_path,:class=>'button button1' %>
-</center>
+
+<aside>
+  <div class="ranking_table">
+    <table class="ranking_table">
+      <h1><font face="Cooper Black">Top 10 Players</font></h1>
+      <% @users.each_with_index do |user, i| %>
+          <tr>
+            <td class="num center"><%= i + 1 %></td>
+            <td id="UsernameInTable"><%= link_to user.username, user %></td>
+            <td>Points: <%= user.player.level - user.player.deaths %></td>
+            <td>Experience: <%= user.player.experience %>/<%= user.player.experience_to_next_level %></td>
+          </tr>
+      <% end %>
+    </table> 
+    <br>
+    <br>
+    <%= link_to "Rankings", users_path,:class=>'button button1' %>-->
+  </div>
+</aside>

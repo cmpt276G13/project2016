@@ -7,6 +7,9 @@
 
 // We can decide on the colours later, just use this for a template.
 
+// All code involve -webkit is defined for Chrome, Safari, Opera 
+// All code involve -moz is defined for Firefox
+
 $gray-medium-light: #eaeaea;
 
 /* Universal */
@@ -15,10 +18,15 @@ a {
   text-align: center;
 }
 
+
+    
 // Place padding for the header to go in.
 body {
-  padding-top: 100px;
+  padding: 50px;
+
 }
+
+
 
 section {
   overflow: auto;
@@ -35,6 +43,9 @@ textarea {
   }
 }
 
+.homepage{
+  margin-top: 10px;
+}
 /* Typography */
 // This will apply to all headers and paragraphs.
 // We can decide on whether we should use this or not.
@@ -81,7 +92,11 @@ p {
   &:hover {
     color: white;
     text-decoration: underline;
+    transform: scale(1.1);
   }
+}
+.navbar{
+  margin-bottom: 50px;
 }
 
 /* Footer */
@@ -110,7 +125,7 @@ footer {
       margin-left: 15px;
     }
   }
-  
+
 }
 
 /* Hub */
@@ -125,10 +140,23 @@ footer {
   }
 }
 
-/* table Typography */
+/* table  */
 
 .ranking_table{
-  margin: 0;
+  
+  margin: 20px;
+  float: left;
+  //             Animation for the table
+  -moz-animation-name: RankTableFromright;
+  -webkit-animation-name: RankTableFromright;
+  animation-name: RankTableFromright;
+  -moz-animation-duration: 4s;
+  -webkit-animation-duration: 4s;
+  animation-duration: 4s;
+   table {
+   border: 1px solid $gray-medium-light;
+   }
+  
   td {
     overflow: auto;
     padding: 0.5em 2em;
@@ -140,7 +168,155 @@ footer {
   }
 }
 
-/*Button styles on home page*/
+
+// Animation for the table
+@-webkit-keyframes RankTableFromright {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(-5000px, 0, 0);
+      }
+      50%{
+        opacity: 0;
+      }
+      
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(25px, 0, 0);
+        transform: translate3d(25px, 0, 0);
+      }
+    
+      75% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(5px, 0, 0);
+        transform: translate3d(5px, 0, 0);
+      }
+  
+}
+
+
+//           Defining Animation WelcomeMessage
+@-webkit-keyframes WelcomeMessage{
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -3000px, 0);
+        transform: translate3d(0, -3000px, 0);
+      }
+      30% {
+        opacity: 0;
+      }
+      60% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 25px, 0);
+        transform: translate3d(0, 25px, 0);
+      }
+    
+      75% {
+        -webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 5px, 0);
+      }
+}
+
+//             Bouncing Letters
+#WW { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s;}
+#WE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#WL { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#WC { animation-delay: 1s;  -webkit-animation-delay: 1s; -moz-animation-delay: 1s;}
+#WO { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#WM { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#WE { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; -moz-animation-delay: 0.7s;}
+#TT { animation-delay: 0.2s;  -webkit-animation-delay: 0.2s; -moz-animation-delay: 0.2s;}
+#TO { animation-delay: 0.7s;  -webkit-animation-delay: 0.7s; -moz-animation-delay: 0.7s;}
+#GG { animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#GE { animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#GO {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; -moz-animation-delay: 0.4s;}
+#GH {animation-delay: 1s;  -webkit-animation-delay: 1s; -moz-animation-delay: 1s;}
+#GU {animation-delay: 0.8s;  -webkit-animation-delay: 0.8s; -moz-animation-delay: 0.8s;}
+#GN {animation-delay: 0.6s;  -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s;}
+#GT {animation-delay: 0.4s;  -webkit-animation-delay: 0.4s; -moz-animation-delay: 0.4s;}
+#GE {animation-delay: 0.9s;  -webkit-animation-delay: 0.9s; -moz-animation-delay: 0.9s;}
+#GR {animation-delay: 1.1s;  -webkit-animation-delay: 1.1s; -moz-animation-delay: 1.1s;}
+
+
+
+
+#WelcomeHeader{
+  text-align: center;
+  margin: 20px;
+  font-size: 2em;
+  #Welcome,#To,#GeoHunter{
+  margin: 20px;
+  padding: 0;
+  }
+}
+// CSS animation is only appliable to "block level" element
+span{
+  display: inline-block
+}
+
+
+              /*BouncedDown Animation for the welcoming message*/
+.BouncedDown,#Welcome,#To,#GeoHunter{
+
+    font-size: 150%;
+    -moz-animation-name: WelcomeMessage;
+    animation-name: WelcomeMessage;
+    -webkit-animation-name: WelcomeMessage; 
+    animation-duration: 2s;
+    -webkit-animation-duration: 2s; 
+    -moz-animation-duration: 2s;
+}
+
+
+
+//             Video's Animation
+@-webkit-keyframes GameplayDemo {
+      0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 3000px, 0);
+        transform: translate3d(0, 3000px, 0);
+      }
+      30%{
+        opacity: 0;
+      }
+      60% {
+        opacity: 0.4;
+        -webkit-transform: translate3d(0, -25px, 0);
+        transform: translate3d(0, -25px, 0);
+      }
+    
+      75% {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 10px, 0);
+        transform: translate3d(0, 10px, 0);
+      }
+    
+      90% {
+        -webkit-transform: translate3d(0, -5px, 0);
+        transform: translate3d(0, -5px, 0);
+      }
+}
+#video{
+    -moz-animation-name: GameplayDemo;
+    -webkit-animation-name: GameplayDemo; /* Chrome, Safari, Opera */
+    animation-name: GameplayDemo;
+    -moz-animation-duration: 5.5s;
+    -webkit-animation-duration: 5.5s; /* Chrome, Safari, Opera */
+    animation-duration: 5.5s;
+}
+
+
+
+
+/* Buttons Style*/
 
 .button {
     background-color: black;
@@ -152,8 +328,6 @@ footer {
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
-    -webkit-transition-duration: 0.4s; 
-    transition-duration: 0.4s;
     cursor: pointer;
 }
 //button1 refers to "Ranking" on home page.
@@ -184,7 +358,6 @@ footer {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
     background-color: white;
     color: black;
+
 }
-
-
 
