@@ -113,6 +113,7 @@
             //player.skills = ...
         };
         
+        var asdz;
         player.save = function() {
             
             var saveData = {
@@ -155,6 +156,9 @@
                 contentType: "application/json",
                 dataType: "json"
             });
+            
+            <%@currentUser.player.reload%>
+            asdz = <%=@currentUser.player.to_json.html_safe%>
         };
         
         player.respawn = function(spawnPoint) {
