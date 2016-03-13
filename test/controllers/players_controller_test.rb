@@ -21,8 +21,8 @@ class PlayersControllerTest < ActionController::TestCase
   
   test "should buy item" do
     log_in_as(@user)
-    assert_difference '@player.reload.gold', -10 do
-      patch :update, { player: { items: { @items.keys[0] => 1 } }, price: @item["price"], id: @user }
+    assert_difference '@player.reload.gold', -30 do
+      patch :update, { player: { items: { @items.keys[0] => 3 } }, price: @item["price"], id: @user }
     end
     assert_equal 'Purchase Successful', flash[:success]
     assert_redirected_to items_url
