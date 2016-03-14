@@ -6,7 +6,6 @@
 }
 #Game{
     padding: 50px;
-    display:inline-block;
 }
 </style>
 <!--This is where the game will go -->
@@ -14,15 +13,8 @@
 
 <p id="additional" style="font-size: 20px; color: red; text-align: center"> </p>
 
-<div class="row">
-  <div class="col-md-6"><%= render 'shared/ranking_table' %></div>
-  <div class="col-md-6">
-  
-  
-  
-
-            <!-- Style the game display canvas however you wish by syling the 'Game' id -->
-            <div id="Game">
+<!-- Style the game display canvas however you wish by syling the 'Game' id -->
+<div id="Game">
     
     <!-- Page specific javascript, don't include these into the resource manifest file since we don't want these
         to be available in every single page of our application.-->
@@ -106,8 +98,6 @@
                 
                 items[name] = createItem(name, quantity);
             <%end%>
-            items["Small Potion"] = createItem("Small Potion", 4);
-            items["Medium Potion"] = createItem("Medium Potion", 4);
             
             this.items = items;
             
