@@ -8,14 +8,13 @@ class PlacesController < ApplicationController
   # GET /places.json
   def index
     @places = Place.all
-    @user_location = get_user_location
     init_markers
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
       marker.infowindow place.title
       marker.picture({
-        "url" => "http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-32.png",
+        "url" => "https://cdn3.iconfinder.com/data/icons/location-vol-2/128/location-15-32.png",
         "width" => 32,
         "height" => 32})
     end
@@ -74,7 +73,13 @@ class PlacesController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
+  def choose
+    @chosen = Place.find(params[:id])
+    index
+    render 'index'
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_place

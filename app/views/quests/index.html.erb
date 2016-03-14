@@ -4,9 +4,6 @@
 <%= will_paginate %>
 
 <table class="quests">
-  <% if current_user.admin? %>
-    <p class="center"><%= link_to "Create New Quest", new_quest_path %></p>
-  <% end %>
   <% @quests.each do |quest| %>
     <% if current_player.quest_req_met?(quest) && 
           current_player.level_met?(quest) &&

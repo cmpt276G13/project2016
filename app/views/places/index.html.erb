@@ -1,42 +1,46 @@
 <% provide(:title, 'Places') %>
 <p id="notice"><%= notice %></p>
-<h1>World Map</h1>
-<center>
-<div style='width: 1000px;'>
-  <div id="geolocation" style='width: 1000px; height: 600px;'></div>
+
+<div class="map-container" style='width: 100%; height: 500px;'>
+  <h1>World Map</h1>
+  <div id="geolocation" style='width: 65%; height: 100%; float: left'></div>
+  <div id="user-created" style='margin-left: 70%;'>
+    <center>
+    <h2>User-Created Locations</h2>
+    <table>
+      <thead>
+        <tr>
+         <!-- <th>Latitude</th>
+         <th>Longitude</th> -->
+          <th>Address</th>
+          <th>Title</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @places.each do |place| %>
+          <tr>
+            <!-- <td><%= place.latitude %></td>
+            <td><%= place.longitude %></td> -->
+            <td><%= place.address %></td>
+            <td><%= place.title %></td>
+            <td><%= link_to 'Go here', places_choose_path(place[:id]) %></td>
+            <!-- <td><%= link_to 'Show', place %></td> -->
+            <td><%= link_to 'Edit', edit_place_path(place) %></td>
+            <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <button><%= link_to 'New Place', new_place_path %></button>
+    <!-- <h3>You selected: <= @chosen[:title] %></h3> -->
+    </center>
+  </div>
 </div>
-</center>
-
-<h2>User-Created Locations</h2>
-<table>
-  <thead>
-    <tr>
-     <!-- <th>Latitude</th>
-      <th>Longitude</th> -->
-      <th>Address</th>
-      <th>Title</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @places.each do |place| %>
-      <tr>
-        <!-- <td><%= place.latitude %></td>
-        <td><%= place.longitude %></td> -->
-        <td><%= place.address %></td>
-        <td><%= place.title %></td>
-        <td><%= link_to 'Show', place %></td>
-        <td><%= link_to 'Edit', edit_place_path(place) %></td>
-        <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
 <br>
 
-<%= link_to 'New Place', new_place_path %>
+
 
 <script src="//maps.google.com/maps/api/js?v=3.18&sensor=false&client=&key=&libraries=geometry&language=&hl=&region="></script> 
 <script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js"></script>
@@ -57,9 +61,11 @@ function displayOnMap(position){
     lng: position.coords.longitude,
     "infowindow": "You are here!"
   });
+  
+  
   //handler.map.centerOn(marker);
   handler.getMap().setZoom(2);
-  
+  /*
   // PRE-LOADED LOCATIONS
   var vancouver = handler.addMarker({
     lat: <%= @vancouver[:lat] %>,
@@ -96,5 +102,7 @@ function displayOnMap(position){
     lng: <%= @brasilia[:lng] %>,
     "infowindow": "<%= @brasilia[:title]  %> [<%= @brasilia[:lat]  %>, <%= @brasilia[:lng]  %>]"
   });
+  */
 };
+
 </script>
