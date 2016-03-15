@@ -77,7 +77,7 @@ class PlacesController < ApplicationController
   def choose
     @chosen = Place.find(params[:id])
     respond_to do |format|
-      format.html { redirect_to places_url, notice: 'Place was successfully chosen.' }
+      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }
       format.json { render :index, status: :ok, location: @chosen }
     end
   end
