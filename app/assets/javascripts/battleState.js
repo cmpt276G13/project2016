@@ -472,7 +472,7 @@ var battleState = {
     
     createRewardsText: function() {
         
-        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
+        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true } );
         var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
         rewardsText += "Gained " + this.rewards.gold + " Gold\n";
         
@@ -487,7 +487,7 @@ var battleState = {
         
         //container for the ui
         var statContainer = {};
-        statContainer.textBox = new textBox(x, y, width, height);
+        statContainer.textBox = new textBox( {x: x, y: y, width: width, height: height} );
         
         var barStyle = {
             
@@ -713,7 +713,7 @@ var battleState = {
         
         //we need a way to give messages to the player
         //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-        this.messageBox = new textBox(0, 0, game.scale.width, 40, false);
+        this.messageBox = new textBox({x: 0, y: 0, width: game.scale.width, height: 40});
         
         //this contains text that will display the amount of damage an monster or player received after an attack
         //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted

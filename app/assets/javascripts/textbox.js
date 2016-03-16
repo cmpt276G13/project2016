@@ -44,11 +44,14 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
 };
 
 //object that draws a text box onto the screen, and allows you to set the text that is displayed
-//if centerToPoint is true, then x, y represents the center point of the textbox
-function textBox(x, y, width, height, centerToPoint) {
+//width is set by config
+//heigh is automatically calculated
+function textBox(config) {
+    
+    this.configuration = this.mergeConfigWithDefault(config);
     
     //text box background
-    this.background = createTextboxBackground(x, y, width, height, centerToPoint);
+    this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, this.configuration.height, this.configuration.centerToPoint);
     this.background.fixedToCamera = true;
     
     //text to display
@@ -60,6 +63,24 @@ function textBox(x, y, width, height, centerToPoint) {
     this.text.anchor.x = 0.5;
     this.text.anchor.y = 0.5;
 };
+
+textBox.prototype.mergeConfigWithDefault = function(configuration) {
+    
+    var defaultConfig = {
+        
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        centerToPoint: false,
+        horizontalAlign: "left", //one of left|center|right
+        verticalAlign: "top" //one of top|center|bottom
+    }
+    
+    mergeObjects(defaultConfig, configuration);
+    
+    return defaultConfig;
+}
 
 textBox.prototype.setText = function(newText) {
     
