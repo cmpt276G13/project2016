@@ -713,7 +713,7 @@ var battleState = {
         
         //we need a way to give messages to the player
         //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-        this.messageBox = new textBox({x: 0, y: 0, width: game.scale.width, height: 40});
+        this.messageBox = new textBox({x: 0, y: 0, width: game.scale.width, height: 40, horizontalAlign: "center", verticalAlign: "center"});
         
         //this contains text that will display the amount of damage an monster or player received after an attack
         //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted

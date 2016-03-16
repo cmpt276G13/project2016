@@ -55,13 +55,21 @@ function textBox(config) {
     this.background.fixedToCamera = true;
     
     //text to display
-    this.text = game.add.text(0, 0, "", messageStyle);
+    this.text = game.add.text(3, 3, "", messageStyle);
     this.background.addChild(this.text);
     
-    this.text.x = this.background.width / 2;
-    this.text.y = this.background.height / 2;
-    this.text.anchor.x = 0.5;
-    this.text.anchor.y = 0.5;
+    //determine position of text
+    if(this.configuration.horizontalAlign == "center") {
+        
+        this.text.x = this.background.width / 2;
+        this.text.anchor.x = 0.5;
+    }
+    
+    if(this.configuration.verticalAlign == "center") {
+        
+        this.text.y = this.background.height / 2;
+        this.text.anchor.y = 0.5;
+    }
 };
 
 textBox.prototype.mergeConfigWithDefault = function(configuration) {
@@ -72,8 +80,8 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         width: 0,
         height: 0,
-        centerToPoint: false,
-        horizontalAlign: "left", //one of left|center|right
+        centerToPoint: false,//whether the textbox should be centered to the given point
+        horizontalAlign: "left", //one of left|center|right, aligns the text within the text box
         verticalAlign: "top" //one of top|center|bottom
     }
     
