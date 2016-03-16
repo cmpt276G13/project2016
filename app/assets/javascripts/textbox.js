@@ -65,10 +65,22 @@ function textBox(config) {
         this.text.anchor.x = 0.5;
     }
     
+    if(this.configuration.horizontalAlign == "right") {
+        
+        this.text.x = this.background.width;
+        this.text.anchor.x = 1;
+    }
+    
     if(this.configuration.verticalAlign == "center") {
         
         this.text.y = this.background.height / 2;
         this.text.anchor.y = 0.5;
+    }
+    
+    if(this.configuration.verticalAlign == "bottom") {
+        
+        this.text.y = this.background.height;
+        this.text.anchor.y = 1;
     }
 };
 
