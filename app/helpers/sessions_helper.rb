@@ -77,6 +77,11 @@ module SessionsHelper
     @brasilia = {:title => "Brasilia, Brazil", :lat => -15.7939, :lng => -47.8828}
   end
   
+  # 
+  def get_chosen_location
+    @chosen_place = Place.new(session[:chosen_attributes])
+  end
+  
   # Redirects to stored location (or to the default).
   def redirect_back_or(default)
     redirect_to(session[:forwarding_url] || default)
