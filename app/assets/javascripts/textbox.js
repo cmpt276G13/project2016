@@ -46,7 +46,34 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
 //takes the given string and adds new lines to break the string into multiple lines, so that it will fit the given text width limit
 function breakStringToFitWidthLimit(string, widthLimit) {
     
+    //estimate how many words can fit in the width limit
+    var averageCharactersPerWord = 5;
+    var characterWidthInPixels = 9;
+    var averageWordWidthInPixels = characterWidthInPixels * averageCharactersPerWord;
     
+    var numberWordsWithinLimit = widthLimit / averageWordWidthInPixels;
+    
+    //add a new line everytime you pass word limit
+    var wordsInCurrentLine = 0;
+    for(var i = 0; i < string.length; ++i) {
+        
+        if(string.charAt(i) != " ") {
+            
+            //not a word seperator, skip
+            continue;
+        }
+        
+        wordsInCurrentLine++;
+        
+        if(wordsInCurrentLine >= numberWordsWithinLimit) {
+            
+            //can't fit any more words onto this line, add a line break and start with next line
+            string = string.substr(0, i) + '\n' + string.substr(i + 1);
+            wordsInCurrentLine = 0;
+        }
+    }
+    
+    return string;
 }
 
 //object that draws a text box onto the screen, and allows you to set the text that is displayed
