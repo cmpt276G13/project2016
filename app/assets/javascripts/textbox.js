@@ -43,11 +43,12 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     return box;
 };
 
+
 //takes the given string and adds new lines to break the string into multiple lines, so that it will fit the given text width limit
 function breakStringToFitWidthLimit(string, widthLimit) {
     
     //estimate how many letters can fit into a line
-    var characterWidthInPixels = 7;
+    var characterWidthInPixels = 8;
     var maxCharacterCountInLine = Math.floor(widthLimit / characterWidthInPixels);
     var averageCharacterCountInWord = 7;
     var minCharacterCountInLine = maxCharacterCountInLine - averageCharacterCountInWord;
@@ -183,6 +184,7 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
 
 textBox.prototype.setText = function(newText) {
     
+    newText = breakStringToFitWidthLimit(newText, this.configuration.width);
     this.text.text = newText;
     
     if(!this.configuration.fixedHeight) {
