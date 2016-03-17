@@ -100,6 +100,11 @@ function textBox(config) {
     this.textList.addParent(this.background);
     
     this.alignText();
+    
+    if(this.configuration.showPressEnterMessage) {
+        
+        this.createPressEnterMessage();
+    }
 };
 
 textBox.prototype.createNewBackground = function(height) {
@@ -117,6 +122,7 @@ textBox.prototype.createNewBackground = function(height) {
     if(typeof this.textList !== "undefined") {
         
         this.recreateTextList({cellWidth: this.configuration.width, cellHeight: height, objectCreationFunction: text});
+       
         this.textList.addParent(this.background);
     }
 }
@@ -136,11 +142,38 @@ textBox.prototype.recreateTextList = function(configuration) {
     this.textList.addObjects(objectConfigurations);
 }
 
-textBox.prototype.updateHeight = function(newHeight) {
+textBox.prototype.updateHeight = function(heightSingleTextObject) {
     
     //determine heigth according to size of text
     //make it sligntly larger for extra stuff
-    this.createNewBackground(newHeight);
+    
+    var height = heightSingleTextObject;
+    
+    if(this.configuration.showPressEnterMessage) {
+        
+        height += 11;
+    }
+    
+    this.createNewBackground(height);
+    
+    //must recreate the press enter message since new background was created, so the background draws overtop of the old pres senter message
+    if(this.configuration.showPressEnterMessage) {
+        
+        this.createPressEnterMessage();
+    }
+}
+
+textBox.prototype.createPressEnterMessage = function() {
+    
+    if(typeof this.pressEnterMessage !== "undefined") {
+        
+        this.pressEnterMessage.destroy();
+    }
+    
+    this.pressEnterMessage = game.add.text(this.background.width - 7, this.background.height, "Press Enter", pressEnterStyle);
+    this.background.addChild(this.pressEnterMessage);
+    this.pressEnterMessage.anchor.x = 1;
+    this.pressEnterMessage.anchor.y = 1;
 }
 
 textBox.prototype.alignText = function() {
@@ -196,6 +229,7 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         width: 0,
         height: 0,
+        showPressEnterMessage: false,//whether there should be a 'press enter' displayed at the bottom right corner ofthe text box (used for when user needs to press enter to close text box)
         fixedHeight: false,//whether the textbox height will stay the same regardless of the text being displayed.
         centerToPoint: false,//whether the textbox should be centered to the given point
         horizontalAlign: "left", //one of left|center|right, aligns the text within the text box

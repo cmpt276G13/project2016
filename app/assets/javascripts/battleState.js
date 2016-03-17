@@ -503,7 +503,7 @@ var battleState = {
     
     createRewardsText: function() {
         
-        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true } );
+        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true, showPressEnterMessage: true} );
         var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
         
         if(this.rewards.gold != 0) {
