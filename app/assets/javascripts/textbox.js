@@ -86,6 +86,8 @@ function breakStringToFitWidthLimit(string, widthLimit) {
 //object that draws a text box onto the screen, and allows you to set the text that is displayed
 //width is set by config
 //heigh is automatically calculated
+//text box can display multiple 'pages' of text
+//basically you can store multiple liens of text, and callign the showNextPage function will replace the current text with the next page of text
 function textBox(config) {
     
     this.configuration = this.mergeConfigWithDefault(config);
@@ -93,11 +95,11 @@ function textBox(config) {
     //text box background, set default height for now
     this.createNewBackground(this.configuration.height);
     
-    //text to display
-    this.text = game.add.text(3, 3, "", messageStyle);
-    this.background.addChild(this.text);
+    //text to display, store as a scrollable object list so that multiple pages of text can be displayed
+    this.textList = new scrollableObjectList({cellWidth: this.configuration.width, cellHeight: this.configuration.height, objectCreationFunction: text});
+    this.textList.addParent(this.background);
     
-    this.alignText();
+    //this.alignText();
 };
 
 textBox.prototype.createNewBackground = function(height) {
@@ -110,18 +112,35 @@ textBox.prototype.createNewBackground = function(height) {
     this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, height, this.configuration.centerToPoint);
     this.background.fixedToCamera = true;
     
-    if(typeof this.text !== "undefined") {
+    //since hte background was reset, you need to reset the scrollable text list to have a new mask
+    //this means you have to recreate the whole thing because you can't chnage the size after its created
+    if(typeof this.textList !== "undefined") {
         
-        this.background.addChild(this.text);
+        this.recreateTextList({cellWidth: this.configuration.width, cellHeight: height, objectCreationFunction: text});
+        this.textList.addParent(this.background);
     }
 }
 
-textBox.prototype.updateHeight = function() {
+textBox.prototype.recreateTextList = function(configuration) {
+    
+    //store all saved objects
+    var objectConfigurations = [];
+    
+    for(var i = 0; i < this.textList.objects.length; ++i) {
+        
+        objectConfigurations.push(this.textList.objects[i].configuration );
+    }
+    
+    this.textList.destroy();
+    this.textList = new scrollableObjectList(configuration);
+    this.textList.addObjects(objectConfigurations);
+}
+
+textBox.prototype.updateHeight = function(newHeight) {
     
     //determine heigth according to size of text
     //make it sligntly larger for extra stuff
-    var height = this.text.height;
-    this.createNewBackground(height);
+    this.createNewBackground(newHeight);
 }
 
 textBox.prototype.alignText = function() {
@@ -182,15 +201,21 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
     return defaultConfig;
 }
 
-textBox.prototype.setText = function(newText) {
+textBox.prototype.addText = function(newText) {
     
     newText = breakStringToFitWidthLimit(newText, this.configuration.width);
-    this.text.text = newText;
+    this.textList.addObject({text: newText, textStyle: messageStyle});
+}
+
+textBox.prototype.setText = function(newText) {
+    
+    this.textList.clear();
+    this.addText(newText);
     
     if(!this.configuration.fixedHeight) {
         
-        this.updateHeight();
-        this.alignText();
+        this.updateHeight(this.textList.objects[0].text.height);
+        //this.alignText();
     }
 };
 
