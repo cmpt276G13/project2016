@@ -22,13 +22,13 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     
     //first create the colored rectangle
     var fillColor = 0x000099;
-    box.beginFill(fillColor, 0.7);
+    box.beginFill(fillColor, 1);
     
     //now create a border around it to make it look nice
-    var lineColor = 0x888888;
-    var boxRadius = lineThickness * 4;
+    var lineColor = 0xffffff;
+    var boxRadius = lineThickness * 1.5;
     
-    box.lineStyle(lineThickness, lineColor, 0.8);
+    box.lineStyle(lineThickness, lineColor, 1);
     box.moveTo(boxRadius, 0);
     box.lineTo(width - boxRadius, 0);
     box.quadraticCurveTo(width, 0, width, boxRadius);

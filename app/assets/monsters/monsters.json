@@ -29,7 +29,10 @@
                 "Medium Potion": 10
             },
             
-            "skills": []
+            "skills": {
+                
+                "Fireball": 10
+            }
         }
     }
 }
