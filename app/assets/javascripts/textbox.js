@@ -247,7 +247,7 @@ textBox.prototype.addText = function(newText) {
     this.textList.addObject({text: newText, textStyle: messageStyle});
 }
 
-textBox.prototype.viewNextText = function() {
+textBox.prototype.showNextPage = function() {
     
     this.textList.scrollDown();
 }

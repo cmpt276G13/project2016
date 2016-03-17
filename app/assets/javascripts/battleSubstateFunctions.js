@@ -525,11 +525,16 @@ function victoryEnter() {
 
 function victoryKeyDown(key) {
     
-    //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        //fade to black
-        this.stateManager.changeState("outro");
+        if(this.rewardsTextbox.isShowingLastPageOfText()) {
+            
+            this.stateManager.changeState("outro");
+            return;
+        }
+        
+        //show next page of text
+        this.rewardsTextbox.showNextPage();
     }
 }
 
