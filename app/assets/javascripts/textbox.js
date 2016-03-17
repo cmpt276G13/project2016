@@ -247,6 +247,16 @@ textBox.prototype.addText = function(newText) {
     this.textList.addObject({text: newText, textStyle: messageStyle});
 }
 
+textBox.prototype.viewNextText = function() {
+    
+    this.textList.scrollDown();
+}
+
+textBox.prototype.isShowingLastPageOfText = function() {
+    
+    return !this.textList.canScrollDown();
+}
+
 textBox.prototype.setText = function(newText) {
     
     this.textList.clear();

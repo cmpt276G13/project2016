@@ -295,16 +295,33 @@ scrollableObjectList.prototype.createMask = function() {
     this.parentGraphics.addChild(this.mask);
 }
 
-scrollableObjectList.prototype.scrollDown = function() {
+scrollableObjectList.prototype.clear = function() {
+    
+    objectList.prototype.clear.call(this);
+    this.resetScroll();
+}
+
+scrollableObjectList.prototype.canScrollDown = function() {
     
     //not enough objects to scroll
     if(this.objects.length <= this.configuration.viewableObjects) {
         
-        return;
+        return false;
     }
     
     //prevent scrolling down beyond the last text
     if( this.mask.y + this.maskHeight >= this.objects.length * this.configuration.cellHeight) {
+        
+        return false;
+    }
+    
+    return true;
+}
+
+scrollableObjectList.prototype.scrollDown = function() {
+    
+    //not enough objects to scroll
+    if(!this.canScrollDown()) {
         
         return;
     }
