@@ -53,11 +53,10 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
   }
   // handler.getMap() got it done! :)
   google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
-    if (window.confirm('Click OK to create new place!')) {
+    //if (window.confirm('Click OK to create new place!')) {
         window.location.href='/places/new';
-      };
+      //};
   });
-
 });
 
 function displayOnMap(position){
