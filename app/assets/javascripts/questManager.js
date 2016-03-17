@@ -99,7 +99,8 @@ function questDisplay(config) {
     this.questProgress.anchor.x = 0.5;
     
     //create description
-    this.questDescription = game.add.text(this.configuration.cellWidth / 2, this.questProgress.y + this.questProgress.height, this.configuration.quest.description, questDescriptionStyle);
+    var questDescriptionString = breakStringToFitWidthLimit(this.configuration.quest.description, this.configuration.cellWidth);
+    this.questDescription = game.add.text(this.configuration.cellWidth / 2, this.questProgress.y + this.questProgress.height, questDescriptionString, questDescriptionStyle);
     this.questDescription.anchor.x = 0.5;
     this.parentGraphics.addChild(this.questDescription);
     

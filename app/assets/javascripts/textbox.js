@@ -46,16 +46,23 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
 //takes the given string and adds new lines to break the string into multiple lines, so that it will fit the given text width limit
 function breakStringToFitWidthLimit(string, widthLimit) {
     
-    //estimate how many words can fit in the width limit
-    var averageCharactersPerWord = 5;
-    var characterWidthInPixels = 9;
-    var averageWordWidthInPixels = characterWidthInPixels * averageCharactersPerWord;
-    
-    var numberWordsWithinLimit = widthLimit / averageWordWidthInPixels;
+    //estimate how many letters can fit into a line
+    var characterWidthInPixels = 7;
+    var maxCharacterCountInLine = Math.floor(widthLimit / characterWidthInPixels);
+    var averageCharacterCountInWord = 7;
+    var minCharacterCountInLine = maxCharacterCountInLine - averageCharacterCountInWord;
     
     //add a new line everytime you pass word limit
-    var wordsInCurrentLine = 0;
+    var charactersInCurrentLine = 0;
+    
     for(var i = 0; i < string.length; ++i) {
+        
+        charactersInCurrentLine++;
+        
+        if(string.charAt(i) == "\n") {
+            
+            charactersInCurrentLine = 0;
+        }
         
         if(string.charAt(i) != " ") {
             
@@ -63,13 +70,12 @@ function breakStringToFitWidthLimit(string, widthLimit) {
             continue;
         }
         
-        wordsInCurrentLine++;
-        
-        if(wordsInCurrentLine >= numberWordsWithinLimit) {
+        //word seperator, if we've reached enough words for this line, then start a new line
+        if(charactersInCurrentLine >= minCharacterCountInLine) {
             
             //can't fit any more words onto this line, add a line break and start with next line
             string = string.substr(0, i) + '\n' + string.substr(i + 1);
-            wordsInCurrentLine = 0;
+            charactersInCurrentLine = 0;
         }
     }
     
