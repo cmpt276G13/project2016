@@ -99,7 +99,7 @@ function textBox(config) {
     this.textList = new scrollableObjectList({cellWidth: this.configuration.width, cellHeight: this.configuration.height, objectCreationFunction: text});
     this.textList.addParent(this.background);
     
-    //this.alignText();
+    this.alignText();
 };
 
 textBox.prototype.createNewBackground = function(height) {
@@ -145,40 +145,46 @@ textBox.prototype.updateHeight = function(newHeight) {
 
 textBox.prototype.alignText = function() {
     
-    if(this.configuration.horizontalAlign == "left") {
+    for(var i = 0; i < this.textList.objects.length; ++i) {
         
-        this.text.x = 0;
-        this.text.anchor.x = 0;
-    }
+        var textObject = this.textList.objects[i];
+        
+        if(this.configuration.horizontalAlign == "left") {
+            
+            textObject.text.x = 0;
+            textObject.text.anchor.x = 0;
+        }
+        
+        if(this.configuration.horizontalAlign == "center") {
+            
+            textObject.text.x = this.background.width / 2;
+            textObject.text.anchor.x = 0.5;
+        }
+        
+        if(this.configuration.horizontalAlign == "right") {
+            
+            textObject.text.x = this.background.width;
+            textObject.text.anchor.x = 1;
+        }
+        
+        if(this.configuration.verticalAlign == "top") {
+            
+            textObject.text.y = 0;
+            textObject.text.anchor.y = 0;
+        }
+        
+        if(this.configuration.verticalAlign == "center") {
+            
+            textObject.text.y = this.background.height / 2;
+            textObject.text.anchor.y = 0.5;
+        }
+        
+        if(this.configuration.verticalAlign == "bottom") {
+            
+            textObject.text.y = this.background.height;
+            textObject.text.anchor.y = 1;
+        }
     
-    if(this.configuration.horizontalAlign == "center") {
-        
-        this.text.x = this.background.width / 2;
-        this.text.anchor.x = 0.5;
-    }
-    
-    if(this.configuration.horizontalAlign == "right") {
-        
-        this.text.x = this.background.width;
-        this.text.anchor.x = 1;
-    }
-    
-    if(this.configuration.verticalAlign == "top") {
-        
-        this.text.y = 0;
-        this.text.anchor.y = 0;
-    }
-    
-    if(this.configuration.verticalAlign == "center") {
-        
-        this.text.y = this.background.height / 2;
-        this.text.anchor.y = 0.5;
-    }
-    
-    if(this.configuration.verticalAlign == "bottom") {
-        
-        this.text.y = this.background.height;
-        this.text.anchor.y = 1;
     }
 }
 
@@ -215,7 +221,7 @@ textBox.prototype.setText = function(newText) {
     if(!this.configuration.fixedHeight) {
         
         this.updateHeight(this.textList.objects[0].text.height);
-        //this.alignText();
+        this.alignText();
     }
 };
 
