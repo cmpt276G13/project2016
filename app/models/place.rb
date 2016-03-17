@@ -3,4 +3,5 @@ class Place < ActiveRecord::Base
     has_one :user
     geocoded_by :address
     after_validation :geocode
+    
 end

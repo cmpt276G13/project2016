@@ -8,7 +8,6 @@ class PlacesController < ApplicationController
   # GET /places.json
   def index
     @places = Place.all
-    init_markers
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
