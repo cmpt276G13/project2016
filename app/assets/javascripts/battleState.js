@@ -428,8 +428,9 @@ var battleState = {
         rewards.experience = 0;
         rewards.gold = 0;
         
-        //if we want monsters to give items when thjey die, then we can add all items to this array
-        rewards.items = [];
+        //if we want monsters to give items when thjey die, then add item here
+        //add as name: quantity
+        rewards.items = {};
         
         //same for new skills
         //add a key to the skills object
@@ -450,7 +451,27 @@ var battleState = {
             
             this.rewards.experience += this.monsters[i].rewards.experience;
             this.rewards.gold += this.monsters[i].rewards.gold;
-            this.rewards.items.concat(this.monsters[i].rewards.items);
+            
+            for(item in this.monsters[i].rewards.items) {
+                
+                //determine if item drops
+                var percentChanceToDrop = this.monsters[i].rewards.items[item];
+                
+                var dropItem = getRandomInt(0, 100) < percentChanceToDrop;
+                
+                if(!dropItem) {
+                    
+                    continue;
+                }
+                
+                if(typeof this.rewards.items[item] === "undefined") {
+                    
+                    this.rewards.items[item] = 0;
+                }
+                
+                this.rewards.items[item] += 1;
+            }
+        
             this.rewards.skills.concat(this.monsters[i].rewards.experience);
         }
     },
@@ -468,18 +489,35 @@ var battleState = {
             this.showMessage("You have leveled up!");
             this.updatePlayerStatDisplay();
         }
+        
+        for(item in this.rewards.items) {
+            
+            if(typeof player.items[item] === "undefined") {
+                
+                player.items[item] = createItem(item, 0);
+            }
+            
+            player.items[item].quantity += Number(this.rewards.items[item]);
+        }
     },
     
     createRewardsText: function() {
         
         this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true } );
         var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
-        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        
+        if(this.rewards.gold != 0) {
+            
+            rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        }
+        
+        //add items
+        for(item in this.rewards.items) {
+            
+            rewardsText += "Gained " + item + "   x" + this.rewards.items[item] + "\n";
+        }
         
         this.rewardsTextbox.setText(rewardsText);
-        this.rewardsTextbox.text.fontSize = 20;
-        this.rewardsTextbox.text.y = 0;
-        this.rewardsTextbox.text.anchor.y = 0;
     },
     
     //create a UI that displays the player's current stats

@@ -23,7 +23,12 @@
             "experience": 5,
             "gold": 10,
             
-            "items": [],
+            "items": {
+                
+                "Small Potion": 25,
+                "Medium Potion": 10
+            },
+            
             "skills": []
         }
     }

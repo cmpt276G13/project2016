@@ -3,7 +3,7 @@ function selectMainActionEnter() {
     this.mainActionsDisplay.resetSelection();
     this.mainActionsDisplay.selectionDisplay.visible = true;
             
-    this.showMessage("Select an action Select an action Select an action Select an action Select an action Select an action Select an action");
+    this.showMessage("Select an action");
 };
 
 function selectMainActionExit() {
