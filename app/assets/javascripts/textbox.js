@@ -43,6 +43,12 @@ function createTextboxBackground(x, y, width, height, centerToPoint) {
     return box;
 };
 
+//takes the given string and adds new lines to break the string into multiple lines, so that it will fit the given text width limit
+function breakStringToFitWidthLimit(string, widthLimit) {
+    
+    
+}
+
 //object that draws a text box onto the screen, and allows you to set the text that is displayed
 //width is set by config
 //heigh is automatically calculated
@@ -50,15 +56,48 @@ function textBox(config) {
     
     this.configuration = this.mergeConfigWithDefault(config);
     
-    //text box background
-    this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, this.configuration.height, this.configuration.centerToPoint);
-    this.background.fixedToCamera = true;
+    //text box background, set default height for now
+    this.createNewBackground(this.configuration.height);
     
     //text to display
     this.text = game.add.text(3, 3, "", messageStyle);
     this.background.addChild(this.text);
     
-    //determine position of text
+    this.alignText();
+};
+
+textBox.prototype.createNewBackground = function(height) {
+    
+    if(typeof this.background !== "undefined") {
+        
+        this.background.destroy(false);
+    }
+    
+    this.background = createTextboxBackground(this.configuration.x, this.configuration.y, this.configuration.width, height, this.configuration.centerToPoint);
+    this.background.fixedToCamera = true;
+    
+    if(typeof this.text !== "undefined") {
+        
+        this.background.addChild(this.text);
+    }
+}
+
+textBox.prototype.updateHeight = function() {
+    
+    //determine heigth according to size of text
+    //make it sligntly larger for extra stuff
+    var height = this.text.height;
+    this.createNewBackground(height);
+}
+
+textBox.prototype.alignText = function() {
+    
+    if(this.configuration.horizontalAlign == "left") {
+        
+        this.text.x = 0;
+        this.text.anchor.x = 0;
+    }
+    
     if(this.configuration.horizontalAlign == "center") {
         
         this.text.x = this.background.width / 2;
@@ -69,6 +108,12 @@ function textBox(config) {
         
         this.text.x = this.background.width;
         this.text.anchor.x = 1;
+    }
+    
+    if(this.configuration.verticalAlign == "top") {
+        
+        this.text.y = 0;
+        this.text.anchor.y = 0;
     }
     
     if(this.configuration.verticalAlign == "center") {
@@ -82,7 +127,7 @@ function textBox(config) {
         this.text.y = this.background.height;
         this.text.anchor.y = 1;
     }
-};
+}
 
 textBox.prototype.mergeConfigWithDefault = function(configuration) {
     
@@ -92,6 +137,7 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
         y: 0,
         width: 0,
         height: 0,
+        fixedHeight: false,//whether the textbox height will stay the same regardless of the text being displayed.
         centerToPoint: false,//whether the textbox should be centered to the given point
         horizontalAlign: "left", //one of left|center|right, aligns the text within the text box
         verticalAlign: "top" //one of top|center|bottom
@@ -105,6 +151,12 @@ textBox.prototype.mergeConfigWithDefault = function(configuration) {
 textBox.prototype.setText = function(newText) {
     
     this.text.text = newText;
+    
+    if(!this.configuration.fixedHeight) {
+        
+        this.updateHeight();
+        this.alignText();
+    }
 };
 
 textBox.prototype.show = function() {

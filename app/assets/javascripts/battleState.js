@@ -487,7 +487,7 @@ var battleState = {
         
         //container for the ui
         var statContainer = {};
-        statContainer.textBox = new textBox( {x: x, y: y, width: width, height: height} );
+        statContainer.textBox = createTextboxBackground(x, y, width, height);
         
         var barStyle = {
             
@@ -507,7 +507,7 @@ var battleState = {
         
         statContainer.playerHealthBar = new HealthBar(barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
-        statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+        statContainer.playerHealthBar.addParent(statContainer.textBox);
         
         barStyle.x += 170;
         barStyle.maxHealth = player.maxMana;
@@ -516,7 +516,7 @@ var battleState = {
         
         statContainer.playerManaBar = new HealthBar(barStyle);
         statContainer.playerManaBar.setValueNoTransition(player.mana);
-        statContainer.playerManaBar.addParent(statContainer.textBox.background);
+        statContainer.playerManaBar.addParent(statContainer.textBox);
         
         statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 150, cellHeight: 15, objectCreationFunction: attributeDisplayText});
         
@@ -524,7 +524,7 @@ var battleState = {
         statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
         statContainer.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
         
-        statContainer.attributeTable.addParent(statContainer.textBox.background);
+        statContainer.attributeTable.addParent(statContainer.textBox);
         
 
         return statContainer;
