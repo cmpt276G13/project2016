@@ -37,7 +37,8 @@ class PlacesController < ApplicationController
   # POST /places.json
   def create
     @place = Place.new(place_params)
-
+    @this = current_user # sessions_helper
+    @place.user_id = session[:user_id]
     respond_to do |format|
       if @place.save
         format.html { redirect_to @place, notice: 'Place was successfully created.' }
