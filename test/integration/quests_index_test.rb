@@ -20,8 +20,8 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     get quests_path
     assert_template 'quests/index'
     assert_select 'div.pagination'
-    accepted_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false).count
-    assert_select 'td', "Accepted", count: accepted_quests
+    ongoing_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false).count
+    assert_select 'td', "Accepted", count: ongoing_quests
     assert_select 'a', text: @quest_turned_in.name, count: 0
     assert_select 'input[type=?]', "submit", count: 1
     first_page_of_quests = Quest.paginate(page: 1)
@@ -80,6 +80,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
   test 'index as non-admin' do
     log_in_as(@non_admin)
     get quests_path
+    assert_template 'quests/index'
     assert_select 'a[href=?]', quests_accept_path(@quest2), text: 'Accept', count: 0
     assert_select 'a[href=?]', new_quest_path, text: "Create New Quest", count: 0
     assert_select 'a', text: 'delete', count: 0

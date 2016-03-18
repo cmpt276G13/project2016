@@ -15,10 +15,32 @@ class PlayerTest < ActiveSupport::TestCase
   test "should be valid" do
     assert @user.player.valid?
   end
-
-  test "user id should be present" do
-    @user.player.user_id = nil
-    assert_not @user.player.valid?
+  
+  test "experience should be a positive integer or 0" do
+    @player.experience = 0
+    assert @player.valid?
+    @player.experience = 4.3
+    assert_not @player.valid?
+    @player.experience = -1
+    assert_not @player.valid?
+    @player.experience = "invalid"
+    assert_not @player.valid?
+  end
+  
+  test "should update items through adding, and change gold" do
+    amount = 5
+    price = 10
+    assert_difference '@player.reload.items["Small Potion"].to_i', 5 do
+      assert_difference '@player.reload.gold', -amount * price do
+        assert @player.update_items!({ "Small Potion" => amount }, price: price)
+      end
+    end
+  end
+  
+  test "should turn in quest" do
+    assert_not @player.quest_acceptances.find_by(quest_id: @quest_complete).turned_in?
+    @player.turn_in(@quest_complete)
+    assert @player.quest_acceptances.find_by(quest_id: @quest_complete).turned_in?
   end
   
   test "should be accepted existing but not new quest" do

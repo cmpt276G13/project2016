@@ -14,7 +14,7 @@ class Player < ActiveRecord::Base
   validates :deaths, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :experience_to_next_level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  # Use eg. @player.items << 'name': amount
+  # Use eg. @player.items["name"] = amount
   # Don't forget to use @player.save
   serialize :items, Hash
   

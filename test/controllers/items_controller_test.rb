@@ -2,9 +2,22 @@ require 'test_helper'
 
 class ItemsControllerTest < ActionController::TestCase
   def setup
+    @user = users(:michael)
     file = File.read("app/assets/items/items.json")
     @items = JSON.parse file
     @item = JSON.parse(file)["Small Potion"]
+  end
+  
+  test "should get index when logged in" do
+    log_in_as(@user)
+    get :index
+    assert_response :success
+  end
+  
+  test "should get show when logged in" do
+    log_in_as(@user)
+    get :show, name: @items.keys[0]
+    assert_response :success
   end
   
   test "should redirect index when not logged in" do
