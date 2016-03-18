@@ -7,7 +7,7 @@ class PlacesController < ApplicationController
   # GET /places
   # GET /places.json
   def index
-    @places = Place.all
+    @places = Place.where(:user_id => session[:user_id])
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
@@ -37,7 +37,6 @@ class PlacesController < ApplicationController
   # POST /places.json
   def create
     @place = Place.new(place_params)
-    @this = current_user # sessions_helper
     @place.user_id = session[:user_id]
     respond_to do |format|
       if @place.save
