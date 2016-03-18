@@ -85,4 +85,12 @@ class PlayerTest < ActiveSupport::TestCase
       @player.level_up
     end
   end
+  
+  test "should initialize progress" do
+    @player.init_progress(@quest_new)
+    q_acceptance = @player.quest_acceptances.find_by(quest_id: @quest_new)
+    @quest_new.target.each_key do |target|
+      assert q_acceptance.progress[target]
+    end
+  end
 end
