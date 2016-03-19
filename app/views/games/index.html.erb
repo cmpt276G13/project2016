@@ -284,6 +284,60 @@
         //cached data will be saved to the global game object, so we can use it in later states
         var loadState = {
             
+            loadTileMapData: function() {
+                
+                //the assets pipeline is garbage so we have to load all the tilemap data
+                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
+            },
+            
+            loadTileSetImages: function() {
+                
+                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
+                game.load.image('tileset2', '<%= asset_path("trees.png") %>');
+            },
+            
+            loadMonsterLists: function() {
+                
+                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
+                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
+                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
+            },
+            
+            loadJSONDatabases: function() {
+                
+                //load the mosnter data base
+                game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
+                
+                //load item database
+                game.load.json('itemData', '<%= asset_path("items.json") %>');
+                
+                 //load quests
+                game.load.json('questData', '<%= asset_path("quests.json") %>');
+                
+                //load skill data, and animations
+                game.load.json('skillData', '<%= asset_path("skills.json") %>');
+            },
+            
+            loadMonsterSpritesheets: function() {
+                
+                //load spritesheets for all the monsters
+                //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
+                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
+            },
+            
+            loadBattleBackgroundImages: function() {
+                
+                //load images used for the battle backgrounds
+                game.load.image('forestClearing', '<%= asset_path("forestClearing.png") %>');
+            },
+            
+            loadSkillSpritesheets: function() {
+                
+                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+            },
+            
             //place to load files
             preload: function() {
                 
@@ -293,40 +347,13 @@
                 //load data that maps a real world GPS location to an ingame map file
                 game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
                 
-                //the assets pipeline is garbage so we have to load all the tilemap data
-                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                
-                //load all the tilesets
-                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
-                game.load.image('tileset2', '<%= asset_path("trees.png") %>');
-                
-                //load all the monster lists
-                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
-                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
-                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
-                
-                //load the mosnter data base
-                game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
-                
-                //load item database
-                game.load.json('itemData', '<%= asset_path("items.json") %>');
-                
-                //load spritesheets for all the monsters
-                //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
-                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
-                
-                //load images used for the battle backgrounds
-                game.load.image('forestClearing', '<%= asset_path("forestClearing.png") %>');
-                
-                //load quests
-                game.load.json('questData', '<%= asset_path("quests.json") %>');
-                
-                //load skill data, and animations
-                game.load.json('skillData', '<%= asset_path("skills.json") %>');
-                
-                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+                this.loadTileMapData();
+                this.loadTileSetImages();
+                this.loadMonsterLists();
+                this.loadJSONDatabases();
+                this.loadMonsterSpritesheets();
+                this.loadBattleBackgroundImages();
+                this.loadSkillSpritesheets();
             },
             
             //create function creats the required object for this game state
@@ -370,7 +397,6 @@
         
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
-                //document.getElementById("additional").innerHTML = mapKeys.mapKey;
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');
