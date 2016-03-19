@@ -326,7 +326,7 @@ var battleState = {
             
             //position the monster somewhere offscreen
             monster.x = getRandomInt(100, 300) * -1;
-            monster.y = getRandomInt(100, 300);
+            monster.y = getRandomInt(200, 400);
             monster.finishedPositioning = false;//need to call move monsters to position at some point
             
             monsters.push(monster);
@@ -363,7 +363,7 @@ var battleState = {
             
             //position the monster somewhere on the screen
             var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
-            var yTarget = 200 + 50 * (i % num);
+            var yTarget = 250 + 50 * (i % num);
             
             this.monsters[i].sprite.position.y = yTarget;
             
@@ -609,7 +609,7 @@ var battleState = {
     orientPlayerForBattle: function() {
         
         player.sprite.x = 500;
-        player.sprite.y = 250;
+        player.sprite.y = 350;
         
         player.sprite.body.velocity.x = 0;
         player.sprite.body.velocity.y = 0;
@@ -696,6 +696,11 @@ var battleState = {
         
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
+		
+		//load background
+		background = game.add.sprite(0, 0, "forestClearing");
+		background.width = game.scale.width;
+		background.height = game.scale.height;
 		
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural

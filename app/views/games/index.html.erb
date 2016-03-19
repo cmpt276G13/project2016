@@ -314,6 +314,9 @@
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
                 
+                //load images used for the battle backgrounds
+                game.load.image('forestClearing', '<%= asset_path("forestClearing.png") %>');
+                
                 //load quests
                 game.load.json('questData', '<%= asset_path("quests.json") %>');
                 
