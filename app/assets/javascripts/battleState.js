@@ -697,8 +697,9 @@ var battleState = {
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
 		
-		//load background
-		background = game.add.sprite(0, 0, "forestClearing");
+		//load random background
+		backgroundId = getRandomInt(0, mapKeys.battleBackgroundKeys.length - 1);
+		background = game.add.sprite(0, 0, mapKeys.battleBackgroundKeys[backgroundId]);
 		background.width = game.scale.width;
 		background.height = game.scale.height;
 		

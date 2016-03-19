@@ -19,6 +19,7 @@
         "bottom": -122.912563,
         "mapKey": "burnaby",
         "tilesetKeys": ["tileset1"],
+        "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "burnabyMonsters"
     },
     
@@ -30,6 +31,7 @@
         "bottom": 0,
         "mapKey": "default",
         "tilesetKeys": ["tileset1"],
+        "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "defaultMonsters"
     }
 }

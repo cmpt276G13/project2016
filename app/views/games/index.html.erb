@@ -65,7 +65,8 @@
             
             mapKey: "default",
             monsterListKey: "defaultMonsters",
-            tilesetKeys: ["tileset1"]
+            tilesetKeys: ["tileset1"],
+            battleBackgroundKeys: ["forestClearing"]
         }
         
         //define a global player variable
@@ -206,6 +207,7 @@
             mapData.mapKey = mappings["default"].mapKey;
             mapData.monsterListKey = mappings["default"].monsterListKey;
             mapData.tilesetKeys = mappings["default"].tilesetKeys;
+            mapData.battleBackgroundKeys = mappings["default"].battleBackgroundKeys;
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
@@ -226,6 +228,7 @@
                 mapData.tilesetKeys = mappings[area].tilesetKeys;
                 mapData.mapKey = mappings[area].mapKey;
                 mapData.monsterListKey = mappings[area].monsterListKey;
+                mapData.battleBackgroundKeys = mappings[area].battleBackgroundKeys;
                 
                 break;
             }
