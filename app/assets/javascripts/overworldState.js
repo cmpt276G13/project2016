@@ -71,10 +71,11 @@ var overworldState = {
             this.map.addTilesetImage('tileset' + i.toString(), mapKeys.tilesetKeys[i - 1]);
         }
         
-        //backround layer
-        this.background = this.map.createLayer('background');
+        //load all layers
+        this.background1 = this.map.createLayer('background1');
+        this.background2 = this.map.createLayer('background2');
         this.solid = this.map.createLayer('solid');
-        this.background.resizeWorld();
+        this.background1.resizeWorld();
         
         this.map.setCollisionBetween(1, 10000, true, 'solid');
     },
@@ -92,8 +93,10 @@ var overworldState = {
         
         game.add.existing(player.sprite);
         
-        //add a forewground layer
+        //create foreground here
+        //NEEDS TO BE MADE AFTER PLAYER SO THAT THE FOREGROUND DRAWS ON TOP OF PLAYER
         this.foreground = this.map.createLayer('foreground');
+        
         
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);

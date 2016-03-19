@@ -583,6 +583,7 @@ function defeatKeyDown(key) {
         
         //now make the screen fade to black, and then go back to the overworld
         this.stateManager.changeState("outro");
+        globalSfx.selectOption.play();
     }
 }
 
