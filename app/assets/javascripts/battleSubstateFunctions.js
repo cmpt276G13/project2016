@@ -14,7 +14,7 @@ function selectMainActionExit() {
 
 function selectMainActionKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.mainActionsDisplay);
+    actionDisplayKeyDown(key, this.mainActionsDisplay, true);
     
     //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
@@ -34,6 +34,8 @@ function selectMainActionKeyDown(key) {
             
             this.stateManager.changeState("selectFightAction");
         }
+        
+        globalSfx.selectOption.play();
     }
 };
 
@@ -58,7 +60,7 @@ function selectFightActionExit() {
 
 function selectFightActionKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.fightActionsDisplay);
+    actionDisplayKeyDown(key, this.fightActionsDisplay, true);
         
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
@@ -66,6 +68,8 @@ function selectFightActionKeyDown(key) {
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
+            globalSfx.cancel.play();
+            return;
         }
         
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
@@ -78,11 +82,14 @@ function selectFightActionKeyDown(key) {
             
             this.stateManager.changeState("selectSkill");
         }
+        
+        globalSfx.selectOption.play();
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectMainAction");
+        globalSfx.cancel.play();
     }
 };
 
@@ -115,15 +122,18 @@ function selectSkillKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectFightAction");
+        globalSfx.cancel.play();
     }
     
-    actionDisplayKeyDown(key, this.skillsDisplay);
+    actionDisplayKeyDown(key, this.skillsDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         if(this.skillsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
             
             this.stateManager.changeState("selectFightAction");
+            
+            globalSfx.cancel.play();
             return;
         }
         
@@ -133,6 +143,8 @@ function selectSkillKeyDown(key) {
         var skillName = this.skillsDisplay.getSelectedActionConfiguration().attributeName;
         
         if(player.mana < game.cache.getJSON("skillData")[skillName].manaCost ) {
+            
+            globalSfx.invalidSelection.play();
             
             //tell player he doesn't have enough manga
             //auto hide the message after a few seconds
@@ -154,6 +166,7 @@ function selectSkillKeyDown(key) {
         //player has enough mana, use skill
         player.lastUsedAttack = game.cache.getJSON("skillData")[skillName];
         this.stateManager.changeState("playerSelectTarget");
+        globalSfx.selectOption.play();
     }
 }
 
@@ -193,21 +206,25 @@ function selectItemActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectMainAction");
+        globalSfx.cancel.play();
     }
     
-    actionDisplayKeyDown(key, this.itemsDisplay);
+    actionDisplayKeyDown(key, this.itemsDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         if(this.itemsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
             
             this.stateManager.changeState("selectMainAction");
+            globalSfx.cancel.play();
+            return;
             
-        } else {
-            
-            //player chooses to use an item
-            this.stateManager.changeState("playerUseItem");
         }
+        
+        
+        globalSfx.selectOption.play();
+        //player chooses to use an item
+        this.stateManager.changeState("playerUseItem");
         
     }
 }
@@ -261,6 +278,8 @@ function playerSelectTargetKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectFightAction");
+        globalSfx.cancel.play();
+        return;
     }
     
     if(key.keyCode == Phaser.Keyboard.UP) {
@@ -527,6 +546,7 @@ function victoryKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
+        globalSfx.selectOption.play();
         if(this.rewardsTextbox.isShowingLastPageOfText()) {
             
             this.stateManager.changeState("outro");

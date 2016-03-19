@@ -2,4 +2,13 @@ highlightOption
 http://www.freesound.org/people/broumbroum/sounds/50561/
 
 selectOption
-http://www.freesound.org/people/TheEvilSocks/sounds/193943/
+http://www.freesound.org/people/killkhan/sounds/150222/
+
+cancel
+http://www.freesound.org/people/broumbroum/sounds/50557/
+
+invalidSelection
+http://www.freesound.org/people/Autistic%20Lucario/sounds/142608/
+
+selectMonster
+http://www.freesound.org/people/Taira%20Komori/sounds/215438/

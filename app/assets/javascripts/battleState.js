@@ -207,6 +207,8 @@ var battleState = {
                 }
             }
             
+            globalSfx.selectMonster.play();
+            
             this.selectedMonstersIndices.push(idOfSelected);
             this.highlighter.addHighlight(monsters[idOfSelected].sprite);
         },
@@ -229,6 +231,8 @@ var battleState = {
             
             this.currentSelection = (this.currentSelection + 1) % monsters.length;
             this.highlightAllSelections(monsters);
+            
+            globalSfx.highlightOption.play();
         },
         
         selectPrevious: function(monsters) {
@@ -240,6 +244,7 @@ var battleState = {
                 this.currentSelection = monsters.length - 1;
             }
             
+            globalSfx.highlightOption.play();
             this.highlightAllSelections(monsters);
         },
         

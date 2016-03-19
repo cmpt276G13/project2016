@@ -69,6 +69,16 @@
             battleBackgroundKeys: ["forestClearing"]
         }
         
+        //global sound effects
+        var globalSfx = {
+            
+            highlightOption: {},
+            selectOption: {},
+            cancel: {},
+            invalidSelection: {},
+            selectMonster: {}
+        }
+        
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
@@ -338,6 +348,15 @@
                 game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
             },
             
+            loadSoundEffects: function() {
+                
+                game.load.audio('highlightOption', '<%= asset_path("highlightOption.wav")%>');
+                game.load.audio('selectOption', '<%= asset_path("selectOption.mp3")%>');
+                game.load.audio('cancel', '<%= asset_path("cancel.wav")%>');
+                game.load.audio('invalidSelection', '<%= asset_path("invalidSelection.wav")%>');
+                game.load.audio('selectMonster', '<%= asset_path("selectMonster.mp3")%>');
+            },
+            
             //place to load files
             preload: function() {
                 
@@ -354,6 +373,7 @@
                 this.loadMonsterSpritesheets();
                 this.loadBattleBackgroundImages();
                 this.loadSkillSpritesheets();
+                this.loadSoundEffects();
             },
             
             //create function creats the required object for this game state
@@ -392,6 +412,11 @@
         		player.sprite.animations.add('down', [0, 1, 2, 3], 10, true);
         		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
+        		
+        		for(soundName in globalSfx) {
+        		    
+        		    globalSfx[soundName] = game.add.sound(soundName);
+        		}
         		
         		game.world.remove(player.sprite);
         
