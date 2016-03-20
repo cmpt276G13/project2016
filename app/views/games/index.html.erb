@@ -66,7 +66,8 @@
             mapKey: "default",
             monsterListKey: "defaultMonsters",
             tilesetKeys: ["tileset1"],
-            battleBackgroundKeys: ["forestClearing"]
+            battleBackgroundKeys: ["forestClearing"],
+            spawnPoint: {x: 0, y: 0}
         }
         
         //global sound effects
@@ -229,6 +230,7 @@
             mapData.monsterListKey = mappings["default"].monsterListKey;
             mapData.tilesetKeys = mappings["default"].tilesetKeys;
             mapData.battleBackgroundKeys = mappings["default"].battleBackgroundKeys;
+            mapData.spawnPoint = mappings["default"].spawnPoint;
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
@@ -250,6 +252,7 @@
                 mapData.mapKey = mappings[area].mapKey;
                 mapData.monsterListKey = mappings[area].monsterListKey;
                 mapData.battleBackgroundKeys = mappings[area].battleBackgroundKeys;
+                mapData.spawnPoint = mappings["default"].spawnPoint;
                 
                 break;
             }
@@ -394,7 +397,7 @@
                 this.loadBackgroundMusic();
             },
             
-            generateTilemap: function() {
+            generateTilemap: function(spawnPoint) {
                 
                 //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
                 tilemap.map = game.add.tilemap(mapKeys.mapKey);
@@ -411,8 +414,9 @@
                 tilemap.solid = tilemap.map.createLayer('solid');
                 tilemap.foreground = tilemap.map.createLayer('foreground');
                 tilemap.background1.resizeWorld();
-                
                 tilemap.map.setCollisionBetween(1, 10000, true, 'solid');
+                
+                tilemap.spawnPoint = {x: spawnPoint.x * 32, y: spawnPoint.y * 32};
             },
             
             //create function creats the required object for this game state
@@ -461,7 +465,7 @@
                 mapKeys = mapCoordinateToMap();
                 
                 //create tilemap here because its too slow to reload it
-                this.generateTilemap();
+                this.generateTilemap(mapKeys.spawnPoint);
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');

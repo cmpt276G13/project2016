@@ -133,6 +133,7 @@ var overworldState = {
     
     shutdown: function() {
         
+        game.world.remove(tilemap.map);
         game.world.remove(player.sprite);
         game.world.remove(tilemap.background1);
         game.world.remove(tilemap.background2);
