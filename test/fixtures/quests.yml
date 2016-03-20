@@ -40,3 +40,11 @@ high_level:
   description: Too high level can't accept quest!!!
   level_req: 5
   rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
+  
+gather:
+  name: Gather Quest
+  description: It's a gather quest! Gather some potions!
+  level_req: 1
+  type: GatherQuest
+  rewards: <%= { items: {"Small Potion": 1}, stats: { experience: 100 } }.to_yaml.inspect %>
+  target: <%= { "Small Potion": 3 }.to_yaml.inspect %>

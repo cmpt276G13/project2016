@@ -7,6 +7,9 @@ class QuestTest < ActiveSupport::TestCase
         description: "Example Description",
         level_req: 1,
       )
+    @q_kill = quests(:two)
+    @q_gather = quests(:gather)
+    @player = players(:michael)
   end
   
   test "should be valid" do
@@ -31,5 +34,23 @@ class QuestTest < ActiveSupport::TestCase
   test "name should not be too long" do
     @quest.name = "a" * 51
     assert_not @quest.valid?
+  end
+  
+  test "target should be present in SIT" do
+    @q_kill.target = {}
+    @q_gather.target = {}
+    assert_not @q_kill.valid?
+    assert_not @q_gather.valid?
+  end
+  
+  test "rewards should be present in SIT" do
+    @q_kill.rewards = {}
+    @q_gather.rewards = {}
+    assert_not @q_kill.valid?
+    assert_not @q_gather.valid?
+  end
+  
+  test "gather quest should take away target items" do
+    
   end
 end
