@@ -79,6 +79,17 @@
             selectMonster: {}
         }
         
+        //tilemap is global
+        var tilemap = {
+            
+            map: {},
+            background1: {},
+            background2: {},
+            solid: {},
+            foreground: {},
+            spawnPoint: {x: 0, y: 0}
+        }
+        
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
@@ -358,6 +369,11 @@
                 game.load.audio('selectMonster', '<%= asset_path("selectMonster.mp3")%>');
             },
             
+            loadBackgroundMusic: function() {
+                
+                game.load.audio("overworldTheme", '<%= asset_path("WorldMapDemo.mp3")%>');
+            },
+            
             //place to load files
             preload: function() {
                 
@@ -375,6 +391,28 @@
                 this.loadBattleBackgroundImages();
                 this.loadSkillSpritesheets();
                 this.loadSoundEffects();
+                this.loadBackgroundMusic();
+            },
+            
+            generateTilemap: function() {
+                
+                //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
+                tilemap.map = game.add.tilemap(mapKeys.mapKey);
+                
+                //add all tileset images to the tileset
+                for(var i = 1; i <= mapKeys.tilesetKeys.length; ++i) {
+                    
+                    tilemap.map.addTilesetImage('tileset' + i.toString(), mapKeys.tilesetKeys[i - 1]);
+                }
+                
+                //load all layers
+                tilemap.background1 = tilemap.map.createLayer('background1');
+                tilemap.background2 = tilemap.map.createLayer('background2');
+                tilemap.solid = tilemap.map.createLayer('solid');
+                tilemap.foreground = tilemap.map.createLayer('foreground');
+                tilemap.background1.resizeWorld();
+                
+                tilemap.map.setCollisionBetween(1, 10000, true, 'solid');
             },
             
             //create function creats the required object for this game state
@@ -418,14 +456,24 @@
         		    
         		    globalSfx[soundName] = game.add.sound(soundName);
         		}
-        		
-        		game.world.remove(player.sprite);
         
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
+                
+                //create tilemap here because its too slow to reload it
+                this.generateTilemap();
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');
+            },
+            
+            shutdown: function() {
+                
+                game.world.remove(player.sprite);
+                game.world.remove(tilemap.background1);
+                game.world.remove(tilemap.background2);
+                game.world.remove(tilemap.foreground);
+                game.world.remove(tilemap.solid);
             }
         };
         
