@@ -252,6 +252,9 @@ function selectItemActionUpdate() {
 
 function playerRunAwayEnter() {
     
+    globalBgm.battle.fadeOut(1250);
+    globalSfx.escapeBattle.play();
+    
     //make player face away and run
     player.sprite.animations.play("right");
     
@@ -524,10 +527,14 @@ function playerDyingEnter() {
     
     player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
     player.sprite.animations.play("dying");
+    globalSfx.entityKilled.play();
     player.deaths += 1;
 }
 
 function victoryEnter() {
+    
+    globalBgm.battle.fadeOut(1500);
+    globalSfx.winBattle.play();
     
     //player won a match, create a message box at the center of the screen
     //show player all the rewards he received
@@ -559,6 +566,9 @@ function victoryKeyDown(key) {
 }
 
 function defeatEnter() {
+    
+    globalBgm.battle.fadeOut(1250);
+    globalSfx.loseBattle.play();
     
     //create a transition so we fade to a black screen
     this.fadeToBlack = new fadeToBlack(700);

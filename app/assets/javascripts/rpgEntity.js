@@ -141,6 +141,7 @@ function startDeathAnimation(dyingEntity) {
     tween.delay(600);
     tween.start();
     dyingEntity.sprite.animations.play("dying");
+    globalSfx.entityKilled.play();
 };
 
 //creates an attack object given the attack data below

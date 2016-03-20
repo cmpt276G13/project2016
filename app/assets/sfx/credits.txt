@@ -15,3 +15,15 @@ http://www.freesound.org/people/Taira%20Komori/sounds/215438/
 
 basicAttack
 http://www.freesound.org/people/Hybrid_V/sounds/319590/
+
+loseBattle
+http://www.freesound.org/people/Deathbygeko/sounds/190843/
+
+entityKilled
+http://www.freesound.org/people/notchfilter/sounds/43696/
+
+escapeBattle
+http://www.freesound.org/people/ProjectsU012/sounds/334285/
+
+winBattle
+http://www.freesound.org/people/LittleRobotSoundFactory/sounds/270404/

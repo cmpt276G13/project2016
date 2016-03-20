@@ -78,7 +78,11 @@
             cancel: {},
             invalidSelection: {},
             selectMonster: {},
-            basicAttack: {}
+            basicAttack: {},
+            entityKilled: {},
+            loseBattle: {},
+            winBattle: {},
+            escapeBattle: {}
         }
         
         //global bgm
@@ -380,6 +384,10 @@
                 game.load.audio('invalidSelection', '<%= asset_path("invalidSelection.wav")%>');
                 game.load.audio('selectMonster', '<%= asset_path("selectMonster.mp3")%>');
                 game.load.audio('basicAttack', '<%= asset_path("basicAttack.wav") %>');
+                game.load.audio('entityKilled', '<%= asset_path("entityKilled.wav") %>');
+                game.load.audio('loseBattle', '<%= asset_path("loseBattle.wav") %>');
+                game.load.audio('winBattle', '<%= asset_path("winBattle.wav") %>');
+                game.load.audio('escapeBattle', '<%= asset_path("escapeBattle.wav") %>');
             },
             
             loadBackgroundMusic: function() {
