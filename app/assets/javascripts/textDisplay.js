@@ -68,6 +68,10 @@ var questRewardsHeadingStyle = {
     fontSize: 15
 }
 
+var pressEnterStyle = {};
+mergeObjects(pressEnterStyle, messageStyle);
+pressEnterStyle.fontSize = 11;
+
 //attributeDisplayText displays an attribute along with its value, in teh following format:
 //attributeName     attributeValue
 //data in the configuration defines a rectangular cell where the attribute is displayed
@@ -146,7 +150,7 @@ text.prototype.addParent = function(parent) {
 
 text.prototype.destroy = function() {
     
-    this.parentGraphics.destroy(true);
+    this.text.destroy(true);
 }
 
 //defines a list of objects that can be drawn onto the screen
@@ -239,6 +243,12 @@ objectList.prototype.clear = function() {
     this.objects = [];
 }
 
+objectList.prototype.destroy = function() {
+    
+    this.clear();
+    this.parentGraphics.destroy();
+}
+
 //object list that limits the number of viewable objects, and allows you to scroll through the objects
 scrollableObjectList.prototype = Object.create(objectList.prototype);
 
@@ -285,16 +295,33 @@ scrollableObjectList.prototype.createMask = function() {
     this.parentGraphics.addChild(this.mask);
 }
 
-scrollableObjectList.prototype.scrollDown = function() {
+scrollableObjectList.prototype.clear = function() {
+    
+    objectList.prototype.clear.call(this);
+    this.resetScroll();
+}
+
+scrollableObjectList.prototype.canScrollDown = function() {
     
     //not enough objects to scroll
     if(this.objects.length <= this.configuration.viewableObjects) {
         
-        return;
+        return false;
     }
     
     //prevent scrolling down beyond the last text
     if( this.mask.y + this.maskHeight >= this.objects.length * this.configuration.cellHeight) {
+        
+        return false;
+    }
+    
+    return true;
+}
+
+scrollableObjectList.prototype.scrollDown = function() {
+    
+    //not enough objects to scroll
+    if(!this.canScrollDown()) {
         
         return;
     }
@@ -318,6 +345,19 @@ scrollableObjectList.prototype.scrollUp = function() {
     
     this.parentGraphics.y += this.configuration.cellHeight;
     this.mask.y -= this.configuration.cellHeight;
+}
+
+//start displaying from the first object
+scrollableObjectList.prototype.resetScroll = function() {
+    
+    this.parentGraphics.y = this.configuration.y;
+    this.mask.y = 0;
+}
+
+scrollableObjectList.prototype.destroy = function() {
+    
+    objectList.prototype.destroy.call(this);
+    this.mask.destroy();
 }
 
 //a table of objects, each column in this table is an objectList

@@ -99,7 +99,8 @@ function questDisplay(config) {
     this.questProgress.anchor.x = 0.5;
     
     //create description
-    this.questDescription = game.add.text(this.configuration.cellWidth / 2, this.questProgress.y + this.questProgress.height, this.configuration.quest.description, questDescriptionStyle);
+    var questDescriptionString = breakStringToFitWidthLimit(this.configuration.quest.description, this.configuration.cellWidth);
+    this.questDescription = game.add.text(this.configuration.cellWidth / 2, this.questProgress.y + this.questProgress.height, questDescriptionString, questDescriptionStyle);
     this.questDescription.anchor.x = 0.5;
     this.parentGraphics.addChild(this.questDescription);
     
@@ -162,36 +163,6 @@ var questManager = {
     //array of strings
     //each string corresponds to the name of a quest
     recentlyCompletedQuests: []
-    // onGetItem(itemName, quantity) {
-        
-    //     //go through the player's items and update any quest progress that requires that item
-    //     scanInventoryForQuestCompletion();
-    // }
-    
-    // scanInventoryForQuestCompletion() {
-        
-    //     for(item in player.items) {
-            
-    //         for(quest in player.quests) {
-                
-    //             if(player.quests[quest].type == "gather") {
-                    
-    //                 checkGatherQuestProgress(item, player.items[item].quantity, player.quests[quest]);
-    //             }
-    //         }
-    //     }
-    // }
-    
-    // //checks if the given gather quest requires the given item
-    // //if it does, the quest progress will be updated according to the amount of items there are
-    // checkGatherQuestProgress(itemName, itemQuantity, player.quests[quest]) {
-        
-    //     if(itemName == player.quests[quest].targetName) {
-            
-    //         player.quests[quest].targetsAcquired = itemQuantity;
-    //         player.quests[quest].completed = (itemQuantity == player.quests[quest].targetAmount);
-    //     }
-    // }
 }
 
 //when player kills a monster, call this function to update his quests

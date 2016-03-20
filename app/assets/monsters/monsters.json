@@ -23,8 +23,16 @@
             "experience": 5,
             "gold": 10,
             
-            "items": [],
-            "skills": []
+            "items": {
+                
+                "Small Potion": 25,
+                "Medium Potion": 10
+            },
+            
+            "skills": {
+                
+                "Fireball": 10
+            }
         }
     }
 }

@@ -175,8 +175,10 @@ actionDisplay.prototype.getSelectedActionConfiguration = function() {
 
 //onKeyDown listener for action Display objects
 //this will assume the arrow keys is used to move, and it will move the current action selection for the given action display
-function actionDisplayKeyDown(key, actionDisplay) {
-        
+function actionDisplayKeyDown(key, actionDisplay, playSound) {
+    
+    var idPreviousSelection = actionDisplay.idSelectedAction;
+    
     //move the players selection
     if(key.keyCode == Phaser.Keyboard.UP) {
         
@@ -186,5 +188,10 @@ function actionDisplayKeyDown(key, actionDisplay) {
     if(key.keyCode == Phaser.Keyboard.DOWN) {
         
         actionDisplay.selectNext();
+    }
+    
+    if(playSound && idPreviousSelection != actionDisplay.idSelectedAction) {
+        
+        globalSfx.highlightOption.play();
     }
 };

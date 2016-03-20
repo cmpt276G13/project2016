@@ -207,6 +207,8 @@ var battleState = {
                 }
             }
             
+            globalSfx.selectMonster.play();
+            
             this.selectedMonstersIndices.push(idOfSelected);
             this.highlighter.addHighlight(monsters[idOfSelected].sprite);
         },
@@ -229,6 +231,8 @@ var battleState = {
             
             this.currentSelection = (this.currentSelection + 1) % monsters.length;
             this.highlightAllSelections(monsters);
+            
+            globalSfx.highlightOption.play();
         },
         
         selectPrevious: function(monsters) {
@@ -240,6 +244,7 @@ var battleState = {
                 this.currentSelection = monsters.length - 1;
             }
             
+            globalSfx.highlightOption.play();
             this.highlightAllSelections(monsters);
         },
         
@@ -326,7 +331,7 @@ var battleState = {
             
             //position the monster somewhere offscreen
             monster.x = getRandomInt(100, 300) * -1;
-            monster.y = getRandomInt(100, 300);
+            monster.y = getRandomInt(200, 400);
             monster.finishedPositioning = false;//need to call move monsters to position at some point
             
             monsters.push(monster);
@@ -363,7 +368,7 @@ var battleState = {
             
             //position the monster somewhere on the screen
             var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
-            var yTarget = 200 + 50 * (i % num);
+            var yTarget = 250 + 50 * (i % num);
             
             this.monsters[i].sprite.position.y = yTarget;
             
@@ -428,8 +433,9 @@ var battleState = {
         rewards.experience = 0;
         rewards.gold = 0;
         
-        //if we want monsters to give items when thjey die, then we can add all items to this array
-        rewards.items = [];
+        //if we want monsters to give items when thjey die, then add item here
+        //add as name: quantity
+        rewards.items = {};
         
         //same for new skills
         //add a key to the skills object
@@ -450,7 +456,27 @@ var battleState = {
             
             this.rewards.experience += this.monsters[i].rewards.experience;
             this.rewards.gold += this.monsters[i].rewards.gold;
-            this.rewards.items.concat(this.monsters[i].rewards.items);
+            
+            for(item in this.monsters[i].rewards.items) {
+                
+                //determine if item drops
+                var percentChanceToDrop = this.monsters[i].rewards.items[item];
+                
+                var dropItem = getRandomInt(0, 100) < percentChanceToDrop;
+                
+                if(!dropItem) {
+                    
+                    continue;
+                }
+                
+                if(typeof this.rewards.items[item] === "undefined") {
+                    
+                    this.rewards.items[item] = 0;
+                }
+                
+                this.rewards.items[item] += 1;
+            }
+        
             this.rewards.skills.concat(this.monsters[i].rewards.experience);
         }
     },
@@ -468,18 +494,42 @@ var battleState = {
             this.showMessage("You have leveled up!");
             this.updatePlayerStatDisplay();
         }
+        
+        for(item in this.rewards.items) {
+            
+            if(typeof player.items[item] === "undefined") {
+                
+                player.items[item] = createItem(item, 0);
+            }
+            
+            player.items[item].quantity += Number(this.rewards.items[item]);
+        }
     },
     
     createRewardsText: function() {
         
-        this.rewardsTextbox = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, game.scale.height / 6, true);
-        var rewardsText = "Gained " + this.rewards.experience + " Experience\n";
-        rewardsText += "Gained " + this.rewards.gold + " Gold\n";
+        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true, showPressEnterMessage: true} );
+        var expGoldText = "Gained " + this.rewards.experience + " Experience\n"
         
-        this.rewardsTextbox.setText(rewardsText);
-        this.rewardsTextbox.text.fontSize = 20;
-        this.rewardsTextbox.text.y = 0;
-        this.rewardsTextbox.text.anchor.y = 0;
+        if(this.rewards.gold != 0) {
+            
+            expGoldText += "Gained " + this.rewards.gold + " Gold\n";
+        }
+        
+        var itemsText = "";
+        
+        //add items
+        for(item in this.rewards.items) {
+            
+            itemsText += "Gained " + item + "   x" + this.rewards.items[item] + "\n";
+        }
+        
+        this.rewardsTextbox.setText(expGoldText);
+        
+        if(itemsText != "") {
+            
+            this.rewardsTextbox.addText(itemsText);
+        }
     },
     
     //create a UI that displays the player's current stats
@@ -487,7 +537,7 @@ var battleState = {
         
         //container for the ui
         var statContainer = {};
-        statContainer.textBox = new textBox(x, y, width, height);
+        statContainer.textBox = createTextboxBackground(x, y, width, height);
         
         var barStyle = {
             
@@ -507,7 +557,7 @@ var battleState = {
         
         statContainer.playerHealthBar = new HealthBar(barStyle);
         statContainer.playerHealthBar.setValueNoTransition(player.health);
-        statContainer.playerHealthBar.addParent(statContainer.textBox.background);
+        statContainer.playerHealthBar.addParent(statContainer.textBox);
         
         barStyle.x += 170;
         barStyle.maxHealth = player.maxMana;
@@ -516,7 +566,7 @@ var battleState = {
         
         statContainer.playerManaBar = new HealthBar(barStyle);
         statContainer.playerManaBar.setValueNoTransition(player.mana);
-        statContainer.playerManaBar.addParent(statContainer.textBox.background);
+        statContainer.playerManaBar.addParent(statContainer.textBox);
         
         statContainer.attributeTable = new objectTable({x: 10, y: 10, cellWidth: 150, cellHeight: 15, objectCreationFunction: attributeDisplayText});
         
@@ -524,7 +574,7 @@ var battleState = {
         statContainer.attributeTable.addObject("health", {attributeName: "HP:", attributeValue: player.health + "/ " + player.maxHealth, textStyle: healthBarCaptionStyle});
         statContainer.attributeTable.addObject("mana", {attributeName: "MP:", attributeValue: player.mana + "/ " + player.maxMana, textStyle: healthBarCaptionStyle});
         
-        statContainer.attributeTable.addParent(statContainer.textBox.background);
+        statContainer.attributeTable.addParent(statContainer.textBox);
         
 
         return statContainer;
@@ -564,7 +614,7 @@ var battleState = {
     orientPlayerForBattle: function() {
         
         player.sprite.x = 500;
-        player.sprite.y = 250;
+        player.sprite.y = 350;
         
         player.sprite.body.velocity.x = 0;
         player.sprite.body.velocity.y = 0;
@@ -646,11 +696,20 @@ var battleState = {
     
     create: function() {
         
+        globalBgm.overworld.stop();
+        globalBgm.battle.play('', 0, globalBgm.volume);
+        
         //misc instructions, ignore
         document.getElementById("additional").innerHTML = "select an action";
         
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
+		
+		//load random background
+		backgroundId = getRandomInt(0, mapKeys.battleBackgroundKeys.length - 1);
+		background = game.add.sprite(0, 0, mapKeys.battleBackgroundKeys[backgroundId]);
+		background.width = game.scale.width;
+		background.height = game.scale.height;
 		
         //next we will create a monster
         //we might have a battle with multiple monsters, so the name is plural
@@ -713,7 +772,7 @@ var battleState = {
         
         //we need a way to give messages to the player
         //we will create a text box at the top of the screen, it will only be visible when there is a message for the player to read
-        this.messageBox = new textBox(0, 0, game.scale.width, 40, false);
+        this.messageBox = new textBox({x: 0, y: 0, width: game.scale.width, height: 40, horizontalAlign: "center", verticalAlign: "center"});
         
         //this contains text that will display the amount of damage an monster or player received after an attack
         //new text is added to it whenever an entity is damaged, and once the text finishes displaying, it will be deleted
@@ -746,5 +805,6 @@ var battleState = {
         
         //once again we don't want the game to destroy the player
         game.world.remove(player.sprite);
+        globalBgm.battle.stop();
     },
 };

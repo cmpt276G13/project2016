@@ -179,7 +179,7 @@ var pauseMenuState = {
         this.skillDisplay = this.createPlayerSkillDisplay();
         this.questDisplay = this.createPlayerQuestDisplay();
         
-        this.messageBox = new textBox(0, game.scale.height - 75, game.scale.width, 75, false);
+        this.messageBox = new textBox({x: 0, y: game.scale.height - 75, width: game.scale.width, height: 75, fixedHeight: true});
         
         game.input.keyboard.addCallbacks(this, this.handleKeyDown);
         

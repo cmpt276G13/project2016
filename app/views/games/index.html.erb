@@ -65,7 +65,46 @@
             
             mapKey: "default",
             monsterListKey: "defaultMonsters",
-            tilesetKeys: ["tileset1"]
+            tilesetKeys: ["tileset1"],
+            battleBackgroundKeys: ["forestClearing"],
+            spawnPoint: {x: 0, y: 0}
+        }
+        
+        //global sound effects
+        var globalSfx = {
+            
+            highlightOption: {},
+            selectOption: {},
+            cancel: {},
+            invalidSelection: {},
+            selectMonster: {},
+            basicAttack: {},
+            entityKilled: {},
+            loseBattle: {},
+            winBattle: {},
+            escapeBattle: {},
+            fireballCreate: {},
+            fireballUpdate: {},
+            fireballDestroy: {}
+        }
+        
+        //global bgm
+        var globalBgm = {
+            
+            overworld: {},
+            battle: {},
+            volume: 0.4
+        }
+        
+        //tilemap is global
+        var tilemap = {
+            
+            map: {},
+            background1: {},
+            background2: {},
+            solid: {},
+            foreground: {},
+            spawnPoint: {x: 0, y: 0}
         }
         
         //define a global player variable
@@ -206,6 +245,8 @@
             mapData.mapKey = mappings["default"].mapKey;
             mapData.monsterListKey = mappings["default"].monsterListKey;
             mapData.tilesetKeys = mappings["default"].tilesetKeys;
+            mapData.battleBackgroundKeys = mappings["default"].battleBackgroundKeys;
+            mapData.spawnPoint = mappings["default"].spawnPoint;
             
             //object will contain a list of areas
             //each area has a bounding box that defines what coordinates map to that area
@@ -226,6 +267,8 @@
                 mapData.tilesetKeys = mappings[area].tilesetKeys;
                 mapData.mapKey = mappings[area].mapKey;
                 mapData.monsterListKey = mappings[area].monsterListKey;
+                mapData.battleBackgroundKeys = mappings[area].battleBackgroundKeys;
+                mapData.spawnPoint = mappings["default"].spawnPoint;
                 
                 break;
             }
@@ -281,6 +324,84 @@
         //cached data will be saved to the global game object, so we can use it in later states
         var loadState = {
             
+            loadTileMapData: function() {
+                
+                //the assets pipeline is garbage so we have to load all the tilemap data
+                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
+            },
+            
+            loadTileSetImages: function() {
+                
+                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
+                game.load.image('tileset2', '<%= asset_path("trees.png") %>');
+                game.load.image('tileset3', '<%= asset_path("tileset1.png") %>');
+            },
+            
+            loadMonsterLists: function() {
+                
+                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
+                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
+                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
+            },
+            
+            loadJSONDatabases: function() {
+                
+                //load the mosnter data base
+                game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
+                
+                //load item database
+                game.load.json('itemData', '<%= asset_path("items.json") %>');
+                
+                 //load quests
+                game.load.json('questData', '<%= asset_path("quests.json") %>');
+                
+                //load skill data, and animations
+                game.load.json('skillData', '<%= asset_path("skills.json") %>');
+            },
+            
+            loadMonsterSpritesheets: function() {
+                
+                //load spritesheets for all the monsters
+                //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
+                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
+            },
+            
+            loadBattleBackgroundImages: function() {
+                
+                //load images used for the battle backgrounds
+                game.load.image('forestClearing', '<%= asset_path("forestClearing.png") %>');
+            },
+            
+            loadSkillSpritesheets: function() {
+                
+                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+            },
+            
+            loadSoundEffects: function() {
+                
+                game.load.audio('highlightOption', '<%= asset_path("highlightOption.wav")%>');
+                game.load.audio('selectOption', '<%= asset_path("selectOption.mp3")%>');
+                game.load.audio('cancel', '<%= asset_path("cancel.wav")%>');
+                game.load.audio('invalidSelection', '<%= asset_path("invalidSelection.wav")%>');
+                game.load.audio('selectMonster', '<%= asset_path("selectMonster.mp3")%>');
+                game.load.audio('basicAttack', '<%= asset_path("basicAttack.wav") %>');
+                game.load.audio('entityKilled', '<%= asset_path("entityKilled.wav") %>');
+                game.load.audio('loseBattle', '<%= asset_path("loseBattle.wav") %>');
+                game.load.audio('winBattle', '<%= asset_path("winBattle.wav") %>');
+                game.load.audio('escapeBattle', '<%= asset_path("escapeBattle.wav") %>');
+                game.load.audio('fireballCreate', '<%= asset_path("fireballCreate.wav") %>');
+                game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
+                game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
+            },
+            
+            loadBackgroundMusic: function() {
+                
+                game.load.audio("overworld", '<%= asset_path("WorldMapDemo.mp3")%>');
+                game.load.audio("battle", '<%= asset_path("GeoHunterFightSongFullVersion.mp3")%>');
+            },
+            
             //place to load files
             preload: function() {
                 
@@ -290,37 +411,37 @@
                 //load data that maps a real world GPS location to an ingame map file
                 game.load.json('coordinateMapping', '<%= asset_path("coordinateMapping.json")%>');
                 
-                //the assets pipeline is garbage so we have to load all the tilemap data
-                game.load.tilemap('surrey', '<%= asset_path("surrey.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('burnaby', '<%= asset_path("burnaby.json") %>', null, Phaser.Tilemap.TILED_JSON);
-                game.load.tilemap('default', '<%= asset_path("default.json") %>', null, Phaser.Tilemap.TILED_JSON);
+                this.loadTileMapData();
+                this.loadTileSetImages();
+                this.loadMonsterLists();
+                this.loadJSONDatabases();
+                this.loadMonsterSpritesheets();
+                this.loadBattleBackgroundImages();
+                this.loadSkillSpritesheets();
+                this.loadSoundEffects();
+                this.loadBackgroundMusic();
+            },
+            
+            generateTilemap: function(spawnPoint) {
                 
-                //load all the tilesets
-                game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
-                game.load.image('tileset2', '<%= asset_path("trees.png") %>');
+                //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
+                tilemap.map = game.add.tilemap(mapKeys.mapKey);
                 
-                //load all the monster lists
-                game.load.json('surreyMonsters', '<%= asset_path("surreyMonsters.json") %>');
-                game.load.json('burnabyMonsters', '<%= asset_path("burnabyMonsters.json") %>');
-                game.load.json('defaultMonsters', '<%= asset_path("defaultMonsters.json") %>');
+                //add all tileset images to the tileset
+                for(var i = 1; i <= mapKeys.tilesetKeys.length; ++i) {
+                    
+                    tilemap.map.addTilesetImage('tileset' + i.toString(), mapKeys.tilesetKeys[i - 1]);
+                }
                 
-                //load the mosnter data base
-                game.load.json('monsterData', '<%= asset_path("monsters.json") %>');
+                //load all layers
+                tilemap.background1 = tilemap.map.createLayer('background1');
+                tilemap.background2 = tilemap.map.createLayer('background2');
+                tilemap.solid = tilemap.map.createLayer('solid');
+                tilemap.foreground = tilemap.map.createLayer('foreground');
+                tilemap.background1.resizeWorld();
+                tilemap.map.setCollisionBetween(1, 10000, true, 'solid');
                 
-                //load item database
-                game.load.json('itemData', '<%= asset_path("items.json") %>');
-                
-                //load spritesheets for all the monsters
-                //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
-                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
-                
-                //load quests
-                game.load.json('questData', '<%= asset_path("quests.json") %>');
-                
-                //load skill data, and animations
-                game.load.json('skillData', '<%= asset_path("skills.json") %>');
-                
-                game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+                tilemap.spawnPoint = {x: spawnPoint.x * 32, y: spawnPoint.y * 32};
             },
             
             //create function creats the required object for this game state
@@ -360,14 +481,34 @@
         		player.sprite.animations.add('attack', [4, 5, 6, 7, 4, 5, 6, 7, 4], 7, false);
         		player.sprite.animations.add('dying', [0, 4, 8, 12, 0, 4, 8, 12], 7, false);
         		
-        		game.world.remove(player.sprite);
+        		for(soundName in globalSfx) {
+        		    
+        		    globalSfx[soundName] = game.add.sound(soundName);
+        		}
+        		
+        		for(songName in globalBgm) {
+        		    
+        		    if(songName != "volume")
+        		    globalBgm[songName] = game.add.sound(songName, globalBgm.volume, true);
+        		}
         
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
-                //document.getElementById("additional").innerHTML = mapKeys.mapKey;
+                
+                //create tilemap here because its too slow to reload it
+                this.generateTilemap(mapKeys.spawnPoint);
         		
         		//all obejcts have been loaded and created, so now we can start the game
         		game.state.start('overworld');
+            },
+            
+            shutdown: function() {
+                
+                game.world.remove(player.sprite);
+                game.world.remove(tilemap.background1);
+                game.world.remove(tilemap.background2);
+                game.world.remove(tilemap.foreground);
+                game.world.remove(tilemap.solid);
             }
         };
         

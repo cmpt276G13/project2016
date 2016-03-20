@@ -141,6 +141,7 @@ function startDeathAnimation(dyingEntity) {
     tween.delay(600);
     tween.start();
     dyingEntity.sprite.animations.play("dying");
+    globalSfx.entityKilled.play();
 };
 
 //creates an attack object given the attack data below
@@ -176,7 +177,7 @@ function createAttack(user, targetPosition, attackData) {
     //instead it uses the user's attack animation, and when the animaton finishes, the attack is finished
     if(attack.hasOwnAnimation == false) {
         
-        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.isFinished = true;}, attack);
+        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.isFinished = true; globalSfx[attack.onHitSfx].play() }, attack);
         
         return attack;
     }
@@ -190,6 +191,30 @@ function createAttack(user, targetPosition, attackData) {
     var create = sprite.animations.add("create", attack.animations["create"].frames, attack.animations["create"].speed);
     var update = sprite.animations.add("update", attack.animations["update"].frames, attack.animations["update"].speed);
     var destroy = sprite.animations.add("destroy", attack.animations["destroy"].frames, attack.animations["destroy"].speed);
+    
+    if(typeof attack.onCreateSfx !== "undefined") {
+        
+        create.onStart.addOnce(function() {
+            
+            globalSfx[attack.onCreateSfx].play();
+        }  );
+    }
+    
+    if(typeof attack.onUpdateSfx !== "undefined") {
+        
+        update.onStart.addOnce(function() {
+            
+            globalSfx[attack.onUpdateSfx].play();
+        }  );
+    }
+    
+    if(typeof attack.onDestroySfx !== "undefined") {
+        
+        destroy.onStart.addOnce(function() {
+            
+            globalSfx[attack.onDestroySfx].play();
+        }  );
+    }
     
     create.onComplete.addOnce(function(){this.sprite.animations.play("update"); }, attack);
     destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);

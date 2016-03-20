@@ -247,7 +247,7 @@ function viewQuestsEnter() {
     this.questActionDisplay.addParent(this.questDisplay.background);
     
     //background for detailed quest description
-    this.detailedQuestDescriptionBackground = createTextboxBackground(300, 200, 300, 300, false);
+    this.detailedQuestDescriptionBackground = createTextboxBackground(250, 100, 400, 400, false);
     this.detailedQuestDescriptionBackground.visible = false;
 }
 
@@ -285,7 +285,7 @@ function viewQuestsKeyDown(key) {
         
         //selected a quest, show a detailed description of it
         this.detailedQuestDescription = new questDisplay({quest: this.questActionDisplay.getSelectedActionConfiguration().quest, 
-            cellWidth: 300, cellHeight: 300
+            cellWidth: 400, cellHeight: 400
         });
         
         this.detailedQuestDescription.addParent(this.detailedQuestDescriptionBackground);

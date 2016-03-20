@@ -60,40 +60,13 @@ var overworldState = {
         
     ],
     
-    generateTilemap: function() {
-        
-        //we already loaded the tilemap data in the load state, we just need to set them to a phaser object
-        this.map = game.add.tilemap(mapKeys.mapKey);
-        
-        //add all tileset images to the tileset
-        for(var i = 1; i <= mapKeys.tilesetKeys.length; ++i) {
-            
-            this.map.addTilesetImage('tileset' + i.toString(), mapKeys.tilesetKeys[i - 1]);
-        }
-        
-        //backround layer
-        this.background = this.map.createLayer('background');
-        this.solid = this.map.createLayer('solid');
-        this.background.resizeWorld();
-        
-        this.map.setCollisionBetween(1, 10000, true, 'solid');
-    },
-    
     create: function() {
         
-        //misc instructions, ignore
-        
-        //first we will create the tile map
-        this.generateTilemap();
-        
-        //like a spawn point
-        //which i'll set manually since i didn't put one in the map
-        this.spawnPoint = {x: 0, y: 0};
-        
+        game.add.existing(tilemap.background1);
+        game.add.existing(tilemap.background2);
+        game.add.existing(tilemap.solid);
         game.add.existing(player.sprite);
-        
-        //add a forewground layer
-        this.foreground = this.map.createLayer('foreground');
+        game.add.existing(tilemap.foreground);
         
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
@@ -124,7 +97,7 @@ var overworldState = {
             //we need to check if we must respawn player
             if(player.health == 0) {
                 
-                player.respawn(this.spawnPoint);
+                player.respawn(tilemap.spawnPoint);
                 this.stateManager.changeState("startGame");
                 
             } else {
@@ -160,6 +133,11 @@ var overworldState = {
     
     shutdown: function() {
         
+        game.world.remove(tilemap.map);
         game.world.remove(player.sprite);
+        game.world.remove(tilemap.background1);
+        game.world.remove(tilemap.background2);
+        game.world.remove(tilemap.foreground);
+        game.world.remove(tilemap.solid);
     }
 };

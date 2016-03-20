@@ -6,8 +6,10 @@
         "right": 49.0587,
         "bottom": -122.710553,
         "mapKey": "surrey",
-        "tilesetKeys": ["tileset1", "tileset1", "tileset2"],
-        "monsterListKey": "surreyMonsters"
+        "tilesetKeys": ["tileset3"],
+        "battleBackgroundKeys": ["forestClearing"],
+        "monsterListKey": "surreyMonsters",
+        "spawnPoint": {"x": 99, "y": 98}
     },
     
     "burnaby": {
@@ -16,9 +18,11 @@
         "top": -123.053130,
         "right": 49.217351,
         "bottom": -122.912563,
-        "mapKey": "burnaby",
-        "tilesetKeys": ["tileset1"],
-        "monsterListKey": "burnabyMonsters"
+        "mapKey": "surrey",
+        "tilesetKeys": ["tileset3"],
+        "battleBackgroundKeys": ["forestClearing"],
+        "monsterListKey": "surreyMonsters",
+        "spawnPoint": {"x": 99, "y": 98}
     },
     
     "default": {
@@ -27,8 +31,10 @@
         "top": 0,
         "right": 0,
         "bottom": 0,
-        "mapKey": "default",
-        "tilesetKeys": ["tileset1"],
-        "monsterListKey": "defaultMonsters"
+        "mapKey": "surrey",
+        "tilesetKeys": ["tileset3"],
+        "battleBackgroundKeys": ["forestClearing"],
+        "monsterListKey": "surreyMonsters",
+        "spawnPoint": {"x": 99, "y": 98}
     }
 }

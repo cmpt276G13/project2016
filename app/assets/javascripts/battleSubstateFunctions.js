@@ -14,7 +14,7 @@ function selectMainActionExit() {
 
 function selectMainActionKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.mainActionsDisplay);
+    actionDisplayKeyDown(key, this.mainActionsDisplay, true);
     
     //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
@@ -34,6 +34,8 @@ function selectMainActionKeyDown(key) {
             
             this.stateManager.changeState("selectFightAction");
         }
+        
+        globalSfx.selectOption.play();
     }
 };
 
@@ -58,7 +60,7 @@ function selectFightActionExit() {
 
 function selectFightActionKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.fightActionsDisplay);
+    actionDisplayKeyDown(key, this.fightActionsDisplay, true);
         
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
@@ -66,6 +68,8 @@ function selectFightActionKeyDown(key) {
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "cancel") {
             
             this.stateManager.changeState("selectMainAction");
+            globalSfx.cancel.play();
+            return;
         }
         
         if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
@@ -78,11 +82,14 @@ function selectFightActionKeyDown(key) {
             
             this.stateManager.changeState("selectSkill");
         }
+        
+        globalSfx.selectOption.play();
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectMainAction");
+        globalSfx.cancel.play();
     }
 };
 
@@ -115,15 +122,18 @@ function selectSkillKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectFightAction");
+        globalSfx.cancel.play();
     }
     
-    actionDisplayKeyDown(key, this.skillsDisplay);
+    actionDisplayKeyDown(key, this.skillsDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         if(this.skillsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
             
             this.stateManager.changeState("selectFightAction");
+            
+            globalSfx.cancel.play();
             return;
         }
         
@@ -133,6 +143,8 @@ function selectSkillKeyDown(key) {
         var skillName = this.skillsDisplay.getSelectedActionConfiguration().attributeName;
         
         if(player.mana < game.cache.getJSON("skillData")[skillName].manaCost ) {
+            
+            globalSfx.invalidSelection.play();
             
             //tell player he doesn't have enough manga
             //auto hide the message after a few seconds
@@ -154,6 +166,7 @@ function selectSkillKeyDown(key) {
         //player has enough mana, use skill
         player.lastUsedAttack = game.cache.getJSON("skillData")[skillName];
         this.stateManager.changeState("playerSelectTarget");
+        globalSfx.selectOption.play();
     }
 }
 
@@ -193,21 +206,25 @@ function selectItemActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectMainAction");
+        globalSfx.cancel.play();
     }
     
-    actionDisplayKeyDown(key, this.itemsDisplay);
+    actionDisplayKeyDown(key, this.itemsDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         if(this.itemsDisplay.getSelectedActionConfiguration().attributeName === "Cancel") {
             
             this.stateManager.changeState("selectMainAction");
+            globalSfx.cancel.play();
+            return;
             
-        } else {
-            
-            //player chooses to use an item
-            this.stateManager.changeState("playerUseItem");
         }
+        
+        
+        globalSfx.selectOption.play();
+        //player chooses to use an item
+        this.stateManager.changeState("playerUseItem");
         
     }
 }
@@ -235,6 +252,9 @@ function selectItemActionUpdate() {
 
 function playerRunAwayEnter() {
     
+    globalBgm.battle.fadeOut(1250);
+    globalSfx.escapeBattle.play();
+    
     //make player face away and run
     player.sprite.animations.play("right");
     
@@ -261,6 +281,8 @@ function playerSelectTargetKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
         this.stateManager.changeState("selectFightAction");
+        globalSfx.cancel.play();
+        return;
     }
     
     if(key.keyCode == Phaser.Keyboard.UP) {
@@ -505,10 +527,14 @@ function playerDyingEnter() {
     
     player.sprite.animations.getAnimation("dying").onComplete.addOnce(function(){this.stateManager.changeState("defeat");}, this);
     player.sprite.animations.play("dying");
+    globalSfx.entityKilled.play();
     player.deaths += 1;
 }
 
 function victoryEnter() {
+    
+    globalBgm.battle.fadeOut(1500);
+    globalSfx.winBattle.play();
     
     //player won a match, create a message box at the center of the screen
     //show player all the rewards he received
@@ -525,22 +551,31 @@ function victoryEnter() {
 
 function victoryKeyDown(key) {
     
-    //execute the action the user has chosen
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
-        //fade to black
-        this.stateManager.changeState("outro");
+        globalSfx.selectOption.play();
+        if(this.rewardsTextbox.isShowingLastPageOfText()) {
+            
+            this.stateManager.changeState("outro");
+            return;
+        }
+        
+        //show next page of text
+        this.rewardsTextbox.showNextPage();
     }
 }
 
 function defeatEnter() {
+    
+    globalBgm.battle.fadeOut(1250);
+    globalSfx.loseBattle.play();
     
     //create a transition so we fade to a black screen
     this.fadeToBlack = new fadeToBlack(700);
     
     //add message to display when screen fades to black
     //can't use the message box because the black screen draws ontop of it, since it was created after the message box
-    this.deathMessage = new textBox(game.scale.width / 2, game.scale.height / 2, game.scale.width / 3, 30, true);
+    this.deathMessage = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: 30, centerToPoint: true, horizontalAlign: "center", verticalAlign: "center", showPressEnterMessage: true});
     this.deathMessage.hide();
     this.deathMessage.setText("You have died.");
     
@@ -558,6 +593,7 @@ function defeatKeyDown(key) {
         
         //now make the screen fade to black, and then go back to the overworld
         this.stateManager.changeState("outro");
+        globalSfx.selectOption.play();
     }
 }
 

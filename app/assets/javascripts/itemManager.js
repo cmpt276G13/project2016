@@ -11,7 +11,7 @@ function createItem(name, quantity) {
     
     //load object from json file
     item = game.cache.getJSON("itemData")[name];
-    item.quantity = quantity;
+    item.quantity = Number(quantity);
     
     return item;
 }
