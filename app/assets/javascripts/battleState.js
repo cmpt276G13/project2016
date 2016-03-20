@@ -696,6 +696,9 @@ var battleState = {
     
     create: function() {
         
+        globalBgm.overworld.stop();
+        globalBgm.battle.play('', 0, globalBgm.volume);
+        
         //misc instructions, ignore
         document.getElementById("additional").innerHTML = "select an action";
         
@@ -802,5 +805,6 @@ var battleState = {
         
         //once again we don't want the game to destroy the player
         game.world.remove(player.sprite);
+        globalBgm.battle.stop();
     },
 };

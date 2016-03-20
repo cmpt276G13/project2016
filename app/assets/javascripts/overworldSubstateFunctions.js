@@ -2,6 +2,8 @@
 function exploreEnter() {
     
     //currently nothing to be done
+    //start music
+    globalBgm.overworld.play('', 0, globalBgm.volume, true, false);
 };
 
 function exploreExit() {
@@ -179,5 +181,5 @@ function enterBattleEnter() {
     
     var maskInTween = game.add.tween(mask.scale);
     maskInTween.to({x: 0, y: 0}, 600, null, true);
-    maskInTween.onComplete.add(function(){game.state.start("battle"); game.world.mask.destroy} );
+    maskInTween.onComplete.add(function(){globalBgm.overworld.stop(); game.state.start("battle"); game.world.mask.destroy} );
 }

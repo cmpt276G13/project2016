@@ -12,3 +12,6 @@ http://www.freesound.org/people/Autistic%20Lucario/sounds/142608/
 
 selectMonster
 http://www.freesound.org/people/Taira%20Komori/sounds/215438/
+
+basicAttack
+http://www.freesound.org/people/Hybrid_V/sounds/319590/

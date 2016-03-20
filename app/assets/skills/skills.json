@@ -9,8 +9,8 @@
         "monsterUseMessage": " Attacks!",
         "description": "A basic physical attack",
         "attackType": "physical",
-        "userAnimation": "attack"
-        
+        "userAnimation": "attack",
+        "onHitSfx": "basicAttack"
     },
     
     "Slash": {
@@ -44,6 +44,7 @@
         "monsterUseMessage": " uses Fireball!",
         "attackType": "magic",
         "userAnimation": "attack",
+        "onHitSfx": "basicAttack",
         
         "spriteKey": "fireball",
         

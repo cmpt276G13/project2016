@@ -77,7 +77,16 @@
             selectOption: {},
             cancel: {},
             invalidSelection: {},
-            selectMonster: {}
+            selectMonster: {},
+            basicAttack: {}
+        }
+        
+        //global bgm
+        var globalBgm = {
+            
+            overworld: {},
+            battle: {},
+            volume: 0.4
         }
         
         //tilemap is global
@@ -370,11 +379,13 @@
                 game.load.audio('cancel', '<%= asset_path("cancel.wav")%>');
                 game.load.audio('invalidSelection', '<%= asset_path("invalidSelection.wav")%>');
                 game.load.audio('selectMonster', '<%= asset_path("selectMonster.mp3")%>');
+                game.load.audio('basicAttack', '<%= asset_path("basicAttack.wav") %>');
             },
             
             loadBackgroundMusic: function() {
                 
-                game.load.audio("overworldTheme", '<%= asset_path("WorldMapDemo.mp3")%>');
+                game.load.audio("overworld", '<%= asset_path("WorldMapDemo.mp3")%>');
+                game.load.audio("battle", '<%= asset_path("GeoHunterFightSongFullVersion.mp3")%>');
             },
             
             //place to load files
@@ -459,6 +470,12 @@
         		for(soundName in globalSfx) {
         		    
         		    globalSfx[soundName] = game.add.sound(soundName);
+        		}
+        		
+        		for(songName in globalBgm) {
+        		    
+        		    if(songName != "volume")
+        		    globalBgm[songName] = game.add.sound(songName, globalBgm.volume, true);
         		}
         
         		//load keys to the map data

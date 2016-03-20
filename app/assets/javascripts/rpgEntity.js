@@ -176,7 +176,7 @@ function createAttack(user, targetPosition, attackData) {
     //instead it uses the user's attack animation, and when the animaton finishes, the attack is finished
     if(attack.hasOwnAnimation == false) {
         
-        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.isFinished = true;}, attack);
+        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.isFinished = true; globalSfx[attack.onHitSfx].play() }, attack);
         
         return attack;
     }
