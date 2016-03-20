@@ -44,7 +44,9 @@
         "monsterUseMessage": " uses Fireball!",
         "attackType": "magic",
         "userAnimation": "attack",
-        "onHitSfx": "basicAttack",
+        "onDestroySfx": "fireballDestroy",
+        "onCreateSfx": "fireballCreate",
+        "onUpdateSfx": "fireballUpdate",
         
         "spriteKey": "fireball",
         

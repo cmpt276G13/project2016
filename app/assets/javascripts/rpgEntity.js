@@ -192,6 +192,30 @@ function createAttack(user, targetPosition, attackData) {
     var update = sprite.animations.add("update", attack.animations["update"].frames, attack.animations["update"].speed);
     var destroy = sprite.animations.add("destroy", attack.animations["destroy"].frames, attack.animations["destroy"].speed);
     
+    if(typeof attack.onCreateSfx !== "undefined") {
+        
+        create.onStart.addOnce(function() {
+            
+            globalSfx[attack.onCreateSfx].play();
+        }  );
+    }
+    
+    if(typeof attack.onUpdateSfx !== "undefined") {
+        
+        update.onStart.addOnce(function() {
+            
+            globalSfx[attack.onUpdateSfx].play();
+        }  );
+    }
+    
+    if(typeof attack.onDestroySfx !== "undefined") {
+        
+        destroy.onStart.addOnce(function() {
+            
+            globalSfx[attack.onDestroySfx].play();
+        }  );
+    }
+    
     create.onComplete.addOnce(function(){this.sprite.animations.play("update"); }, attack);
     destroy.onComplete.addOnce(function(){this.isFinished = true; this.sprite.destroy()}, attack);
     

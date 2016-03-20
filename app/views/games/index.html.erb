@@ -82,7 +82,10 @@
             entityKilled: {},
             loseBattle: {},
             winBattle: {},
-            escapeBattle: {}
+            escapeBattle: {},
+            fireballCreate: {},
+            fireballUpdate: {},
+            fireballDestroy: {}
         }
         
         //global bgm
@@ -388,6 +391,9 @@
                 game.load.audio('loseBattle', '<%= asset_path("loseBattle.wav") %>');
                 game.load.audio('winBattle', '<%= asset_path("winBattle.wav") %>');
                 game.load.audio('escapeBattle', '<%= asset_path("escapeBattle.wav") %>');
+                game.load.audio('fireballCreate', '<%= asset_path("fireballCreate.wav") %>');
+                game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
+                game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
             },
             
             loadBackgroundMusic: function() {

@@ -27,3 +27,12 @@ http://www.freesound.org/people/ProjectsU012/sounds/334285/
 
 winBattle
 http://www.freesound.org/people/LittleRobotSoundFactory/sounds/270404/
+
+fireballCreate
+http://www.freesound.org/people/n_audioman/sounds/273579/
+
+fireballUpdate
+http://www.freesound.org/people/sfx4animation/sounds/273663/
+
+fireballHit
+http://www.freesound.org/people/D%20W/sounds/136696/
