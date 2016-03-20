@@ -36,3 +36,6 @@ http://www.freesound.org/people/sfx4animation/sounds/273663/
 
 fireballHit
 http://www.freesound.org/people/D%20W/sounds/136696/
+
+useItem
+created by ViRiX Dreamcore soundcloud.com/virix"

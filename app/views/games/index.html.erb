@@ -85,7 +85,8 @@
             escapeBattle: {},
             fireballCreate: {},
             fireballUpdate: {},
-            fireballDestroy: {}
+            fireballDestroy: {},
+            useItem: {}
         }
         
         //global bgm
@@ -394,6 +395,7 @@
                 game.load.audio('fireballCreate', '<%= asset_path("fireballCreate.wav") %>');
                 game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
                 game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
+                game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
             },
             
             loadBackgroundMusic: function() {

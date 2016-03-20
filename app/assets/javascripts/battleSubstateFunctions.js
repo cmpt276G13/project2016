@@ -221,8 +221,8 @@ function selectItemActionKeyDown(key) {
             
         }
         
+        globalSfx.useItem.play();
         
-        globalSfx.selectOption.play();
         //player chooses to use an item
         this.stateManager.changeState("playerUseItem");
         
