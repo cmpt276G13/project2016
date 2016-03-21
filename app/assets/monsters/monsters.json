@@ -17,7 +17,7 @@
             {"name": "dying", "frames": [0, 13, 26, 39, 52, 65, 0], "speed": 6}
         ],
         
-        "skills": ["Fireball"],
+        "skills": ["Fireball", "Slash"],
         
         "rewards": {
             
