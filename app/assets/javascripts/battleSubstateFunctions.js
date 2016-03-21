@@ -474,6 +474,7 @@ function monsterTurnUpdate() {
     //move onto the results when this monster's last attack finishes displaying
     if(this.monsters[this.currentMonster].lastUsedAttack.isFinished) {
         
+        this.monsters[this.currentMonster].sprite.animations.play("stand");
         this.stateManager.changeState("monsterAttackResults");
     }
 };

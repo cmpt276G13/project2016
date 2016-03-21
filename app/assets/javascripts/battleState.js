@@ -349,6 +349,7 @@ var battleState = {
         for(i = 0; i < monsters.length; ++i) {
             
             monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
+            monsters[i].sprite.animations.play("stand");
             
             for(var j = 0; j < monsters[i].animations.length; ++j) {
                 
@@ -367,8 +368,8 @@ var battleState = {
             var num = Math.max(Math.floor(this.monsters.length / 2), 2);
             
             //position the monster somewhere on the screen
-            var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
-            var yTarget = 250 + 50 * (i % num);
+            var xTarget = 230 - (40 * this.monsters.length / 2) + i * 40;
+            var yTarget = 265 + 50 * (i % num);
             
             this.monsters[i].sprite.position.y = yTarget;
             
@@ -613,7 +614,7 @@ var battleState = {
     //positions the player in the battle screen
     orientPlayerForBattle: function() {
         
-        player.sprite.x = 500;
+        player.sprite.x = 570;
         player.sprite.y = 350;
         
         player.sprite.body.velocity.x = 0;

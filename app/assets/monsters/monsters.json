@@ -10,10 +10,11 @@
         "magicDefense": 0,
         "defense": 4,
         "strength": 5,
-        "startingFrame": 8,
+        "startingFrame": 39,
         "animations": [
-            {"name": "attack", "frames": [8, 8, 8, 8, 9, 10, 11, 8, 9, 10, 11, 8], "speed": 8},
-            {"name": "dying", "frames": [8, 12, 0, 4, 8, 12, 0, 4], "speed": 5}
+            {"name": "stand", "frames": [39], "speed": 6},
+            {"name": "attack", "frames": [195, 196, 197, 198, 199, 200], "speed": 6},
+            {"name": "dying", "frames": [0, 13, 26, 39, 52, 65, 0], "speed": 6}
         ],
         
         "skills": ["Fireball"],
