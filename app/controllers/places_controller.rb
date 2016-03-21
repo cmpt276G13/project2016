@@ -1,14 +1,14 @@
 class PlacesController < ApplicationController
   # logged_in_user is defined in sessions_helper.rb
-  before_action :logged_in_user
+  before_action :logged_in_user, only: [:show, :edit, :update, :destroy]
   before_action :req_check, only: :accept
   before_action :set_place, only: [:show, :edit, :update, :destroy]
 
   # GET /places
   # GET /places.json
   def index
-    @places = Place.all
-    init_markers
+    @user_location = get_user_location
+    @places = Place.where(:user_id => session[:user_id])
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
@@ -38,7 +38,7 @@ class PlacesController < ApplicationController
   # POST /places.json
   def create
     @place = Place.new(place_params)
-
+    @place.user_id = session[:user_id]
     respond_to do |format|
       if @place.save
         format.html { redirect_to @place, notice: 'Place was successfully created.' }
@@ -76,9 +76,21 @@ class PlacesController < ApplicationController
   
   def choose
     @chosen = Place.find(params[:id])
+    # save to session. @chosen hash can be accessed using 'get_chosen_location' method
+    # in sessions_helper
+    session[:chosen_attributes] = @chosen.attributes
     respond_to do |format|
-      format.html { redirect_to places_url, notice: 'Place was successfully chosen.' }
+      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }
       format.json { render :index, status: :ok, location: @chosen }
+    end
+  end
+  
+  def choose_geolocation
+    @geo = get_user_location
+    session[:geo_attributes] = @geo.attributes
+    respond_to do |format|
+      format.html { redirect_to game_url, notice: "Place chosen: #{@geo[:country_name]}" }
+      format.json { render :index, status: :ok, location: @geo }
     end
   end
   

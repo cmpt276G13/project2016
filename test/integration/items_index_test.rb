@@ -15,9 +15,12 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
     get items_path
     assert_select 'p', "Gold: " + @admin.player.gold.to_s
     assert_template 'items/index'
+    assert_select 'input[type=?]', "submit", count: @items.count
+    assert_select 'input[type=?]', "number", count: @items.count
     @items.each do |name, array|
       assert_select 'a[href=?]', item_path(name), text: name
       assert_select 'td', "Price: " + array["price"].to_s + " G"
+      assert_select 'input[type=?]', "hidden", value: array["price"]
     end
   end
 end

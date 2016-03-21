@@ -11,20 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310224300) do
+ActiveRecord::Schema.define(version: 20160321010847) do
 
   create_table "places", force: :cascade do |t|
-    t.integer  "user_id"
     t.float    "latitude"
     t.float    "longitude"
     t.string   "address"
     t.string   "title"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
-  add_index "places", ["address"], name: "index_places_on_address"
-  add_index "places", ["user_id"], name: "index_places_on_user_id"
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -40,6 +37,11 @@ ActiveRecord::Schema.define(version: 20160310224300) do
     t.integer  "experience_to_next_level", default: 10
     t.integer  "deaths",                   default: 0
     t.text     "items",                    default: "--- {}\n"
+    t.text     "skills",                   default: "--- []\n"
+    t.integer  "mana",                     default: 25
+    t.integer  "max_mana",                 default: 25
+    t.integer  "magic_power",              default: 10
+    t.integer  "magic_defense",            default: 10
   end
 
   add_index "players", ["user_id"], name: "index_players_on_user_id"

@@ -1,5 +1,5 @@
 class Player < ActiveRecord::Base
-  
+  after_initialize :starting_equipment
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
@@ -14,9 +14,10 @@ class Player < ActiveRecord::Base
   validates :deaths, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :experience_to_next_level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  # Use eg. @player.items << 'name': amount
+  # Use eg. @player.items["name"] = amount
   # Don't forget to use @player.save
   serialize :items, Hash
+  serialize :skills, Array
   
   # Run this method to update the items. You can add additional options for gold.
   # If gold is not put in, it will update items without the need for price.
@@ -61,7 +62,6 @@ class Player < ActiveRecord::Base
   
   # Turns in the quest given the quest_id
   def turn_in(quest_id)
-    # Add checking for gather quest and appropriately take away items.
     self.quest_acceptances.find_by(quest_id: quest_id).update(turned_in: true)
   end
   
@@ -105,4 +105,12 @@ class Player < ActiveRecord::Base
     end
     q_acceptance.save
   end
+  
+  private
+    
+    def starting_equipment
+      # self.weapon
+      self.skills = [ "Slash", "Fireball" ] if self.skills.empty?
+      self.items = { "Small Potion" => 2, "Medium Potion" => 2 } if self.items.empty?
+    end
 end

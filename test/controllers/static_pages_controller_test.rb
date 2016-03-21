@@ -15,6 +15,12 @@ class StaticPagesControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  test "should get hub when logged in" do
+    log_in_as(@user)
+    get :hub, id: @user
+    assert_response :success
+  end
+  
   test "should redirect hub when not logged in" do
     get :hub, id: @user
     assert_not flash.empty?
