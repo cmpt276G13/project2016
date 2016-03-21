@@ -242,8 +242,8 @@ function createAttack(user, targetPosition, attackData) {
         //set the position of skill to the targets position
         attack.sprite.x = targetPosition.x;
         attack.sprite.y = targetPosition.y;
-        attack.sprite.anchor.x = 0.5;
-        attack.sprite.anchor.y = 0.5;
+        attack.sprite.anchor.x = 0.25;
+        attack.sprite.anchor.y = 0.25;
         update.onComplete.addOnce(function(){this.sprite.animations.play("destroy"); }, attack);
         
         user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.sprite.animations.play("create")}, attack);
