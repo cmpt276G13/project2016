@@ -12,8 +12,10 @@ class QuestAcceptance < ActiveRecord::Base
     self.quest.after_turned_in(self.player) if self.turned_in_changed? && self.turned_in == true
   end
   
-  def init
-    self.completed ||= false
-    self.turned_in ||= false
-  end
+  private
+    
+    def init
+      self.completed ||= false
+      self.turned_in ||= false
+    end
 end

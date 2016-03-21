@@ -1,5 +1,5 @@
 class Player < ActiveRecord::Base
-  
+  after_initialize :starting_equipment
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
@@ -17,6 +17,7 @@ class Player < ActiveRecord::Base
   # Use eg. @player.items["name"] = amount
   # Don't forget to use @player.save
   serialize :items, Hash
+  serialize :skills, Array
   
   # Run this method to update the items. You can add additional options for gold.
   # If gold is not put in, it will update items without the need for price.
@@ -104,4 +105,14 @@ class Player < ActiveRecord::Base
     end
     q_acceptance.save
   end
+  
+  private
+    
+    def starting_equipment
+      # self.weapon
+      self.skills = [ "Slash", "Fireball" ]
+      self.items = { "Small Potion": 2, "Medium Potion": 2 }
+      
+      self.save
+    end
 end
