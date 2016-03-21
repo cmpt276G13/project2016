@@ -86,7 +86,8 @@
             fireballCreate: {},
             fireballUpdate: {},
             fireballDestroy: {},
-            useItem: {}
+            useItem: {},
+            slashUpdate: {}
         }
         
         //global bgm
@@ -118,7 +119,7 @@
         player.gold = 0;
         player.strength = 2000;
         player.items = {};
-        player.skills = ["Fireball"];
+        player.skills = ["Fireball", "Slash"];
         player.deaths = 0;
         player.quests = {};
         
@@ -378,6 +379,7 @@
             loadSkillSpritesheets: function() {
                 
                 game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+                game.load.spritesheet('slash', "<%= asset_path("slash.png")%>", 100, 100);
             },
             
             loadSoundEffects: function() {
@@ -396,6 +398,7 @@
                 game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
                 game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
                 game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
+                game.load.audio('slashUpdate', '<%= asset_path("slash.wav") %>');
             },
             
             loadBackgroundMusic: function() {

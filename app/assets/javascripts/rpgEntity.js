@@ -184,7 +184,7 @@ function createAttack(user, targetPosition, attackData) {
     
     //load spritesheet for animation
     //set position to whereever the casted spell should start
-    var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, 0);
+    var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, attack.startingFrame);
     attack.sprite = sprite;
     
     //setup the animation
@@ -235,6 +235,18 @@ function createAttack(user, targetPosition, attackData) {
         
         //begin creating fireball while user is doing his casting animation
         user.sprite.animations.getAnimation(attack.userAnimation).onStart.addOnce(function(){this.sprite.animations.play("create") }, attack)
+    }
+    
+    if(attackData.behaviour == "stationary") {
+        
+        //set the position of skill to the targets position
+        attack.sprite.x = targetPosition.x;
+        attack.sprite.y = targetPosition.y;
+        attack.sprite.anchor.x = 0.5;
+        attack.sprite.anchor.y = 0.5;
+        update.onComplete.addOnce(function(){this.sprite.animations.play("destroy"); }, attack);
+        
+        user.sprite.animations.getAnimation(attack.userAnimation).onComplete.addOnce(function(){this.sprite.animations.play("create")}, attack);
     }
     
     return attack;
