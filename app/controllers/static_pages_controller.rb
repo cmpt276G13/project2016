@@ -7,6 +7,5 @@ class StaticPagesController < ApplicationController
   
   def hub
     @user_location = get_user_location
-    init_markers
   end
 end
