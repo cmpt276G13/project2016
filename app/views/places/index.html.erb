@@ -59,6 +59,7 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
         window.location.href='/places/new';
       //};
   });
+
 });
 
 function displayOnMap(position){
@@ -68,9 +69,7 @@ function displayOnMap(position){
     lng: position.coords.longitude,
     "infowindow": "You are here!"
   });
-google.maps.event.addListener(marker,'click',function() {
-  alert("Clicked marker")
-  });
+  
   handler.map.centerOn(marker);
   handler.getMap().setZoom(10);
 }
