@@ -110,9 +110,7 @@ class Player < ActiveRecord::Base
     
     def starting_equipment
       # self.weapon
-      self.skills = [ "Slash", "Fireball" ]
-      self.items = { "Small Potion": 2, "Medium Potion": 2 }
-      
-      self.save
+      self.skills = [ "Slash", "Fireball" ] if self.skills.empty?
+      self.items = { "Small Potion" => 2, "Medium Potion" => 2 } if self.items.empty?
     end
 end
