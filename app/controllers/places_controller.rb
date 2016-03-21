@@ -7,6 +7,7 @@ class PlacesController < ApplicationController
   # GET /places
   # GET /places.json
   def index
+    @user_location = get_user_location
     @places = Place.where(:user_id => session[:user_id])
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
@@ -77,6 +78,15 @@ class PlacesController < ApplicationController
     @chosen = Place.find(params[:id])
     # save to session. @chosen hash can be accessed using 'get_chosen_location' method
     # in sessions_helper
+    session[:chosen_attributes] = @chosen.attributes
+    respond_to do |format|
+      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }
+      format.json { render :index, status: :ok, location: @chosen }
+    end
+  end
+  
+  def choose_geolocation
+    @chosen = get_user_location
     session[:chosen_attributes] = @chosen.attributes
     respond_to do |format|
       format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }

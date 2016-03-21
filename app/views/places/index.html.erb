@@ -8,7 +8,9 @@
   <div id="geolocation" style='width: 65%; height: 100%; float: left'></div>
   <div id="user-created" style='margin-left: 70%;'>
     <center>
-    <h2>User-Created Locations</h2>
+    <h2><strong>User Geolocation</strong></h2>
+    <p><strong>Country: </strong><%= @user_location[:country_name] %></p>
+    <h2><strong>User-Created Locations</strong></h2>
     <table>
       <thead>
         <tr>
@@ -28,7 +30,7 @@
             <td><%= place.address %></td>
             <td><%= place.title %></td>
             <td><%= link_to 'Go here', places_choose_path(place[:id]), data: { confirm: 'Pick this location?' } %></td>
-            <td><%= link_to 'Show', place %></td>
+            <!-- <td><%= link_to 'Show', place %></td> -->
             <td><%= link_to 'Edit', edit_place_path(place) %></td>
             <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
@@ -69,7 +71,7 @@ function displayOnMap(position){
 google.maps.event.addListener(marker,'click',function() {
   alert("Clicked marker")
   });
-  //handler.map.centerOn(marker);
-  handler.getMap().setZoom(2);
+  handler.map.centerOn(marker);
+  handler.getMap().setZoom(10);
 }
 </script>
