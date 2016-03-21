@@ -53,12 +53,8 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(displayOnMap);
   }
-  // handler.getMap() got it done! :)
-  google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
-    //if (window.confirm('Click OK to create new place!')) {
-        window.location.href='/places/new';
-      //};
-  });
+  
+  init_eventListeners();
 
 });
 
@@ -72,5 +68,22 @@ function displayOnMap(position){
   
   handler.map.centerOn(marker);
   handler.getMap().setZoom(10);
+}
+
+function init_eventListeners() {
+  // RIGHT CLICK
+  google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
+    //if (window.confirm('Click OK to create new place!')) {
+        window.location.href='/places/new';
+      //};
+  });
+  
+  google.maps.event.addListener(handler.getMap(), 'click', function(e) {
+    //alert("left click");
+    var click_marker = handler.addMarker({
+      lat: 47.0,
+      lng: 2.0,
+    });
+  });
 }
 </script>
