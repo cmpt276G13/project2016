@@ -119,21 +119,35 @@
         player.gold = 0;
         player.strength = 2000;
         player.items = {};
-        player.skills = ["Fireball", "Slash"];
+        //player.skills = ["Fireball", "Slash"];
         player.deaths = 0;
         player.quests = {};
         
         player.load = function() {
+            
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
             this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //if some how the health exceeded max health
+            this.maxMana = <%= @currentUser.player.max_mana%>;
+            this.mana = <%= @currentUser.player.mana%>;
+            this.magicPower = <%= @currentUser.player.magic_power%>;
+            this.magicDefense = <%= @currentUser.player.magic_defense%>;
             this.gold = <%= @currentUser.player.gold%>;
             this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
+            
+            var skills = [];
+            
+            <% @currentUser.player.skills.each do |skillName|%>
+                
+                skills.push("<%=skillName%>");
+            <%end%>
+            
+            this.skills = skills;
             
             //for whatever reason json parse isn't working so use ruby to set the data
             var items = {};
