@@ -86,11 +86,11 @@ class PlacesController < ApplicationController
   end
   
   def choose_geolocation
-    @chosen = get_user_location
-    session[:chosen_attributes] = @chosen.attributes
+    @geo = get_user_location
+    session[:geo_attributes] = @geo.attributes
     respond_to do |format|
-      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }
-      format.json { render :index, status: :ok, location: @chosen }
+      format.html { redirect_to game_url, notice: "Place chosen: #{@geo[:country_name]}" }
+      format.json { render :index, status: :ok, location: @geo }
     end
   end
   
