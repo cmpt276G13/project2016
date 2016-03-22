@@ -26,13 +26,51 @@
             
             "items": {
                 
-                "Small Potion": 25,
-                "Medium Potion": 10
+                "Small Potion": 20,
+                "Medium Potion": 5
             },
             
             "skills": {
                 
                 "Fireball": 10
+            }
+        }
+    },
+    
+    "slime": {
+        
+        "imageKey": "slime",
+        "name": "Slime",
+        "levelRange": 3,
+        "maxHealth": 4,
+        "maxMana": 7,
+        "magicPower": 5,
+        "magicDefense": 3,
+        "defense": 2,
+        "strength": 1,
+        "startingFrame": 3,
+        "animations": [
+            {"name": "stand", "frames": [3], "speed": 6},
+            {"name": "attack", "frames": [3, 0, 1, 1, 2, 3], "speed": 6},
+            {"name": "dying", "frames": [3, 0, 1, 1], "speed": 6}
+        ],
+        
+        "skills": ["Fireball"],
+        
+        "rewards": {
+            
+            "experience": 4,
+            "gold": 5,
+            
+            "items": {
+                
+                "Small Potion": 8,
+                "Medium Potion": 1
+            },
+            
+            "skills": {
+                
+                "Fireball": 30
             }
         }
     }

@@ -310,7 +310,7 @@ var battleState = {
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
-            var id = 0;
+            var id = 1;
             var monsterName = monsterNames.monsters[id];
             
             //now we can use this key to load the monster data
