@@ -41,7 +41,7 @@ function menuHomeUpdate() {
 
 function menuHomeKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.menuActions);
+    actionDisplayKeyDown(key, this.menuActions, true);
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
@@ -124,11 +124,11 @@ function viewItemsKeyDown(key) {
     
     if(this.itemDisplay.selectingUsage) {
         
-        actionDisplayKeyDown(key, this.selectionOptionsDisplay);
+        actionDisplayKeyDown(key, this.selectionOptionsDisplay, true);
         
     } else {
         
-        actionDisplayKeyDown(key, this.itemActionDisplay);
+        actionDisplayKeyDown(key, this.itemActionDisplay, true);
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
@@ -236,7 +236,7 @@ function viewSkillsUpdate() {
 
 function viewSkillsKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.skillActionDisplay);
+    actionDisplayKeyDown(key, this.skillActionDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
     
@@ -292,7 +292,7 @@ function viewQuestsKeyDown(key) {
     
     if(!this.detailedQuestDescriptionBackground.visible) {
         
-        actionDisplayKeyDown(key, this.questActionDisplay);
+        actionDisplayKeyDown(key, this.questActionDisplay, true);
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {

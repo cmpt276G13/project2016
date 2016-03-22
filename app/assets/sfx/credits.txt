@@ -42,3 +42,6 @@ created by ViRiX Dreamcore soundcloud.com/virix"
 
 slash
 http://www.freesound.org/people/ksdj55/sounds/322361/
+
+discardItem
+http://www.freesound.org/people/rhodesmas/sounds/322931/
