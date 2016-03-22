@@ -45,3 +45,9 @@ http://www.freesound.org/people/ksdj55/sounds/322361/
 
 discardItem
 http://www.freesound.org/people/rhodesmas/sounds/322931/
+
+pause
+http://www.freesound.org/people/crisstanza/sounds/167127/
+
+unpause
+http://www.freesound.org/people/crisstanza/sounds/167126/

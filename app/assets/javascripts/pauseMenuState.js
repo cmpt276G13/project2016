@@ -200,6 +200,7 @@ var pauseMenuState = {
     
     shutdown: function() {
         
+        globalSfx.unpause.play();
         game.world.remove(player.sprite);
     }
 };

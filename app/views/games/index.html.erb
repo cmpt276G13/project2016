@@ -88,7 +88,9 @@
             fireballDestroy: {},
             useItem: {},
             slashUpdate: {},
-            discardItem: {}
+            discardItem: {},
+            pause: {},
+            unpause: {}
         }
         
         //global bgm
@@ -416,6 +418,8 @@
                 game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
                 game.load.audio('slashUpdate', '<%= asset_path("slash.wav") %>');
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
+                game.load.audio('pause', '<%= asset_path("pause.mp3") %>');
+                game.load.audio('unpause', '<%= asset_path("unpause.mp3") %>');
             },
             
             loadBackgroundMusic: function() {
@@ -505,7 +509,7 @@
         		
         		for(soundName in globalSfx) {
         		    
-        		    globalSfx[soundName] = game.add.sound(soundName);
+        		    globalSfx[soundName] = game.add.sound(soundName, 2);
         		}
         		
         		for(songName in globalBgm) {

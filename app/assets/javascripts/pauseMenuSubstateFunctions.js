@@ -53,8 +53,10 @@ function menuHomeKeyDown(key) {
         if(this.menuActions.getSelectedActionConfiguration().text == "Back") {
             
             game.state.start("overworld");
+            return;
         }
         
+        globalSfx.selectOption.play();
         if(this.menuActions.getSelectedActionConfiguration().text == "Items") {
             
             this.stateManager.changeState("viewItems");
@@ -133,13 +135,15 @@ function viewItemsKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
+        globalSfx.cancel.play();
         if(this.itemDisplay.selectingUsage) {
             
             this.itemDisplay.selectingUsage = false;
             this.selectionOptionsDisplay.background.visible = false;
+            
             return;
         }
-    
+        
         this.stateManager.changeState("menuHome");
     }
     
@@ -147,9 +151,12 @@ function viewItemsKeyDown(key) {
         
         if(this.itemActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         } 
+        
+        globalSfx.selectOption.play();
         
         //chose an item
         this.itemDisplay.selectingUsage = true;
@@ -162,12 +169,15 @@ function viewItemsKeyDown(key) {
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Cancel") {
             
+            globalSfx.cancel.play();
             this.itemDisplay.selectingUsage = false;
             this.selectionOptionsDisplay.background.visible = false;
             return;
         }
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use" && player.items[this.itemActionDisplay.getSelectedActionConfiguration().attributeName].usable) {
+            
+            globalSfx.useItem.play();
             
             //player uses an item
             useItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
@@ -181,6 +191,8 @@ function viewItemsKeyDown(key) {
         }
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Discard") {
+            
+            globalSfx.discardItem.play();
             
             //player uses an item
             discardItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
@@ -240,6 +252,7 @@ function viewSkillsKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
     
+        globalSfx.cancel.play();
         this.stateManager.changeState("menuHome");
     }
     
@@ -247,6 +260,7 @@ function viewSkillsKeyDown(key) {
         
         if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         } 
@@ -297,8 +311,9 @@ function viewQuestsKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
+        globalSfx.cancel.play();
         if(!this.detailedQuestDescriptionBackground.visible) {
-            
+                
             this.stateManager.changeState("menuHome");
             return;
         }
@@ -311,9 +326,12 @@ function viewQuestsKeyDown(key) {
         
         if(this.questActionDisplay.getSelectedActionConfiguration().quest.name == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         }
+        
+        globalSfx.selectOption.play();
         
         //selected a quest, show a detailed description of it
         this.detailedQuestDescription = new questDisplay({quest: this.questActionDisplay.getSelectedActionConfiguration().quest, 
@@ -328,6 +346,7 @@ function viewQuestsKeyDown(key) {
         
         this.detailedQuestDescriptionBackground.visible = false;
         this.detailedQuestDescription.destroy();
+        globalSfx.cancel.play();
     }
 }
 

@@ -116,6 +116,7 @@ function exploreKeyDown(key) {
     //if user presses the enter key we will enter the battle state
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
+        globalSfx.pause.play();
         game.state.start('pauseMenu');
     }
     
