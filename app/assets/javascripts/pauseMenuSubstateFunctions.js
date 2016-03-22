@@ -10,11 +10,32 @@ function menuHomeExit() {
     
     this.menuActions.selectionDisplay.visible = false;
     this.statDisplay.background.destroy();
+    this.hideMessage();
 };
 
 function menuHomeUpdate() {
     
     this.menuActions.highlightSelectedAction();
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Back") {
+        
+        this.showMessage("Return to game.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Items") {
+        
+        this.showMessage("View your items.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Skills") {
+        
+        this.showMessage("View your skills.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Quests") {
+        
+        this.showMessage("View all the quests you are undertaking.");
+    }
 };
 
 function menuHomeKeyDown(key) {
@@ -28,22 +49,22 @@ function menuHomeKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
     
-        if(this.menuActions.getSelectedActionConfiguration().text == "back") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Back") {
             
             game.state.start("overworld");
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "items") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Items") {
             
             this.stateManager.changeState("viewItems");
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "skills") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Skills") {
             
             this.stateManager.changeState("viewSkills");
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "quests") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Quests") {
             
             this.stateManager.changeState("viewQuests");
         }
@@ -55,7 +76,7 @@ function viewItemsEnter() {
     this.itemDisplay = this.createPlayerItemDisplay();
     
     //create an action text display to show all of the player's actions
-    this.itemActionDisplay = new actionDisplay({x: 15, y: 60, width: this.itemDisplay.background.width / 2.5, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
+    this.itemActionDisplay = new actionDisplay({x: this.itemDisplay.background.width / 4, y: 60, width: this.itemDisplay.background.width / 2, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
     
     for(var item in player.items) {
         
@@ -69,7 +90,7 @@ function viewItemsEnter() {
     this.itemDisplay.selectingUsage = false;
     
     //create options for when player clicks on an item
-    this.selectionOptionsDisplay = new actionDisplay({x: this.itemDisplay.background.width / 2.5, y: 100, width: 150, height: 110, objectCreationFunction: text}, [{text: "Use"}, {text: "Discard"}, {text: "Cancel"}]);
+    this.selectionOptionsDisplay = new actionDisplay({x: this.itemDisplay.background.width / 2.5, y: 100, width: 150, height: 110, viewableObjects: 8, objectCreationFunction: text}, [{text: "Use"}, {text: "Discard"}, {text: "Cancel"}]);
     this.selectionOptionsDisplay.addParent(this.itemDisplay.background);
     this.selectionOptionsDisplay.background.visible = false;
 }
@@ -86,7 +107,7 @@ function viewItemsUpdate() {
     
     if(this.itemActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
         
-        this.hideMessage();
+        this.showMessage("Return to main menu");
         return;
     }
     
@@ -145,10 +166,17 @@ function viewItemsKeyDown(key) {
             return;
         }
         
-        if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use") {
+        if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use" && player.items[this.itemActionDisplay.getSelectedActionConfiguration().attributeName].usable) {
             
             //player uses an item
             useItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
+            
+        } else if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use" && !player.items[this.itemActionDisplay.getSelectedActionConfiguration().attributeName].usable) {
+            
+            var message = new textBox({x: 320, y: 300, width: 300, height: 20, showPressEnterMessage: false});
+            message.setText("This item is not usable");
+            game.time.events.add(2000, function(){this.background.destroy() }, message);
+            return;
         }
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Discard") {
@@ -177,7 +205,7 @@ function viewSkillsEnter() {
    this.skillDisplay = this.createPlayerSkillDisplay();
     
     //create an action text display to show all of the player's actions
-    this.skillActionDisplay = new actionDisplay({x: 15, y: 60, width: this.skillDisplay.background.width / 2.5, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
+    this.skillActionDisplay = new actionDisplay({viewableObjects: 8, x: this.skillDisplay.background.width / 4, y: 60, width: this.skillDisplay.background.width / 2, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
     
     for(var i = 0; i < player.skills.length; ++i) {
         
@@ -196,7 +224,7 @@ function viewSkillsUpdate() {
     
     if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
         
-        this.hideMessage();
+        this.showMessage("Return to main menu.");
         return;
     }
     
@@ -230,11 +258,12 @@ function viewSkillsExit() {
 
 function viewQuestsEnter() {
     
+    this.showMessage("Select a quest to view a detailed description of it.\nPress Back to return to the main menu.");
     questManager.onInventoryCheck();
     this.questDisplay = this.createPlayerQuestDisplay();
     
     //create an action text display to show all of the player's quests
-    this.questActionDisplay = new actionDisplay({x: 15, y: 60, width: this.questDisplay.background.width / 2.5, height: this.questDisplay.background.height - 100, cellHeight: 43, objectCreationFunction: questDisplaySummary}, []);
+    this.questActionDisplay = new actionDisplay({viewableObjects: 7, x: this.questDisplay.background.width / 4, y: 60, width: this.questDisplay.background.width / 2, height: this.questDisplay.background.height - 100, cellHeight: 43, objectCreationFunction: questDisplaySummary}, []);
     
     for(questID in player.quests) {
         

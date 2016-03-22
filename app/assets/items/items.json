@@ -7,6 +7,7 @@
         "battleDescription": "Restores 25 health",
         "effect": "restoreStats",
         
+        "usable": true,
         "stats": {
             
             "health": 25
@@ -20,6 +21,7 @@
         "battleDescription": "Restores 70 health",
         "effect": "restoreStats",
         
+        "usable": true,
         "stats": {
             
             "health": 70
