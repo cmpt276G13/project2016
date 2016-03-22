@@ -1,5 +1,6 @@
 function menuHomeEnter() {
     
+    player.save();
     questManager.onInventoryCheck();
     this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
@@ -197,6 +198,8 @@ function viewItemsKeyDown(key) {
             
             this.stateManager.changeState("viewItems");
         }
+        
+        player.save();
     }
 }
 
