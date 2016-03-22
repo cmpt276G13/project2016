@@ -26,5 +26,17 @@
             
             "health": 70
         }
+    },
+    
+    "Orc Skull": {
+        
+        "description": "A skull harvested from a dead orc.",
+        "usable": false
+    },
+    
+    "Slime Tentacle": {
+        
+        "description": "A tentacle torn from a dead slime.",
+        "usable": false
     }
 }

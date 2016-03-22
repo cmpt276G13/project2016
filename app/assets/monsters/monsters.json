@@ -27,7 +27,8 @@
             "items": {
                 
                 "Small Potion": 20,
-                "Medium Potion": 5
+                "Medium Potion": 5,
+                "Orc Skull": 50
             },
             
             "skills": {
@@ -65,7 +66,8 @@
             "items": {
                 
                 "Small Potion": 8,
-                "Medium Potion": 1
+                "Medium Potion": 1,
+                "Slime Tentacle": 100
             },
             
             "skills": {

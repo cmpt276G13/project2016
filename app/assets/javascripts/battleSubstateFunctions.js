@@ -186,6 +186,11 @@ function selectItemActionEnter() {
     
     for(item in player.items) {
         
+        if(!player.items[item].usable) {
+            
+            continue;
+        }
+        
         var config = {attributeName: item, attributeValue: "x" + player.items[item].quantity};
         this.itemsDisplay.addAction(config);
     }
