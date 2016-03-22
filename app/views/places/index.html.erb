@@ -79,11 +79,14 @@ function init_eventListeners() {
   });
   
   google.maps.event.addListener(handler.getMap(), 'click', function(e) {
+    window.setTimeout(function() {
+    handler.panTo(marker.getPosition());
+  },2000);
     //alert("left click");
-    var click_marker = handler.addMarker({
-      lat: e.lat,
-      lng: e.lng,
-    });
+    //var click_marker = handler.addMarker({
+      //"lat": e.lat,
+      //"lng": e.lng,
+    //});
   });
 }
 </script>
