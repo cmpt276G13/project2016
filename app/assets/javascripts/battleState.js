@@ -298,7 +298,7 @@ var battleState = {
     loadMonsters: function() {
         
         //load all monsters that exist in this level
-        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey);
+        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey)["monsters"];
         
         //now turn the monster database to a javascript object, os we can find monsters in this database
         var monsterDatabase = game.cache.getJSON('monsterData');
@@ -310,8 +310,8 @@ var battleState = {
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
-            var id = 1;
-            var monsterName = monsterNames.monsters[id];
+            var id = getRandomInt(0, monsterNames.length - 1);
+            var monsterName = monsterNames[id];
             
             //now we can use this key to load the monster data
             //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
