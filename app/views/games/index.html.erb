@@ -109,7 +109,7 @@
             background2: {},
             solid: {},
             foreground: {},
-            spawnPoint: {x: 0, y: 0}
+            spawnPoint: {}
         }
         
         //define a global player variable
@@ -166,11 +166,6 @@
             this.items = items;
             
             loadQuests();
-            //this.quests = quests;
-            //do something to load quests
-            
-            //player.items = ...
-            //player.skills = ...
         };
         
         player.save = function() {
@@ -327,15 +322,26 @@
             questManager.onInventoryCheck();
         }
         
-        loadQuests();
+        function removePersistentObjectsFromWorld() {
+            
+            game.world.remove(player.sprite);
+            game.world.remove(tilemap.background1);
+            game.world.remove(tilemap.background2);
+            game.world.remove(tilemap.foreground);
+            game.world.remove(tilemap.solid);
+            game.world.remove(tilemap.spawnPoint);
+        }
         
-        /*
+        function addPersistentObjectsToWorld() {
+            
+            game.add.existing(tilemap.background1);
+            game.add.existing(tilemap.background2);
+            game.add.existing(tilemap.spawnPoint);
+            game.add.existing(tilemap.solid);
+            game.add.existing(player.sprite);
+            game.add.existing(tilemap.foreground);
+        }
         
-        i put the loadState here because it loads assets using the asset pipeline.
-        to do that it needs to call ruby functions, which it can't do in its own javascript file
-        
-        
-        */
         
         //loading state should load ALL of the game's resources
         //this will cache (store in memory) all of the required pictures, sounds, level data for later use
@@ -356,6 +362,7 @@
                 game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
                 game.load.image('tileset2', '<%= asset_path("trees.png") %>');
                 game.load.image('tileset3', '<%= asset_path("tileset1.png") %>');
+                game.load.image('spawnPoint', '<%= asset_path("spawnPoint.png")%>');
             },
             
             loadMonsterLists: function() {
@@ -467,7 +474,22 @@
                 tilemap.background1.resizeWorld();
                 tilemap.map.setCollisionBetween(1, 10000, true, 'solid');
                 
-                tilemap.spawnPoint = {x: spawnPoint.x * 32, y: spawnPoint.y * 32};
+                //default spawn point
+                tilemap.spawnPoint = {x: 0, y: 0};
+                
+                //load spawn point
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "spawnPoint") {
+                        
+                        continue;
+                    }
+                    
+                    var spawnPointObject = tilemap.map.objects["objects"][i];
+                    
+                    //create spawnPoint sprite
+                    tilemap.spawnPoint = game.add.sprite(spawnPointObject.x, spawnPointObject.y, spawnPointObject.properties.sprite);
+                }
             },
             
             //create function creats the required object for this game state
@@ -530,11 +552,7 @@
             
             shutdown: function() {
                 
-                game.world.remove(player.sprite);
-                game.world.remove(tilemap.background1);
-                game.world.remove(tilemap.background2);
-                game.world.remove(tilemap.foreground);
-                game.world.remove(tilemap.solid);
+                removePersistentObjectsFromWorld();
             }
         };
         
