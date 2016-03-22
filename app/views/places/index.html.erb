@@ -81,8 +81,8 @@ function init_eventListeners() {
   google.maps.event.addListener(handler.getMap(), 'click', function(e) {
     //alert("left click");
     var click_marker = handler.addMarker({
-      lat: e.latlng.lat(),
-      lng: e.latlng.lng(),
+      lat: e.lat,
+      lng: e.lng,
     });
   });
 }
