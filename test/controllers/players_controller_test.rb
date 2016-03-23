@@ -50,7 +50,7 @@ class PlayersControllerTest < ActionController::TestCase
     log_in_as(@user)
     request.env["HTTP_REFERER"] = quests_url
     assert_difference "@player.reload.experience", 1 do
-      patch :update , { player: { items: { "Small Potion" => 1 }, quest: @quest_complete, experience: 1 }, commit: "Turn in", id: @user }
+      patch :update , { player: { items: { @items.keys[0] => 1 }, quest: @quest_complete, experience: 1 }, commit: "Turn in", id: @user }
     end
     assert @player.accepted?(@quest_complete).turned_in?
     assert_redirected_to quests_url

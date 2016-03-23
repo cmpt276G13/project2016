@@ -31,6 +31,23 @@ class QuestsControllerTest < ActionController::TestCase
     assert_redirected_to quests_url
   end
   
+  test "should redirect update when not logged in" do
+    patch :update, id: @quest, quest: { name: @quest.name, 
+                              description: @quest.description, 
+                              level_req: @quest.level_req }
+    assert_equal "Please log in.", flash[:danger]
+    assert_redirected_to login_url
+  end
+  
+  test "should redirect update when logged in as non-admin" do
+    log_in_as(@non_admin)
+    patch :update, id: @quest, quest: { name: @quest.name, 
+                              description: @quest.description, 
+                              level_req: @quest.level_req }
+    assert flash.empty?
+    assert_redirected_to quests_url
+  end
+  
   test "should redirect destroy when not logged in" do
     assert_no_difference 'Quest.count' do
       delete :destroy, id: @quest

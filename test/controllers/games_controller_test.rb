@@ -18,5 +18,6 @@ class GamesControllerTest < ActionController::TestCase
     @request.env['HTTP_REFERER'] = hub_url
     get :index
     assert :success
+    assert_select 'div', id: "Game"
   end
 end
