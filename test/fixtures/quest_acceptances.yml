@@ -19,7 +19,13 @@ michael_quest_20:
   turned_in: false
   
 three:
-  player_id: archer
+  player: archer
   quest_id: 1
   completed: false
   turned_in: false
+  
+michael_gather:
+  player: michael
+  quest: gather
+  completed: true
+  turned_in: true
