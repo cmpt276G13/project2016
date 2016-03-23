@@ -1,12 +1,12 @@
 <% provide(:title, params[:name]) %>
 <h1><%= params[:name] %></h1>
-<p class="center">Gold: <%= @player.gold %></p>
 
 <div class="container">
   <p><%= simple_format @item["description"] %></p>
   
   <ul class="item_links center">
-    Price: <%= @item["price"] %> G
+    <p class="center">Gold: <%= @player.gold %></p>
+    <p class="center">Price: <%= @item["price"] %> G</p>
     <%= form_for(@player) do |f| %>
       <%= hidden_field_tag :item_name, params[:name] %>
       <%= hidden_field_tag :gold, @item["price"] %>
