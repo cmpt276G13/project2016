@@ -246,12 +246,16 @@ footer {
 #GR {animation-delay: 1.1s;  -webkit-animation-delay: 1.1s; -moz-animation-delay: 1.1s;}
 
 
-
+#WelcomeHeader{
+  display: inline-block;
+  text-align: center;
+}
 
 #WelcomeHeader{
-  text-align: center;
+  // text-align: center;
   margin: 20px;
   font-size: 2em;
+  
   #Welcome,#To,#GeoHunter{
   margin: 20px;
   padding: 0;

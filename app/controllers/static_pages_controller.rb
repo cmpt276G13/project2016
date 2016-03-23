@@ -9,6 +9,6 @@ class StaticPagesController < ApplicationController
     @user_location = get_user_location
     init_markers
   end
-  def tutorial
+  def gameinfo
   end
 end
