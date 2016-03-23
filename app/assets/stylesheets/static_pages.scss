@@ -247,7 +247,7 @@ footer {
 
 
 #WelcomeHeader{
-  display: inline-block;
+  display: inline;
   text-align: center;
 }
 
@@ -263,7 +263,7 @@ footer {
 }
 // CSS animation is only appliable to "block level" element
 span{
-  display: inline-block
+  display: inline-block;
 }
 
 
