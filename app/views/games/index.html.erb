@@ -358,6 +358,21 @@
             }
         }
         
+        function removeBoss(name) {
+            
+            for(var i = 0; i < tilemap.bosses.length;) {
+                
+                if(tilemap.bosses[i].name === name) {
+                    
+                    tilemap.bosses[i].destroy();
+                    tilemap.bosses.splice(i, 1);
+                    continue;
+                }
+                
+                ++i;
+            }
+        };
+        
         //loading state should load ALL of the game's resources
         //this will cache (store in memory) all of the required pictures, sounds, level data for later use
         //this state is also where we generate the game world based on the players location
@@ -443,13 +458,13 @@
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
                 game.load.audio('pause', '<%= asset_path("pause.mp3") %>');
                 game.load.audio('unpause', '<%= asset_path("unpause.mp3") %>');
-                game.load.audio('bossBattle', '<%= asset_path("BossFight.mp3") %>');
             },
             
             loadBackgroundMusic: function() {
                 
                 game.load.audio("overworld", '<%= asset_path("WorldMap.mp3")%>');
                 game.load.audio("battle", '<%= asset_path("NormalBattle.mp3")%>');
+                game.load.audio('bossBattle', '<%= asset_path("BossFight.mp3") %>');
             },
             
             //place to load files
