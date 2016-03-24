@@ -307,11 +307,21 @@ var battleState = {
         var monstersToSpawn = getRandomInt(1, 3);
         var monsters = [];
         
+        if(this.isFightingBoss) {
+            
+            monstersToSpawn = 1;
+        }
+        
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
             var id = getRandomInt(0, monsterNames.length - 1);
             var monsterName = monsterNames[id];
+            
+            if(this.isFightingBoss) {
+                
+                monsterName = this.bossName;
+            }
             
             //now we can use this key to load the monster data
             //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
@@ -693,6 +703,19 @@ var battleState = {
         }
 
         return true;
+    },
+    
+    init: function() {
+        
+        this.isFightingBoss = typeof fightingBoss !== "undefined" ? fightingBoss : false;
+        
+        if(typeof bossName === "undefined" || bossName == "") {
+            
+            this.isFightingBoss = false;
+            return;
+        }
+        
+        this.bossName = bossName;
     },
     
     create: function() {

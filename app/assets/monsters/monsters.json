@@ -82,12 +82,12 @@
         "imageKey": "dragon",
         "name": "Dragon",
         "levelRange": 1,
-        "maxHealth": 15,
-        "maxMana": 15,
-        "magicPower": 15,
-        "magicDefense": 15,
-        "defense": 15,
-        "strength": 15,
+        "maxHealth": 17,
+        "maxMana": 16,
+        "magicPower": 4,
+        "magicDefense": 5,
+        "defense": 4,
+        "strength": 7,
         "startingFrame": 8,
         "animations": [
             {"name": "stand", "frames": [8], "speed": 6},
@@ -95,7 +95,7 @@
             {"name": "dying", "frames": [12, 0, 4, 8], "speed": 6}
         ],
         
-        "skills": ["Fireball"],
+        "skills": ["Fireball", "Slash"],
         
         "rewards": {
             

@@ -25,6 +25,7 @@ function exploreUpdate() {
     //this is why we need a seperate layer for background and solid, i only want my player to collide with fenses or houses
     //not the grass
     game.physics.arcade.collide(player.sprite, tilemap.solid);
+    game.physics.arcade.collide(player.sprite, tilemap.bosses, function(player, boss){fightingBoss = true; bossName = boss.name; this.stateManager.changeState("enterBattle");}, null, this);
     
     //now we want to see if the player randomly encountered an monster, this will send us to the battle state
     //we only want to check if player encounterd an monster if he moved

@@ -67,7 +67,6 @@ var overworldState = {
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
         
-        
         //this function makes phaser use arrow keys for movement
         //it creates a collection of keys that you can poll for events (look at update function for polling code)
         //polling a key means you check if a key is pressed, or released

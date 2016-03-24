@@ -113,6 +113,9 @@
             bosses: []
         }
         
+        var fightingBoss = false;
+        var bossName = "";
+        
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
         //We don't want to have to recreate a player object every single time we end a battle, so we will make a global player
@@ -515,6 +518,9 @@
                     var bossObject = tilemap.map.objects["objects"][i];
                     
                     tilemap.bosses.push(game.add.sprite(bossObject.x, bossObject.y, bossObject.properties.sprite, bossObject.startingFrame));
+                    game.physics.arcade.enable(tilemap.bosses[tilemap.bosses.length - 1]);
+                    tilemap.bosses[tilemap.bosses.length - 1].body.immovable = true;
+                    tilemap.bosses[tilemap.bosses.length - 1].name = bossObject.properties.name;
                 }
             },
             
