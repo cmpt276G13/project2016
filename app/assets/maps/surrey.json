@@ -46,7 +46,7 @@
         }, 
         {
          "draworder":"topdown",
-         "height":200,
+         "height":0,
          "name":"objects",
          "objects":[
                 {
@@ -65,15 +65,34 @@
                  "width":32,
                  "x":3135,
                  "y":3155
+                }, 
+                {
+                 "gid":154,
+                 "height":96,
+                 "id":4,
+                 "name":"",
+                 "properties":
+                    {
+                     "name":"Dragon",
+                     "sprite":"dragon",
+                     "startingFrame":"0",
+                     "type":"boss"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":2702.66666666667,
+                 "y":2860.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":200,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":3,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "properties":
     {
@@ -140,11 +159,11 @@
          "transparentcolor":"#ffffff"
         }, 
         {
-         "columns":8,
+         "columns":1,
          "firstgid":153,
-         "image":"tileset2.png",
-         "imageheight":256,
-         "imagewidth":256,
+         "image":"spawnPoint.png",
+         "imageheight":32,
+         "imagewidth":32,
          "margin":0,
          "name":"tileset2",
          "properties":
@@ -152,9 +171,26 @@
 
             },
          "spacing":0,
-         "tilecount":64,
+         "tilecount":1,
          "tileheight":32,
          "tilewidth":32
+        }, 
+        {
+         "columns":4,
+         "firstgid":154,
+         "image":"dragon.png",
+         "imageheight":384,
+         "imagewidth":384,
+         "margin":0,
+         "name":"tileset2",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":16,
+         "tileheight":96,
+         "tilewidth":96
         }],
  "tilewidth":32,
  "version":1,

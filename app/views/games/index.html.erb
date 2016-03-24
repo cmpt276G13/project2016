@@ -109,7 +109,8 @@
             background2: {},
             solid: {},
             foreground: {},
-            spawnPoint: {}
+            spawnPoint: {},
+            bosses: []
         }
         
         //define a global player variable
@@ -330,6 +331,11 @@
             game.world.remove(tilemap.foreground);
             game.world.remove(tilemap.solid);
             game.world.remove(tilemap.spawnPoint);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.world.remove(tilemap.bosses[i]);
+            }
         }
         
         function addPersistentObjectsToWorld() {
@@ -340,8 +346,12 @@
             game.add.existing(tilemap.solid);
             game.add.existing(player.sprite);
             game.add.existing(tilemap.foreground);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.add.existing(tilemap.bosses[i]);
+            }
         }
-        
         
         //loading state should load ALL of the game's resources
         //this will cache (store in memory) all of the required pictures, sounds, level data for later use
@@ -393,6 +403,7 @@
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
                 game.load.spritesheet('orc','<%= asset_path("orc.png") %>', 64, 64);
                 game.load.spritesheet('slime', '<%= asset_path("slime.png")%>', 70, 60);
+                game.load.spritesheet('dragon', '<%= asset_path("dragon.png")%>', 96, 96);
             },
             
             loadBattleBackgroundImages: function() {
@@ -489,6 +500,21 @@
                     
                     //create spawnPoint sprite
                     tilemap.spawnPoint = game.add.sprite(spawnPointObject.x, spawnPointObject.y, spawnPointObject.properties.sprite);
+                }
+                
+                //load bosses
+                tilemap.bosses = [];
+                
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "boss") {
+                        
+                        continue;
+                    }
+                    
+                    var bossObject = tilemap.map.objects["objects"][i];
+                    
+                    tilemap.bosses.push(game.add.sprite(bossObject.x, bossObject.y, bossObject.properties.sprite, bossObject.startingFrame));
                 }
             },
             

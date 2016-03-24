@@ -1,5 +1,5 @@
 {
-    "orc": {
+    "Orc": {
         
         "imageKey": "orc",
         "name": "Orc",
@@ -38,7 +38,7 @@
         }
     },
     
-    "slime": {
+    "Slime": {
         
         "imageKey": "slime",
         "name": "Slime",
@@ -68,6 +68,44 @@
                 "Small Potion": 8,
                 "Medium Potion": 1,
                 "Slime Tentacle": 100
+            },
+            
+            "skills": {
+                
+                "Fireball": 30
+            }
+        }
+    },
+    
+    "Dragon": {
+        
+        "imageKey": "dragon",
+        "name": "Dragon",
+        "levelRange": 1,
+        "maxHealth": 15,
+        "maxMana": 15,
+        "magicPower": 15,
+        "magicDefense": 15,
+        "defense": 15,
+        "strength": 15,
+        "startingFrame": 8,
+        "animations": [
+            {"name": "stand", "frames": [8], "speed": 6},
+            {"name": "attack", "frames": [8, 9, 10, 11, 8, 9, 10, 11], "speed": 11},
+            {"name": "dying", "frames": [12, 0, 4, 8], "speed": 6}
+        ],
+        
+        "skills": ["Fireball"],
+        
+        "rewards": {
+            
+            "experience": 20,
+            "gold": 20,
+            
+            "items": {
+                
+                "Small Potion": 80,
+                "Medium Potion": 100
             },
             
             "skills": {
