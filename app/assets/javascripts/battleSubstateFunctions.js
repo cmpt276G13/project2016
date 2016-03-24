@@ -553,6 +553,12 @@ function victoryEnter() {
         
         questManager.onKillMonster(name, this.defeatedMonsters[name]);
     }
+    
+    //delete the defeated boss
+    if(fightingBoss) {
+        
+        removeBoss(bossName);
+    }
 };
 
 function victoryKeyDown(key) {
@@ -629,12 +635,6 @@ function outroEnter() {
     
     questManager.onInventoryCheck();
     var fade = new fadeToBlack(450);
-    
-    //delete the defeated boss
-    if(fightingBoss) {
-        
-        removeBoss(bossName);
-    }
     
     fade.setOnExit(function(){game.state.start("overworld")});
     fade.start();
