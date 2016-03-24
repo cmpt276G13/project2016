@@ -98,6 +98,8 @@
             
             overworld: {},
             battle: {},
+            bossBattle: {},
+            activeBgm: {},
             volume: 0.4
         }
         
@@ -441,6 +443,7 @@
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
                 game.load.audio('pause', '<%= asset_path("pause.mp3") %>');
                 game.load.audio('unpause', '<%= asset_path("unpause.mp3") %>');
+                game.load.audio('bossBattle', '<%= asset_path("BossFight.mp3") %>');
             },
             
             loadBackgroundMusic: function() {

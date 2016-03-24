@@ -3,7 +3,10 @@ function exploreEnter() {
     
     //currently nothing to be done
     //start music
-    globalBgm.overworld.play('', 0, globalBgm.volume, true, false);
+    globalBgm.activeBgm = globalBgm.overworld;
+    globalBgm.activeBgm.play('', 0, globalBgm.volume, true, false);
+    
+    fightingBoss = false;
 };
 
 function exploreExit() {
@@ -183,5 +186,5 @@ function enterBattleEnter() {
     
     var maskInTween = game.add.tween(mask.scale);
     maskInTween.to({x: 0, y: 0}, 600, null, true);
-    maskInTween.onComplete.add(function(){globalBgm.overworld.stop(); game.state.start("battle"); game.world.mask.destroy} );
+    maskInTween.onComplete.add(function(){globalBgm.activeBgm.stop(); game.state.start("battle"); game.world.mask.destroy} );
 }

@@ -257,7 +257,7 @@ function selectItemActionUpdate() {
 
 function playerRunAwayEnter() {
     
-    globalBgm.battle.fadeOut(1250);
+    globalBgm.activeBgm.fadeOut(1250);
     globalSfx.escapeBattle.play();
     
     //make player face away and run
@@ -539,7 +539,7 @@ function playerDyingEnter() {
 
 function victoryEnter() {
     
-    globalBgm.battle.fadeOut(1500);
+    globalBgm.activeBgm.fadeOut(1500);
     globalSfx.winBattle.play();
     
     //player won a match, create a message box at the center of the screen
@@ -573,7 +573,7 @@ function victoryKeyDown(key) {
 
 function defeatEnter() {
     
-    globalBgm.battle.fadeOut(1250);
+    globalBgm.activeBgm.fadeOut(1250);
     globalSfx.loseBattle.play();
     
     //create a transition so we fade to a black screen

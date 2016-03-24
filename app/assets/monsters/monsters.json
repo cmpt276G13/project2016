@@ -82,7 +82,7 @@
         "imageKey": "dragon",
         "name": "Dragon",
         "levelRange": 1,
-        "maxHealth": 17,
+        "maxHealth": 18,
         "maxMana": 16,
         "magicPower": 4,
         "magicDefense": 5,
