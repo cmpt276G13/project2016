@@ -35,15 +35,6 @@ function exploreUpdate() {
     );
         
     }, null, this);
-    
-    //now we want to see if the player randomly encountered an monster, this will send us to the battle state
-    //we only want to check if player encounterd an monster if he moved
-    //for now its commentd out since I didn't create the battle state
-    //basically if hte player travels a certain distance, we check if he should battle an monster
-    /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
-        
-        game.state.start('battle');
-    }*/
 };
 
 function exploreKeystates() {

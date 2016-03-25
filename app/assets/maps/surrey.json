@@ -82,8 +82,28 @@
                  "type":"",
                  "visible":true,
                  "width":96,
-                 "x":2702.66666666667,
-                 "y":2860.66666666667
+                 "x":2702.67,
+                 "y":2860.67
+                }, 
+                {
+                 "gid":170,
+                 "height":32,
+                 "id":7,
+                 "name":"",
+                 "properties":
+                    {
+                     "item":"Small Potion",
+                     "quantity":"2",
+                     "sprite":"chest",
+                     "startingFrame":"0",
+                     "type":"chest"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":3590.66666666667,
+                 "y":2892
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -92,7 +112,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":7,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "properties":
     {
@@ -191,6 +211,23 @@
          "tilecount":16,
          "tileheight":96,
          "tilewidth":96
+        }, 
+        {
+         "columns":2,
+         "firstgid":170,
+         "image":"chest.png",
+         "imageheight":32,
+         "imagewidth":64,
+         "margin":0,
+         "name":"tileset3",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tilecount":2,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "version":1,

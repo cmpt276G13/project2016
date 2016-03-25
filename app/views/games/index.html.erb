@@ -113,7 +113,8 @@
             solid: {},
             foreground: {},
             spawnPoint: {},
-            bosses: []
+            bosses: [],
+            chests: []
         }
         
         var fightingBoss = false;
@@ -342,6 +343,11 @@
                 
                 game.world.remove(tilemap.bosses[i]);
             }
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.world.remove(tilemap.chests[i]);
+            }
         }
         
         function addPersistentObjectsToWorld() {
@@ -356,6 +362,11 @@
             for(var i = 0; i < tilemap.bosses.length; ++i) {
                 
                 game.add.existing(tilemap.bosses[i]);
+            }
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.add.existing(tilemap.chests[i]);
             }
         }
         
@@ -394,6 +405,7 @@
                 game.load.image('tileset2', '<%= asset_path("trees.png") %>');
                 game.load.image('tileset3', '<%= asset_path("tileset1.png") %>');
                 game.load.image('spawnPoint', '<%= asset_path("spawnPoint.png")%>');
+                game.load.spritesheet('chest', '<%= asset_path("chest.png")%>', 32, 32);
             },
             
             loadMonsterLists: function() {
@@ -540,6 +552,26 @@
                     game.physics.arcade.enable(tilemap.bosses[tilemap.bosses.length - 1]);
                     tilemap.bosses[tilemap.bosses.length - 1].body.immovable = true;
                     tilemap.bosses[tilemap.bosses.length - 1].name = bossObject.properties.name;
+                }
+                
+                //load chests
+                tilemap.chests = [];
+                
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "chest") {
+                        
+                        continue;
+                    }
+                    
+                    var chestObject = tilemap.map.objects["objects"][i];
+                    
+                    tilemap.chests.push(game.add.sprite(chestObject.x, chestObject.y, chestObject.properties.sprite, chestObject.startingFrame));
+                    game.physics.arcade.enable(tilemap.chests[tilemap.chests.length - 1]);
+                    tilemap.chests[tilemap.chests.length - 1].body.immovable = true;
+                    tilemap.chests[tilemap.chests.length - 1].name = chestObject.properties.name;
+                    tilemap.chests[tilemap.chests.length - 1].item = chestObject.properties.item;
+                    tilemap.chests[tilemap.chests.length - 1].quantity = chestObject.properties.quantity;
                 }
             },
             
