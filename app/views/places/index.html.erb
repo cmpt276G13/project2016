@@ -89,6 +89,8 @@ function init_eventListeners() {
         content: '<h3><%= link_to 'Go here', game_url %></h3>'
       });
       infowindow.open(handler.getMap(), click_marker);
+      
+      // WANT: PREPOPULATE FORM W/ LAT, LNG ; STORE IN DB
     }
   });
   
