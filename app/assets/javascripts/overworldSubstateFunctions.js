@@ -28,7 +28,13 @@ function exploreUpdate() {
     //this is why we need a seperate layer for background and solid, i only want my player to collide with fenses or houses
     //not the grass
     game.physics.arcade.collide(player.sprite, tilemap.solid);
-    game.physics.arcade.collide(player.sprite, tilemap.bosses, function(player, boss){fightingBoss = true; bossName = boss.name; this.stateManager.changeState("enterBattle");}, null, this);
+    game.physics.arcade.collide(player.sprite, tilemap.bosses, function(player, boss){ bossName = boss.name;
+    
+    this.getPlayerConfirmation("Will you fight " + bossName + "?", function(){fightingBoss = true; this.stateManager.changeState("enterBattle")},
+        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") }
+    );
+        
+    }, null, this);
     
     //now we want to see if the player randomly encountered an monster, this will send us to the battle state
     //we only want to check if player encounterd an monster if he moved
@@ -187,4 +193,42 @@ function enterBattleEnter() {
     var maskInTween = game.add.tween(mask.scale);
     maskInTween.to({x: 0, y: 0}, 600, null, true);
     maskInTween.onComplete.add(function(){globalBgm.activeBgm.stop(); game.state.start("battle"); game.world.mask.destroy} );
+}
+
+function confirmationMessageKeyDown(key) {
+
+    //start drawing message
+    var selection = this.confirmation.onKeyDown(key);
+    
+    if(key == Phaser.Keyboard.ESC) {
+        
+        globalSfx.cancel.play();
+        this.confirmation.onCancelFunc.call(this);
+        return;
+    }
+    
+    if(selection == "No") {
+        
+        globalSfx.selectOption.play();
+        this.confirmation.onNoFunc.call(this);
+    }
+    
+    if(selection == "Yes") {
+        
+        globalSfx.selectOption.play();
+        this.confirmation.onYesFunc.call(this);
+    }
+}
+
+function confirmationMessageUpdate() {
+    
+    this.confirmation.highlightSelectedAction();
+}
+
+function confirmationMessageExit() {
+    
+    if(typeof this.confirmation !== "undefined") {
+        
+        this.confirmation.destroy();
+    }
 }

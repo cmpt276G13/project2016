@@ -21,7 +21,6 @@ function confirmation(config) {
     
     this.selectionBox = new actionDisplay(selectionBoxConfig, [{text: "Yes"}, {text: "No"}]);
     this.selectionBox.highlightSelectedAction();
-    //this.selectionBox.addParent(this.messageBox.background);
 }
 
 confirmation.prototype.mergeConfigWithDefault = function(configuration) {
@@ -43,14 +42,25 @@ confirmation.prototype.mergeConfigWithDefault = function(configuration) {
 }
 
 //returns the option selected if user presses enter
-confirmation.prototype.handleInput = function(key) {
+confirmation.prototype.onKeyDown = function(key) {
     
     actionDisplayKeyDown(key, this.selectionBox, true);
     
-    if(key.keyCode == Phaser.keyboard.ENTER) {
+    if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         return this.selectionBox.getSelectedActionConfiguration().text;
     }
     
     return "";
+}
+
+confirmation.prototype.highlightSelectedAction = function() {
+    
+    this.selectionBox.highlightSelectedAction();
+}
+
+confirmation.prototype.destroy = function() {
+    
+    this.messageBox.background.destroy(true);
+    this.selectionBox.background.destroy(true);
 }

@@ -56,9 +56,30 @@ var overworldState = {
                 
                 onEnter: enterBattleEnter
             }
+        },
+        
+        
+        {name: "confirmationMessage",
+            functions: {
+                
+                onKeyDown: confirmationMessageKeyDown,
+                onUpdate: confirmationMessageUpdate,
+                onExit: confirmationMessageExit
+            }
         }
         
     ],
+    
+    //call this function when player needs to confirm an action
+    //displays 'messageToDisplay' to player
+    getPlayerConfirmation(messageToDisplay, onYesFunc, onNoFunc, onCancelFunc) {
+        
+        this.confirmation = new confirmation({message: messageToDisplay});
+        this.confirmation.onYesFunc = onYesFunc;
+        this.confirmation.onNoFunc = onNoFunc;
+        this.confirmation.onCancelFunc = onCancelFunc;
+        this.stateManager.changeState("confirmationMessage");
+    },
     
     create: function() {
         

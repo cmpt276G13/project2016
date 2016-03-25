@@ -836,6 +836,7 @@ var battleState = {
         
         //now we also want the player ot return to whatever he was doing, so set him back to his original position
         this.loadPlayerOverworldOrientation();
+        fightingBoss = false;
         
         //once again we don't want the game to destroy the player
         game.world.remove(player.sprite);
