@@ -7,7 +7,6 @@ class PlacesController < ApplicationController
   # GET /places
   # GET /places.json
   def index
-    @user_location = get_user_location
     @places = Place.where(:user_id => session[:user_id])
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
