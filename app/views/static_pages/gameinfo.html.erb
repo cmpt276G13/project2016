@@ -1,0 +1,166 @@
+<% provide(:title, 'Tutorial') %>
+/*<style>*/
+/*    body {*/
+/*    background: #fafafa;*/
+/*    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+/*    color: #333;*/
+/*}*/
+
+
+/*.tab-panels ul {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*}*/
+/*.tab-panels ul li {*/
+/*    list-style-type: none;*/
+/*    display: inline-block;*/
+/*    background: #999;*/
+/*    margin: 0;*/
+/*    padding: 3px 10px;*/
+/*    border-radius: 10px 10px 0 0;*/
+/*    color: #fff;*/
+/*    font-weight: 200;*/
+/*    cursor: pointer;*/
+/*    width: 100px;*/
+/*    height: 50px;*/
+
+/*}*/
+/*.tab-panels ul li:hover {*/
+/*    color: #fff;*/
+/*    background: #666;*/
+/*}*/
+
+/*.tab-panels ul li.active {*/
+/*    color: #fff;*/
+/*    background: #666;*/
+/*}*/
+
+/*.tab-panels .panel {*/
+/*    display:none;*/
+/*    background: #c9c9c9;*/
+/*    padding: 30px;*/
+/*    border-radius: 0 0 10px 10px;*/
+/*}*/
+
+/*.tab-panels .panel.active {*/
+/*    display:block;*/
+/*}*/
+
+
+</style>
+<div>
+    <h1>Welcome to GeoHunter. </h1>
+    <h1>Here you'll find all the basic information you need to get set up and hit the virtual world of the game.</h1>
+    <br>
+    <h2>What is GeoHunter?</h2>
+    <p>
+        GeoHunter is a browser game that allows people to experience exploring, without actually going out 
+        into the world and explore. This game is a Turn-based Role Playing Game and the main goal of the game would be to acquire 
+        as much experience points as possible and level up their character. These levels would represent the 
+        player's score on a leaderboard. GeoHunter’s main feature would be using the Google Maps API to determine 
+        what game maps are available to the player. This system allows players to visit different in-game locations 
+        according to their real world position.
+
+    </p>
+</div>
+<!--<div>-->
+<!--    <div class="tab-panels">-->
+                <!--<ul class="nav nav-tabs">-->
+                    <!--basic actions in the game: movement, attack and run-->
+                <!--    <li rel="panel1" class="active">The basics</li> -->
+                    <!--rewarding of top players(not been decided yet),how the rank system works-->
+                <!--    <li rel="panel2">Rank system</li>-->
+                <!--    <li rel="panel3">Shop&Items</li>-->
+                <!--    <li rel="panel4">Acquired Quest</li>-->
+                <!--</ul>-->
+<!--                <ul class="nav nav-tabs">-->
+<!--                  <li role="presentation" class="active"><a href="#">Home</a></li>-->
+<!--                  <li role="presentation"><a href="#">Profile</a></li>-->
+<!--                  <li role="presentation"><a href="#">Messages</a></li>-->
+<!--                </ul>-->
+    
+<!--                <div id="panel1" class="panel active">-->
+<!--                    content1<br/>-->
+<!--                    content1<br/>-->
+<!--                    content1<br/>-->
+<!--                    content1<br/>-->
+<!--                    content1<br/>-->
+<!--                </div>-->
+<!--                <div id="panel2" class="panel">-->
+<!--                    content2<br/>-->
+<!--                    content2<br/>-->
+<!--                    content2<br/>-->
+<!--                    content2<br/>-->
+<!--                    content2<br/>-->
+<!--                </div>-->
+<!--                <div id="panel3" class="panel">-->
+<!--                    content3<br/>-->
+<!--                    content3<br/>-->
+<!--                    content3<br/>-->
+<!--                    content3<br/>-->
+<!--                    content3<br/>-->
+<!--                </div>-->
+<!--                <div id="panel4" class="panel">-->
+<!--                    content4<br/>-->
+<!--                    content4<br/>-->
+<!--                    content4<br/>-->
+<!--                    content4<br/>-->
+<!--                    content4<br/>-->
+<!--                </div>-->
+                
+                
+<!--    </div>-->
+<!--</div>-->
+
+
+<!--<div>-->
+  <!-- Nav tabs -->
+<!--  <ul class="nav nav-tabs" role="tablist">-->
+<!--    <li role="presentation" class="active"><a href="TheBasics" aria-controls="TheBasics" role="tab" data-toggle="tab">TheBasics</a></li>-->
+<!--    <li role="presentation"><a href="#RankSystem" aria-controls="RankSystem" role="tab" data-toggle="tab">RankSystem</a></li>-->
+<!--    <li role="presentation"><a href="#Shop" aria-controls="Shop" role="tab" data-toggle="tab">Shop</a></li>-->
+<!--    <li role="presentation"><a href="#AcquiredQuest" aria-controls="AcquiredQuest" role="tab" data-toggle="tab">AcquiredQuest</a></li>-->
+<!--  </ul>-->
+
+  <!-- Tab panes -->
+<!--  <div class="tab-content">-->
+<!--    <div role="tabpanel" class="tab-pane fade active" id="TheBasics">...</div>-->
+<!--    <div role="tabpanel" class="tab-pane fade" id="RankSystem">...</div>-->
+<!--    <div role="tabpanel" class="tab-pane fade" id="Shop">...</div>-->
+<!--    <div role="tabpanel" class="tab-pane fade" id="AcquiredQuest">...</div>-->
+<!--  </div>-->
+
+<!--</div>-->
+<div class="container">
+  <h2>Dynamic Tabs</h2>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+    <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <h3>HOME</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Menu 1</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Menu 2</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Menu 3</h3>
+      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
