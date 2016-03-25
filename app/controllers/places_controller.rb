@@ -41,8 +41,13 @@ class PlacesController < ApplicationController
     @place.user_id = session[:user_id]
     respond_to do |format|
       if @place.save
-        format.html { redirect_to @place, notice: 'Place was successfully created.' }
-        format.json { render :show, status: :created, location: @place }
+        #if (@place.latitude>=49.0587 && @place.latitude<=49.2880) && (@place.longitude>=-123.053130 && @place.longitude<=-122.710553)
+          format.html { redirect_to @place, notice: 'Place was successfully created.' }
+          format.json { render :show, status: :created, location: @place }
+        #else
+          #format.html { render :new }
+          #format.json { render json: @place.errors, status: :unprocessable_entity }
+        #end
       else
         format.html { render :new }
         format.json { render json: @place.errors, status: :unprocessable_entity }
@@ -55,8 +60,13 @@ class PlacesController < ApplicationController
   def update
     respond_to do |format|
       if @place.update(place_params)
-        format.html { redirect_to @place, notice: 'Place was successfully updated.' }
-        format.json { render :show, status: :ok, location: @place }
+        #if (@place.latitude>=49.0587 && @place.latitude<=49.2880) && (@place.longitude>=-123.053130 && @place.longitude<=-122.710553)
+          format.html { redirect_to @place, notice: 'Place was successfully updated.' }
+          format.json { render :show, status: :ok, location: @place }
+        #else
+          #format.html { render :edit }
+          #format.json { render json: @place.errors, status: :unprocessable_entity }
+        #end
       else
         format.html { render :edit }
         format.json { render json: @place.errors, status: :unprocessable_entity }
