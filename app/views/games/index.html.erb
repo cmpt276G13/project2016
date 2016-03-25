@@ -134,6 +134,16 @@
         player.deaths = 0;
         player.quests = {};
         
+        player.receiveItem = function(itemName, quantity) {
+            
+            if(typeof this.items[itemName] === "undefined") {
+                
+                this.items[itemName] = createItem(itemName, 0);
+            }
+            
+            this.items[itemName].quantity += quantity;
+        }
+        
         player.load = function() {
             
             this.level = <%= @currentUser.player.level%>;
@@ -356,17 +366,18 @@
             game.add.existing(tilemap.background2);
             game.add.existing(tilemap.spawnPoint);
             game.add.existing(tilemap.solid);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.add.existing(tilemap.chests[i]);
+            }
+            
             game.add.existing(player.sprite);
             game.add.existing(tilemap.foreground);
             
             for(var i = 0; i < tilemap.bosses.length; ++i) {
                 
                 game.add.existing(tilemap.bosses[i]);
-            }
-            
-            for(var i = 0; i < tilemap.bosses.length; ++i) {
-                
-                game.add.existing(tilemap.chests[i]);
             }
         }
         

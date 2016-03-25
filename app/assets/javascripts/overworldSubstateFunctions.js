@@ -35,6 +35,8 @@ function exploreUpdate() {
     );
         
     }, null, this);
+    
+    game.physics.arcade.collide(player.sprite, tilemap.chests, function(player1, chest){player.receiveItem(chest.item, Number(chest.quantity)) } );
 };
 
 function exploreKeystates() {
