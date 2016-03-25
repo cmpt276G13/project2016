@@ -70,19 +70,25 @@ function displayOnMap(position){
   handler.getMap().setZoom(10);
 }
 
+
 function init_eventListeners() {
   google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
     //if (window.confirm('Click OK to create new place!')) {
         window.location.href='/places/new';
       //};s
   });
-  
+
   google.maps.event.addListener(handler.getMap(), 'click', function(e) {
     if (window.confirm('Place marker here?')) {
       var click_marker = new google.maps.Marker({
         position: e.latLng, 
-        map: handler.getMap()
+        map: handler.getMap(),
       });
+      
+      var infowindow = new google.maps.InfoWindow({
+        content: '<h2>Awesome!</h2><p>Content</p>'
+      });
+      infowindow.open(handler.getMap(), click_marker);
     }
   });
 }
