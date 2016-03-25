@@ -72,11 +72,11 @@ function displayOnMap(position){
 
 
 function init_eventListeners() {
-  google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
+  //google.maps.event.addListener(handler.getMap(), 'rightclick', function() {
     //if (window.confirm('Click OK to create new place!')) {
-        window.location.href='/places/new';
+    //    window.location.href='/places/new';
       //};s
-  });
+  //});
 
   google.maps.event.addListener(handler.getMap(), 'click', function(e) {
     if (window.confirm('Place marker here?')) {
@@ -86,10 +86,12 @@ function init_eventListeners() {
       });
       
       var infowindow = new google.maps.InfoWindow({
-        content: '<h2>Awesome!</h2><p>Content</p>'
+        content: '<h3><%= link_to 'Go here', game_url %></h3>'
       });
       infowindow.open(handler.getMap(), click_marker);
     }
   });
+  
+  
 }
 </script>
