@@ -69,4 +69,15 @@ class QuestsControllerTest < ActionController::TestCase
     end
     assert_redirected_to login_url
   end
+  
+  test "should have back button in edit" do
+    log_in_as(@admin)
+    request.env["HTTP_REFERER"] = quests_url
+    get :edit, id: @quest
+    assert_select 'a[href=?]', quests_url, text: "Back"
+    
+    request.env["HTTP_REFERER"] = edit_quest_url(@quest)
+    get :edit, id: @quest
+    assert_select 'a[href=?]', edit_quest_url(@quest), text: "Back"
+  end
 end

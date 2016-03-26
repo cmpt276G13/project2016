@@ -70,7 +70,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_redirected_to quests_url
   end
   
-  test "should accept new quest with no pre-req" do
+  test "should accept new quest that has no pre-req" do
     log_in_as(@admin) 
     assert_difference "QuestAcceptance.count", 1 do
       get quests_accept_path(@quest6)
