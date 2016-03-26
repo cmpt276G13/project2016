@@ -583,6 +583,9 @@
                     tilemap.chests[tilemap.chests.length - 1].name = chestObject.properties.name;
                     tilemap.chests[tilemap.chests.length - 1].item = chestObject.properties.item;
                     tilemap.chests[tilemap.chests.length - 1].quantity = chestObject.properties.quantity;
+                    
+                    tilemap.chests[tilemap.chests.length - 1].animations.add('closed', [0], 1, false);
+                    tilemap.chests[tilemap.chests.length - 1].animations.add('open', [1], 1, false);
                 }
             },
             

@@ -31,12 +31,19 @@ function exploreUpdate() {
     game.physics.arcade.collide(player.sprite, tilemap.bosses, function(player, boss){ bossName = boss.name;
     
     this.getPlayerConfirmation("Will you fight " + bossName + "?", function(){fightingBoss = true; this.stateManager.changeState("enterBattle")},
-        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") }
-    );
+        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") });
         
     }, null, this);
     
-    game.physics.arcade.collide(player.sprite, tilemap.chests, function(player1, chest){player.receiveItem(chest.item, Number(chest.quantity)) } );
+    game.physics.arcade.collide(player.sprite, tilemap.chests, function(player1, chest){
+    
+    if(typeof chest.isOpened !== "undefined" && chest.isOpened)
+        return;
+        
+    this.getPlayerConfirmation("Will you open the chest?", function(){this.openChest(chest)},
+        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") });
+        
+    }, null, this);
 };
 
 function exploreKeystates() {
@@ -193,7 +200,7 @@ function confirmationMessageKeyDown(key) {
     //start drawing message
     var selection = this.confirmation.onKeyDown(key);
     
-    if(key == Phaser.Keyboard.ESC) {
+    if(key.keyCode == Phaser.Keyboard.ESC) {
         
         globalSfx.cancel.play();
         this.confirmation.onCancelFunc.call(this);
@@ -204,12 +211,14 @@ function confirmationMessageKeyDown(key) {
         
         globalSfx.selectOption.play();
         this.confirmation.onNoFunc.call(this);
+        return;
     }
     
     if(selection == "Yes") {
         
         globalSfx.selectOption.play();
         this.confirmation.onYesFunc.call(this);
+        return;
     }
 }
 
@@ -224,4 +233,49 @@ function confirmationMessageExit() {
         
         this.confirmation.destroy();
     }
+}
+
+function openingChestEnter() {
+    
+    //start chest opening animation
+    this.chestBeingOpened.finishedOpening = false;
+    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true}, this.chestBeingOpened);
+    this.chestBeingOpened.animations.play('open');
+    
+    //create a message to tell palyer what he received
+    this.receivedItemMessage = new textBox({y: game.scale.height - 100, width: game.scale.width, height: 100, showPressEnterMessage: true, fixedHeight: true} );
+    this.receivedItemMessage.setText("You have received " + this.chestBeingOpened.quantity + " " + this.chestBeingOpened.item + "(s)");
+    this.receivedItemMessage.hide();
+    
+    
+    player.receiveItem(this.chestBeingOpened.item, Number(this.chestBeingOpened.quantity));
+    player.save();
+}
+
+function openingChestUpdate() {
+    
+    if(this.chestBeingOpened.finishedOpening) {
+        
+        this.receivedItemMessage.show();
+    }
+}
+
+function openingChestKeyDown(key) {
+    
+    if(this.chestBeingOpened.finishedOpening && key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        globalSfx.selectOption.play();
+        this.stateManager.changeState("explore");
+    }
+}
+
+function openingChestExit() {
+    
+    if(typeof this.chestBeingOpened === "undefined" || this.receivedItemMessage === "undefined")
+        return;
+    
+    this.chestBeingOpened.isOpened = true;
+    this.receivedItemMessage.background.destroy(true);
+    delete this.receivedItemMessage;
+    delete this.chestBeingOpened;
 }

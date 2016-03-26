@@ -66,6 +66,16 @@ var overworldState = {
                 onUpdate: confirmationMessageUpdate,
                 onExit: confirmationMessageExit
             }
+        },
+        
+        {name: "openingChest",
+            functions: {
+                
+                onEnter: openingChestEnter,
+                onKeyDown: openingChestKeyDown,
+                onUpdate: openingChestUpdate,
+                onExit: openingChestExit
+            }
         }
         
     ],
@@ -79,6 +89,13 @@ var overworldState = {
         this.confirmation.onNoFunc = onNoFunc;
         this.confirmation.onCancelFunc = onCancelFunc;
         this.stateManager.changeState("confirmationMessage");
+    },
+    
+    //
+    openChest(chestToOpen) {
+        
+        this.chestBeingOpened = chestToOpen;
+        this.stateManager.changeState("openingChest");
     },
     
     create: function() {
