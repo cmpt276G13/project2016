@@ -195,6 +195,11 @@ function enterBattleEnter() {
     maskInTween.onComplete.add(function(){globalBgm.activeBgm.stop(); game.state.start("battle"); game.world.mask.destroy} );
 }
 
+function confirmationMessageEnter() {
+    
+    globalSfx.message.play();
+}
+
 function confirmationMessageKeyDown(key) {
 
     //start drawing message
@@ -240,7 +245,7 @@ function openingChestEnter() {
     //start chest opening animation
     this.chestBeingOpened.finishedOpening = false;
     globalSfx.openChest.play();
-    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true; globalSfx.useItem.play()}, this.chestBeingOpened);
+    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true; globalSfx.useItem.play(); globalSfx.message.play()}, this.chestBeingOpened);
     this.chestBeingOpened.animations.play('open');
     
     //create a message to tell palyer what he received

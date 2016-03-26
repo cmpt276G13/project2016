@@ -62,6 +62,7 @@ var overworldState = {
         {name: "confirmationMessage",
             functions: {
                 
+                onEnter: confirmationMessageEnter,
                 onKeyDown: confirmationMessageKeyDown,
                 onUpdate: confirmationMessageUpdate,
                 onExit: confirmationMessageExit
