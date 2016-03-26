@@ -47,13 +47,13 @@ function init_eventListeners() {
       
       // https://www.codementor.io/ruby-on-rails/tutorial/tutorial-how-to-debug-ajax-in-rails
       // To pass to controller:
-      var click_marker_coords = {
+      var place = { place: {
         latitude: e.latLng.lat(),
         longitude: e.latLng.lng(),
-        title: "clicked"
-      } ;
+        title: "clicked" }
+      } 
       
-      console.log(click_marker_coords) ;
+      console.log(place) ;
       
       var infowindow = new google.maps.InfoWindow({
         content: 'dblclick=save<br>rightclick=delete' + '<br>Latitude: ' + e.latLng.lat() + '<br>Longitude: ' + e.latLng.lng() 
@@ -63,9 +63,9 @@ function init_eventListeners() {
       google.maps.event.addListener(click_marker, 'dblclick', function() {
         window.location.href='/places/new';
       });
-      
+      JSON.stringify(place) ;
       // Post data via ajax to a rails controller
-      $.post('/places', click_marker_coords);
+      $.post('/places', place);
       //'<h3><= link_to 'Go here', new_place_path %></h3>'
     }
   });

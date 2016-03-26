@@ -1,0 +1,35 @@
+<!--
+  <div id="user-created" style='margin-left: 70%;'>
+    <center>
+    <h2><strong>User Geolocation</strong></h2>
+    <p><strong>Country: </strong><= @user_location[:country_name] %></p>
+    <h2><strong>User-Created Locations</strong></h2>
+    <table>
+      <thead>
+        <tr>
+         <th>Latitude</th>
+         <th>Longitude</th>
+          <th>Address</th>
+          <th>Title</th>
+          <th colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        < @places.each do |place| %>
+          <tr>
+            <td><= place.latitude %></td>
+            <td><= place.longitude %></td>
+            <td><= place.address %></td>
+            <td><= place.title %></td>
+            <td><= link_to 'Go here', places_choose_path(place[:id]), data: { confirm: 'Pick this location?' } %></td>
+            <td><= link_to 'Show', place %></td>
+            <td><= link_to 'Edit', edit_place_path(place) %></td>
+            <td><= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          </tr>
+        < end %>
+      </tbody>
+    </table>
+    <button><= link_to 'New Place', new_place_path %></button>
+    </center>
+  </div> -->

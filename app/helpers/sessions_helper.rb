@@ -61,9 +61,6 @@ module SessionsHelper
     @chosen_place = Place.new(session[:chosen_attributes])
   end
   
-  def save_coords(lt, ln)
-    @saved_coords = {'latitude' => lt, 'longitude' => ln}
-  end
   # Redirects to stored location (or to the default).
   def redirect_back_or(default)
     redirect_to(session[:forwarding_url] || default)
