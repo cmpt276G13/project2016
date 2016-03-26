@@ -51,3 +51,6 @@ http://www.freesound.org/people/crisstanza/sounds/167127/
 
 unpause
 http://www.freesound.org/people/crisstanza/sounds/167126/
+
+openChest
+http://www.freesound.org/people/TimPryor/sounds/188606/

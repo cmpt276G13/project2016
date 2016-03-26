@@ -91,7 +91,8 @@
             slashUpdate: {},
             discardItem: {},
             pause: {},
-            unpause: {}
+            unpause: {},
+            openChest: {}
         }
         
         //global bgm
@@ -482,6 +483,7 @@
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
                 game.load.audio('pause', '<%= asset_path("pause.mp3") %>');
                 game.load.audio('unpause', '<%= asset_path("unpause.mp3") %>');
+                game.load.audio('openChest', '<%= asset_path("openChest.wav") %>');
             },
             
             loadBackgroundMusic: function() {
@@ -585,7 +587,7 @@
                     tilemap.chests[tilemap.chests.length - 1].quantity = chestObject.properties.quantity;
                     
                     tilemap.chests[tilemap.chests.length - 1].animations.add('closed', [0], 1, false);
-                    tilemap.chests[tilemap.chests.length - 1].animations.add('open', [1], 1, false);
+                    tilemap.chests[tilemap.chests.length - 1].animations.add('open', [0, 1], 1, false);
                 }
             },
             

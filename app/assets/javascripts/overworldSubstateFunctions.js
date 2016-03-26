@@ -239,14 +239,14 @@ function openingChestEnter() {
     
     //start chest opening animation
     this.chestBeingOpened.finishedOpening = false;
-    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true}, this.chestBeingOpened);
+    globalSfx.openChest.play();
+    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true; globalSfx.useItem.play()}, this.chestBeingOpened);
     this.chestBeingOpened.animations.play('open');
     
     //create a message to tell palyer what he received
     this.receivedItemMessage = new textBox({y: game.scale.height - 100, width: game.scale.width, height: 100, showPressEnterMessage: true, fixedHeight: true} );
     this.receivedItemMessage.setText("You have received " + this.chestBeingOpened.quantity + " " + this.chestBeingOpened.item + "(s)");
     this.receivedItemMessage.hide();
-    
     
     player.receiveItem(this.chestBeingOpened.item, Number(this.chestBeingOpened.quantity));
     player.save();
