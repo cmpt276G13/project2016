@@ -19,24 +19,30 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
   if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(displayOnMap);
   }
- 
-  init_eventListeners();
+  var user_markers_json = <%=raw @user_markers.to_json %> ;
+  var u_markers = handler.addMarkers(user_markers_json);
+  for (var i = 0; i <  user_markers_json.length; ++i) {
+    //console.log(user_markers_json[i].lat) ;
+    google.maps.event.addListener(user_markers_json[i], 'click', function(){
+      alert("click") ;
+    });
+  }
+  place_marker();
+  //gmaps4rails_callback() ;
 });
 
 function displayOnMap(position){
-  var u_markers = handler.addMarkers(<%=raw @user_markers.to_json %>);
   var marker = handler.addMarker({
     lat: position.coords.latitude,
     lng: position.coords.longitude,
     "infowindow": "You are here!"
   });
-
+  
   handler.map.centerOn(marker);
   handler.getMap().setZoom(10);
 }
 
-
-function init_eventListeners() {
+function place_marker() {
   google.maps.event.addListener(handler.getMap(), 'click', function(e) {
     if (window.confirm('Place marker here?')) {
       var click_marker = new google.maps.Marker({
