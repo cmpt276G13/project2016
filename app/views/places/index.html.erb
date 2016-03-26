@@ -21,7 +21,6 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
   }
  
   init_eventListeners();
-
 });
 
 function displayOnMap(position){
@@ -31,7 +30,7 @@ function displayOnMap(position){
     lng: position.coords.longitude,
     "infowindow": "You are here!"
   });
-  
+
   handler.map.centerOn(marker);
   handler.getMap().setZoom(10);
 }
@@ -47,26 +46,18 @@ function init_eventListeners() {
       
       // https://www.codementor.io/ruby-on-rails/tutorial/tutorial-how-to-debug-ajax-in-rails
       // To pass to controller:
-      var place = { place: {
-        latitude: e.latLng.lat(),
-        longitude: e.latLng.lng(),
-        title: "clicked" }
+      var place = { 
+        place: {
+          latitude: e.latLng.lat(),
+          longitude: e.latLng.lng(),
+          title: "clicked" 
+        }
       } 
       
-      console.log(place) ;
-      
-      var infowindow = new google.maps.InfoWindow({
-        content: 'dblclick=save<br>rightclick=delete' + '<br>Latitude: ' + e.latLng.lat() + '<br>Longitude: ' + e.latLng.lng() 
-      });
-      infowindow.open(handler.getMap(), click_marker);
-      
-      google.maps.event.addListener(click_marker, 'dblclick', function() {
-        window.location.href='/places/new';
-      });
       JSON.stringify(place) ;
       // Post data via ajax to a rails controller
       $.post('/places', place);
-      //'<h3><= link_to 'Go here', new_place_path %></h3>'
+      location.reload();
     }
   });
   
