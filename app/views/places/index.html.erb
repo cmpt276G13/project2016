@@ -26,12 +26,12 @@
       <tbody>
         <% @places.each do |place| %>
           <tr>
-            <td><%= place.latitude %></td>
-            <td><%= place.longitude %></td>
-            <td><%= place.address %></td>
-            <td><%= link_to 'Go here', places_choose_path(place[:id]), data: { confirm: 'Pick this location?' } %></td>
+            <td><%= place.latitude %>  </td>
+            <td><%= place.longitude %>  </td>
+            <td><%= place.address %>  </td>
+            <td><%= link_to 'Go here', places_choose_path(place[:id]), data: { confirm: 'Pick this location?' } %>  </td>
             <td><%= link_to 'Show', place %></td>
-            <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %>  </td>
           </tr>
         <% end %>
       </tbody>

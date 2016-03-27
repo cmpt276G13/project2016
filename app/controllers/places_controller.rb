@@ -89,7 +89,7 @@ class PlacesController < ApplicationController
     # in sessions_helper
     session[:chosen_attributes] = @chosen.attributes
     respond_to do |format|
-      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:title]}" }
+      format.html { redirect_to game_url, notice: "Place chosen: #{@chosen[:address]}" }
       format.json { render :index, status: :ok, location: @chosen }
     end
   end

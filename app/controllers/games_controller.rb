@@ -12,9 +12,9 @@ class GamesController < ApplicationController
         if request.referer != (hub_url || game_url)
             redirect_to hub_path
         end
-        
-        @latitude = get_user_location[:latitude]
-        @longitude = get_user_location[:longitude]
+        get_chosen_location
+        @latitude = @chosen_place[:latitude]
+        @longitude = @chosen_place[:longitude]
     end
     
     def save 
