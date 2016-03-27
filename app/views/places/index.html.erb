@@ -7,6 +7,7 @@
   <p><strong>Right click</strong> on a spot to place a marker!<br>Page will reload upon marker placement.</p>
   <div id="geolocation" style='width: 100%; height: 100%; float: left'></div>
 </div>
+
 <br><br>
 
 <div id="user-created">
@@ -44,9 +45,9 @@
 <script charset="utf-8">
 var handler = Gmaps.build('Google');
 handler.buildMap({ internal: {id: 'geolocation'} }, function(){
-  if(navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(displayOnMap);
-  }
+  handler.map.centerOn([49.19426915204543, -122.7577972412109416778]);
+  handler.getMap().setZoom(10);
+
   var user_markers_json = <%=raw @user_markers.to_json %> ;
   var u_markers = handler.addMarkers(user_markers_json);
   for (var i = 0; i <  user_markers_json.length; ++i) {
@@ -57,17 +58,6 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
   }
   place_marker();
 });
-
-function displayOnMap(position){
-  var marker = handler.addMarker({
-    lat: position.coords.latitude,
-    lng: position.coords.longitude,
-    "infowindow": "You are here!"
-  });
-  
-  handler.map.centerOn(marker);
-  handler.getMap().setZoom(10);
-}
 
 function place_marker() {
   google.maps.event.addListener(handler.getMap(), 'rightclick', function(e) {
