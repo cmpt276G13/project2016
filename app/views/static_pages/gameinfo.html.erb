@@ -1,53 +1,7 @@
 <% provide(:title, 'Tutorial') %>
-/*<style>*/
-/*    body {*/
-/*    background: #fafafa;*/
-/*    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-/*    color: #333;*/
-/*}*/
 
 
-/*.tab-panels ul {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
-/*.tab-panels ul li {*/
-/*    list-style-type: none;*/
-/*    display: inline-block;*/
-/*    background: #999;*/
-/*    margin: 0;*/
-/*    padding: 3px 10px;*/
-/*    border-radius: 10px 10px 0 0;*/
-/*    color: #fff;*/
-/*    font-weight: 200;*/
-/*    cursor: pointer;*/
-/*    width: 100px;*/
-/*    height: 50px;*/
 
-/*}*/
-/*.tab-panels ul li:hover {*/
-/*    color: #fff;*/
-/*    background: #666;*/
-/*}*/
-
-/*.tab-panels ul li.active {*/
-/*    color: #fff;*/
-/*    background: #666;*/
-/*}*/
-
-/*.tab-panels .panel {*/
-/*    display:none;*/
-/*    background: #c9c9c9;*/
-/*    padding: 30px;*/
-/*    border-radius: 0 0 10px 10px;*/
-/*}*/
-
-/*.tab-panels .panel.active {*/
-/*    display:block;*/
-/*}*/
-
-
-</style>
 <div>
     <h2>What is GeoHunter?</h2>
     <p>
@@ -60,74 +14,7 @@
 
     </p>
 </div>
-<!--<div>-->
-<!--    <div class="tab-panels">-->
-                <!--<ul class="nav nav-tabs">-->
-                    <!--basic actions in the game: movement, attack and run-->
-                <!--    <li rel="panel1" class="active">The basics</li> -->
-                    <!--rewarding of top players(not been decided yet),how the rank system works-->
-                <!--    <li rel="panel2">Rank system</li>-->
-                <!--    <li rel="panel3">Shop&Items</li>-->
-                <!--    <li rel="panel4">Acquired Quest</li>-->
-                <!--</ul>-->
-<!--                <ul class="nav nav-tabs">-->
-<!--                  <li role="presentation" class="active"><a href="#">Home</a></li>-->
-<!--                  <li role="presentation"><a href="#">Profile</a></li>-->
-<!--                  <li role="presentation"><a href="#">Messages</a></li>-->
-<!--                </ul>-->
-    
-<!--                <div id="panel1" class="panel active">-->
-<!--                    content1<br/>-->
-<!--                    content1<br/>-->
-<!--                    content1<br/>-->
-<!--                    content1<br/>-->
-<!--                    content1<br/>-->
-<!--                </div>-->
-<!--                <div id="panel2" class="panel">-->
-<!--                    content2<br/>-->
-<!--                    content2<br/>-->
-<!--                    content2<br/>-->
-<!--                    content2<br/>-->
-<!--                    content2<br/>-->
-<!--                </div>-->
-<!--                <div id="panel3" class="panel">-->
-<!--                    content3<br/>-->
-<!--                    content3<br/>-->
-<!--                    content3<br/>-->
-<!--                    content3<br/>-->
-<!--                    content3<br/>-->
-<!--                </div>-->
-<!--                <div id="panel4" class="panel">-->
-<!--                    content4<br/>-->
-<!--                    content4<br/>-->
-<!--                    content4<br/>-->
-<!--                    content4<br/>-->
-<!--                    content4<br/>-->
-<!--                </div>-->
-                
-                
-<!--    </div>-->
-<!--</div>-->
 
-
-<!--<div>-->
-  <!-- Nav tabs -->
-<!--  <ul class="nav nav-tabs" role="tablist">-->
-<!--    <li role="presentation" class="active"><a href="TheBasics" aria-controls="TheBasics" role="tab" data-toggle="tab">TheBasics</a></li>-->
-<!--    <li role="presentation"><a href="#RankSystem" aria-controls="RankSystem" role="tab" data-toggle="tab">RankSystem</a></li>-->
-<!--    <li role="presentation"><a href="#Shop" aria-controls="Shop" role="tab" data-toggle="tab">Shop</a></li>-->
-<!--    <li role="presentation"><a href="#AcquiredQuest" aria-controls="AcquiredQuest" role="tab" data-toggle="tab">AcquiredQuest</a></li>-->
-<!--  </ul>-->
-
-  <!-- Tab panes -->
-<!--  <div class="tab-content">-->
-<!--    <div role="tabpanel" class="tab-pane fade active" id="TheBasics">...</div>-->
-<!--    <div role="tabpanel" class="tab-pane fade" id="RankSystem">...</div>-->
-<!--    <div role="tabpanel" class="tab-pane fade" id="Shop">...</div>-->
-<!--    <div role="tabpanel" class="tab-pane fade" id="AcquiredQuest">...</div>-->
-<!--  </div>-->
-
-<!--</div>-->
 <div class="container">
   <ul class="nav nav-tabs">
       <h1>Welcome to GeoHunter. </h1>
@@ -141,20 +28,34 @@
 
   <div class="tab-content">
     <div id="TheBasics" class="tab-pane fade in active">
-      <!--<img src="attack.gif" alt="attack gif" style="width:799px;height:591px;" >-->
-      <%= image_tag "/assets/attack.gif" , size: "500x350" %>  
+      <div class="row">
+        <img id="img1" src="/assets/Forest-Green-Wallpaper.jpg" onclick="activateGIF(this, '#anim',10000)"/> <!-- set up a static img and onclick event -->
+        <img id="anim" class="hidden" src="/assets/attack.gif" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+        <!--<div class="col-lg-7"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>-->
+        <!--<div class="col-lg-5">TheBasics are here</div>-->
+      </div>
+      
     </div>
     <div id="RankSystem" class="tab-pane fade">
+      <div class="row">
+        <div class="col-lg-6"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
+        <div class="col-lg-6">TheBasics are here</div>
+      </div>
       
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     </div>
     <div id="ShopItems" class="tab-pane fade">
+      <div class="row">
+        <div class="col-lg-7"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
+        <div class="col-lg-5">TheBasics are here</div>
+      </div>
       
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
     </div>
     <div id="AcquiredQuest" class="tab-pane fade">
+      <div class="row">
+        <div class="col-lg-6"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
+        <div class="col-lg-6">TheBasics are here</div>
+      </div>
       
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
     </div>
   </div>
 </div>
