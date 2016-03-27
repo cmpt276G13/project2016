@@ -1,5 +1,4 @@
 class Player < ActiveRecord::Base
-  after_initialize :starting_equipment
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
