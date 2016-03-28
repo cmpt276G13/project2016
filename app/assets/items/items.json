@@ -28,6 +28,62 @@
         }
     },
     
+    "Large Potion": {
+        
+        "description": "A drink that restores 150 health.",
+        "price": 60,
+        "battleDescription": "Restores 150 health",
+        "effect": "restoreStats",
+        
+        "usable": true,
+        "stats": {
+            
+            "health": 150
+        }
+    },
+    
+    "Small Mana Potion": {
+        
+        "description": "A drink that restores 15 Mana.",
+        "price": 10,
+        "battleDescription": "Restores 15 Mana",
+        "effect": "restoreStats",
+        
+        "usable": true,
+        "stats": {
+            
+            "mana": 15
+        }
+    },
+    
+    "Medium Mana Potion": {
+        
+        "description": "A drink that restores 30 Mana.",
+        "price": 30,
+        "battleDescription": "Restores 30 Mana",
+        "effect": "restoreStats",
+        
+        "usable": true,
+        "stats": {
+            
+            "mana": 30
+        }
+    },
+    
+    "Large Mana Potion": {
+        
+        "description": "A drink that restores 50 Mana.",
+        "price": 50,
+        "battleDescription": "Restores 50 Mana",
+        "effect": "restoreStats",
+        
+        "usable": true,
+        "stats": {
+            
+            "mana": 50
+        }
+    },
+    
     "Orc Skull": {
         
         "description": "A skull harvested from a dead orc.",
@@ -37,6 +93,12 @@
     "Slime Tentacle": {
         
         "description": "A tentacle torn from a dead slime.",
+        "usable": false
+    },
+    
+    "Dino Nail": {
+        
+        "description": "A nail ripped from a dead Dino.",
         "usable": false
     }
 }
