@@ -16,6 +16,7 @@
     <table>
       <thead>
         <tr>
+         <th>No.</th>
          <th>Latitude</th>
          <th>Longitude</th>
           <th>Address</th>
@@ -24,8 +25,9 @@
       </thead>
 
       <tbody>
-        <% @places.each do |place| %>
+        <% @places.each_with_index do |place, index| %>
           <tr>
+            <td><%= index+1 %></td>
             <td><%= place.latitude %>  </td>
             <td><%= place.longitude %>  </td>
             <td><%= place.address %>  </td>
