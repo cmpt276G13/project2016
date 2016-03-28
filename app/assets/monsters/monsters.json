@@ -113,5 +113,81 @@
                 "Fireball": 30
             }
         }
+    },
+    
+    "Dino": {
+        
+        "imageKey": "dino",
+        "name": "Dino",
+        "levelRange": 4,
+        "maxHealth": 6,
+        "maxMana": 1,
+        "magicPower": 1,
+        "magicDefense": 0,
+        "defense": 5,
+        "strength": 6,
+        "startingFrame": 0,
+        "animations": [
+            {"name": "stand", "frames": [0], "speed": 6},
+            {"name": "attack", "frames": [0, 1, 2, 3, 4, 5], "speed": 8},
+            {"name": "dying", "frames": [0], "speed": 6}
+        ],
+        
+        "skills": ["Slash"],
+        
+        "rewards": {
+            
+            "experience": 7,
+            "gold": 11,
+            
+            "items": {
+                
+                "Small Potion": 15,
+                "Medium Potion": 10
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Gorgon": {
+        
+        "imageKey": "gorgon",
+        "name": "Gorgon",
+        "levelRange": 5,
+        "maxHealth": 6,
+        "maxMana": 6,
+        "magicPower": 6,
+        "magicDefense": 5,
+        "defense": 1,
+        "strength": 1,
+        "startingFrame": 0,
+        "animations": [
+            {"name": "stand", "frames": [0], "speed": 6},
+            {"name": "attack", "frames": [8, 7, 6, 5, 4, 3, 2, 1, 0], "speed": 8},
+            {"name": "dying", "frames": [0], "speed": 6}
+        ],
+        
+        "skills": ["Fireball"],
+        
+        "rewards": {
+            
+            "experience": 10,
+            "gold": 8,
+            
+            "items": {
+                
+                "Small Potion": 10,
+                "Medium Potion": 10
+            },
+            
+            "skills": {
+                
+                "Fireball": 20
+            }
+        }
     }
 }

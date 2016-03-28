@@ -359,13 +359,15 @@ var battleState = {
         for(i = 0; i < monsters.length; ++i) {
             
             monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
-            monsters[i].sprite.animations.play("stand");
+            
             
             for(var j = 0; j < monsters[i].animations.length; ++j) {
                 
                 animation = monsters[i].animations[j];
                 monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
             }
+            
+            monsters[i].sprite.animations.play("stand");
         }
     },
     
