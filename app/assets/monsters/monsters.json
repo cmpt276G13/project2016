@@ -104,8 +104,11 @@
             
             "items": {
                 
-                "Small Potion": 80,
-                "Medium Potion": 100
+                "Small Potion": 100,
+                "Medium Potion": 100,
+                "Large Potion": 100,
+                "Medium Mana Potion": 100,
+                "Large Mana Potion": 100
             },
             
             "skills": {
@@ -143,7 +146,8 @@
             "items": {
                 
                 "Small Potion": 15,
-                "Medium Potion": 10
+                "Medium Potion": 10,
+                "Dino Nail": 40
             },
             
             "skills": {
@@ -180,8 +184,9 @@
             
             "items": {
                 
-                "Small Potion": 10,
-                "Medium Potion": 10
+                "Small Mana Potion": 30,
+                "Medium Mana Potion": 10,
+                "Gorgon Hair": 45
             },
             
             "skills": {

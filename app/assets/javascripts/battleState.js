@@ -521,7 +521,7 @@ var battleState = {
     
     createRewardsText: function() {
         
-        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true, showPressEnterMessage: true} );
+        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 2.75, height: game.scale.height / 5, centerToPoint: true, showPressEnterMessage: true, fixedHeight: true} );
         var expGoldText = "Gained " + this.rewards.experience + " Experience\n"
         
         if(this.rewards.gold != 0) {
@@ -529,15 +529,25 @@ var battleState = {
             expGoldText += "Gained " + this.rewards.gold + " Gold\n";
         }
         
+        this.rewardsTextbox.setText(expGoldText);
+        
         var itemsText = "";
+        var itemCount = 0;
         
         //add items
         for(item in this.rewards.items) {
             
             itemsText += "Gained " + item + "   x" + this.rewards.items[item] + "\n";
+            
+            itemCount += 1;
+            
+            if(itemCount >= 4) {
+                
+                this.rewardsTextbox.addText(itemsText);
+                itemCount = 0;
+                itemsText = "";
+            }
         }
-        
-        this.rewardsTextbox.setText(expGoldText);
         
         if(itemsText != "") {
             

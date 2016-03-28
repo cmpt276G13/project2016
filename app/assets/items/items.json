@@ -100,5 +100,11 @@
         
         "description": "A nail ripped from a dead Dino.",
         "usable": false
+    },
+    
+    "Gorgon Hair": {
+        
+        "description": "A piece of hair that fell off from a dead Gorgon.",
+        "usable": false
     }
 }
