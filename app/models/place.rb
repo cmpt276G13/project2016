@@ -1,5 +1,7 @@
 class Place < ActiveRecord::Base
     belongs_to :user
+    validates_associated :user
+    
     #validates :address, presence: true
     #validates :title, presence: true
     validates :user_id, presence: true

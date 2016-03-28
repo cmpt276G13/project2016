@@ -26,7 +26,8 @@ class PlacesController < ApplicationController
 
   # GET /places/new
   def new
-    @place = Place.new
+    #@place = Place.new
+    redirect_to '/places'
   end
 
   # GET /places/1/edit
@@ -40,13 +41,9 @@ class PlacesController < ApplicationController
     @place.user_id = session[:user_id]
     respond_to do |format|
       if @place.save
-        #if (@place.latitude>=49.0587 && @place.latitude<=49.2880) && (@place.longitude>=-123.053130 && @place.longitude<=-122.710553)
           format.html { redirect_to @place, notice: 'Place was successfully created.' }
-          format.json { render :show, status: :created, location: @place }
-        #else
-          #format.html { render :new }
-          #format.json { render json: @place.errors, status: :unprocessable_entity }
-        #end
+          format.js 
+          format.json {render :index }
       else
         format.html { render :new }
         format.json { render json: @place.errors, status: :unprocessable_entity }
@@ -57,20 +54,18 @@ class PlacesController < ApplicationController
   # PATCH/PUT /places/1
   # PATCH/PUT /places/1.json
   def update
+    redirect_to '/places'
+=begin
     respond_to do |format|
       if @place.update(place_params)
-        #if (@place.latitude>=49.0587 && @place.latitude<=49.2880) && (@place.longitude>=-123.053130 && @place.longitude<=-122.710553)
           format.html { redirect_to @place, notice: 'Place was successfully updated.' }
           format.json { render :show, status: :ok, location: @place }
-        #else
-          #format.html { render :edit }
-          #format.json { render json: @place.errors, status: :unprocessable_entity }
-        #end
       else
         format.html { render :edit }
         format.json { render json: @place.errors, status: :unprocessable_entity }
       end
     end
+=end
   end
 
   # DELETE /places/1
@@ -81,6 +76,12 @@ class PlacesController < ApplicationController
       format.html { redirect_to places_url, notice: 'Place was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def remove_all
+    Place.delete_all
+    flash[:notice] = "You have removed all markers!"
+    redirect_to '/places'
   end
   
   def choose
