@@ -60,6 +60,7 @@ class PlayerTest < ActiveSupport::TestCase
   
   test "should be accepted existing but not new quest" do
     assert @user.player.accepted?(@quest)
+    assert_equal @user.player.accepted?(@quest), @player.quest_acceptances.find_by(quest_id: @quest)
     assert_not @user.player.accepted?(@quest2)
   end
   

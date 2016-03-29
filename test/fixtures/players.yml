@@ -10,7 +10,7 @@ michael:
   level: 1
   experience: 2
   gold: 100
-  items: <%= { "Small Potion": 1 }.to_yaml.inspect %>
+  items: <%= { "Small Potion": 5, "Medium Potion": 5 }.to_yaml.inspect %>
 
 archer:
   user: archer
