@@ -1,25 +1,28 @@
 <% provide(:title, 'Hub') %>
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <h1>Hub</h1>
-<div class="col-md-8">
-<%= render partial: 'shared/player_info', locals: { player: current_player } %>
-</div>
+<center><%= link_to "Start Game!", game_path, action: 'get', class: "button button2"%></center>
 
-<div class="col-md-4">
-  <h2>Items</h2>
-  <% current_player.items.each do |item, amount| %>
-    <%= simple_format(pluralize(amount, item.to_s) + "\n") %>
-  <% end %>
+<div class="container">
+  <div class="col-md-8">
+    <%= render partial: 'shared/player_info', locals: { player: current_player } %>
+  </div>
+  
+  <div class="col-md-4">
+    <h2>Items</h2>
+    <% current_player.items.each do |item, amount| %>
+      <%= simple_format(pluralize(amount, item.to_s) + "\n") %>
+    <% end %>
+  </div>
 </div>
 
 <center>
-  <%= link_to "Start Game!", game_path, action: 'get', :class=>"button button2"%>
-<div class="container">
-  <ul class="setup_links center">
-    <li><%= link_to "World Map", places_path %></li>
-    <li><%= link_to "Quests", quests_path %></li>
-    <li><%= link_to "Shop", items_path %></li>
-  </ul>
-</div>
+  <div class="container">
+    <ul class="setup_links center">
+      <li><%= link_to "World Map", places_path %></li>
+      <li><%= link_to "Quests", quests_path %></li>
+      <li><%= link_to "Shop", items_path %></li>
+    </ul>
+  </div>
 
 </center>
