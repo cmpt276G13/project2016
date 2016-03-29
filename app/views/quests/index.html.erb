@@ -21,6 +21,7 @@
         <% if current_player.accepted?(quest) %>
         
           <% if current_player.completed?(quest) %>
+            <!-- Simulate a form to patch to player -->
             <%= form_for(current_player) do |f| %>
               <%= f.hidden_field :quest, value: quest.id %>
               <% quest.rewards[:items].each do |key, value| %>

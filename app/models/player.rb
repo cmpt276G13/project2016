@@ -1,5 +1,4 @@
 class Player < ActiveRecord::Base
-  after_initialize :starting_equipment
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
@@ -106,11 +105,10 @@ class Player < ActiveRecord::Base
     q_acceptance.save
   end
   
-  private
-    
-    def starting_equipment
-      # self.weapon
-      self.skills = [ "Slash", "Fireball" ] if self.skills.empty?
-      self.items = { "Small Potion" => 2, "Medium Potion" => 2 } if self.items.empty?
-    end
+  def initialize(attributes=nil)
+    attr_with_defaults = {skills: [ "Slash", "Fireball" ], items: 
+                          { "Small Potion" => 2, "Medium Potion" => 2 }
+    }.merge(attributes)
+    super(attr_with_defaults)
+  end
 end

@@ -51,6 +51,14 @@ class QuestTest < ActiveSupport::TestCase
   end
   
   test "gather quest should take away target items" do
-    
+    target = ""
+    amount = 0
+    @q_gather.target.each do |key, value|
+      target = key
+      amount = value
+    end
+    assert_difference '@player.items[target].to_i', -amount.to_i do
+      @q_gather.after_turned_in(@player)
+    end
   end
 end
