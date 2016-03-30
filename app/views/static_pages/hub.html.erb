@@ -4,16 +4,23 @@
 <center><%= link_to "Start Game!", game_path, action: 'get', class: "button button2"%></center>
 
 <div class="container">
-  <div class="col-md-8">
+  <div class="col-md-6">
     <%= render partial: 'shared/player_info', locals: { player: current_player } %>
   </div>
   
-  <div class="col-md-4">
+  <div class="col-md-3">
     <h2>Items</h2>
     <% current_player.items.each do |item, amount| %>
       <%= simple_format(pluralize(amount, item.to_s) + "\n") %>
     <% end %>
   </div>
+  
+  <!--<div class="col-md-3">-->
+  <!--  <h2>Skills</h2>-->
+  <!--  <% current_player.skills.each do |skill| %>-->
+  <!--    <%= simple_format(skill + "\n") %>-->
+  <!--  <% end %>-->
+  <!--</div>-->
 </div>
 
 <center>

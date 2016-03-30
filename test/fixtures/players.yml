@@ -11,6 +11,9 @@ michael:
   experience: 2
   gold: 100
   items: <%= { "Small Potion": 1 }.to_yaml.inspect %>
+  skills:
+    - Fireball
+    - Slash
 
 archer:
   user: archer

@@ -24,5 +24,9 @@ class HubTest < ActionDispatch::IntegrationTest
     @player.save
     get hub_path
     assert_select 'p', text: amount.to_s + " " + @items.keys[0].pluralize
+    
+    @player.skills.each do |skill|
+      assert_select 'p', text: skill
+    end
   end
 end
