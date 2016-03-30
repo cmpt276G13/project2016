@@ -5,7 +5,7 @@
   padding: 4em;
   font
 }
-.row{margin :10px;}
+.row{margin-top: 10px;}
 </style>
 <div id='guideheading'>
 <h1>Game Guide </h1>
@@ -37,14 +37,15 @@
     <div id="TheBasics" class="tab-pane fade in active">
       <div class="row" >
         <div class="col-lg-7"> 
-          <p>attack demonstration</p>
+        <p>attack demonstration</p>
         </div>
         <div class="col-lg-5">
           <p>Click the picture to play gifs</p>
-          <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-          <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+        <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+        <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
         </div>
       </div>
+    
       <div class="row">
         <div class="col-lg-7">
           <p>skills demonstration</p>
@@ -56,9 +57,9 @@
       </div>
         <!--<img id="img2" src="/assets/skillsimg.png" height="300" width="300" onclick="activateGIF(this, '#anim2',11000)"/> <!-- set up a static img and onclick event -->
         <!--<img id="anim2" class="hidden" src="/assets/skills.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
-      </div>
-      
-    </div>
+     
+     </div> 
+    
     <div id="RankSystem" class="tab-pane fade">
       <div class="row">
         
