@@ -1,5 +1,4 @@
 class Player < ActiveRecord::Base
-  
   belongs_to :user
   has_many :quest_acceptances
   has_many :quests, through: :quest_acceptances
@@ -17,6 +16,7 @@ class Player < ActiveRecord::Base
   # Use eg. @player.items["name"] = amount
   # Don't forget to use @player.save
   serialize :items, Hash
+  serialize :skills, Array
   
   # Run this method to update the items. You can add additional options for gold.
   # If gold is not put in, it will update items without the need for price.
@@ -103,5 +103,12 @@ class Player < ActiveRecord::Base
       q_acceptance.progress[target] = 0
     end
     q_acceptance.save
+  end
+  
+  def initialize(attributes=nil)
+    attr_with_defaults = {skills: [ "Slash", "Fireball" ], items: 
+                          { "Small Potion" => 2, "Medium Potion" => 2 }
+    }.merge(attributes)
+    super(attr_with_defaults)
   end
 end

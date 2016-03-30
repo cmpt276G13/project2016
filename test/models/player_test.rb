@@ -16,6 +16,21 @@ class PlayerTest < ActiveSupport::TestCase
     assert @user.player.valid?
   end
   
+  test "should have starting equipment" do
+    user = User.new(
+      username: "exampleuser",
+      email: "user@example.com",
+      password: "foobar",
+      password_confirmation: "foobar"
+    )
+    player = user.create_player
+    
+    assert player.skills[0] == "Slash"
+    assert player.skills[1] == "Fireball"
+    assert player.items["Small Potion"] == 2
+    assert player.items["Medium Potion"] == 2
+  end
+  
   test "experience should be a positive integer or 0" do
     @player.experience = 0
     assert @player.valid?
@@ -45,6 +60,7 @@ class PlayerTest < ActiveSupport::TestCase
   
   test "should be accepted existing but not new quest" do
     assert @user.player.accepted?(@quest)
+    assert_equal @user.player.accepted?(@quest), @player.quest_acceptances.find_by(quest_id: @quest)
     assert_not @user.player.accepted?(@quest2)
   end
   
