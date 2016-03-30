@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :players, only: [:update]
   resources :quests
   resources :items, param: :name, only: [:index, :show]
+  resources :skills, param: :name, only: [:index, :show]
   resources :places 
   get 'places/:id/choose' => 'places#choose', as: :places_choose
   get 'quests/:id/accept' => 'quests#accept', as: :quests_accept

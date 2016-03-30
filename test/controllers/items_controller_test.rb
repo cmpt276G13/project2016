@@ -5,7 +5,7 @@ class ItemsControllerTest < ActionController::TestCase
     @user = users(:michael)
     file = File.read("app/assets/items/items.json")
     @items = JSON.parse file
-    @item = JSON.parse(file)["Small Potion"]
+    @item = @items[@items.keys[0]]
   end
   
   test "should get index when logged in" do
