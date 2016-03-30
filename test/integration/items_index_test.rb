@@ -7,6 +7,7 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
     @broke_player = @admin.player
     file = File.read("app/assets/items/items.json")
     @items = JSON.parse(file)
+    @item = @items[@items.keys[0]]
   end
   
   test "index" do
