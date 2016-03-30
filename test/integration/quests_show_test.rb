@@ -18,12 +18,14 @@ class QuestsShowTest < ActionDispatch::IntegrationTest
     assert_select 'h1', text: @quest20.name
     assert_select 'td', 'Accepted', count: 1
     assert_select 'a[href=?]', quests_path, text: "Back", count: 1
+    assert_select 'a[href=?]', edit_quest_path(@quest20), text: 'Edit'
+    assert_select 'a[href=?]', quest_path(@quest20), text: 'Delete'
   end
   
   test "quest display completed" do
     log_in_as(@admin)
     get quest_path(@quest_complete)
-    assert_select 'input[type=?]', "submit", count: 1
+    assert_select 'input[type=?]', "submit", value: "Turn in", count: 1
   end
   
   test "quest display not accepted and not as admin" do

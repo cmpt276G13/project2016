@@ -20,10 +20,11 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     get quests_path
     assert_template 'quests/index'
     assert_select 'div.pagination'
-    ongoing_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false).count
-    assert_select 'td', "Accepted", count: ongoing_quests
+    ongoing_quests = @admin.player.quest_acceptances.where(completed: false, turned_in: false)
+    assert_select 'td', "Accepted", count: ongoing_quests.count
     assert_select 'a', text: @quest_turned_in.name, count: 0
-    assert_select 'input[type=?]', "submit", count: 1
+    completed_quests = @admin.player.quest_acceptances.where(completed: true, turned_in: false)
+    assert_select 'input[type=?]', "submit", value: "Turn in", count: completed_quests.count
     first_page_of_quests = Quest.paginate(page: 1)
     first_page_of_quests.each do |quest|
       unless quest == @quest3 || @quest4 || @quest_turned_in
@@ -69,7 +70,7 @@ class QuestsIndexTest < ActionDispatch::IntegrationTest
     assert_redirected_to quests_url
   end
   
-  test "should accept new quest with no pre-req" do
+  test "should accept new quest that has no pre-req" do
     log_in_as(@admin) 
     assert_difference "QuestAcceptance.count", 1 do
       get quests_accept_path(@quest6)

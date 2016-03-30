@@ -7,12 +7,13 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
     @broke_player = @admin.player
     file = File.read("app/assets/items/items.json")
     @items = JSON.parse(file)
-    @item = @items["Small Potion"]
+    @item = @items[@items.keys[0]]
   end
   
   test "index" do
     log_in_as(@admin)
     get items_path
+    assert_select 'h1', "Shop"
     assert_select 'p', "Gold: " + @admin.player.gold.to_s
     assert_template 'items/index'
     assert_select 'input[type=?]', "submit", count: @items.count
