@@ -28,11 +28,13 @@
 
   <div class="tab-content">
     <div id="TheBasics" class="tab-pane fade in active">
-      <div class="row">
-        <img id="img1" src="/assets/Forest-Green-Wallpaper.jpg" onclick="activateGIF(this, '#anim',10000)"/> <!-- set up a static img and onclick event -->
-        <img id="anim" class="hidden" src="/assets/attack.gif" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
-        <!--<div class="col-lg-7"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>-->
+      <div class="row" >
+        <img id="img1" src="/assets/attackimg.png" height="300" width="300" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+        <img id="anim1" class="hidden" src="/assets/attack.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+        <!--<div class="col-lg-7"></div>-->
         <!--<div class="col-lg-5">TheBasics are here</div>-->
+        <img id="img2" src="/assets/skillsimg.png" height="300" width="300" onclick="activateGIF(this, '#anim2',11000)"/> <!-- set up a static img and onclick event -->
+        <img id="anim2" class="hidden" src="/assets/skills.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
       </div>
       
     </div>

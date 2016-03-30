@@ -4,6 +4,7 @@ class StaticPagesController < ApplicationController
     # Users are now by default ordered by points. Check user.rb.
     @users = User.first(10)
   end
+  
   def gameinfo
   end
 end
