@@ -1,6 +1,16 @@
 <% provide(:title, 'Tutorial') %>
-
-
+<style>
+#guideheading{
+  text-align: center;
+  padding: 4em;
+  font
+}
+.row{margin :10px;}
+</style>
+<div id='guideheading'>
+<h1>Game Guide </h1>
+<h1>Here you'll find all the basic information you need to know and get ready to hit the virtual world of the game.</h1>
+</div>
 
 <div>
     <h2>What is GeoHunter?</h2>
@@ -16,8 +26,6 @@
 
 <div class="container">
   <ul class="nav nav-tabs">
-      <h1>Welcome to GeoHunter. </h1>
-    <h1>Here you'll find all the basic information you need to get set up and hit the virtual world of the game.</h1>
     <br>
     <li class="active"><a data-toggle="tab" href="#TheBasics">The Basics</a></li>
     <li><a data-toggle="tab" href="#RankSystem">RankSystem</a></li>
@@ -28,33 +36,44 @@
   <div class="tab-content">
     <div id="TheBasics" class="tab-pane fade in active">
       <div class="row" >
-        <img id="img1" src="/assets/attackimg.png" height="300" width="300" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-        <img id="anim1" class="hidden" src="/assets/attack.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
-        <!--<div class="col-lg-7"></div>-->
-        <!--<div class="col-lg-5">TheBasics are here</div>-->
-        <img id="img2" src="/assets/skillsimg.png" height="300" width="300" onclick="activateGIF(this, '#anim2',11000)"/> <!-- set up a static img and onclick event -->
-        <img id="anim2" class="hidden" src="/assets/skills.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+        <div class="col-lg-7"> 
+          <p>attack demonstration</p>
+        </div>
+        <div class="col-lg-5">
+          <p>Click the picture to play gifs</p>
+          <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+          <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-7">
+          <p>skills demonstration</p>
+        </div>
+          <div class="col-lg-5">
+            <img id="img2" src="/assets/skillsimg.png" height="300" width="350" onclick="activateGIF(this, '#anim2',11000)"/>  
+            <img id="anim2" class="hidden" src="/assets/skills.gif" height="300" width="350"/> 
+          </div>
+      </div>
+        <!--<img id="img2" src="/assets/skillsimg.png" height="300" width="300" onclick="activateGIF(this, '#anim2',11000)"/> <!-- set up a static img and onclick event -->
+        <!--<img id="anim2" class="hidden" src="/assets/skills.gif" height="300" width="300"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
       </div>
       
     </div>
     <div id="RankSystem" class="tab-pane fade">
       <div class="row">
-        <div class="col-lg-6"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
-        <div class="col-lg-6">TheBasics are here</div>
+        
       </div>
       
     </div>
     <div id="ShopItems" class="tab-pane fade">
       <div class="row">
-        <div class="col-lg-7"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
-        <div class="col-lg-5">TheBasics are here</div>
+        
       </div>
       
     </div>
     <div id="AcquiredQuest" class="tab-pane fade">
       <div class="row">
-        <div class="col-lg-6"><%= image_tag "/assets/attack.gif" , size: "500x350" %></div>
-        <div class="col-lg-6">TheBasics are here</div>
+        
       </div>
       
     </div>
