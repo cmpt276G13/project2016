@@ -17,5 +17,8 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', items_path, { text: "Items"}, "No link to items"
     assert_select 'h1', "Skills Shop"
     assert_select 'p', "Gold: " + @player.gold.to_s
+    BASIC_SKILLS = ["Basic Attack"]
+    avail_skills = @skills.keys - @player.skills - BASIC_SKILLS
+    assert_select 'input[type=?]', "submit", count: avail_skills.count
   end
 end

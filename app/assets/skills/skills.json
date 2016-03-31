@@ -72,5 +72,25 @@
         },
         
         "behaviour": "projectile"
+    },
+    
+    "Explosion": {
+        
+        "power": 50,
+        "targetsHit": 10,
+        "manaCost": 200,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Explosion!",
+        "monsterUseMessage": " uses Explosion!",
+        "description": "",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "spriteKey": "explosion",
+        "animations": {
+            
+            
+        },
+        
+        "behaviour": "stationary"
     }
 }
