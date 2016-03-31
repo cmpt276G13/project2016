@@ -1,6 +1,6 @@
-<% provide(:title, 'Shop') %>
-<h1>Shop</h1>
-<p class="center">Gold: <%= @player.gold %></p>
+<% provide(:title, 'Shop-Items') %>
+<%= render 'shared/shop_header' %>
+<h1>Item Shop</h1>
 
 <table class="users">
   <%= render 'shared/error_messages', object: @player %>
