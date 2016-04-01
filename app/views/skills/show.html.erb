@@ -1,0 +1,13 @@
+<% provide(:title, params[:name]) %>
+<%= render 'shared/shop_header' %>
+
+<h1><%= params[:name] %></h1>
+
+<div class="container">
+  <p><%= simple_format @skill["description"] %></p>
+  
+  <ul class="skill_links center">
+    <p>Price: <%= @skill["price"] %></p>
+    
+  </ul>
+</div>

@@ -8,10 +8,9 @@
   <ul class="item_links center">
     <p class="center">Price: <%= @item["price"] %> G</p>
     <%= form_for(@player) do |f| %>
-      <%= hidden_field_tag :item_name, params[:name] %>
-      <%= hidden_field_tag :gold, @item["price"] %>
+      <%= hidden_field_tag :price, @item["price"] %>
       <li><%= f.label "Amount" %></li>
-      <%= f.number_field :items, min: 1, value: 1, class: 'form-control', id: "item_amount" %>
+      <%= f.number_field "items[" + params[:name] + "]", min: 1, value: 1, class: 'form-control', id: "item_amount" %>
       <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
     <% end %>
   </ul>

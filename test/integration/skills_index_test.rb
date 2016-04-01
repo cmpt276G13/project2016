@@ -6,7 +6,7 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     @player = @user.player
     file = File.read("app/assets/skills/skills.json")
     @skills = JSON.parse file
-    @skill = @skills[@skills.keys[1]]
+    @skill = @skills[@skills.keys[3]]
   end
   
   test "skills display" do

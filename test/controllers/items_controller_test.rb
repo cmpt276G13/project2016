@@ -38,4 +38,11 @@ class ItemsControllerTest < ActionController::TestCase
     get :show, name: @items.keys[0]
     assert_select 'a[href=?]', items_url, text: "Back"
   end
+  
+  test "After buying item, back button should go to items index" do
+    log_in_as(@user)
+    request.env["HTTP_REFERER"] = item_url(@items.keys[0])
+    get :show, name: @items.keys[0]
+    assert_select 'a[href=?]', items_url, text: "Back"
+  end
 end
