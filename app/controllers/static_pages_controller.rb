@@ -5,6 +5,11 @@ class StaticPagesController < ApplicationController
     @users = User.first(10)
   end
   
+  def hub
+    #@user_location = get_user_location
+    #@latitude = @user_location[:latitude]
+    #@longitude = @user_location[:longitude]
+  end
   def gameinfo
   end
 end
