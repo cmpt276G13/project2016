@@ -7,8 +7,9 @@
   <p><%= simple_format @skill["description"] %></p>
   
   <ul class="skill_links center">
+    <p>Cost: <%= number_with_delimiter @skill["manaCost"] %> MP</p>
     <% if current_player.skills.include?(params[:name]) %>
-      <li>Already Bought</li>
+      <p>Already Learned</p>
     <% else %>
       <p>Price: <%= number_with_delimiter @skill["price"] %> G</p>
       <%= form_for(current_player) do |f| %>

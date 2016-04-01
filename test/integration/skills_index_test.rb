@@ -17,10 +17,13 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', items_path, { text: "Items"}, "No link to items"
     assert_select 'h1', "Skills Shop"
     assert_select 'p', "Gold: " + @player.gold.to_s
-    avail_skills = @skills.keys - @player.skills - @player.BASIC_SKILLS
-    assert_select 'input[type=?]', "submit", count: avail_skills.count
-    avail_skills.each do |name|
+    assert_select 'input[type=?]', "submit", count: available_skills(@skills, @player).count
+    available_skills(@skills, @player).each do |name, array|
       assert_select 'a[href=?]', skill_path(name), text: name
+      assert_select 'td', array["manaCost"] + " MP"
+      assert_select 'input[type=?]', 'hidden', value: array["price"]
+      assert_select 'input[type=?]', 'hidden', value: name
+      assert_select 'input[type=?]', 'submit', value: "Buy"
     end
   end
 end

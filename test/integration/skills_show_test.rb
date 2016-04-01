@@ -22,6 +22,7 @@ class SkillsShowTest < ActionDispatch::IntegrationTest
     assert_select 'p', @skill["description"].split("\n\n")[0]
     assert_select 'p', @skill["description"].split("\n\n")[1]
     assert_select 'p', "Price: " + number_with_delimiter(@skill["price"]) + " G"
+    assert_select 'p', "Cost: " + number_with_delimiter(@skill["manaCost"]) + " MP"
     assert_select 'input[type=?]', "hidden", value: @skill["price"]
     assert_select 'input[type=?]', "hidden", value: @skill.keys[@ID]
     assert_select 'input[type=?]', "submit", value: "Buy"
@@ -32,6 +33,6 @@ class SkillsShowTest < ActionDispatch::IntegrationTest
     get skill_path(@player.skills[0])
     assert_template 'skills/show'
     assert_select 'input', count: 0
-    assert_select 'p', "Already Bought"
+    assert_select 'p', "Already Learned"
   end
 end

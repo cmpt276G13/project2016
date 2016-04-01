@@ -7,6 +7,7 @@
   <% available_skills(@skills).each do |name, array| %>
     <tr>
       <td><%= link_to name, skill_path(name) %></td>
+      <td><%= array["manaCost"] %> MP</td>
       <!-- The split at the the newline is to make it so the first part of the description -->
       <!-- is the short description to go in the index -->
       <td><%= array["description"].split("\n")[0] %></td>
