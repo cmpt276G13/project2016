@@ -2,8 +2,7 @@ class User < ActiveRecord::Base
   attr_accessor :remember_token
   has_one :player, dependent: :destroy # Relations to players table
   has_many :places
-  geocoded_by :ip_address
-  after_validation :geocode
+
   # This makes it so that by default the users will be ordered by points.
   default_scope -> { includes(:player).order("players.level - players.deaths DESC, players.experience DESC") }
   
