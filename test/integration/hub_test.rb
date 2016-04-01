@@ -26,7 +26,7 @@ class HubTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', item_path(@items.keys[0]), text: amount.to_s + " " + @items.keys[0].pluralize
     
     @player.skills.each do |skill|
-      assert_select 'p', text: skill
+      assert_select 'a[href=?]', skill_path(skill), text: skill
     end
   end
 end

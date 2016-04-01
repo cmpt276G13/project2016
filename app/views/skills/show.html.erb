@@ -7,11 +7,15 @@
   <p><%= simple_format @skill["description"] %></p>
   
   <ul class="skill_links center">
-    <p>Price: <%= number_with_delimiter @skill["price"] %> G</p>
-    <%= form_for(current_player) do |f| %>
-      <%= hidden_field_tag :price, @skill["price"] %>
-      <%= hidden_field_tag :skill, params[:name] %>
-      <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
+    <% if current_player.skills.include?(params[:name]) %>
+      <li>Already Bought</li>
+    <% else %>
+      <p>Price: <%= number_with_delimiter @skill["price"] %> G</p>
+      <%= form_for(current_player) do |f| %>
+        <%= hidden_field_tag :price, @skill["price"] %>
+        <%= hidden_field_tag :skill, params[:name] %>
+        <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
+      <% end %>
     <% end %>
   </ul>
   

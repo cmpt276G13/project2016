@@ -21,7 +21,7 @@
     <h2>Skills</h2>
     <center>
       <% current_player.skills.each do |skill| %>
-        <%= simple_format(skill + "\n") %>
+        <%= link_to simple_format(skill + "\n"), skill_path(skill) %>
       <% end %>
     </center>
   </div>

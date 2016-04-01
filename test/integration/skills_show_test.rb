@@ -11,7 +11,7 @@ class SkillsShowTest < ActionDispatch::IntegrationTest
     @skill = @skills[@skills.keys[@ID]]
   end
   
-  test "skill display" do
+  test "unbought skill display" do
     log_in_as(@user)
     get skill_path(@skills.keys[@ID])
     assert_template 'skills/show'
@@ -25,5 +25,13 @@ class SkillsShowTest < ActionDispatch::IntegrationTest
     assert_select 'input[type=?]', "hidden", value: @skill["price"]
     assert_select 'input[type=?]', "hidden", value: @skill.keys[@ID]
     assert_select 'input[type=?]', "submit", value: "Buy"
+  end
+  
+  test "bought skill display" do
+    log_in_as(@user)
+    get skill_path(@player.skills[0])
+    assert_template 'skills/show'
+    assert_select 'input', count: 0
+    assert_select 'p', "Already Bought"
   end
 end
