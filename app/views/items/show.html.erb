@@ -6,7 +6,7 @@
   <p><%= simple_format @item["description"] %></p>
   
   <ul class="item_links center">
-    <p class="center">Price: <%= @item["price"] %> G</p>
+    <p class="center">Price: <%= number_with_delimiter @item["price"] %> G</p>
     <%= form_for(@player) do |f| %>
       <%= hidden_field_tag :price, @item["price"] %>
       <li><%= f.label "Amount" %></li>

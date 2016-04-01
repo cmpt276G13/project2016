@@ -10,7 +10,7 @@
       <!-- The split at the the newline is to make it so the first part of the description -->
       <!-- is the short description to go in the index -->
       <td><%= array["description"].split("\n")[0] %></td>
-      <td>Price: <%= array["price"] %> G</td>
+      <td>Price: <%= number_with_delimiter array["price"] %> G</td>
       <%= form_for(@player) do |f| %>
         <%= hidden_field_tag :price, array["price"] %>
         <td style="width:5em" class="center">
