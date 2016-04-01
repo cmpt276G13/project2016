@@ -28,7 +28,7 @@ class SkillsControllerTest < ActionController::TestCase
     assert_select 'a[href=?]', skills_url, text: "Back"
   end
   
-  test "After buying item, back button should go to items index" do
+  test "After buying item, back button should go to skills index" do
     log_in_as(@user)
     request.env["HTTP_REFERER"] = skill_url(@skills.keys[@ID])
     get :show, name: @skills.keys[@ID]
