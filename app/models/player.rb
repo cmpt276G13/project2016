@@ -50,6 +50,10 @@ class Player < ActiveRecord::Base
       
       self.max_health += 20
       self.health = self.max_health
+      self.max_mana += 10
+      self.mana = self.max_mana
+      self.magic_power += 5;
+      self.magic_defense += 5;
       self.strength += 5
       self.defense += 5
       self.experience -= self.experience_to_next_level
