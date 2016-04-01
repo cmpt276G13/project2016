@@ -11,31 +11,6 @@
 <!--This is where the game will go -->
 <p id="asdf"><font face="Broadway"><B>Let's start our journey!</B></font></p>
 
-<!-- NIMESH Here's the code -->
-<p>Click the button to get your coordinates.</p>
-
-<button onclick="getLocation()">Try It</button>
-
-<p id="demo"></p>
-
-<script>
-var x = document.getElementById("demo");
-
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else { 
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
-
-function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;	
-}
-</script>
-<!-- -->
-
 <p id="additional" style="font-size: 20px; color: red; text-align: center"> </p>
 
 <div class="row">

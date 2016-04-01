@@ -6,8 +6,5 @@ class StaticPagesController < ApplicationController
   end
   
   def hub
-    get_chosen_location
-    @latitude = @chosen_place[:latitude]
-    @longitude = @chosen_place[:longitude]
   end
 end
