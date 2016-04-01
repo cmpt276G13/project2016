@@ -11,7 +11,7 @@ class PlacesController < ApplicationController
     @user_markers = Gmaps4rails.build_markers(@places) do |place, marker|
       marker.lat place.latitude
       marker.lng place.longitude
-      marker.infowindow "#{place[:id]}"
+      marker.infowindow place.address
       marker.picture({
         "url" => "https://cdn3.iconfinder.com/data/icons/location-vol-2/128/location-15-32.png",
         "width" => 32,
