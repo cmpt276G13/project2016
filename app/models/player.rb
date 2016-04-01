@@ -93,14 +93,17 @@ class Player < ActiveRecord::Base
     end
   end
   
+  # Returns true if the quest is completed.
   def completed?(quest)
     accepted?(quest).completed? if accepted?(quest)
   end
   
+  # Returns true if the quest is turned in.
   def turned_in?(quest)
     accepted?(quest).turned_in? if accepted?(quest)
   end
   
+  # Initializes the progress field of the quest_acceptance.
   def init_progress(quest)
     q_acceptance = accepted?(quest)
     quest.target.each_key do |target|
@@ -109,10 +112,16 @@ class Player < ActiveRecord::Base
     q_acceptance.save
   end
   
+  # Give player with default skills and items.
   def initialize(attributes=nil)
     attr_with_defaults = {skills: [ "Slash", "Fireball" ], items: 
                           { "Small Potion" => 2, "Medium Potion" => 2 }
     }.merge(attributes)
     super(attr_with_defaults)
+  end
+  
+  # Returns the basic skills from skills.json that no player should have.
+  def BASIC_SKILLS
+    ["Basic Attack"]
   end
 end

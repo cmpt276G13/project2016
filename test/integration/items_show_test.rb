@@ -12,6 +12,8 @@ class ItemsShowTest < ActionDispatch::IntegrationTest
     log_in_as(@admin)
     get item_path(@items.keys[0])
     assert_template 'items/show'
+    assert_select 'a[href=?]', skills_path, { text: "Skills"}, "No link to skills"
+    assert_select 'a[href=?]', items_path, { text: "Items"}, "No link to items"
     assert_select 'title', full_title(@items.keys[0])
     assert_select 'h1', @items.keys[0]
     assert_select 'p', @item["description"]
