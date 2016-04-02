@@ -94,16 +94,7 @@ class PlacesController < ApplicationController
       format.json { render :index, status: :ok, location: @chosen }
     end
   end
-  
-  def choose_geolocation
-    @geo = get_user_location
-    session[:geo_attributes] = @geo.attributes
-    respond_to do |format|
-      format.html { redirect_to game_url, notice: "Place chosen: #{@geo[:country_name]}" }
-      format.json { render :index, status: :ok, location: @geo }
-    end
-  end
-  
+
   private
 
     # Use callbacks to share common setup or constraints between actions.

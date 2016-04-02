@@ -2,6 +2,7 @@ module SessionsHelper
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
+    session[:chosen_attributes] = Hash.new
   end
   
   # Remembers a user in a persistent session.
@@ -53,23 +54,18 @@ module SessionsHelper
   def log_out
     forget(current_user)
     session.delete(:user_id)
+    session.delete(:chosen_attributes)
     @current_user = nil
   end
   
-  # 
+  # Upon log-in, session[:chosen_attributes] is set to empty
+  # Upon log-out, session[:chosen_attributes] is deleted
   def get_chosen_location
-    @chosen_place = Place.new(session[:chosen_attributes])
-  end
-  
-  # Gets all user location info including
-  # :ip, :country_name, :city, :latitude, :longitude, etc.
-  def get_user_location
-    # https://github.com/jeroenj/geo_ip
-    # http://www.rubydoc.info/gems/geo_ip
-    #return: hash w/ location info
-    GeoIp.geolocation(request.remote_ip)
-    #@latitude = @user_location[:latitude]
-    #@longitude = @user_location[:longitude]
+      if session[:chosen_attributes].empty?
+        @chosen_place = Place.new({"latitude" => 49.19426915204543, "longitude" => -122.7577972412109416778})
+      else
+        @chosen_place = Place.new(session[:chosen_attributes])
+      end
   end
   
   # Redirects to stored location (or to the default).
