@@ -24,6 +24,9 @@ class GamesController < ApplicationController
        current_user.player.items = params[:items] #permit keeps removing items even though its specified, access items directly from parameters
        current_user.player.save
        
+       current_user.player.skills = params[:skills] #permit removes skills for some reason
+       current_user.player.save
+       
        #save player's quest progress
        questProgressData = params[:quest_progress]
        
@@ -39,6 +42,6 @@ class GamesController < ApplicationController
     
     def player_params
        
-       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths, :items) 
+       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths, :items, :mana, :max_mana, :magic_power, :magic_defense, :skills) 
     end
 end

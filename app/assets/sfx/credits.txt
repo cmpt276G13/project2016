@@ -36,3 +36,24 @@ http://www.freesound.org/people/sfx4animation/sounds/273663/
 
 fireballHit
 http://www.freesound.org/people/D%20W/sounds/136696/
+
+useItem
+created by ViRiX Dreamcore soundcloud.com/virix"
+
+slash
+http://www.freesound.org/people/ksdj55/sounds/322361/
+
+discardItem
+http://www.freesound.org/people/rhodesmas/sounds/322931/
+
+pause
+http://www.freesound.org/people/crisstanza/sounds/167127/
+
+unpause
+http://www.freesound.org/people/crisstanza/sounds/167126/
+
+openChest
+http://www.freesound.org/people/TimPryor/sounds/188606/
+
+message
+http://www.freesound.org/people/GabrielAraujo/sounds/242502/

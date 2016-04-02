@@ -43,40 +43,31 @@ var pauseMenuState = {
         }
     ],
     
-    createPlayerQuestDisplay: function() {
+    createDisplay: function(displayTitle) {
         
         var display = {};
-        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 450, false);
         
-        display.title = game.add.text(display.background.width / 2, 15, "Quests", actionStyle);
+        display.title = game.add.text(display.background.width / 2, 15, displayTitle, actionStyle);
         display.title.anchor.x = 0.5;
         display.background.addChild(display.title);
         
         return display;
+    },
+    
+    createPlayerQuestDisplay: function() {
+        
+        return this.createDisplay("Quests");
     },
     
     createPlayerItemDisplay: function() {
         
-        var display = {};
-        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
-        
-        display.title = game.add.text(display.background.width / 2, 15, "Items", actionStyle);
-        display.title.anchor.x = 0.5;
-        display.background.addChild(display.title);
-        
-        return display;
+        return this.createDisplay("Items");
     },
     
     createPlayerSkillDisplay: function() {
         
-        var display = {};
-        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
-        
-        display.title = game.add.text(display.background.width / 2, 15, "Skills", actionStyle);
-        display.title.anchor.x = 0.5;
-        display.background.addChild(display.title);
-        
-        return display;
+        return this.createDisplay("Skills");
     },
     
     //create a box that displays the player's stats
@@ -85,9 +76,15 @@ var pauseMenuState = {
         
         //first the background that holds the text
         var display = {};
-        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 350, false);
+        display.background = createTextboxBackground(150, 0, game.scale.width - 150, 450, false);
         
         var textOffset = 15;
+        
+        /*display.barCaptionTexts = new objectTable({x: 5, y: textOffset + 45, cellWidth: 145, cellHeight: 20, columnSpacing: 70, objectCreationFunction: attributeDisplayText} );
+        display.bars = new objectTable({x: 5, y: textOffset + 63, cellWidth: 145, cellHeight: 20, columnSpacing: 70, objectCreationFunction: HealthBar} );
+        
+        display.barCaptionTexts.addParent(display.background);
+        display.bars.addParent(display.background);*/
 
         display.playerName = game.add.text(display.background.width / 2, textOffset, player.name, statDisplayStyle);
         display.playerName.anchor.setTo(0.5, 0);
@@ -98,12 +95,12 @@ var pauseMenuState = {
         display.playerExp = new attributeDisplayText({attributeName: "EXP:", attributeValue: player.experience + "/ " + player.experienceToNextLevel, x: textOffset + display.background.width / 3 * 2, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle});
         display.playerMana = new attributeDisplayText({attributeName: "MP:", attributeValue: player.mana+"/ "+player.maxMana, x:textOffset + display.background.width / 3, y: textOffset + 45, cellWidth: 145, cellHeight: 20, textStyle: healthBarCaptionStyle} );
         
-        display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 90, cellWidth: display.background.width / 4, cellHeight: 20, columnSpacing: 80, objectCreationFunction: attributeDisplayText} );
-        display.attributeTable.addObject("left", {attributeName: "STR", attributeValue: player.strength, textStyle: statDisplayStyle} );
-        display.attributeTable.addObject("right", {attributeName: "DEF", attributeValue: player.defense, textStyle: statDisplayStyle} );
-        display.attributeTable.addObject("right", {attributeName: "MDEF", attributeValue: player.magicDefense, textStyle: statDisplayStyle} );
-        display.attributeTable.addObject("left", {attributeName: "MATK", attributeValue: player.magicPower, textStyle: statDisplayStyle} );
-        display.attributeTable.addObject("left", {attributeName: "GOLD", attributeValue: player.gold, textStyle: statDisplayStyle} );
+        display.attributeTable = new objectTable({x: display.background.width / 5, y: textOffset + 130, cellWidth: display.background.width / 3.7, cellHeight: 25, columnSpacing: 100, objectCreationFunction: attributeDisplayText} );
+        display.attributeTable.addObject("left", {attributeName: "STR:", attributeValue: player.strength, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "DEF:", attributeValue: player.defense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("right", {attributeName: "MDEF:", attributeValue: player.magicDefense, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "MATK:", attributeValue: player.magicPower, textStyle: statDisplayStyle} );
+        display.attributeTable.addObject("left", {attributeName: "GOLD:", attributeValue: player.gold, textStyle: statDisplayStyle} );
         
         display.background.addChild(display.playerName);
         display.background.addChild(display.playerLevel);
@@ -172,14 +169,14 @@ var pauseMenuState = {
     create: function() {
         
         //create a list of actions the player can select from
-        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 350}, [{text: 'items'}, {text: 'skills'}, {text: 'quests'}, {text: 'back'}]);
+        this.menuActions = new actionDisplay({x: 0, y: 0, width: 150, height: 450}, [{text: 'Items'}, {text: 'Skills'}, {text: 'Quests'}, {text: 'Back'}]);
         
         this.statDisplay = this.createPlayerStatDisplay();
         this.itemDisplay = this.createPlayerItemDisplay();
         this.skillDisplay = this.createPlayerSkillDisplay();
         this.questDisplay = this.createPlayerQuestDisplay();
         
-        this.messageBox = new textBox({x: 0, y: game.scale.height - 75, width: game.scale.width, height: 75, fixedHeight: true});
+        this.messageBox = new textBox({x: 0, y: 450, width: game.scale.width, height: game.scale.height - 450, fixedHeight: true});
         
         game.input.keyboard.addCallbacks(this, this.handleKeyDown);
         
@@ -203,6 +200,7 @@ var pauseMenuState = {
     
     shutdown: function() {
         
+        globalSfx.unpause.play();
         game.world.remove(player.sprite);
     }
 };

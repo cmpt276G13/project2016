@@ -1,5 +1,6 @@
 function menuHomeEnter() {
     
+    player.save();
     questManager.onInventoryCheck();
     this.menuActions.resetSelection();
     this.menuActions.highlightSelectedAction();
@@ -10,16 +11,37 @@ function menuHomeExit() {
     
     this.menuActions.selectionDisplay.visible = false;
     this.statDisplay.background.destroy();
+    this.hideMessage();
 };
 
 function menuHomeUpdate() {
     
     this.menuActions.highlightSelectedAction();
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Back") {
+        
+        this.showMessage("Return to game.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Items") {
+        
+        this.showMessage("View your items.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Skills") {
+        
+        this.showMessage("View your skills.");
+    }
+    
+    if(this.menuActions.getSelectedActionConfiguration().text == "Quests") {
+        
+        this.showMessage("View all the quests you are undertaking.");
+    }
 };
 
 function menuHomeKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.menuActions);
+    actionDisplayKeyDown(key, this.menuActions, true);
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
@@ -28,22 +50,24 @@ function menuHomeKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.ENTER) {
     
-        if(this.menuActions.getSelectedActionConfiguration().text == "back") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Back") {
             
             game.state.start("overworld");
+            return;
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "items") {
+        globalSfx.selectOption.play();
+        if(this.menuActions.getSelectedActionConfiguration().text == "Items") {
             
             this.stateManager.changeState("viewItems");
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "skills") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Skills") {
             
             this.stateManager.changeState("viewSkills");
         }
         
-        if(this.menuActions.getSelectedActionConfiguration().text == "quests") {
+        if(this.menuActions.getSelectedActionConfiguration().text == "Quests") {
             
             this.stateManager.changeState("viewQuests");
         }
@@ -55,7 +79,7 @@ function viewItemsEnter() {
     this.itemDisplay = this.createPlayerItemDisplay();
     
     //create an action text display to show all of the player's actions
-    this.itemActionDisplay = new actionDisplay({x: 15, y: 60, width: this.itemDisplay.background.width / 2.5, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
+    this.itemActionDisplay = new actionDisplay({x: this.itemDisplay.background.width / 4, y: 60, width: this.itemDisplay.background.width / 2, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
     
     for(var item in player.items) {
         
@@ -69,7 +93,7 @@ function viewItemsEnter() {
     this.itemDisplay.selectingUsage = false;
     
     //create options for when player clicks on an item
-    this.selectionOptionsDisplay = new actionDisplay({x: this.itemDisplay.background.width / 2.5, y: 100, width: 150, height: 110, objectCreationFunction: text}, [{text: "Use"}, {text: "Discard"}, {text: "Cancel"}]);
+    this.selectionOptionsDisplay = new actionDisplay({x: this.itemDisplay.background.width / 2.5, y: 100, width: 150, height: 110, viewableObjects: 8, objectCreationFunction: text}, [{text: "Use"}, {text: "Discard"}, {text: "Cancel"}]);
     this.selectionOptionsDisplay.addParent(this.itemDisplay.background);
     this.selectionOptionsDisplay.background.visible = false;
 }
@@ -86,7 +110,7 @@ function viewItemsUpdate() {
     
     if(this.itemActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
         
-        this.hideMessage();
+        this.showMessage("Return to main menu");
         return;
     }
     
@@ -102,22 +126,24 @@ function viewItemsKeyDown(key) {
     
     if(this.itemDisplay.selectingUsage) {
         
-        actionDisplayKeyDown(key, this.selectionOptionsDisplay);
+        actionDisplayKeyDown(key, this.selectionOptionsDisplay, true);
         
     } else {
         
-        actionDisplayKeyDown(key, this.itemActionDisplay);
+        actionDisplayKeyDown(key, this.itemActionDisplay, true);
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
+        globalSfx.cancel.play();
         if(this.itemDisplay.selectingUsage) {
             
             this.itemDisplay.selectingUsage = false;
             this.selectionOptionsDisplay.background.visible = false;
+            
             return;
         }
-    
+        
         this.stateManager.changeState("menuHome");
     }
     
@@ -125,9 +151,12 @@ function viewItemsKeyDown(key) {
         
         if(this.itemActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         } 
+        
+        globalSfx.selectOption.play();
         
         //chose an item
         this.itemDisplay.selectingUsage = true;
@@ -140,18 +169,30 @@ function viewItemsKeyDown(key) {
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Cancel") {
             
+            globalSfx.cancel.play();
             this.itemDisplay.selectingUsage = false;
             this.selectionOptionsDisplay.background.visible = false;
             return;
         }
         
-        if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use") {
+        if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use" && player.items[this.itemActionDisplay.getSelectedActionConfiguration().attributeName].usable) {
+            
+            globalSfx.useItem.play();
             
             //player uses an item
             useItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
+            
+        } else if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Use" && !player.items[this.itemActionDisplay.getSelectedActionConfiguration().attributeName].usable) {
+            
+            var message = new textBox({x: 320, y: 300, width: 300, height: 20, showPressEnterMessage: false});
+            message.setText("This item is not usable");
+            game.time.events.add(2000, function(){this.background.destroy() }, message);
+            return;
         }
         
         if(this.selectionOptionsDisplay.getSelectedActionConfiguration().text == "Discard") {
+            
+            globalSfx.discardItem.play();
             
             //player uses an item
             discardItem(player, this.itemActionDisplay.getSelectedActionConfiguration().attributeName);
@@ -169,6 +210,8 @@ function viewItemsKeyDown(key) {
             
             this.stateManager.changeState("viewItems");
         }
+        
+        player.save();
     }
 }
 
@@ -177,7 +220,7 @@ function viewSkillsEnter() {
    this.skillDisplay = this.createPlayerSkillDisplay();
     
     //create an action text display to show all of the player's actions
-    this.skillActionDisplay = new actionDisplay({x: 15, y: 60, width: this.skillDisplay.background.width / 2.5, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
+    this.skillActionDisplay = new actionDisplay({viewableObjects: 8, x: this.skillDisplay.background.width / 4, y: 60, width: this.skillDisplay.background.width / 2, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText}, []);
     
     for(var i = 0; i < player.skills.length; ++i) {
         
@@ -196,7 +239,7 @@ function viewSkillsUpdate() {
     
     if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
         
-        this.hideMessage();
+        this.showMessage("Return to main menu.");
         return;
     }
     
@@ -205,10 +248,11 @@ function viewSkillsUpdate() {
 
 function viewSkillsKeyDown(key) {
     
-    actionDisplayKeyDown(key, this.skillActionDisplay);
+    actionDisplayKeyDown(key, this.skillActionDisplay, true);
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
     
+        globalSfx.cancel.play();
         this.stateManager.changeState("menuHome");
     }
     
@@ -216,6 +260,7 @@ function viewSkillsKeyDown(key) {
         
         if(this.skillActionDisplay.getSelectedActionConfiguration().attributeName == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         } 
@@ -230,11 +275,12 @@ function viewSkillsExit() {
 
 function viewQuestsEnter() {
     
+    this.showMessage("Select a quest to view a detailed description of it.\nPress Back to return to the main menu.");
     questManager.onInventoryCheck();
     this.questDisplay = this.createPlayerQuestDisplay();
     
     //create an action text display to show all of the player's quests
-    this.questActionDisplay = new actionDisplay({x: 15, y: 60, width: this.questDisplay.background.width / 2.5, height: this.questDisplay.background.height - 100, cellHeight: 43, objectCreationFunction: questDisplaySummary}, []);
+    this.questActionDisplay = new actionDisplay({viewableObjects: 7, x: this.questDisplay.background.width / 4, y: 60, width: this.questDisplay.background.width / 2, height: this.questDisplay.background.height - 100, cellHeight: 43, objectCreationFunction: questDisplaySummary}, []);
     
     for(questID in player.quests) {
         
@@ -260,13 +306,14 @@ function viewQuestsKeyDown(key) {
     
     if(!this.detailedQuestDescriptionBackground.visible) {
         
-        actionDisplayKeyDown(key, this.questActionDisplay);
+        actionDisplayKeyDown(key, this.questActionDisplay, true);
     }
     
     if(key.keyCode == Phaser.Keyboard.ESC) {
         
+        globalSfx.cancel.play();
         if(!this.detailedQuestDescriptionBackground.visible) {
-            
+                
             this.stateManager.changeState("menuHome");
             return;
         }
@@ -279,9 +326,12 @@ function viewQuestsKeyDown(key) {
         
         if(this.questActionDisplay.getSelectedActionConfiguration().quest.name == "Back") {
             
+            globalSfx.cancel.play();
             this.stateManager.changeState("menuHome");
             return;
         }
+        
+        globalSfx.selectOption.play();
         
         //selected a quest, show a detailed description of it
         this.detailedQuestDescription = new questDisplay({quest: this.questActionDisplay.getSelectedActionConfiguration().quest, 
@@ -296,6 +346,7 @@ function viewQuestsKeyDown(key) {
         
         this.detailedQuestDescriptionBackground.visible = false;
         this.detailedQuestDescription.destroy();
+        globalSfx.cancel.play();
     }
 }
 
