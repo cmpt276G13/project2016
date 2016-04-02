@@ -1,22 +1,26 @@
 <% provide(:title, 'Tutorial') %>
 <style>
-h1{
-  text-align: left;
-  text-align: center;
-  padding: 4em;
-  font
-}
-  
-
-
 .row{margin-top: 10px;}
-
+#guideheading{
+  text-align: left;
+}
 .content-blocks{
-  background-color: rgba(148,148,148,0.6);
+  /*background-color: rgba(196,195,195,0.6);*/
+  background: #c4c3c3;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(196,195,195,0.6)), color-stop(100%, rgba(148,148,148,0.6)));
+    background: -webkit-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: -moz-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: -o-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: linear-gradient(rgba(196,195,195,0.6),rgba(148,148,148,0.6));
+    padding: 10px;
+    margin: 10px 0;
+
+  list-style-type:none;
+  
 }
 
 </style>
-<div class= "h1">
+<div>
 <h1>Game Guide </h1>
 <h1>Here you'll find all the basic information you need to know and get ready to hit the virtual world of the game.</h1>
 </div>
@@ -49,7 +53,26 @@ h1{
       <div class="row" >
         <ul class="content-blocks">
           <li class="content-blocks">
+            <h3>Choose Your Quest</h3>
+            <p>Before starting your exploration, use Google Map which is built in our system to choose a location. We have designed different themes of quest for each location!</p>
+          </li>
+          <li class="content-blocks">
             <h3>Scaling Monster</h3>
+            <p>One small reminder,monsters have levels. This says that they can come to you with more attack power and health as the journey goes on.
+            On the plus side, they’re far more vulnerable to your attacks when you are leveling up!</p>
+          </li>
+          <li class="content-blocks">
+            <h3>Gear up!</h3>
+            <p>For combat efficiency , there is a shop available for you to purchase certain items such as health potion to help you 
+            defeat stronger monsters</p>
+          </li>
+          <li class="content-blocks">
+            <h3>Find it and Fight it!</h3>
+            <p>When user selected a quest, the status display will be replaced with a list
+            all the quests the player is currently doing. Each quest display contains the 
+            quest name, and a message that says “In Progress” if the quest is in progress, 
+            and “Complete” if the quest is completed by finishing certain conditions.
+            </p>
           </li>
         </ul>
         
