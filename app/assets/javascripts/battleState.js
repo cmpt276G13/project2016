@@ -791,7 +791,7 @@ var battleState = {
         this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
         this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight, viewableObjects: 4}, [
-                                        {text: 'fight'}, {text: 'items'}, {text: 'run'}, {text: 'option4'}, {text: 'option5'}, {text: 'option6'}]);
+                                        {text: 'Fight'}, {text: 'Items'}, {text: 'Run'}]);
         this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2 - 20, 
                                         width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'attack'}, {text: 'skills'}, {text: 'cancel'}]);
                                         

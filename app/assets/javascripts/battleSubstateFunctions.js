@@ -20,17 +20,17 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "run") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Run") {
             
             this.stateManager.changeState("playerRunAway");
         }
         
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "items") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Items") {
             
             this.stateManager.changeState("selectItemAction");
         }
         
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Fight") {
             
             this.stateManager.changeState("selectFightAction");
         }

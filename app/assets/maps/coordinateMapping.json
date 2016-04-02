@@ -18,7 +18,7 @@
         "top": -123.053130,
         "right": 49.217351,
         "bottom": -122.912563,
-        "mapKey": "surrey",
+        "mapKey": "burnaby",
         "tilesetKeys": ["tileset3", "tileset4"],
         "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "surreyMonsters",
