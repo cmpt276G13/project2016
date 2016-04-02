@@ -12,6 +12,8 @@ class GamesController < ApplicationController
         if request.referer != (hub_url || game_url)
             redirect_to hub_path
         end
+        
+        # FOR USER MARKERS; USER CLICKS ON 'GO HERE' ON PLACES PAGE
         get_chosen_location
         @latitude = @chosen_place[:latitude]
         @longitude = @chosen_place[:longitude]

@@ -2,6 +2,7 @@ module SessionsHelper
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
+    session[:chosen_attributes] = Hash.new
   end
   
   # Remembers a user in a persistent session.
@@ -53,12 +54,18 @@ module SessionsHelper
   def log_out
     forget(current_user)
     session.delete(:user_id)
+    session.delete(:chosen_attributes)
     @current_user = nil
   end
   
-  # 
+  # Upon log-in, session[:chosen_attributes] is set to empty
+  # Upon log-out, session[:chosen_attributes] is deleted
   def get_chosen_location
-    @chosen_place = Place.new(session[:chosen_attributes])
+      if session[:chosen_attributes].empty?
+        @chosen_place = Place.new({"latitude" => 49.19426915204543, "longitude" => -122.7577972412109416778})
+      else
+        @chosen_place = Place.new(session[:chosen_attributes])
+      end
   end
   
   # Redirects to stored location (or to the default).

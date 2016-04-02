@@ -148,7 +148,14 @@ function place_marker() {
       $.ajax({
         type: "POST",
         url: '/places',
-        data: place
+        data: place,
+        success: function(data) {
+          $('#user-created').load('/places #user-created')
+        }
+      });
+      setTimeout(executeQuery, 500);
+      $(document).ready(function() {
+        setTimeout(executeQuery, 500);
       });
       //location.reload();
     }
