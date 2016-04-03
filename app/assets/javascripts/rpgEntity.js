@@ -24,11 +24,11 @@ function determineDamage(attack, defender) {
     return Math.max(1, damage);
 }
 
-function scaleMonsterToPlayer(monster, playerLevel) {
+function scaleMonsterToPlayer(monster, playerLevel, clampLevel) {
     
     scaleMonsterLevelToPlayer(monster, playerLevel);
     
-    if(playerLevel < 4) {
+    if(clampLevel && playerLevel < 4) {
         
         monster.level = 1;
     }
