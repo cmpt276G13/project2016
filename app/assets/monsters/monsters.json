@@ -145,7 +145,7 @@
             
             "items": {
                 
-                "Small Potion": 100,
+                "Small Mana Potion": 100,
                 "Medium Potion": 90,
                 "Large Potion": 80,
                 "Medium Mana Potion": 80,
@@ -154,7 +154,7 @@
             
             "skills": {
                 
-                "Fireball": 30
+                "Fireball": 50
             }
         }
     },
@@ -189,6 +189,44 @@
                 "Small Potion": 15,
                 "Medium Potion": 10,
                 "Dino Nail": 40
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Bat": {
+        
+        "imageKey": "bat",
+        "name": "Bat",
+        "levelRange": 2,
+        "maxHealth": 4,
+        "maxMana": 3,
+        "magicPower": 3,
+        "magicDefense": 3,
+        "defense": 3,
+        "strength": 3,
+        "startingFrame": 8,
+        "animations": [
+            {"name": "stand", "frames": [8], "speed": 6},
+            {"name": "attack", "frames": [8, 9, 10, 11, 8, 9, 10, 11], "speed": 11},
+            {"name": "dying", "frames": [8], "speed": 6}
+        ],
+        
+        "skills": ["Slash"],
+        
+        "rewards": {
+            
+            "experience": 5,
+            "gold": 6,
+            
+            "items": {
+                
+                "Small Potion": 10,
+                "Small Mana Potion": 10
             },
             
             "skills": {
