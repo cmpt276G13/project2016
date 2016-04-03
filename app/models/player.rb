@@ -18,29 +18,16 @@ class Player < ActiveRecord::Base
   serialize :items, Hash
   serialize :skills, Array
   
-  # Run this method to update the items. You can add additional options for gold.
-  # If gold is not put in, it will update items without the need for price.
-  # params should be like this {item_name:amount, item_name:amount,...}
-  def update_items!(params, options = {})
+  # This will update any seralizations in the players model. Current additional options:
+  # { price: amount }
+  def update_serializations!(params, options = {})
     price = options[:price].to_i || nil
     
-    params.each do |key, value|
-      if price # Update gold, if necessary
-        if self.gold >= price * value.to_i
-          self.gold = self.gold - price * value.to_i
-        else
-          return false
-        end
-      end
-      
-      if self.items[key]
-        self.items[key] = self.items[key].to_i + value.to_i
-      else
-        self.items[key] = value
-      end
+    if params.is_a?(Hash)
+      update_items!(params, price: price)
+    else
+      update_arrays!(params, price: price)
     end
-    
-    self.save
   end
   
   # Handles level ups.
@@ -124,4 +111,56 @@ class Player < ActiveRecord::Base
   def BASIC_SKILLS
     ["Basic Attack"]
   end
+  
+  private
+  
+    # Run this method to update the items. You can add additional options for gold.
+    # If gold is not put in, it will update items without the need for price.
+    # params should be like this {item_name:amount, item_name:amount,...}
+    def update_items!(params, options = {})
+      price = options[:price].to_i
+      
+      params.each do |key, value|
+        if price # Update gold, if necessary
+          if self.gold >= price * value.to_i
+            self.gold = self.gold - price * value.to_i
+          else
+            # Not enough gold
+            return false
+          end
+        end
+        
+        if self.items[key]
+          self.items[key] = self.items[key].to_i + value.to_i
+        else
+          self.items[key] = value
+        end
+      end
+      
+      self.save
+    end
+    
+    # Updates all arrays in the players model. Additional options:
+    # { price: amount }
+    # Currently is hard coded to update skills
+    def update_arrays!(params, options = {})
+      price = options[:price].to_i
+      
+      params.each do |value|
+        if price # Update gold, if necessary
+          if self.gold >= price
+            self.gold -= price
+          else
+            # Not enough gold
+            return false
+          end
+        end
+        
+        if self.skills.exclude? value
+          self.skills << value
+        end
+        
+        self.save
+      end
+    end
 end

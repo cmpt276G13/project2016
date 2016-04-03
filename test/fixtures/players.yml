@@ -34,7 +34,7 @@ lana:
   defense: 10
   level: 5
   experience: 20
-  gold: 0
+  gold: 5000000
   items: <%= {}.to_yaml.inspect %>
 
 malory:

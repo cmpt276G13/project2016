@@ -16,7 +16,7 @@ class PlayersController < ApplicationController
       message_success = "Purchase Successful"
       message_fail = "Not enough gold."
     end
-    if @player.update_items!(params[:player][:items], price: params[:price])
+    if @player.update_serializations!(params[:player][:skills], price: params[:price])
       flash[:success] = message_success
     else
       flash[:danger] = message_fail
