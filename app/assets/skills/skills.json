@@ -2,7 +2,7 @@
     "Basic Attack": {
         
         "power": 5,
-        "targetsHit": 5,
+        "targetsHit": 1,
         "manaCost": 0,
         "hasOwnAnimation": false,
         "playerUseMessage": "You Attack!",
@@ -21,13 +21,32 @@
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Slash!",
         "monsterUseMessage": " uses Slash!",
-        "description": "",
+        "description": "A heavy slash attack",
         "attackType": "physical",
         "userAnimation": "attack",
+        "startingFrame": 6,
+        "onUpdateSfx": "slashUpdate",
         "spriteKey": "slash",
+        
         "animations": {
             
+            "create": {
+                
+                "frames": [6],
+                "speed": 50
+            },
             
+            "update": {
+                
+                "frames": [0, 1, 2, 3, 4, 5],
+                "speed": 15
+            },
+            
+            "destroy": {
+                
+                "frames": [5],
+                "speed": 50
+            }
         },
         
         "behaviour": "stationary"
@@ -48,6 +67,7 @@
         "onCreateSfx": "fireballCreate",
         "onUpdateSfx": "fireballUpdate",
         
+        "startingFrame": 0,
         "spriteKey": "fireball",
         
         "animations": {

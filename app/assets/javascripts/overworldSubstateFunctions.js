@@ -3,7 +3,10 @@ function exploreEnter() {
     
     //currently nothing to be done
     //start music
-    globalBgm.overworld.play('', 0, globalBgm.volume, true, false);
+    globalBgm.activeBgm = globalBgm.overworld;
+    globalBgm.activeBgm.play('', 0, globalBgm.volume, true, false);
+    
+    fightingBoss = false;
 };
 
 function exploreExit() {
@@ -25,15 +28,22 @@ function exploreUpdate() {
     //this is why we need a seperate layer for background and solid, i only want my player to collide with fenses or houses
     //not the grass
     game.physics.arcade.collide(player.sprite, tilemap.solid);
+    game.physics.arcade.collide(player.sprite, tilemap.bosses, function(player, boss){ bossName = boss.name;
     
-    //now we want to see if the player randomly encountered an monster, this will send us to the battle state
-    //we only want to check if player encounterd an monster if he moved
-    //for now its commentd out since I didn't create the battle state
-    //basically if hte player travels a certain distance, we check if he should battle an monster
-    /*if(player.sprite.body.deltaABSX() >= THRESHOLD || player.sprite.body.deltaABSY() >= THRESHOLD) {
+    this.getPlayerConfirmation("Will you fight " + bossName + "?", function(){fightingBoss = true; this.stateManager.changeState("enterBattle")},
+        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") });
         
-        game.state.start('battle');
-    }*/
+    }, null, this);
+    
+    game.physics.arcade.collide(player.sprite, tilemap.chests, function(player1, chest){
+    
+    if(typeof chest.isOpened !== "undefined" && chest.isOpened)
+        return;
+        
+    this.getPlayerConfirmation("Will you open the chest?", function(){this.openChest(chest)},
+        function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") });
+        
+    }, null, this);
 };
 
 function exploreKeystates() {
@@ -116,6 +126,7 @@ function exploreKeyDown(key) {
     //if user presses the enter key we will enter the battle state
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
+        globalSfx.pause.play();
         game.state.start('pauseMenu');
     }
     
@@ -181,5 +192,95 @@ function enterBattleEnter() {
     
     var maskInTween = game.add.tween(mask.scale);
     maskInTween.to({x: 0, y: 0}, 600, null, true);
-    maskInTween.onComplete.add(function(){globalBgm.overworld.stop(); game.state.start("battle"); game.world.mask.destroy} );
+    maskInTween.onComplete.add(function(){globalBgm.activeBgm.stop(); game.state.start("battle"); game.world.mask.destroy} );
+}
+
+function confirmationMessageEnter() {
+    
+    globalSfx.message.play();
+}
+
+function confirmationMessageKeyDown(key) {
+
+    //start drawing message
+    var selection = this.confirmation.onKeyDown(key);
+    
+    if(key.keyCode == Phaser.Keyboard.ESC) {
+        
+        globalSfx.cancel.play();
+        this.confirmation.onCancelFunc.call(this);
+        return;
+    }
+    
+    if(selection == "No") {
+        
+        globalSfx.selectOption.play();
+        this.confirmation.onNoFunc.call(this);
+        return;
+    }
+    
+    if(selection == "Yes") {
+        
+        globalSfx.selectOption.play();
+        this.confirmation.onYesFunc.call(this);
+        return;
+    }
+}
+
+function confirmationMessageUpdate() {
+    
+    this.confirmation.highlightSelectedAction();
+}
+
+function confirmationMessageExit() {
+    
+    if(typeof this.confirmation !== "undefined") {
+        
+        this.confirmation.destroy();
+    }
+}
+
+function openingChestEnter() {
+    
+    //start chest opening animation
+    this.chestBeingOpened.finishedOpening = false;
+    globalSfx.openChest.play();
+    this.chestBeingOpened.animations.getAnimation('open').onComplete.addOnce(function(){this.finishedOpening = true; globalSfx.useItem.play(); globalSfx.message.play()}, this.chestBeingOpened);
+    this.chestBeingOpened.animations.play('open');
+    
+    //create a message to tell palyer what he received
+    this.receivedItemMessage = new textBox({y: game.scale.height - 100, width: game.scale.width, height: 100, showPressEnterMessage: true, fixedHeight: true} );
+    this.receivedItemMessage.setText("You have received " + this.chestBeingOpened.quantity + " " + this.chestBeingOpened.item + "(s)");
+    this.receivedItemMessage.hide();
+    
+    player.receiveItem(this.chestBeingOpened.item, Number(this.chestBeingOpened.quantity));
+    player.save();
+}
+
+function openingChestUpdate() {
+    
+    if(this.chestBeingOpened.finishedOpening) {
+        
+        this.receivedItemMessage.show();
+    }
+}
+
+function openingChestKeyDown(key) {
+    
+    if(this.chestBeingOpened.finishedOpening && key.keyCode == Phaser.Keyboard.ENTER) {
+        
+        globalSfx.selectOption.play();
+        this.stateManager.changeState("explore");
+    }
+}
+
+function openingChestExit() {
+    
+    if(typeof this.chestBeingOpened === "undefined" || this.receivedItemMessage === "undefined")
+        return;
+    
+    this.chestBeingOpened.isOpened = true;
+    this.receivedItemMessage.background.destroy(true);
+    delete this.receivedItemMessage;
+    delete this.chestBeingOpened;
 }
