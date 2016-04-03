@@ -185,6 +185,7 @@ function createAttack(user, targetPosition, attackData) {
     //load spritesheet for animation
     //set position to whereever the casted spell should start
     var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, attack.startingFrame);
+    sprite.x -= sprite.width / 2;
     sprite.y -= sprite.height;
     attack.sprite = sprite;
     
@@ -229,7 +230,7 @@ function createAttack(user, targetPosition, attackData) {
         var tween = game.add.tween(sprite);
         
         tween.to({x: targetPosition.x, y: targetPosition.y});
-        tween.onComplete.addOnce(function(){this.sprite.animations.play("destroy");}, attack);
+        tween.onComplete.addOnce(function(){this.sprite.animations.play("destroy"); this.sprite.y -= this.sprite.height / 2}, attack);
         attack.tween = tween;
         
         update.onStart.addOnce(function(){this.tween.start() }, attack);

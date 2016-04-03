@@ -64,21 +64,22 @@
         "attackType": "physical",
         "userAnimation": "attack",
         "startingFrame": 14,
-        "onUpdateSfx": "slashUpdate",
+        "onCreateSfx": "slashUpdate",
+        "onUpdateSfx": "fireslashUpdate",
         "spriteKey": "fireSlash",
         
         "animations": {
             
             "create": {
                 
-                "frames": [0],
-                "speed": 50
+                "frames": [0, 1, 2, 3, 4, 5, 6],
+                "speed": 11
             },
             
             "update": {
                 
-                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                "speed": 15
+                "frames": [7, 8, 9, 10, 11, 12],
+                "speed": 11
             },
             
             "destroy": {
