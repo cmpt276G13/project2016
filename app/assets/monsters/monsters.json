@@ -95,7 +95,7 @@
             {"name": "dying", "frames": [12, 0, 4, 8], "speed": 6}
         ],
         
-        "skills": ["Fireball", "Slash"],
+        "skills": ["Fireball", "Slash", "Fire Slash"],
         
         "rewards": {
             
@@ -136,7 +136,7 @@
             {"name": "dying", "frames": [6], "speed": 6}
         ],
         
-        "skills": ["Fireball"],
+        "skills": ["Thunderball", "Ice Burst", "Thunder"],
         
         "rewards": {
             
@@ -177,7 +177,7 @@
             {"name": "dying", "frames": [0], "speed": 6}
         ],
         
-        "skills": ["Slash"],
+        "skills": ["Slash", "Fire Slash", "Fireball"],
         
         "rewards": {
             
@@ -254,7 +254,7 @@
             {"name": "dying", "frames": [6, 9, 0, 3, 6], "speed": 6}
         ],
         
-        "skills": ["Slash"],
+        "skills": ["Thunderball", "Thunder", "Thunder Slash"],
         
         "rewards": {
             
@@ -331,7 +331,7 @@
             {"name": "dying", "frames": [0], "speed": 6}
         ],
         
-        "skills": ["Fireball"],
+        "skills": ["Fireball", "Thunderball", "Ice Burst"],
         
         "rewards": {
             
