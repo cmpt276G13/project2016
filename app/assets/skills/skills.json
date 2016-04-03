@@ -1,7 +1,7 @@
 {
     "Basic Attack": {
         
-        "power": 5,
+        "power": 6,
         "targetsHit": 1,
         "manaCost": 0,
         "hasOwnAnimation": false,
@@ -96,11 +96,11 @@
     
     "Thunder": {
         
-        "power": 16,
+        "power": 18,
         "targetsHit": 3,
-        "manaCost": 13,
+        "manaCost": 20,
         "hasOwnAnimation": true,
-        "description": "Strike an enemy with a thunderbolt to inflict magic damage.",
+        "description": "Strike up to three enemies with a thunderbolt to inflict magic damage.",
         "playerUseMessage": "You use Thunder!",
         "monsterUseMessage": " uses Thunder!",
         "attackType": "magic",
@@ -130,6 +130,48 @@
                 
                 "frames": [10, 11, 12, 13, 14, 15, 16, 17],
                 "speed": 11
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
+    "Ice Burst": {
+        
+        "power": 16,
+        "targetsHit": 1,
+        "manaCost": 8,
+        "hasOwnAnimation": true,
+        "description": "Strike an enemy with Ice to inflict magic damage.",
+        "playerUseMessage": "You use Ice Burst!",
+        "monsterUseMessage": " uses Ice Burst!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "onDestroySfx": "fireballDestroy",
+        "onCreateSfx": "fireballCreate",
+        "onUpdateSfx": "fireballUpdate",
+        
+        "startingFrame": 34,
+        "spriteKey": "iceBurst",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "speed": 14
+            },
+            
+            "update": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 18, 17, 19],
+                "speed": 14
+            },
+            
+            "destroy": {
+                
+                "frames": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+                "speed": 14
             }
         },
         
