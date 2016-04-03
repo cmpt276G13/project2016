@@ -223,9 +223,8 @@
         "monsterUseMessage": " uses Thunder!",
         "attackType": "magic",
         "userAnimation": "attack",
-        "onDestroySfx": "fireballDestroy",
-        "onCreateSfx": "fireballCreate",
-        "onUpdateSfx": "fireballUpdate",
+        "onCreateSfx": "thunderCreate",
+        "onUpdateSfx": "thunderUpdate",
         
         "startingFrame": 18,
         "spriteKey": "thunder",
