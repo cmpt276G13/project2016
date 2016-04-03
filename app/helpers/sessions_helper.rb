@@ -64,7 +64,7 @@ module SessionsHelper
       @chosen_place = Place.new(session[:chosen_attributes])
     else
       @chosen_place = GeoIp.geolocation(request.remote_ip)
-      if @chosen_place.nil?
+      if @chosen_place[:latitude].nil?
         surrey = Geocoder.search("Surrey")[0]
         @chosen_place = Place.new(latitude: surrey.latitude, longitude: surrey.longitude)
       end
