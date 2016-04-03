@@ -793,7 +793,7 @@ var battleState = {
         this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight, viewableObjects: 4}, [
                                         {text: 'Fight'}, {text: 'Items'}, {text: 'Run'}]);
         this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2 - 20, 
-                                        width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'attack'}, {text: 'skills'}, {text: 'cancel'}]);
+                                        width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'Attack'}, {text: 'Skills'}, {text: 'Cancel'}]);
                                         
         //action list when user selects items
         this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
