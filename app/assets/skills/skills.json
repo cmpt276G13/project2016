@@ -306,9 +306,9 @@
         "monsterUseMessage": " uses Thunderball!",
         "attackType": "magic",
         "userAnimation": "attack",
-        "onDestroySfx": "fireballDestroy",
-        "onCreateSfx": "fireballCreate",
-        "onUpdateSfx": "fireballUpdate",
+        "onCreateSfx": "thunderballCreate",
+        "onUpdateSfx": "thunderballUpdate",
+        "onDestroySfx": "thunderUpdate",
         
         "startingFrame": 24,
         "spriteKey": "thunderball",
