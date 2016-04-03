@@ -176,5 +176,47 @@
         },
         
         "behaviour": "stationary"
+    },
+    
+    "Thunderball": {
+        
+        "power": 12,
+        "targetsHit": 1,
+        "manaCost": 4,
+        "hasOwnAnimation": true,
+        "description": "Shoots a thunderball at the target to inflict magic damage.",
+        "playerUseMessage": "You use Thunderball!",
+        "monsterUseMessage": " uses Thunderball!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "onDestroySfx": "fireballDestroy",
+        "onCreateSfx": "fireballCreate",
+        "onUpdateSfx": "fireballUpdate",
+        
+        "startingFrame": 24,
+        "spriteKey": "thunderball",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                "speed": 12
+            },
+            
+            "update": {
+                
+                "frames": [8, 9],
+                "speed": 8
+            },
+            
+            "destroy": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                "speed": 16
+            }
+        },
+        
+        "behaviour": "projectile"
     }
 }

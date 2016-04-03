@@ -185,6 +185,7 @@ function createAttack(user, targetPosition, attackData) {
     //load spritesheet for animation
     //set position to whereever the casted spell should start
     var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, attack.startingFrame);
+    sprite.y -= sprite.height;
     attack.sprite = sprite;
     
     //setup the animation
