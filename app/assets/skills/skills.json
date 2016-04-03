@@ -92,5 +92,47 @@
         },
         
         "behaviour": "projectile"
+    },
+    
+    "Thunder": {
+        
+        "power": 16,
+        "targetsHit": 3,
+        "manaCost": 13,
+        "hasOwnAnimation": true,
+        "description": "Strike an enemy with a thunderbolt to inflict magic damage.",
+        "playerUseMessage": "You use Thunder!",
+        "monsterUseMessage": " uses Thunder!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "onDestroySfx": "fireballDestroy",
+        "onCreateSfx": "fireballCreate",
+        "onUpdateSfx": "fireballUpdate",
+        
+        "startingFrame": 18,
+        "spriteKey": "thunder",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [11, 10, 9],
+                "speed": 5
+            },
+            
+            "update": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "speed": 11
+            },
+            
+            "destroy": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 17],
+                "speed": 11
+            }
+        },
+        
+        "behaviour": "stationary"
     }
 }
