@@ -1,7 +1,7 @@
 <% provide(:title, 'Hub') %>
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <h1>Hub</h1>
-<p><%= @chosen_place[:city] %></p>
+<p class="center"><%= @chosen_place[:city] %></p>
 <center><%= link_to "Start Game!", game_path, action: 'get', class: "button button2"%></center>
 
 <div class="container">
