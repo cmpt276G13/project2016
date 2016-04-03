@@ -264,9 +264,8 @@
         "monsterUseMessage": " uses Ice Burst!",
         "attackType": "magic",
         "userAnimation": "attack",
-        "onDestroySfx": "fireballDestroy",
-        "onCreateSfx": "fireballCreate",
-        "onUpdateSfx": "fireballUpdate",
+        "onCreateSfx": "iceBurstCreate",
+        "onUpdateSfx": "iceBurstUpdate",
         
         "startingFrame": 34,
         "spriteKey": "iceBurst",
