@@ -105,10 +105,51 @@
             "items": {
                 
                 "Small Potion": 100,
-                "Medium Potion": 100,
-                "Large Potion": 100,
-                "Medium Mana Potion": 100,
-                "Large Mana Potion": 100
+                "Medium Potion": 90,
+                "Large Potion": 80,
+                "Medium Mana Potion": 80,
+                "Large Mana Potion": 70
+            },
+            
+            "skills": {
+                
+                "Fireball": 30
+            }
+        }
+    },
+    
+    "Lord Bug": {
+        
+        "imageKey": "bug",
+        "name": "Lord Bug",
+        "levelRange": 1,
+        "maxHealth": 20,
+        "maxMana": 20,
+        "magicPower": 8,
+        "magicDefense": 8,
+        "defense": 3,
+        "strength": 4,
+        "startingFrame": 6,
+        "animations": [
+            {"name": "stand", "frames": [6], "speed": 6},
+            {"name": "attack", "frames": [6, 7, 8, 6, 7, 8], "speed": 11},
+            {"name": "dying", "frames": [6], "speed": 6}
+        ],
+        
+        "skills": ["Fireball"],
+        
+        "rewards": {
+            
+            "experience": 20,
+            "gold": 20,
+            
+            "items": {
+                
+                "Small Potion": 100,
+                "Medium Potion": 90,
+                "Large Potion": 80,
+                "Medium Mana Potion": 80,
+                "Large Mana Potion": 70
             },
             
             "skills": {
