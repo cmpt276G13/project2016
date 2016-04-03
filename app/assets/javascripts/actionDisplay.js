@@ -85,6 +85,7 @@ actionDisplay.prototype.resetSelection = function() {
     
     this.idActionToHighlight = 0;
     this.idSelectedAction = 0;
+    this.actionTextList.resetScroll();
 }
 
 actionDisplay.prototype.replaceAction = function(idOfAction, attributeToUse) {
