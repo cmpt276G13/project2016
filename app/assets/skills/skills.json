@@ -52,6 +52,45 @@
         "behaviour": "stationary"
     },
     
+    "Fire Slash": {
+        
+        "power": 20,
+        "targetsHit": 2,
+        "manaCost": 15,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Fire Slash!",
+        "monsterUseMessage": " uses Fire Slash!",
+        "description": "A flaming slash attack.",
+        "attackType": "physical",
+        "userAnimation": "attack",
+        "startingFrame": 14,
+        "onUpdateSfx": "slashUpdate",
+        "spriteKey": "fireSlash",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0],
+                "speed": 50
+            },
+            
+            "update": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                "speed": 15
+            },
+            
+            "destroy": {
+                
+                "frames": [13],
+                "speed": 50
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
     "Fireball": {
         
         "power": 10,
