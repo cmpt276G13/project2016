@@ -60,11 +60,15 @@ module SessionsHelper
   # Upon log-in, session[:chosen_attributes] is set to empty
   # Upon log-out, session[:chosen_attributes] is deleted
   def get_chosen_location
-      if session[:chosen_attributes]
-        @chosen_place = Place.new(session[:chosen_attributes])
-      else
-        @chosen_place = Place.new({"latitude" => 49.19426915204543, "longitude" => -122.7577972412109416778})
+    if session[:chosen_attributes]
+      @chosen_place = Place.new(session[:chosen_attributes])
+    else
+      @chosen_place = GeoIp.geolocation(request.remote_ip)
+      if @chosen_place.nil?
+        surrey = Geocoder.search("Surrey")[0]
+        @chosen_place = Place.new(latitude: surrey.latitude, longitude: surrey.longitude)
       end
+    end
   end
   
   # Redirects to stored location (or to the default).
