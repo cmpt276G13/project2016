@@ -68,7 +68,7 @@ class PlayersControllerTest < ActionController::TestCase
     request.env["HTTP_REFERER"] = skills_url
     assert_not @rich_player.skills.include? @skills.keys[@SKILLID]
     assert_difference "@rich_player.reload.gold", -@skill[:price].to_i do
-      patch :update, { player: { skills: [@skills.keys[@SKILLID]] }, price: @skill[:price], id: @rich_user }
+      patch :update, { player: { skills: @skills.keys[@SKILLID] }, price: @skill[:price], id: @rich_user }
     end
     assert @rich_player.reload.skills.include? @skills.keys[@SKILLID]
     assert_equal 'Purchase Successful', flash[:success]
@@ -78,11 +78,11 @@ class PlayersControllerTest < ActionController::TestCase
   test "should not buy skills when poor" do
     log_in_as(@broke_user)
     request.env["HTTP_REFERER"] = skills_url
-    assert_not @broke_player.skills.include? @skills.keys[@SKILLID]
     assert_no_difference "@broke_player.reload.gold" do
-      patch :update, { player: { skills: [@skills.keys[@SKILLID]] }, price: @skill[:price], id: @broke_user }
+      patch :update, { player: { skills: @skills.keys[@SKILLID] }, price: @skill[:price], id: @broke_user }
     end
-    assert_equal 'Not enough gold.', flash[:danger]
+    assert_not flash.empty?
+    assert_equal @broke_player.skills, @broke_player.reload.skills
     assert_redirected_to skills_url
   end
 end

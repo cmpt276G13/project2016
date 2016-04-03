@@ -14,7 +14,7 @@
       <td>Price: <%= number_with_delimiter array["price"] %> G</td>
       <%= form_for(current_player) do |f| %>
         <%= hidden_field_tag :price, array["price"] %>
-        <%= hidden_field_tag :skill, [name] %>
+        <%= hidden_field_tag "player[skills]", name %>
         <td><%= f.submit "Buy", class: "btn btn-primary", id: "shop" %></td>
       <% end %>
     </tr>

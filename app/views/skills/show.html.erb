@@ -14,7 +14,7 @@
       <p>Price: <%= number_with_delimiter @skill["price"] %> G</p>
       <%= form_for(current_player) do |f| %>
         <%= hidden_field_tag :price, @skill["price"] %>
-        <%= hidden_field_tag :skill, [params[:name]] %>
+        <%= hidden_field_tag "player[skills]", params[:name] %>
         <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
       <% end %>
     <% end %>

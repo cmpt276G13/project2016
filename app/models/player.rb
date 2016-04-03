@@ -23,10 +23,14 @@ class Player < ActiveRecord::Base
   def update_serializations!(params, options = {})
     price = options[:price].to_i || nil
     
-    if params.is_a?(Hash)
-      update_items!(params, price: price)
+    if params[:items]
+      update_items!(params[:items], price: price)
     else
-      update_arrays!(params, price: price)
+      if params[:skills].is_a?(Array)
+        update_arrays!(params[:skills], price: price)
+      else
+        update_arrays!([params[:skills]], price: price)
+      end
     end
   end
   
