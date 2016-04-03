@@ -21,7 +21,7 @@
         "mapKey": "burnaby",
         "tilesetKeys": ["tileset3", "tileset4"],
         "battleBackgroundKeys": ["forestClearing"],
-        "monsterListKey": "surreyMonsters",
+        "monsterListKey": "burnabyMonsters",
         "spawnPoint": {"x": 99, "y": 98}
     },
     
