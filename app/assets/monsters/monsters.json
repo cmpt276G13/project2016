@@ -274,6 +274,45 @@
         }
     },
     
+    "Tree Spirit": {
+        
+        "imageKey": "treeSpirit",
+        "name": "Tree Spirit",
+        "levelRange": 5,
+        "maxHealth": 6,
+        "maxMana": 6,
+        "magicPower": 6,
+        "magicDefense": 5,
+        "defense": 2,
+        "strength": 4,
+        "startingFrame": 6,
+        "animations": [
+            {"name": "stand", "frames": [6], "speed": 6},
+            {"name": "attack", "frames": [6, 7, 8, 6, 7, 8], "speed": 8},
+            {"name": "dying", "frames": [6, 9, 0, 3, 6], "speed": 6}
+        ],
+        
+        "skills": ["Slash"],
+        
+        "rewards": {
+            
+            "experience": 7,
+            "gold": 7,
+            
+            "items": {
+                
+                "Small Potion": 15,
+                "Small Mana Potion": 15,
+                "Medium Potion": 10
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
     "Gorgon": {
         
         "imageKey": "gorgon",
