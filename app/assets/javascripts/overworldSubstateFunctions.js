@@ -149,7 +149,7 @@ function exploreKeyDown(key) {
     
     if(key.keyCode == Phaser.Keyboard.SPACEBAR) {
         
-        this.stateManager.changeState("enterBattle");
+        //this.stateManager.changeState("enterBattle");
     }
 };
 
