@@ -5,9 +5,10 @@ class StaticPagesControllerTest < ActionController::TestCase
     @user = users(:michael)
   end
   
-  test "should get index" do
+  test "should get index and video" do
     get :index
     assert_response :success
+    assert_select "iframe[src=?]", "https://www.youtube.com/embed/RgXeE7yqZ2E"
   end
   
   test "should get about" do
