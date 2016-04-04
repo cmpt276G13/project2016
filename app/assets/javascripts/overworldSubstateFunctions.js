@@ -50,8 +50,9 @@ function exploreUpdate() {
     
     if((player.sprite.body.deltaX() != 0 || player.sprite.body.deltaY() != 0) && this.stepTimer.seconds > 1) {
         
-        var rand = getRandomInt(1, 10);
+        var rand = getRandomInt(1, 5);
         
+     console.log(rand);
         if(rand == 1) {
             
             this.stateManager.changeState("enterBattle");
