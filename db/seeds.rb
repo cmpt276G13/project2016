@@ -80,7 +80,7 @@ q_dragon1 = KillQuest.new(name: "Kill a Dragon!",
               level_req: 5)
 q_dragon1.rewards[:items] = { "Small Potion": 2, "Medium Potion": 1, "Medium Mana Potion": 2 }
 q_dragon1.rewards[:stats] = { experience: 200, gold: 600 }
-q_dragon1.target[:Dragon] = 5
+q_dragon1.target[:Dragon] = 1
 q_dragon1.quests << q_orc2
 q_dragon1.quests << q_gorgon1
 q_dragon1.quests << q_slime1
