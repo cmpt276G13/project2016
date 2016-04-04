@@ -8,7 +8,7 @@
   
   <ul class="skill_links center">
     <p>Cost: <%= number_with_delimiter @skill["manaCost"] %> MP</p>
-    <% if @skill[:price] && current_player.skills.exclude?(params[:name]) %>
+    <% if @skill["price"] && current_player.skills.exclude?(params[:name]) %>
       <p>Price: <%= number_with_delimiter @skill["price"] %> G</p>
       <%= form_for(current_player) do |f| %>
         <%= hidden_field_tag :price, @skill["price"] %>

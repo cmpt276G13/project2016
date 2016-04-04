@@ -25,7 +25,7 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'input[type=?]', "submit", count: @skills.count
     @skills.each do |name, array|
       assert_select 'a[href=?]', skill_path(name), text: name
-      assert_select 'td', array["manaCost"] + " MP"
+      assert_select 'td', array["manaCost"].to_s + " MP"
       assert_select 'input[type=?]', 'hidden', value: array["price"]
       assert_select 'input[type=?]', 'hidden', value: name
       assert_select 'input[type=?]', 'submit', value: "Buy"
