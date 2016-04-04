@@ -255,8 +255,21 @@ scrollableObjectList.prototype = Object.create(objectList.prototype);
 //additional configuration, along with its parent's configurations
 //viewableObjects: maximum number of objects that will be drawn at once
 function scrollableObjectList(configuration) {
+
+    this.configuration = this.mergeConfigWithDefault(configuration);
+    
+    if(this.configuration.displayScrollBar) {
+        
+        configuration.cellWidth -= 4;
+    }
     
     objectList.call(this, configuration);
+    
+    if(this.configuration.displayScrollBar) {
+        
+        //create a scroll bar
+        this.createScrollBar();
+    }
     
     //create a mask for the view region, so all obejcts outside this region will not be drawn
     this.createMask();
@@ -273,7 +286,8 @@ scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) 
         cellWidth: 0,
         cellHeight: 0,
         viewableObjects: 1,
-        objectCreationFunction: {}
+        objectCreationFunction: {},
+        displayScrollBar: false
     };
     
     mergeObjects(defaultConfig, configuration);
@@ -286,6 +300,12 @@ scrollableObjectList.prototype.createMask = function() {
     this.mask = game.add.graphics(0, 0);
     
     var maskWidth = this.configuration.cellWidth;
+    
+    if(this.configuration.displayScrollBar) {
+        
+        maskWidth += 3;
+    }
+    
     this.maskHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
     
     this.mask.beginFill(0xffffff, 1);
@@ -299,6 +319,40 @@ scrollableObjectList.prototype.clear = function() {
     
     objectList.prototype.clear.call(this);
     this.resetScroll();
+}
+
+scrollableObjectList.prototype.addObject = function(objectConfig) {
+    
+    objectList.prototype.addObject.call(this, objectConfig);
+    
+    if(this.configuration.displayScrollBar) {
+        
+        this.createScrollBar();
+    }
+}
+
+scrollableObjectList.prototype.createScrollBar = function() {
+    
+    if(typeof this.scrollBar !== "undefined") {
+        
+        this.scrollBar.destroy();
+    }
+    
+    this.scrollBar = game.add.graphics(0, 0);
+    
+    this.scrollBar.beginFill(0x00ff00, 1);
+    var barHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
+    
+    if(this.objects.length >= this.configuration.viewableObjects) {
+        
+        barHeight -= (this.objects.length - this.configuration.viewableObjects) * this.configuration.cellHeight;
+    }
+    
+    this.scrollBar.drawRect(this.configuration.cellWidth, 0, 3, barHeight);
+    this.parentGraphics.addChild(this.scrollBar);
+    this.scrollBar.endFill();
+    
+    
 }
 
 scrollableObjectList.prototype.canScrollDown = function() {
@@ -322,13 +376,18 @@ scrollableObjectList.prototype.scrollDown = function() {
     
     //not enough objects to scroll
     if(!this.canScrollDown()) {
-        
+    
         return;
     }
     
     //move all the text up so it looks like it scrolled down
     //scroll down by 1 text
     this.parentGraphics.y -= this.configuration.cellHeight;
+    
+    if(this.configuration.displayScrollBar) {
+        
+        this.scrollBar.y += this.configuration.cellHeight * 2;
+    }
     
     //moving parent moves the mask up as well, so move the mask down
     this.mask.y += this.configuration.cellHeight;
@@ -345,6 +404,11 @@ scrollableObjectList.prototype.scrollUp = function() {
     
     this.parentGraphics.y += this.configuration.cellHeight;
     this.mask.y -= this.configuration.cellHeight;
+    
+    if(this.configuration.displayScrollBar) {
+        
+        this.scrollBar.y -= this.configuration.cellHeight * 2;
+    }
 }
 
 //start displaying from the first object
@@ -352,6 +416,11 @@ scrollableObjectList.prototype.resetScroll = function() {
     
     this.parentGraphics.y = this.configuration.y;
     this.mask.y = 0;
+    
+    if(this.configuration.displayScrollBar) {
+        
+        this.scrollBar.y = 0;
+    }
 }
 
 scrollableObjectList.prototype.destroy = function() {
