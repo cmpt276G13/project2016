@@ -412,8 +412,6 @@ function playerUseItemEnter() {
     
     this.finishedItemUseAnimation = false;
     
-    document.getElementById("additional").innerHTML = "asdf";
-    
     //apply item effect to player and show some kind of animation and message
     var nameOfItemUsed = this.itemsDisplay.getSelectedActionConfiguration().attributeName;
     this.showMessage("You use " + nameOfItemUsed);
