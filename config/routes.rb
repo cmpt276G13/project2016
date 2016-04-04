@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :players, only: [:update]
   resources :quests
   resources :items, param: :name, only: [:index, :show]
+  resources :skills, param: :name, only: [:index, :show]
   resources :places do
     collection do
       get 'remove_all'

@@ -1,6 +1,7 @@
 <% provide(:title, 'Hub') %>
 <!-- Using gmaps4rails for the map, geo_ip for user_location -->
 <h1>Hub</h1>
+<p class="center"><%= @chosen_place[:city] %></p>
 <center><%= link_to "Start Game!", game_path, action: 'get', class: "button button2"%></center>
 
 <div class="container">
@@ -10,17 +11,21 @@
   
   <div class="col-md-3">
     <h2>Items</h2>
-    <% current_player.items.each do |item, amount| %>
-      <%= simple_format(pluralize(amount, item.to_s) + "\n") %>
-    <% end %>
+    <center>
+      <% current_player.items.each do |item, amount| %>
+        <%= link_to simple_format(pluralize(amount, item.to_s) + "\n"), item_path(item) %>
+      <% end %>
+    </center>
   </div>
   
-  <!--<div class="col-md-3">-->
-  <!--  <h2>Skills</h2>-->
-  <!--  <% current_player.skills.each do |skill| %>-->
-  <!--    <%= simple_format(skill + "\n") %>-->
-  <!--  <% end %>-->
-  <!--</div>-->
+  <div class="col-md-3">
+    <h2>Skills</h2>
+    <center>
+      <% current_player.skills.each do |skill| %>
+        <%= link_to simple_format(skill + "\n"), skill_path(skill) %>
+      <% end %>
+    </center>
+  </div>
 </div>
 
 <center>

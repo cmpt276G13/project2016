@@ -11,6 +11,14 @@ class ItemsController < ApplicationController
   def show
     @item = JSON.parse(self.file)[params[:name]]
     @player = current_user.player
+    
+    # Allow the back button to redirect back after buying items.
+    if request.env["HTTP_REFERER"] == item_url(params[:name])
+      request.env["HTTP_REFERER"] = (session[:forwarding_url] || items_url)
+      session.delete(:forwarding_url)
+    else
+      session[:forwarding_url] = request.env["HTTP_REFERER"]
+    end
   end
   
   private
