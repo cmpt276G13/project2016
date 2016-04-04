@@ -351,6 +351,8 @@ scrollableObjectList.prototype.createScrollBar = function() {
     this.scrollBar.drawRect(this.configuration.cellWidth, 0, 3, barHeight);
     this.parentGraphics.addChild(this.scrollBar);
     this.scrollBar.endFill();
+    
+    
 }
 
 scrollableObjectList.prototype.canScrollDown = function() {

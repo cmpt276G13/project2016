@@ -797,10 +797,10 @@ var battleState = {
                                         
         //action list when user selects items
         this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
-                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
         
         this.skillsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
-                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
         
         //add all of the player's skills to the display
         for(var i = 0; i < player.skills.length; ++i) {
