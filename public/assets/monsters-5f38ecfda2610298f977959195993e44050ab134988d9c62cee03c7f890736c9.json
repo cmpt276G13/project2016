@@ -1,0 +1,354 @@
+{
+    "Orc": {
+        
+        "imageKey": "orc",
+        "name": "Orc",
+        "levelRange": 4,
+        "maxHealth": 7,
+        "maxMana": 7,
+        "magicPower": 3,
+        "magicDefense": 2,
+        "defense": 6,
+        "strength": 7,
+        "startingFrame": 39,
+        "animations": [
+            {"name": "stand", "frames": [39], "speed": 6},
+            {"name": "attack", "frames": [195, 196, 197, 198, 199, 200], "speed": 6},
+            {"name": "dying", "frames": [0, 13, 26, 39, 52, 65, 0], "speed": 6}
+        ],
+        
+        "skills": ["Fireball", "Slash"],
+        
+        "rewards": {
+            
+            "experience": 5,
+            "gold": 10,
+            
+            "items": {
+                
+                "Small Potion": 20,
+                "Medium Potion": 5,
+                "Orc Skull": 50
+            },
+            
+            "skills": {
+                
+                "Fireball": 10
+            }
+        }
+    },
+    
+    "Slime": {
+        
+        "imageKey": "slime",
+        "name": "Slime",
+        "levelRange": 3,
+        "maxHealth": 6,
+        "maxMana": 9,
+        "magicPower": 7,
+        "magicDefense": 5,
+        "defense": 4,
+        "strength": 3,
+        "startingFrame": 3,
+        "animations": [
+            {"name": "stand", "frames": [3], "speed": 6},
+            {"name": "attack", "frames": [3, 0, 1, 1, 2, 3], "speed": 6},
+            {"name": "dying", "frames": [3, 0, 1, 1], "speed": 6}
+        ],
+        
+        "skills": ["Fireball"],
+        
+        "rewards": {
+            
+            "experience": 4,
+            "gold": 5,
+            
+            "items": {
+                
+                "Small Potion": 8,
+                "Medium Potion": 1,
+                "Slime Tentacle": 100
+            },
+            
+            "skills": {
+                
+                "Fireball": 30
+            }
+        }
+    },
+    
+    "Dragon": {
+        
+        "imageKey": "dragon",
+        "name": "Dragon",
+        "levelRange": 1,
+        "maxHealth": 22,
+        "maxMana": 19,
+        "magicPower": 6,
+        "magicDefense": 6,
+        "defense": 5,
+        "strength": 8,
+        "startingFrame": 8,
+        "animations": [
+            {"name": "stand", "frames": [8], "speed": 6},
+            {"name": "attack", "frames": [8, 9, 10, 11, 8, 9, 10, 11], "speed": 11},
+            {"name": "dying", "frames": [12, 0, 4, 8], "speed": 6}
+        ],
+        
+        "skills": ["Fireball", "Slash", "Fire Slash"],
+        
+        "rewards": {
+            
+            "experience": 20,
+            "gold": 20,
+            
+            "items": {
+                
+                "Small Potion": 100,
+                "Medium Potion": 90,
+                "Large Potion": 80,
+                "Medium Mana Potion": 80,
+                "Large Mana Potion": 70
+            },
+            
+            "skills": {
+                
+                "Fireball": 30
+            }
+        }
+    },
+    
+    "Lord Bug": {
+        
+        "imageKey": "bug",
+        "name": "Lord Bug",
+        "levelRange": 1,
+        "maxHealth": 22,
+        "maxMana": 22,
+        "magicPower": 10,
+        "magicDefense": 10,
+        "defense": 5,
+        "strength": 6,
+        "startingFrame": 6,
+        "animations": [
+            {"name": "stand", "frames": [6], "speed": 6},
+            {"name": "attack", "frames": [6, 7, 8, 6, 7, 8], "speed": 11},
+            {"name": "dying", "frames": [6], "speed": 6}
+        ],
+        
+        "skills": ["Thunderball", "Ice Burst", "Thunder"],
+        
+        "rewards": {
+            
+            "experience": 20,
+            "gold": 20,
+            
+            "items": {
+                
+                "Small Mana Potion": 100,
+                "Medium Potion": 90,
+                "Large Potion": 80,
+                "Medium Mana Potion": 80,
+                "Large Mana Potion": 70
+            },
+            
+            "skills": {
+                
+                "Fireball": 50
+            }
+        }
+    },
+    
+    "Dino": {
+        
+        "imageKey": "dino",
+        "name": "Dino",
+        "levelRange": 4,
+        "maxHealth": 8,
+        "maxMana": 3,
+        "magicPower": 3,
+        "magicDefense": 2,
+        "defense": 7,
+        "strength": 7,
+        "startingFrame": 0,
+        "animations": [
+            {"name": "stand", "frames": [0], "speed": 6},
+            {"name": "attack", "frames": [0, 1, 2, 3, 4, 5], "speed": 8},
+            {"name": "dying", "frames": [0], "speed": 6}
+        ],
+        
+        "skills": ["Slash", "Fire Slash", "Fireball"],
+        
+        "rewards": {
+            
+            "experience": 7,
+            "gold": 11,
+            
+            "items": {
+                
+                "Small Potion": 15,
+                "Medium Potion": 10,
+                "Dino Nail": 40
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Bat": {
+        
+        "imageKey": "bat",
+        "name": "Bat",
+        "levelRange": 2,
+        "maxHealth": 5,
+        "maxMana": 5,
+        "magicPower": 5,
+        "magicDefense": 5,
+        "defense": 5,
+        "strength": 5,
+        "startingFrame": 8,
+        "animations": [
+            {"name": "stand", "frames": [8], "speed": 6},
+            {"name": "attack", "frames": [8, 9, 10, 11, 8, 9, 10, 11], "speed": 11},
+            {"name": "dying", "frames": [8, 12, 0, 4], "speed": 6}
+        ],
+        
+        "skills": ["Slash"],
+        
+        "rewards": {
+            
+            "experience": 5,
+            "gold": 6,
+            
+            "items": {
+                
+                "Small Potion": 10,
+                "Small Mana Potion": 10
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Harpy": {
+        
+        "imageKey": "harpy",
+        "name": "Harpy",
+        "levelRange": 2,
+        "maxHealth": 5,
+        "maxMana": 5,
+        "magicPower": 5,
+        "magicDefense": 6,
+        "defense": 6,
+        "strength": 5,
+        "startingFrame": 6,
+        "animations": [
+            {"name": "stand", "frames": [6], "speed": 6},
+            {"name": "attack", "frames": [6, 7, 8, 6, 7, 8], "speed": 8},
+            {"name": "dying", "frames": [6, 9, 0, 3, 6], "speed": 6}
+        ],
+        
+        "skills": ["Thunderball", "Thunder", "Thunder Slash"],
+        
+        "rewards": {
+            
+            "experience": 5,
+            "gold": 6,
+            
+            "items": {
+                
+                "Small Potion": 10,
+                "Small Mana Potion": 10
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Tree Spirit": {
+        
+        "imageKey": "treeSpirit",
+        "name": "Tree Spirit",
+        "levelRange": 5,
+        "maxHealth": 8,
+        "maxMana": 8,
+        "magicPower": 7,
+        "magicDefense": 6,
+        "defense": 4,
+        "strength": 6,
+        "startingFrame": 6,
+        "animations": [
+            {"name": "stand", "frames": [6], "speed": 6},
+            {"name": "attack", "frames": [6, 7, 8, 6, 7, 8], "speed": 8},
+            {"name": "dying", "frames": [6, 9, 0, 3, 6], "speed": 6}
+        ],
+        
+        "skills": ["Slash"],
+        
+        "rewards": {
+            
+            "experience": 7,
+            "gold": 7,
+            
+            "items": {
+                
+                "Small Potion": 15,
+                "Small Mana Potion": 15,
+                "Medium Potion": 10
+            },
+            
+            "skills": {
+                
+                "Slash": 10
+            }
+        }
+    },
+    
+    "Gorgon": {
+        
+        "imageKey": "gorgon",
+        "name": "Gorgon",
+        "levelRange": 5,
+        "maxHealth": 7,
+        "maxMana": 8,
+        "magicPower": 8,
+        "magicDefense": 7,
+        "defense": 3,
+        "strength": 3,
+        "startingFrame": 0,
+        "animations": [
+            {"name": "stand", "frames": [0], "speed": 6},
+            {"name": "attack", "frames": [8, 7, 6, 5, 4, 3, 2, 1, 0], "speed": 8},
+            {"name": "dying", "frames": [0], "speed": 6}
+        ],
+        
+        "skills": ["Fireball", "Thunderball", "Ice Burst"],
+        
+        "rewards": {
+            
+            "experience": 10,
+            "gold": 8,
+            
+            "items": {
+                
+                "Small Mana Potion": 30,
+                "Medium Mana Potion": 10,
+                "Gorgon Hair": 45
+            },
+            
+            "skills": {
+                
+                "Fireball": 20
+            }
+        }
+    }
+}
