@@ -86,7 +86,15 @@
             escapeBattle: {},
             fireballCreate: {},
             fireballUpdate: {},
+            iceBurstCreate: {},
+            iceBurstUpdate: {},
+            iceSlashUpdate: {},
             fireballDestroy: {},
+            thunderCreate: {},
+            thunderUpdate: {},
+            thunderballCreate: {},
+            thunderballUpdate: {},
+            fireslashUpdate: {},
             useItem: {},
             slashUpdate: {},
             discardItem: {},
@@ -306,7 +314,6 @@
                 
                 break;
             }
-            
             return mapData;
         }
         
@@ -453,6 +460,10 @@
                 game.load.spritesheet('dragon', '<%= asset_path("dragon.png")%>', 96, 96);
                 game.load.spritesheet('dino', '<%= asset_path("dino.png")%>', 80, 56);
                 game.load.spritesheet('gorgon', '<%= asset_path("gorgon.png")%>', 55, 60);
+                game.load.spritesheet('bug', '<%= asset_path("Lord Bug.png")%>', 160, 128);
+                game.load.spritesheet('bat', '<%= asset_path("bat.png")%>', 32, 48);
+                game.load.spritesheet('harpy', '<%= asset_path("harpy.png")%>', 64, 64);
+                game.load.spritesheet('treeSpirit', '<%= asset_path("Tree Spirit.png")%>', 64, 64);
             },
             
             loadBattleBackgroundImages: function() {
@@ -465,6 +476,12 @@
                 
                 game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
                 game.load.spritesheet('slash', "<%= asset_path("slash.png")%>", 100, 100);
+                game.load.spritesheet('thunder', "<%= asset_path("thunder.png")%>", 192, 192);
+                game.load.spritesheet('iceBurst', "<%= asset_path("Ice Burst.png")%>", 192, 192);
+                game.load.spritesheet('thunderball', "<%= asset_path("Thunderball.png")%>", 96, 96);
+                game.load.spritesheet('fireSlash', "<%= asset_path("Fire Slash.png")%>", 192, 192);
+                game.load.spritesheet('thunderSlash', "<%= asset_path("Thunder Slash.png")%>", 192, 192);
+                game.load.spritesheet('iceSlash', "<%= asset_path("Ice Slash.png")%>", 192, 192);
             },
             
             loadSoundEffects: function() {
@@ -482,6 +499,14 @@
                 game.load.audio('fireballCreate', '<%= asset_path("fireballCreate.wav") %>');
                 game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
                 game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
+                game.load.audio('iceBurstCreate', '<%= asset_path("iceBurstCreate.wav") %>');
+                game.load.audio('iceBurstUpdate', '<%= asset_path("iceBurstUpdate.mp3") %>');
+                game.load.audio('iceSlashUpdate', '<%= asset_path("iceSlashUpdate.wav") %>');
+                game.load.audio('thunderCreate', '<%= asset_path("thunderCreate.wav") %>');
+                game.load.audio('thunderUpdate', '<%= asset_path("thunderUpdate.wav") %>');
+                game.load.audio('thunderballCreate', '<%= asset_path("thunderballCreate.wav") %>');
+                game.load.audio('thunderballUpdate', '<%= asset_path("thunderballUpdate.wav") %>');
+                game.load.audio('fireslashUpdate', '<%= asset_path("fireslashUpdate.wav") %>');
                 game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
                 game.load.audio('slashUpdate', '<%= asset_path("slash.wav") %>');
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
@@ -643,7 +668,7 @@
         		    if(songName != "volume")
         		    globalBgm[songName] = game.add.sound(songName, globalBgm.volume, true);
         		}
-        
+        		
         		//load keys to the map data
                 mapKeys = mapCoordinateToMap();
                 
