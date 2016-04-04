@@ -5,8 +5,13 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     @user = users(:michael)
     @player = @user.player
     file = File.read("app/assets/skills/skills.json")
-    @skills = JSON.parse file
-    @skill = @skills[@skills.keys[3]]
+    all_skills = JSON.parse file
+    @skills = Hash.new
+    all_skills.each do |key, value|
+      if value["price"]
+        @skills[key] = value
+      end
+    end
   end
   
   test "skills display" do
@@ -17,8 +22,8 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', items_path, { text: "Items"}, "No link to items"
     assert_select 'h1', "Skills Shop"
     assert_select 'p', "Gold: " + @player.gold.to_s
-    assert_select 'input[type=?]', "submit", count: available_skills(@skills, @player).count
-    available_skills(@skills, @player).each do |name, array|
+    assert_select 'input[type=?]', "submit", count: @skills.count
+    @skills.each do |name, array|
       assert_select 'a[href=?]', skill_path(name), text: name
       assert_select 'td', array["manaCost"] + " MP"
       assert_select 'input[type=?]', 'hidden', value: array["price"]

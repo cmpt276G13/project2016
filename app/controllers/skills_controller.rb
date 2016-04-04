@@ -4,7 +4,13 @@ class SkillsController < ApplicationController
   before_action :logged_in_user
   
   def index
-    @skills = JSON.parse self.file
+    all_skills = JSON.parse self.file
+    @skills = Hash.new
+    all_skills.each do |key, value|
+      if value["price"]
+        @skills[key] = value
+      end
+    end
   end
   
   def show
