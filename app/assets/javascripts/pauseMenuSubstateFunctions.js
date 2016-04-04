@@ -79,7 +79,7 @@ function viewItemsEnter() {
     this.itemDisplay = this.createPlayerItemDisplay();
     
     //create an action text display to show all of the player's actions
-    this.itemActionDisplay = new actionDisplay({x: this.itemDisplay.background.width / 4, y: 60, width: this.itemDisplay.background.width / 2, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
+    this.itemActionDisplay = new actionDisplay({viewableObjects: 9, x: this.itemDisplay.background.width / 4, y: 60, width: this.itemDisplay.background.width / 2, height: this.itemDisplay.background.height - 100, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
     
     for(var item in player.items) {
         
@@ -220,7 +220,7 @@ function viewSkillsEnter() {
    this.skillDisplay = this.createPlayerSkillDisplay();
     
     //create an action text display to show all of the player's actions
-    this.skillActionDisplay = new actionDisplay({viewableObjects: 8, x: this.skillDisplay.background.width / 4, y: 60, width: this.skillDisplay.background.width / 2, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
+    this.skillActionDisplay = new actionDisplay({viewableObjects: 9, x: this.skillDisplay.background.width / 4, y: 60, width: this.skillDisplay.background.width / 2, height: this.skillDisplay.background.height - 100, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
     
     for(var i = 0; i < player.skills.length; ++i) {
         
