@@ -53,6 +53,46 @@
     },
     
     
+    "Explosion": {
+        
+        "power": 210,
+        "targetsHit": 10,
+        "manaCost": 200,
+        "price": 10000,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Explosion!",
+        "monsterUseMessage": " uses Explosion!",
+        "description": "Generates a gigantic expanding flame beneath the opponent's feet\n\nIncantation: \"Darkness blacker than black and darker than dark, I beseech thee, combine with my deep crimson. The time of awakening cometh. Justice, fallen upon the infallible boundary, appear now as an intangible distortion! Dance, dance, dance! I desire for my torrent of power, a destructive force: a destructive force without equal! Return all creation to cinders, and come from the abyss! This is the mightiest means of attack known to man, the ultimate attack magic!\n\nExplosion!\"\n- Megumin, KonoSuba, 2016",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "startingFrame": 16,
+        "onCreateSfx": "appear",
+        "onUpdateSfx": "explosionUpdate",
+        "spriteKey": "explosion",
+        
+        "animations": {
+            "create": {
+                
+                "frames": [16],
+                "speed": 1
+            },
+            
+            "update": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "speed": 4
+            },
+            
+            "destroy": {
+                
+                "frames": [10, 11, 12, 13, 14, 15],
+                "speed": 4
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
     "Fire Slash": {
         
         "power": 20,

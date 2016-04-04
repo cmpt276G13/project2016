@@ -93,6 +93,8 @@
             thunderballCreate: {},
             thunderballUpdate: {},
             fireslashUpdate: {},
+            appear: {},
+            explosionUpdate: {},
             useItem: {},
             slashUpdate: {},
             discardItem: {},
@@ -109,7 +111,7 @@
             battle: {},
             bossBattle: {},
             activeBgm: {},
-            volume: 0.4
+            volume: 0.5
         }
         
         //tilemap is global
@@ -480,6 +482,7 @@
                 game.load.spritesheet('fireSlash', "<%= asset_path("Fire Slash.png")%>", 192, 192);
                 game.load.spritesheet('thunderSlash', "<%= asset_path("Thunder Slash.png")%>", 192, 192);
                 game.load.spritesheet('iceSlash', "<%= asset_path("Ice Slash.png")%>", 192, 192);
+                game.load.spritesheet('explosion', "<%= asset_path("explosion.png")%>", 192, 194);
             },
             
             loadSoundEffects: function() {
@@ -505,6 +508,8 @@
                 game.load.audio('thunderballCreate', '<%= asset_path("thunderballCreate.wav") %>');
                 game.load.audio('thunderballUpdate', '<%= asset_path("thunderballUpdate.wav") %>');
                 game.load.audio('fireslashUpdate', '<%= asset_path("fireslashUpdate.wav") %>');
+                game.load.audio('appear', '<%= asset_path("appear.wav") %>');
+                game.load.audio('explosionUpdate', '<%= asset_path("explosionUpdate.wav") %>');
                 game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
                 game.load.audio('slashUpdate', '<%= asset_path("slash.wav") %>');
                 game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
