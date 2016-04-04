@@ -7,7 +7,7 @@ class SkillsController < ApplicationController
     all_skills = JSON.parse self.file
     @skills = Hash.new
     all_skills.each do |key, value|
-      if value["price"]
+      if value["price"] && current_player.skills.exclude?(key)
         @skills[key] = value
       end
     end
