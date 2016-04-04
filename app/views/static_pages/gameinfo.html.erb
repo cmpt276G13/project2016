@@ -1,0 +1,134 @@
+<% provide(:title, 'Game Info') %>
+<style>
+.row{margin-top: 10px;}
+#guideheading{
+  text-align: left;
+}
+#description{
+    border-style: solid;
+    border-color: black;
+    padding: 5px;
+}
+.content-blocks{
+    background: #c4c3c3;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(196,195,195,0.6)), color-stop(100%, rgba(148,148,148,0.6)));
+    background: -webkit-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: -moz-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: -o-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
+    background: linear-gradient(rgba(196,195,195,0.6),rgba(148,148,148,0.6));
+    padding: 10px;
+    margin: 10px 0;
+
+    list-style-type:none;
+  
+}
+
+</style>
+<div>
+<h1 id="guideheading">Game Guide </h1>
+<h1 id="guideheading">Here you'll find all of the basic information you need to know to get ready to hit the virtual world of the game.</h1>
+</div>
+
+<div id="description">
+    <h2 id="guideheading">What is GeoHunter?</h2>
+    <p id="guideheading">
+        GeoHunter is a browser game that allows you to experience exploring, without actually going out 
+        into the world and explore. This game is a turn-based Role Playing Game and the main goal of the game would be to acquire 
+        as much experience points as possible and level up your character. These levels would represent the 
+        player's score on a leaderboard. GeoHunter’s main feature would be using your location to determine 
+        what game maps are available for you to explore.
+    </p>
+</div>
+
+<div class="container">
+  <ul class="nav nav-tabs">
+    <br>
+    <li class="active"><a data-toggle="tab" href="#TheBasics">The Basics</a></li>
+    <li><a data-toggle="tab" href="#BattleSystem">Battle System</a></li>
+    <li><a data-toggle="tab" href="#RankSystem">Rank System</a></li>
+  </ul>
+
+  <div class="tab-content">
+    
+    <div id="TheBasics" class="tab-pane fade in active">
+      
+        <h1 id="guideheading">What You Need to Know...</h1>
+        <p>This tutorial is packed with information and designed to get you up to speed fast about GeoHunter so you can start having fun. There are a few core concepts that you should know up front before starting the game.</p>
+      <div class="row" >
+        <ul class="content-blocks">
+          <li class="content-blocks">
+            <h3>Choose Your Quest</h3>
+            <p>Before starting your exploration, use Google Map which is built in our system to choose a location. We have designed different themes of quest for each location!</p>
+          </li>
+          <li class="content-blocks">
+            <h3>Scaling Monster</h3>
+            <p>One small reminder, monsters have levels. This says that they can come to you with more attack power and health as the journey goes on.
+            On the plus side, they’re far more vulnerable to your attacks when you are leveling up!</p>
+          </li>
+          <li class="content-blocks">
+            <h3>Gear up!</h3>
+            <p>For combat efficiency, there is a shop available for you to purchase certain items such as health potion to help you 
+            defeat stronger monsters.</p>
+          </li>
+          <li class="content-blocks">
+            <h3>Find it and Fight it!</h3>
+            <p>When user selected a quest, the status display will be replaced with a list
+            all the quests the player is currently doing. Each quest display contains the 
+            quest name, and a message that says “In Progress” if the quest is in progress, 
+            and “Complete” if the quest is completed by finishing certain conditions.
+            </p>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+      
+      
+      
+      <div id="BattleSystem" class="tab-pane fade in">
+          <h1 id="guideheading">How to fight...</h1>
+          <div class="row jumbotron" >
+            <div class="col-lg-6"> 
+              <p>Basic Attacks</p>
+            </div>
+            <div class="col-lg-6">
+              <h4>Click the picture to play the demonstration!</h4>
+              <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGif(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+            </div>
+          </div>
+          <div class="row jumbotron" >
+            <div class="col-lg-6">
+              <h4>Click the picture to play the demonstration!</h4>
+              <img id="img2" src="/assets/skillsimg.png" height="300" width="350" onclick="activateGif(this, '#anim2',10000)"/> <!-- set up a static img and onclick event -->
+              <img id="anim2" class='hidden'  src="/assets/skills.gif" height="300" width="350" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+            </div>
+            <div class="col-lg-6"> 
+            
+              <p>There are various types of skills that are available to you to pick up.
+              Lock-On Skills! Skills allow players to select targets. Just press the 'Enter'button  on the targets.</p>
+            </div>
+            
+          </div>
+      </div>
+      
+    
+    
+    
+    <div id="RankSystem" class="tab-pane fade">
+      <div class="row jumbotron">
+        <div class = "col-lg-12">
+        <p>
+        Rank is determined by player's level, death and current experience points. If multiple players have the same level, 
+        then the rankings are determined by each player's experience points.
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

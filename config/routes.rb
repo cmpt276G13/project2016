@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
   get 'hub' => 'static_pages#hub'
+  get 'gameinfo' => 'static_pages#gameinfo'
   resources :users
   resources :players, only: [:update]
   resources :quests
