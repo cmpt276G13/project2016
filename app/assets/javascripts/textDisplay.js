@@ -268,11 +268,7 @@ function scrollableObjectList(configuration) {
     if(this.configuration.displayScrollBar) {
         
         //create a scroll bar
-        this.scrollBar = game.add.graphics(0, 0);
-        this.scrollBar.beginFill(0x00ff00, 1);
-        this.scrollBar.drawRect(this.configuration.cellWidth, 0, 3, this.configuration.cellHeight);
-        this.parentGraphics.addChild(this.scrollBar);
-        this.scrollBar.endFill();
+        this.createScrollBar();
     }
     
     //create a mask for the view region, so all obejcts outside this region will not be drawn
@@ -291,7 +287,7 @@ scrollableObjectList.prototype.mergeConfigWithDefault = function(configuration) 
         cellHeight: 0,
         viewableObjects: 1,
         objectCreationFunction: {},
-        displayScrollBar: true
+        displayScrollBar: false
     };
     
     mergeObjects(defaultConfig, configuration);
@@ -323,6 +319,38 @@ scrollableObjectList.prototype.clear = function() {
     
     objectList.prototype.clear.call(this);
     this.resetScroll();
+}
+
+scrollableObjectList.prototype.addObject = function(objectConfig) {
+    
+    objectList.prototype.addObject.call(this, objectConfig);
+    
+    if(this.configuration.displayScrollBar) {
+        
+        this.createScrollBar();
+    }
+}
+
+scrollableObjectList.prototype.createScrollBar = function() {
+    
+    if(typeof this.scrollBar !== "undefined") {
+        
+        this.scrollBar.destroy();
+    }
+    
+    this.scrollBar = game.add.graphics(0, 0);
+    
+    this.scrollBar.beginFill(0x00ff00, 1);
+    var barHeight = this.configuration.cellHeight * this.configuration.viewableObjects;
+    
+    if(this.objects.length >= this.configuration.viewableObjects) {
+        
+        barHeight -= (this.objects.length - this.configuration.viewableObjects) * this.configuration.cellHeight;
+    }
+    
+    this.scrollBar.drawRect(this.configuration.cellWidth, 0, 3, barHeight);
+    this.parentGraphics.addChild(this.scrollBar);
+    this.scrollBar.endFill();
 }
 
 scrollableObjectList.prototype.canScrollDown = function() {
