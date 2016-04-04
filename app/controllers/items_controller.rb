@@ -4,7 +4,13 @@ class ItemsController < ApplicationController
   before_action :logged_in_user
   
   def index
-    @items = JSON.parse self.file
+    all_items = JSON.parse self.file
+    @items = Hash.new
+    all_items.each do |key, value|
+      if value["price"]
+        @items[key] = value
+      end
+    end
     @player = current_user.player
   end
   
