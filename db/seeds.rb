@@ -59,6 +59,33 @@ q_orc2.target[:Orc] = 10
 q_orc2.quests << q_orc1 # Make q_orc1 a requirement for q_orc2
 q_orc2.save
 
+q_gorgon1 = KillQuest.new(name: "Kill Gorgons!",
+              description: "Kill 5 Gorgons",
+              level_req: 1)
+q_gorgon1.rewards[:items] = { "Small Potion": 1, "Small Mana Potion": 2 }
+q_gorgon1.rewards[:stats] = { experience: 50, gold: 100 }
+q_gorgon1.target[:Gorgon] = 5
+q_gorgon1.save
+
+q_slime1 = KillQuest.new(name: "Kill Slimes!",
+              description: "Kill 5 Slimes",
+              level_req: 1)
+q_slime1.rewards[:items] = { "Small Potion": 1 }
+q_slime1.rewards[:stats] = { experience: 10, gold: 60 }
+q_slime1.target[:Slime] = 5
+q_slime1.save
+
+q_dragon1 = KillQuest.new(name: "Kill a Dragon!",
+              description: "Kill a Dragon",
+              level_req: 5)
+q_dragon1.rewards[:items] = { "Small Potion": 2, "Medium Potion": 1, "Medium Mana Potion": 2 }
+q_dragon1.rewards[:stats] = { experience: 200, gold: 600 }
+q_dragon1.target[:Dragon] = 5
+q_dragon1.quests << q_orc2
+q_dragon1.quests << q_gorgon1
+q_dragon1.quests << q_slime1
+q_dragon1.save
+
 q_s_potion = GatherQuest.new(name: "Gather Quest!",
                                   description: "Gather 3 Small Potions\nI have discovered a new brewing method! I can take Small Potions and increase their potency. Please gather some.",
                                   level_req: 1)
@@ -66,3 +93,11 @@ q_s_potion.rewards[:items] = { "Small Potion": 4, "Medium Potion": 2 }
 q_s_potion.rewards[:stats] = { experience: 30, gold: 50 }
 q_s_potion.target["Small Potion"] = 3
 q_s_potion.save
+
+q_g_slime = GatherQuest.new(name: "Gather Slime Tentacles!",
+                                  description: "Gather 5 Slime Tentacles",
+                                  level_req: 1)
+q_g_slime.rewards[:items] = { "Small Potion": 2, "Medium Potion": 2 }
+q_g_slime.rewards[:stats] = { experience: 15, gold: 150 }
+q_g_slime.target["Slime Tentacle"] = 5
+q_g_slime.save
