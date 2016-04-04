@@ -8,7 +8,7 @@ class SkillsIndexTest < ActionDispatch::IntegrationTest
     all_skills = JSON.parse file
     @skills = Hash.new
     all_skills.each do |key, value|
-      if value["price"]
+      if value["price"] && @player.skills.exclude?(key)
         @skills[key] = value
       end
     end
