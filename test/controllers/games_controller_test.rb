@@ -19,5 +19,7 @@ class GamesControllerTest < ActionController::TestCase
     get :index
     assert :success
     assert_select 'div', id: "Game"
+    assert assigns(:latitude)
+    assert assigns(:longitude)
   end
 end

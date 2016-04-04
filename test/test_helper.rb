@@ -26,6 +26,11 @@ class ActiveSupport::TestCase
     end
   end
   
+  # Returns an array of the skills that the player does not currently have.
+  def available_skills(skills, player)
+    skills.slice!(*(player.skills + player.BASIC_SKILLS))
+  end
+  
   private
 
     # Returns true if inside an integration test.

@@ -21,7 +21,7 @@ function actionDisplay(configuration, actionTexts) {
     
     //the text that will be displayed
     this.actionTextList = new scrollableObjectList({x: 5, y: 5, cellWidth: this.configuration.width - 10, cellHeight: this.configuration.cellHeight,
-                                                    objectCreationFunction: this.configuration.objectCreationFunction, viewableObjects: this.configuration.viewableObjects}); //createActionTexts(actionTexts, this.background);
+                                                    objectCreationFunction: this.configuration.objectCreationFunction, viewableObjects: this.configuration.viewableObjects, displayScrollBar: this.configuration.displayScrollBar}); //createActionTexts(actionTexts, this.background);
     
     //add all the texts
     for(var i = 0; i < actionTexts.length; ++i) {
@@ -50,7 +50,8 @@ actionDisplay.prototype.mergeConfigWithDefault = function(configuration) {
         height: 0,
         cellHeight: 28,
         viewableObjects: 5,
-        objectCreationFunction: text
+        objectCreationFunction: text,
+        displayScrollBar: false
     }
     
     $.extend(config, configuration);
@@ -85,6 +86,7 @@ actionDisplay.prototype.resetSelection = function() {
     
     this.idActionToHighlight = 0;
     this.idSelectedAction = 0;
+    this.actionTextList.resetScroll();
 }
 
 actionDisplay.prototype.replaceAction = function(idOfAction, attributeToUse) {

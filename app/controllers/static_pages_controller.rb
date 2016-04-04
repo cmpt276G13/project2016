@@ -6,5 +6,6 @@ class StaticPagesController < ApplicationController
   end
   
   def hub
+    get_chosen_location
   end
 end
