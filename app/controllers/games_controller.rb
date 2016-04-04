@@ -40,7 +40,7 @@ class GamesController < ApplicationController
            quest.progress = progressData["progress"]
            quest.save
        end
-       
+       head :ok
     end
     
     def player_params
