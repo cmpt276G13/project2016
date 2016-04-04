@@ -5,15 +5,17 @@
 <div class="container">
   <p><%= simple_format @item["description"] %></p>
   
-  <ul class="item_links center">
-    <p class="center">Price: <%= number_with_delimiter @item["price"] %> G</p>
-    <%= form_for(@player) do |f| %>
-      <%= hidden_field_tag :price, @item["price"] %>
-      <li><%= f.label "Amount" %></li>
-      <%= f.number_field "items[" + params[:name] + "]", min: 1, value: 1, class: 'form-control', id: "item_amount" %>
-      <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
-    <% end %>
-  </ul>
+  <% if @item["price"] %>
+    <ul class="item_links center">
+      <p class="center">Price: <%= number_with_delimiter @item["price"] %> G</p>
+      <%= form_for(@player) do |f| %>
+        <%= hidden_field_tag :price, @item["price"] %>
+        <li><%= f.label "Amount" %></li>
+        <%= f.number_field "items[" + params[:name] + "]", min: 1, value: 1, class: 'form-control', id: "item_amount" %>
+        <li><%= f.submit "Buy", class: "btn btn-primary", id: "shop_individual" %></li>
+      <% end %>
+    </ul>
+  <% end %>
   
   <%= link_to "Back", :back %>
 </div>

@@ -4,8 +4,13 @@ class ItemsIndexTest < ActionDispatch::IntegrationTest
   def setup
     @admin = users(:michael)
     file = File.read("app/assets/items/items.json")
-    @items = JSON.parse(file)
-    @item = @items[@items.keys[0]]
+    all_items = JSON.parse file
+    @items = Hash.new
+    all_items.each do |key, value|
+      if value["price"]
+        @items[key] = value
+      end
+    end
   end
   
   test "index" do
