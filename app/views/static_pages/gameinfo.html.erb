@@ -4,6 +4,11 @@
 #guideheading{
   text-align: left;
 }
+#description{
+    border-style: solid;
+    border-color: black;
+    padding: 5px;
+}
 .content-blocks{
   /*background-color: rgba(196,195,195,0.6);*/
   background: #c4c3c3;
@@ -21,15 +26,15 @@
 
 </style>
 <div>
-<h1>Game Guide </h1>
-<h1>Here you'll find all the basic information you need to know and get ready to hit the virtual world of the game.</h1>
+<h1 id="guideheading">Game Guide </h1>
+<h1 id="guideheading">Here you'll find all the basic information you need to know and get ready to hit the virtual world of the game.</h1>
 </div>
 
-<div>
-    <h2>What is GeoHunter?</h2>
-    <p>
+<div id="description">
+    <h2 id="guideheading">What is GeoHunter?</h2>
+    <p id="guideheading">
         GeoHunter is a browser game that allows you to experience exploring, without actually going out 
-        into the world and explore. This game is a Turn-based Role Playing Game and the main goal of the game would be to acquire 
+        into the world and explore. This game is a turn-based Role Playing Game and the main goal of the game would be to acquire 
         as much experience points as possible and level up your character. These levels would represent the 
         player's score on a leaderboard. GeoHunter’s main feature would be using your location to determine 
         what game maps are available for you to explore.
@@ -63,8 +68,8 @@
           </li>
           <li class="content-blocks">
             <h3>Gear up!</h3>
-            <p>For combat efficiency , there is a shop available for you to purchase certain items such as health potion to help you 
-            defeat stronger monsters</p>
+            <p>For combat efficiency,there is a shop available for you to purchase certain items such as health potion to help you 
+            defeat stronger monsters.</p>
           </li>
           <li class="content-blocks">
             <h3>Find it and Fight it!</h3>
@@ -85,23 +90,22 @@
         
           <div class="row jumbotron" >
             <div class="col-lg-6"> 
-              <p>attack demonstration</p>
+              <p>Attack demonstration</p>
             </div>
             <div class="col-lg-6">
-              <p>Click the picture to play gifs</p>
+              <p>Click the picture to play the demonstration!</p>
               <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
               <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
             </div>
           </div>
           
           <div class="row jumbotron" >
-            <div class="col-lg-6"> 
-              <p>attack demonstration</p>
-            </div>
             <div class="col-lg-6">
-              <p>Click the picture to play gifs</p>
-              <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+              <img id="img1" src="/assets/skillsimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+              <img id="anim1" class='hidden'  src="/assets/skills.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+            </div>
+            <div class="col-lg-6"> 
+              <p>Skills demonstration</p>
             </div>
           </div>
         
@@ -115,9 +119,10 @@
       <div class="row jumbotron">
         <div class = "col-lg-12">
         <p>
-        Determined by levels. If multiple users have the same level, then determine rankings by experience points
-A weekly reward is given to the top players
-If two top players have the same experience points, they both get the rewards
+        Rank is determined by levels. If multiple players have the same level, 
+        then the rankings are determined by each player's experience points
+        A weekly reward will be given to the top players
+        If two top players have the same experience points, they both get the rewards
         </p>
         </div>
       </div>
