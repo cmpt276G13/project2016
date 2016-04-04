@@ -10,8 +10,7 @@
     padding: 5px;
 }
 .content-blocks{
-  /*background-color: rgba(196,195,195,0.6);*/
-  background: #c4c3c3;
+    background: #c4c3c3;
     background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(196,195,195,0.6)), color-stop(100%, rgba(148,148,148,0.6)));
     background: -webkit-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
     background: -moz-linear-gradient(rgba(196,195,195,0.6), rgba(148,148,148,0.6));
@@ -20,7 +19,7 @@
     padding: 10px;
     margin: 10px 0;
 
-  list-style-type:none;
+    list-style-type:none;
   
 }
 
@@ -94,20 +93,12 @@
             </div>
             <div class="col-lg-6">
               <p>Click the picture to play the demonstration!</p>
-              <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+              <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGif(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
+              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGif(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
             </div>
           </div>
           
-          <div class="row jumbotron" >
-            <div class="col-lg-6">
-              <img id="img1" src="/assets/skillsimg.png" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-              <img id="anim1" class='hidden'  src="/assets/skills.gif" height="300" width="350" onclick="activateGIF(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
-            </div>
-            <div class="col-lg-6"> 
-              <p>Skills demonstration</p>
-            </div>
-          </div>
+          
         
         
       </div>
@@ -127,9 +118,6 @@
         </div>
       </div>
     </div>
-    
-    
-    
   </div>
 </div>
 
