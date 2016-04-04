@@ -23,7 +23,7 @@
 //     });
 // });
 
-function activateGIF(gifID, gifsrc, timeout) {
+function activateGif(gifID, gifsrc, timeout) {
     var animsrc = $(gifsrc).attr('src'); //Get animation source
     var src = $(gifID).attr('src'); //Get static img source
     var onclick = $(gifID).attr('onclick'); //Get 'onclick'  into gifID object

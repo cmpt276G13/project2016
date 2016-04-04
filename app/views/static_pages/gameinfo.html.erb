@@ -1,4 +1,4 @@
-<% provide(:title, 'Game_Info') %>
+<% provide(:title, 'GameInfo') %>
 <style>
 .row{margin-top: 10px;}
 #guideheading{
@@ -86,21 +86,28 @@
       
       
       <div id="BattleSystem" class="tab-pane fade in">
-        
+          <h1 id="guideheading">How to fight...</h1>
           <div class="row jumbotron" >
             <div class="col-lg-6"> 
-              <p>Attack demonstration</p>
+              <p>Basic Attacks</p>
             </div>
             <div class="col-lg-6">
-              <p>Click the picture to play the demonstration!</p>
+              <h4>Click the picture to play the demonstration!</h4>
               <img id="img1" src="/assets/attackimg.png" height="300" width="350" onclick="activateGif(this, '#anim1',10000)"/> <!-- set up a static img and onclick event -->
-              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" onclick="activateGif(this, '#anim1',10000)"/> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+              <img id="anim1" class='hidden'  src="/assets/attack.gif" height="300" width="350" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
             </div>
           </div>
-          
-          
-        
-        
+          <div class="row jumbotron" >
+            <div class="col-lg-6">
+              <h4>Click the picture to play the demonstration!</h4>
+              <img id="img2" src="/assets/skillsimg.png" height="300" width="350" onclick="activateGif(this, '#anim2',10000)"/> <!-- set up a static img and onclick event -->
+              <img id="anim2" class='hidden'  src="/assets/skills.gif" height="300" width="350" /> <!-- retrieve Animation file hiddenclass is needed otherwise the gif will still pop up -->
+            </div>
+            <div class="col-lg-6"> 
+              <p>There are various types of skills that are available to you to pick up.
+              Lock-On Skills! Skills allow players to select targets. Just press the 'Enter'button  on the targets.</p>
+            </div>
+          </div>
       </div>
       
     
