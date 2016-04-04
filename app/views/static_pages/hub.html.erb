@@ -13,7 +13,9 @@
     <h2>Items</h2>
     <center>
       <% current_player.items.each do |item, amount| %>
-        <%= link_to simple_format(pluralize(amount, item.to_s) + "\n"), item_path(item) %>
+        <% if amount != 0 %>
+          <%= link_to simple_format(pluralize(amount, item.to_s) + "\n"), item_path(item) %>
+        <% end %>
       <% end %>
     </center>
   </div>

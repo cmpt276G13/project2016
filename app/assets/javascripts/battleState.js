@@ -745,9 +745,6 @@ var battleState = {
         
         globalBgm.activeBgm.play('', 0, globalBgm.volume);
         
-        //misc instructions, ignore
-        document.getElementById("additional").innerHTML = "select an action";
-        
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
 		

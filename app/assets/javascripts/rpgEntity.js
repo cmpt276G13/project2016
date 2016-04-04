@@ -28,11 +28,6 @@ function scaleMonsterToPlayer(monster, playerLevel, clampLevel) {
     
     scaleMonsterLevelToPlayer(monster, playerLevel);
     
-    if(clampLevel && playerLevel < 4) {
-        
-        monster.level = 1;
-    }
-    
     scaleMonsterStatsToLevel(monster);
     //scaleMonsterRewardsToLevel(monster);
 }
