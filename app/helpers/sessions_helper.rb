@@ -2,7 +2,6 @@ module SessionsHelper
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
-    session[:chosen_attributes] = Hash.new
   end
   
   # Remembers a user in a persistent session.
@@ -61,11 +60,15 @@ module SessionsHelper
   # Upon log-in, session[:chosen_attributes] is set to empty
   # Upon log-out, session[:chosen_attributes] is deleted
   def get_chosen_location
-      if session[:chosen_attributes].empty?
-        @chosen_place = Place.new({"latitude" => 49.19426915204543, "longitude" => -122.7577972412109416778})
-      else
-        @chosen_place = Place.new(session[:chosen_attributes])
+    if session[:chosen_attributes]
+      @chosen_place = Place.new(session[:chosen_attributes])
+    else
+      @chosen_place = GeoIp.geolocation(request.remote_ip)
+      if @chosen_place[:latitude].nil?
+        surrey = Geocoder.search("Surrey")[0]
+        @chosen_place = Place.new(latitude: surrey.latitude, longitude: surrey.longitude)
       end
+    end
   end
   
   # Redirects to stored location (or to the default).

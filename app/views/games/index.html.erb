@@ -40,6 +40,7 @@
     <%= javascript_include_tag "pauseMenuSubstateFunctions" %>
     <%= javascript_include_tag "questManager" %>
     <%= javascript_include_tag "itemManager" %>
+    <%= javascript_include_tag "confirmation" %>
     
     <script>
         //Returns a random integer between min (inclusive) and max (inclusive)
@@ -85,7 +86,14 @@
             escapeBattle: {},
             fireballCreate: {},
             fireballUpdate: {},
-            fireballDestroy: {}
+            fireballDestroy: {},
+            useItem: {},
+            slashUpdate: {},
+            discardItem: {},
+            pause: {},
+            unpause: {},
+            openChest: {},
+            message: {}
         }
         
         //global bgm
@@ -93,6 +101,8 @@
             
             overworld: {},
             battle: {},
+            bossBattle: {},
+            activeBgm: {},
             volume: 0.4
         }
         
@@ -104,8 +114,13 @@
             background2: {},
             solid: {},
             foreground: {},
-            spawnPoint: {x: 0, y: 0}
+            spawnPoint: {},
+            bosses: [],
+            chests: []
         }
+        
+        var fightingBoss = false;
+        var bossName = "";
         
         //define a global player variable
         //players will be global since Phaser deletes objects after a game state has ended (see below for explanation of game state)
@@ -117,21 +132,45 @@
         player.gold = 0;
         player.strength = 2000;
         player.items = {};
-        player.skills = ["Fireball"];
+        //player.skills = ["Fireball", "Slash"];
         player.deaths = 0;
         player.quests = {};
         
+        player.receiveItem = function(itemName, quantity) {
+            
+            if(typeof this.items[itemName] === "undefined") {
+                
+                this.items[itemName] = createItem(itemName, 0);
+            }
+            
+            this.items[itemName].quantity += quantity;
+        }
+        
         player.load = function() {
+            
             this.level = <%= @currentUser.player.level%>;
             this.name = '<%= @currentUser.username%>';
             this.maxHealth = <%= @currentUser.player.max_health%>;
             this.health = Math.min(<%= @currentUser.player.health%>, this.maxHealth); //if some how the health exceeded max health
+            this.maxMana = <%= @currentUser.player.max_mana%>;
+            this.mana = <%= @currentUser.player.mana%>;
+            this.magicPower = <%= @currentUser.player.magic_power%>;
+            this.magicDefense = <%= @currentUser.player.magic_defense%>;
             this.gold = <%= @currentUser.player.gold%>;
             this.experienceToNextLevel = <%= @currentUser.player.experience_to_next_level%>;;
             this.experience = <%= @currentUser.player.experience%>;
             this.strength = <%= @currentUser.player.strength%>;
             this.defense = <%= @currentUser.player.defense%>;
             this.deaths = <%= @currentUser.player.deaths%>;
+            
+            var skills = [];
+            
+            <% @currentUser.player.skills.each do |skillName|%>
+                
+                skills.push("<%=skillName%>");
+            <%end%>
+            
+            this.skills = skills;
             
             //for whatever reason json parse isn't working so use ruby to set the data
             var items = {};
@@ -147,11 +186,6 @@
             this.items = items;
             
             loadQuests();
-            //this.quests = quests;
-            //do something to load quests
-            
-            //player.items = ...
-            //player.skills = ...
         };
         
         player.save = function() {
@@ -308,15 +342,61 @@
             questManager.onInventoryCheck();
         }
         
-        loadQuests();
+        function removePersistentObjectsFromWorld() {
+            
+            game.world.remove(player.sprite);
+            game.world.remove(tilemap.background1);
+            game.world.remove(tilemap.background2);
+            game.world.remove(tilemap.foreground);
+            game.world.remove(tilemap.solid);
+            game.world.remove(tilemap.spawnPoint);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.world.remove(tilemap.bosses[i]);
+            }
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.world.remove(tilemap.chests[i]);
+            }
+        }
         
-        /*
+        function addPersistentObjectsToWorld() {
+            
+            game.add.existing(tilemap.background1);
+            game.add.existing(tilemap.background2);
+            game.add.existing(tilemap.spawnPoint);
+            game.add.existing(tilemap.solid);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.add.existing(tilemap.chests[i]);
+            }
+            
+            game.add.existing(player.sprite);
+            game.add.existing(tilemap.foreground);
+            
+            for(var i = 0; i < tilemap.bosses.length; ++i) {
+                
+                game.add.existing(tilemap.bosses[i]);
+            }
+        }
         
-        i put the loadState here because it loads assets using the asset pipeline.
-        to do that it needs to call ruby functions, which it can't do in its own javascript file
-        
-        
-        */
+        function removeBoss(name) {
+            
+            for(var i = 0; i < tilemap.bosses.length;) {
+                
+                if(tilemap.bosses[i].name === name) {
+                    
+                    tilemap.bosses[i].destroy();
+                    tilemap.bosses.splice(i, 1);
+                    continue;
+                }
+                
+                ++i;
+            }
+        };
         
         //loading state should load ALL of the game's resources
         //this will cache (store in memory) all of the required pictures, sounds, level data for later use
@@ -337,6 +417,9 @@
                 game.load.image('tileset1', '<%= asset_path("TileSet.png") %>');
                 game.load.image('tileset2', '<%= asset_path("trees.png") %>');
                 game.load.image('tileset3', '<%= asset_path("tileset1.png") %>');
+                game.load.image('tileset4', '<%= asset_path("tileset4.png") %>');
+                game.load.image('spawnPoint', '<%= asset_path("spawnPoint.png")%>');
+                game.load.spritesheet('chest', '<%= asset_path("chest.png")%>', 32, 32);
             },
             
             loadMonsterLists: function() {
@@ -365,7 +448,11 @@
                 
                 //load spritesheets for all the monsters
                 //now we would load all the images for the mosnters, but for now just load the orc image because i don't have any other mosnters
-                game.load.spritesheet('orc','<%= asset_path("ifrit.png") %>', 80, 80);
+                game.load.spritesheet('orc','<%= asset_path("orc.png") %>', 64, 64);
+                game.load.spritesheet('slime', '<%= asset_path("slime.png")%>', 70, 60);
+                game.load.spritesheet('dragon', '<%= asset_path("dragon.png")%>', 96, 96);
+                game.load.spritesheet('dino', '<%= asset_path("dino.png")%>', 80, 56);
+                game.load.spritesheet('gorgon', '<%= asset_path("gorgon.png")%>', 55, 60);
             },
             
             loadBattleBackgroundImages: function() {
@@ -377,6 +464,7 @@
             loadSkillSpritesheets: function() {
                 
                 game.load.spritesheet('fireball','<%= asset_path("fireball.png") %>', 32, 32);
+                game.load.spritesheet('slash', "<%= asset_path("slash.png")%>", 100, 100);
             },
             
             loadSoundEffects: function() {
@@ -394,12 +482,20 @@
                 game.load.audio('fireballCreate', '<%= asset_path("fireballCreate.wav") %>');
                 game.load.audio('fireballUpdate', '<%= asset_path("fireballUpdate.wav") %>');
                 game.load.audio('fireballDestroy', '<%= asset_path("fireballDestroy.wav") %>');
+                game.load.audio('useItem', '<%= asset_path("useItem.wav") %>');
+                game.load.audio('slashUpdate', '<%= asset_path("slash.wav") %>');
+                game.load.audio('discardItem', '<%= asset_path("discardItem.wav") %>');
+                game.load.audio('pause', '<%= asset_path("pause.mp3") %>');
+                game.load.audio('unpause', '<%= asset_path("unpause.mp3") %>');
+                game.load.audio('openChest', '<%= asset_path("openChest.wav") %>');
+                game.load.audio('message', '<%= asset_path("message.wav") %>');
             },
             
             loadBackgroundMusic: function() {
                 
-                game.load.audio("overworld", '<%= asset_path("WorldMapDemo.mp3")%>');
-                game.load.audio("battle", '<%= asset_path("GeoHunterFightSongFullVersion.mp3")%>');
+                game.load.audio("overworld", '<%= asset_path("WorldMap.mp3")%>');
+                game.load.audio("battle", '<%= asset_path("NormalBattle.mp3")%>');
+                game.load.audio('bossBattle', '<%= asset_path("BossFight.mp3") %>');
             },
             
             //place to load files
@@ -441,7 +537,63 @@
                 tilemap.background1.resizeWorld();
                 tilemap.map.setCollisionBetween(1, 10000, true, 'solid');
                 
-                tilemap.spawnPoint = {x: spawnPoint.x * 32, y: spawnPoint.y * 32};
+                //default spawn point
+                tilemap.spawnPoint = {x: 0, y: 0};
+                
+                //load spawn point
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "spawnPoint") {
+                        
+                        continue;
+                    }
+                    
+                    var spawnPointObject = tilemap.map.objects["objects"][i];
+                    
+                    //create spawnPoint sprite
+                    tilemap.spawnPoint = game.add.sprite(spawnPointObject.x, spawnPointObject.y, spawnPointObject.properties.sprite);
+                }
+                
+                //load bosses
+                tilemap.bosses = [];
+                
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "boss") {
+                        
+                        continue;
+                    }
+                    
+                    var bossObject = tilemap.map.objects["objects"][i];
+                    
+                    tilemap.bosses.push(game.add.sprite(bossObject.x, bossObject.y, bossObject.properties.sprite, bossObject.startingFrame));
+                    game.physics.arcade.enable(tilemap.bosses[tilemap.bosses.length - 1]);
+                    tilemap.bosses[tilemap.bosses.length - 1].body.immovable = true;
+                    tilemap.bosses[tilemap.bosses.length - 1].name = bossObject.properties.name;
+                }
+                
+                //load chests
+                tilemap.chests = [];
+                
+                for(var i = 0; i < tilemap.map.objects["objects"].length; ++i) {
+                    
+                    if(tilemap.map.objects["objects"][i].properties.type !== "chest") {
+                        
+                        continue;
+                    }
+                    
+                    var chestObject = tilemap.map.objects["objects"][i];
+                    
+                    tilemap.chests.push(game.add.sprite(chestObject.x, chestObject.y, chestObject.properties.sprite, chestObject.startingFrame));
+                    game.physics.arcade.enable(tilemap.chests[tilemap.chests.length - 1]);
+                    tilemap.chests[tilemap.chests.length - 1].body.immovable = true;
+                    tilemap.chests[tilemap.chests.length - 1].name = chestObject.properties.name;
+                    tilemap.chests[tilemap.chests.length - 1].item = chestObject.properties.item;
+                    tilemap.chests[tilemap.chests.length - 1].quantity = chestObject.properties.quantity;
+                    
+                    tilemap.chests[tilemap.chests.length - 1].animations.add('closed', [0], 1, false);
+                    tilemap.chests[tilemap.chests.length - 1].animations.add('open', [0, 1], 1, false);
+                }
             },
             
             //create function creats the required object for this game state
@@ -483,7 +635,7 @@
         		
         		for(soundName in globalSfx) {
         		    
-        		    globalSfx[soundName] = game.add.sound(soundName);
+        		    globalSfx[soundName] = game.add.sound(soundName, 2);
         		}
         		
         		for(songName in globalBgm) {
@@ -504,11 +656,7 @@
             
             shutdown: function() {
                 
-                game.world.remove(player.sprite);
-                game.world.remove(tilemap.background1);
-                game.world.remove(tilemap.background2);
-                game.world.remove(tilemap.foreground);
-                game.world.remove(tilemap.solid);
+                removePersistentObjectsFromWorld();
             }
         };
         
