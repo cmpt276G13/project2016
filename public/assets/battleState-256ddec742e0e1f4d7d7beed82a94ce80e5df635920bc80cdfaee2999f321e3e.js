@@ -334,7 +334,7 @@ var battleState = {
             jQuery.extend(monster.rewards, monsterDatabase[monsterName].rewards);
             
             //now scale monster to player's level
-            scaleMonsterToPlayer(monster, player.level + this.isFightingBoss + (player.level < 5) * this.isFightingBoss, !this.isFightingBoss);
+            scaleMonsterToPlayer(monster, player.level + this.isFightingBoss + (player.level < 5) * 3 * this.isFightingBoss, !this.isFightingBoss);
             scaleMonsterRewardsToLevel(monster, monsterDatabase[monsterName].rewards );
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
