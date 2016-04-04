@@ -6,6 +6,9 @@ function exploreEnter() {
     globalBgm.activeBgm = globalBgm.overworld;
     globalBgm.activeBgm.play('', 0, globalBgm.volume, true, false);
     
+    this.stepTimer = game.time.create(false);
+    this.stepTimer.start();
+    
     fightingBoss = false;
 };
 
@@ -44,6 +47,19 @@ function exploreUpdate() {
         function(){this.stateManager.changeState("explore") }, function(){this.stateManager.changeState("explore") });
         
     }, null, this);
+    
+    if((player.sprite.body.deltaX() != 0 || player.sprite.body.deltaY() != 0) && this.stepTimer.seconds > 1) {
+        
+        var rand = getRandomInt(1, 10);
+        
+        if(rand == 1) {
+            
+            this.stateManager.changeState("enterBattle");
+        }
+        
+        this.stepTimer.stop();
+        this.stepTimer.start();
+    }
 };
 
 function exploreKeystates() {

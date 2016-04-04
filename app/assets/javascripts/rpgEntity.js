@@ -24,11 +24,11 @@ function determineDamage(attack, defender) {
     return Math.max(1, damage);
 }
 
-function scaleMonsterToPlayer(monster, playerLevel) {
+function scaleMonsterToPlayer(monster, playerLevel, clampLevel) {
     
     scaleMonsterLevelToPlayer(monster, playerLevel);
     
-    if(playerLevel < 4) {
+    if(clampLevel && playerLevel < 4) {
         
         monster.level = 1;
     }
@@ -185,6 +185,8 @@ function createAttack(user, targetPosition, attackData) {
     //load spritesheet for animation
     //set position to whereever the casted spell should start
     var sprite = game.add.sprite(user.sprite.x, user.sprite.y, attack.spriteKey, attack.startingFrame);
+    sprite.x -= sprite.width / 2;
+    sprite.y -= sprite.height;
     attack.sprite = sprite;
     
     //setup the animation
@@ -228,7 +230,7 @@ function createAttack(user, targetPosition, attackData) {
         var tween = game.add.tween(sprite);
         
         tween.to({x: targetPosition.x, y: targetPosition.y});
-        tween.onComplete.addOnce(function(){this.sprite.animations.play("destroy");}, attack);
+        tween.onComplete.addOnce(function(){this.sprite.animations.play("destroy"); this.sprite.y -= this.sprite.height / 2}, attack);
         attack.tween = tween;
         
         update.onStart.addOnce(function(){this.tween.start() }, attack);

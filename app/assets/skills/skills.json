@@ -1,7 +1,7 @@
 {
     "Basic Attack": {
         
-        "power": 5,
+        "power": 6,
         "targetsHit": 1,
         "manaCost": 0,
         "hasOwnAnimation": false,
@@ -52,6 +52,126 @@
         "behaviour": "stationary"
     },
     
+    "Fire Slash": {
+        
+        "power": 20,
+        "targetsHit": 2,
+        "manaCost": 15,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Fire Slash!",
+        "monsterUseMessage": " uses Fire Slash!",
+        "description": "A flaming slash attack.",
+        "attackType": "physical",
+        "userAnimation": "attack",
+        "startingFrame": 14,
+        "onCreateSfx": "slashUpdate",
+        "onUpdateSfx": "fireslashUpdate",
+        "spriteKey": "fireSlash",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6],
+                "speed": 11
+            },
+            
+            "update": {
+                
+                "frames": [7, 8, 9, 10, 11, 12],
+                "speed": 11
+            },
+            
+            "destroy": {
+                
+                "frames": [13],
+                "speed": 50
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
+    "Thunder Slash": {
+        
+        "power": 20,
+        "targetsHit": 2,
+        "manaCost": 15,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Thunder Slash!",
+        "monsterUseMessage": " uses Thunder Slash!",
+        "description": "An electric slash attack.",
+        "attackType": "physical",
+        "userAnimation": "attack",
+        "startingFrame": 14,
+        "onCreateSfx": "slashUpdate",
+        "onUpdateSfx": "thunderUpdate",
+        "spriteKey": "thunderSlash",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7],
+                "speed": 11
+            },
+            
+            "update": {
+                
+                "frames": [8, 9, 10, 11, 12],
+                "speed": 11
+            },
+            
+            "destroy": {
+                
+                "frames": [13],
+                "speed": 50
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
+    "Ice Slash": {
+        
+        "power": 20,
+        "targetsHit": 2,
+        "manaCost": 15,
+        "hasOwnAnimation": true,
+        "playerUseMessage": "You use Ice Slash!",
+        "monsterUseMessage": " uses Ice Slash!",
+        "description": "An Ice Slash attack.",
+        "attackType": "physical",
+        "userAnimation": "attack",
+        "startingFrame": 14,
+        "onCreateSfx": "slashUpdate",
+        "onUpdateSfx": "iceSlashUpdate",
+        "spriteKey": "iceSlash",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6],
+                "speed": 11
+            },
+            
+            "update": {
+                
+                "frames": [7, 8, 9, 10, 11, 12],
+                "speed": 11
+            },
+            
+            "destroy": {
+                
+                "frames": [13],
+                "speed": 50
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
     "Fireball": {
         
         "power": 10,
@@ -94,24 +214,127 @@
         "behaviour": "projectile"
     },
     
-    "Explosion": {
+    "Thunder": {
         
-        "price": 10000,
-        "power": 50,
-        "targetsHit": 10,
-        "manaCost": 200,
+        "power": 18,
+        "targetsHit": 3,
+        "manaCost": 20,
         "hasOwnAnimation": true,
-        "playerUseMessage": "You use Explosion!",
-        "monsterUseMessage": " uses Explosion!",
-        "description": "Generates a gigantic expanding flame beneath the opponent's feet\n\nIncantation: \"Darkness blacker than black and darker than dark, I beseech thee, combine with my deep crimson. The time of awakening cometh. Justice, fallen upon the infallible boundary, appear now as an intangible distortion! Dance, dance, dance! I desire for my torrent of power, a destructive force: a destructive force without equal! Return all creation to cinders, and come from the abyss! This is the mightiest means of attack known to man, the ultimate attack magic!\n\nExplosion!\"",
+        "description": "Strike up to three enemies with a thunderbolt to inflict magic damage.",
+        "playerUseMessage": "You use Thunder!",
+        "monsterUseMessage": " uses Thunder!",
         "attackType": "magic",
         "userAnimation": "attack",
-        "spriteKey": "explosion",
+        "onCreateSfx": "thunderCreate",
+        "onUpdateSfx": "thunderUpdate",
+        
+        "startingFrame": 18,
+        "spriteKey": "thunder",
+        
         "animations": {
             
+            "create": {
+                
+                "frames": [11, 10, 9],
+                "speed": 5
+            },
             
+            "update": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "speed": 11
+            },
+            
+            "destroy": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 17],
+                "speed": 11
+            }
         },
         
         "behaviour": "stationary"
+    },
+    
+    "Ice Burst": {
+        
+        "power": 16,
+        "targetsHit": 1,
+        "manaCost": 8,
+        "hasOwnAnimation": true,
+        "description": "Strike an enemy with Ice to inflict magic damage.",
+        "playerUseMessage": "You use Ice Burst!",
+        "monsterUseMessage": " uses Ice Burst!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "onCreateSfx": "iceBurstCreate",
+        "onUpdateSfx": "iceBurstUpdate",
+        
+        "startingFrame": 34,
+        "spriteKey": "iceBurst",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "speed": 14
+            },
+            
+            "update": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 18, 17, 19],
+                "speed": 14
+            },
+            
+            "destroy": {
+                
+                "frames": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+                "speed": 14
+            }
+        },
+        
+        "behaviour": "stationary"
+    },
+    
+    "Thunderball": {
+        
+        "power": 12,
+        "targetsHit": 1,
+        "manaCost": 4,
+        "hasOwnAnimation": true,
+        "description": "Shoots a thunderball at the target to inflict magic damage.",
+        "playerUseMessage": "You use Thunderball!",
+        "monsterUseMessage": " uses Thunderball!",
+        "attackType": "magic",
+        "userAnimation": "attack",
+        "onCreateSfx": "thunderballCreate",
+        "onUpdateSfx": "thunderballUpdate",
+        "onDestroySfx": "thunderUpdate",
+        
+        "startingFrame": 24,
+        "spriteKey": "thunderball",
+        
+        "animations": {
+            
+            "create": {
+                
+                "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                "speed": 12
+            },
+            
+            "update": {
+                
+                "frames": [8, 9],
+                "speed": 8
+            },
+            
+            "destroy": {
+                
+                "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                "speed": 16
+            }
+        },
+        
+        "behaviour": "projectile"
     }
 }
