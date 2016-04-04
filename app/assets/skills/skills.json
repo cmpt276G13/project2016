@@ -57,6 +57,7 @@
         "power": 20,
         "targetsHit": 2,
         "manaCost": 15,
+        "price": 350,
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Fire Slash!",
         "monsterUseMessage": " uses Fire Slash!",
@@ -94,9 +95,10 @@
     
     "Thunder Slash": {
         
-        "power": 20,
-        "targetsHit": 2,
+        "power": 23,
+        "targetsHit": 1,
         "manaCost": 15,
+        "price": 350,
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Thunder Slash!",
         "monsterUseMessage": " uses Thunder Slash!",
@@ -134,9 +136,10 @@
     
     "Ice Slash": {
         
-        "power": 20,
+        "power": 30,
         "targetsHit": 2,
-        "manaCost": 15,
+        "manaCost": 20,
+        "price": 450,
         "hasOwnAnimation": true,
         "playerUseMessage": "You use Ice Slash!",
         "monsterUseMessage": " uses Ice Slash!",
@@ -219,6 +222,7 @@
         "power": 18,
         "targetsHit": 3,
         "manaCost": 20,
+        "price": 500,
         "hasOwnAnimation": true,
         "description": "Strike up to three enemies with a thunderbolt to inflict magic damage.",
         "playerUseMessage": "You use Thunder!",
@@ -260,6 +264,7 @@
         "power": 16,
         "targetsHit": 1,
         "manaCost": 8,
+        "price": 300,
         "hasOwnAnimation": true,
         "description": "Strike an enemy with Ice to inflict magic damage.",
         "playerUseMessage": "You use Ice Burst!",
@@ -301,6 +306,7 @@
         "power": 12,
         "targetsHit": 1,
         "manaCost": 4,
+        "price": 200,
         "hasOwnAnimation": true,
         "description": "Shoots a thunderball at the target to inflict magic damage.",
         "playerUseMessage": "You use Thunderball!",
