@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
     before_action :logged_in_user, only: [:index, :save] #im not even sure how they'll get to the save without being logged in, but i'll put it here anyways
+    skip_before_action :verify_authenticity_token
     
     #whatever route contains the game should send in the database information for the current player
     def index
