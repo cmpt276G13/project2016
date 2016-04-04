@@ -1,22 +1,20 @@
-<% provide(:title, 'Shop-Items') %>
+<% provide(:title, 'Shop-Skills') %>
 <%= render 'shared/shop_header' %>
-<h1>Item Shop</h1>
+
+<h1>Skills Shop</h1>
 
 <table class="users">
-  <%= render 'shared/error_messages', object: @player %>
-  <% @items.each do |name, array| %>
+  <% available_skills(@skills).each do |name, array| %>
     <tr>
-      <td><%= link_to name, item_path(name) %></td>
+      <td><%= link_to name, skill_path(name) %></td>
+      <td><%= array["manaCost"] %> MP</td>
       <!-- The split at the the newline is to make it so the first part of the description -->
       <!-- is the short description to go in the index -->
       <td><%= array["description"].split("\n")[0] %></td>
       <td>Price: <%= number_with_delimiter array["price"] %> G</td>
-      <%= form_for(@player) do |f| %>
+      <%= form_for(current_player) do |f| %>
         <%= hidden_field_tag :price, array["price"] %>
-        <td style="width:5em" class="center">
-          <%= f.label "Amount" %>
-          <%= f.number_field "items[" + name + "]", min: 1, value: 1, class: 'form-control' %>
-        </td>
+        <%= hidden_field_tag "player[skills]", name %>
         <td><%= f.submit "Buy", class: "btn btn-primary", id: "shop" %></td>
       <% end %>
     </tr>
