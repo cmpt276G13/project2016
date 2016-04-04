@@ -298,7 +298,7 @@ var battleState = {
     loadMonsters: function() {
         
         //load all monsters that exist in this level
-        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey);
+        var monsterNames = game.cache.getJSON(mapKeys.monsterListKey)["monsters"];
         
         //now turn the monster database to a javascript object, os we can find monsters in this database
         var monsterDatabase = game.cache.getJSON('monsterData');
@@ -307,11 +307,21 @@ var battleState = {
         var monstersToSpawn = getRandomInt(1, 3);
         var monsters = [];
         
+        if(this.isFightingBoss) {
+            
+            monstersToSpawn = 1;
+        }
+        
         for(var i = 0; i < monstersToSpawn; ++i) {
             
             //now we want to randomly select a monster name from this list
-            var id = 0;
-            var monsterName = monsterNames.monsters[id];
+            var id = getRandomInt(0, monsterNames.length - 1);
+            var monsterName = monsterNames[id];
+            
+            if(this.isFightingBoss) {
+                
+                monsterName = this.bossName;
+            }
             
             //now we can use this key to load the monster data
             //if you don't understand this notation, please search up javascript objects: http://www.w3schools.com/js/js_object_definition.asp, and follow the next 3 tutorials
@@ -350,11 +360,14 @@ var battleState = {
             
             monsters[i].sprite = game.add.sprite(monsters[i].x, monsters[i].y, monsters[i].imageKey, monsters[i].startingFrame);
             
+            
             for(var j = 0; j < monsters[i].animations.length; ++j) {
                 
                 animation = monsters[i].animations[j];
                 monsters[i].sprite.animations.add(animation.name, animation.frames, animation.speed, false);
             }
+            
+            monsters[i].sprite.animations.play("stand");
         }
     },
     
@@ -367,8 +380,8 @@ var battleState = {
             var num = Math.max(Math.floor(this.monsters.length / 2), 2);
             
             //position the monster somewhere on the screen
-            var xTarget = 200 - (40 * this.monsters.length / 2) + i * 40;
-            var yTarget = 250 + 50 * (i % num);
+            var xTarget = 230 - (40 * this.monsters.length / 2) + i * 40;
+            var yTarget = 265 + 50 * (i % num);
             
             this.monsters[i].sprite.position.y = yTarget;
             
@@ -508,7 +521,7 @@ var battleState = {
     
     createRewardsText: function() {
         
-        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 3, height: game.scale.height / 6, centerToPoint: true, showPressEnterMessage: true} );
+        this.rewardsTextbox = new textBox({x: game.scale.width / 2, y: game.scale.height / 2, width: game.scale.width / 2.75, height: game.scale.height / 5, centerToPoint: true, showPressEnterMessage: true, fixedHeight: true} );
         var expGoldText = "Gained " + this.rewards.experience + " Experience\n"
         
         if(this.rewards.gold != 0) {
@@ -516,15 +529,25 @@ var battleState = {
             expGoldText += "Gained " + this.rewards.gold + " Gold\n";
         }
         
+        this.rewardsTextbox.setText(expGoldText);
+        
         var itemsText = "";
+        var itemCount = 0;
         
         //add items
         for(item in this.rewards.items) {
             
             itemsText += "Gained " + item + "   x" + this.rewards.items[item] + "\n";
+            
+            itemCount += 1;
+            
+            if(itemCount >= 4) {
+                
+                this.rewardsTextbox.addText(itemsText);
+                itemCount = 0;
+                itemsText = "";
+            }
         }
-        
-        this.rewardsTextbox.setText(expGoldText);
         
         if(itemsText != "") {
             
@@ -613,7 +636,7 @@ var battleState = {
     //positions the player in the battle screen
     orientPlayerForBattle: function() {
         
-        player.sprite.x = 500;
+        player.sprite.x = 570;
         player.sprite.y = 350;
         
         player.sprite.body.velocity.x = 0;
@@ -694,10 +717,33 @@ var battleState = {
         return true;
     },
     
+    init: function() {
+        
+        this.isFightingBoss = typeof fightingBoss !== "undefined" ? fightingBoss : false;
+        
+        if(typeof bossName === "undefined" || bossName == "") {
+            
+            this.isFightingBoss = false;
+            return;
+        }
+        
+        this.bossName = bossName;
+    },
+    
     create: function() {
         
-        globalBgm.overworld.stop();
-        globalBgm.battle.play('', 0, globalBgm.volume);
+        globalBgm.activeBgm.stop();
+        
+        if(fightingBoss) {
+            
+            globalBgm.activeBgm = globalBgm.bossBattle;
+            
+        } else {
+            
+            globalBgm.activeBgm = globalBgm.battle;
+        }
+        
+        globalBgm.activeBgm.play('', 0, globalBgm.volume);
         
         //misc instructions, ignore
         document.getElementById("additional").innerHTML = "select an action";
@@ -802,9 +848,10 @@ var battleState = {
         
         //now we also want the player ot return to whatever he was doing, so set him back to his original position
         this.loadPlayerOverworldOrientation();
+        fightingBoss = false;
         
         //once again we don't want the game to destroy the player
         game.world.remove(player.sprite);
-        globalBgm.battle.stop();
+        globalBgm.activeBgm.stop();
     },
 };

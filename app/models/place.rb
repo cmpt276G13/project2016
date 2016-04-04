@@ -1,10 +1,19 @@
 class Place < ActiveRecord::Base
     belongs_to :user
+    validates_associated :user
+
+    validate :thing_count_within_limit, :on => :create
+
+    def thing_count_within_limit
+        if self.user.places(:reload).count >= 10
+            errors.add(:base, "Exceeded marker limit")
+        end
+    end
     #validates :address, presence: true
     #validates :title, presence: true
     validates :user_id, presence: true
-    #validates_numericality_of :latitude, :greater_than_or_equal_to => 49.0587, :less_than_or_equal_to => 49.2880
-    #validates_numericality_of :longitude, :greater_than_or_equal_to => -123.053130, :less_than_or_equal_to => -122.710553
+    validates_numericality_of :latitude, :greater_than_or_equal_to => 48, :less_than_or_equal_to => 50
+    validates_numericality_of :longitude, :greater_than => -124, :less_than_or_equal_to => -122
     #geocoded_by :address
     #after_validation :geocode
     

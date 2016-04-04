@@ -186,6 +186,11 @@ function selectItemActionEnter() {
     
     for(item in player.items) {
         
+        if(!player.items[item].usable) {
+            
+            continue;
+        }
+        
         var config = {attributeName: item, attributeValue: "x" + player.items[item].quantity};
         this.itemsDisplay.addAction(config);
     }
@@ -221,8 +226,8 @@ function selectItemActionKeyDown(key) {
             
         }
         
+        globalSfx.useItem.play();
         
-        globalSfx.selectOption.play();
         //player chooses to use an item
         this.stateManager.changeState("playerUseItem");
         
@@ -252,7 +257,7 @@ function selectItemActionUpdate() {
 
 function playerRunAwayEnter() {
     
-    globalBgm.battle.fadeOut(1250);
+    globalBgm.activeBgm.fadeOut(1250);
     globalSfx.escapeBattle.play();
     
     //make player face away and run
@@ -474,6 +479,7 @@ function monsterTurnUpdate() {
     //move onto the results when this monster's last attack finishes displaying
     if(this.monsters[this.currentMonster].lastUsedAttack.isFinished) {
         
+        this.monsters[this.currentMonster].sprite.animations.play("stand");
         this.stateManager.changeState("monsterAttackResults");
     }
 };
@@ -533,7 +539,7 @@ function playerDyingEnter() {
 
 function victoryEnter() {
     
-    globalBgm.battle.fadeOut(1500);
+    globalBgm.activeBgm.fadeOut(1500);
     globalSfx.winBattle.play();
     
     //player won a match, create a message box at the center of the screen
@@ -546,6 +552,12 @@ function victoryEnter() {
     for(name in this.defeatedMonsters) {
         
         questManager.onKillMonster(name, this.defeatedMonsters[name]);
+    }
+    
+    //delete the defeated boss
+    if(fightingBoss) {
+        
+        removeBoss(bossName);
     }
 };
 
@@ -567,7 +579,7 @@ function victoryKeyDown(key) {
 
 function defeatEnter() {
     
-    globalBgm.battle.fadeOut(1250);
+    globalBgm.activeBgm.fadeOut(1250);
     globalSfx.loseBattle.play();
     
     //create a transition so we fade to a black screen

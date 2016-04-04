@@ -53,12 +53,22 @@ module SessionsHelper
   def log_out
     forget(current_user)
     session.delete(:user_id)
+    session.delete(:chosen_attributes)
     @current_user = nil
   end
   
-  # 
+  # Upon log-in, session[:chosen_attributes] is set to empty
+  # Upon log-out, session[:chosen_attributes] is deleted
   def get_chosen_location
-    @chosen_place = Place.new(session[:chosen_attributes])
+    if session[:chosen_attributes]
+      @chosen_place = Place.new(session[:chosen_attributes])
+    else
+      @chosen_place = GeoIp.geolocation(request.remote_ip)
+      if @chosen_place[:latitude].nil?
+        surrey = Geocoder.search("Surrey")[0]
+        @chosen_place = Place.new(latitude: surrey.latitude, longitude: surrey.longitude)
+      end
+    end
   end
   
   # Redirects to stored location (or to the default).

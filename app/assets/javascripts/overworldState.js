@@ -56,21 +56,55 @@ var overworldState = {
                 
                 onEnter: enterBattleEnter
             }
+        },
+        
+        
+        {name: "confirmationMessage",
+            functions: {
+                
+                onEnter: confirmationMessageEnter,
+                onKeyDown: confirmationMessageKeyDown,
+                onUpdate: confirmationMessageUpdate,
+                onExit: confirmationMessageExit
+            }
+        },
+        
+        {name: "openingChest",
+            functions: {
+                
+                onEnter: openingChestEnter,
+                onKeyDown: openingChestKeyDown,
+                onUpdate: openingChestUpdate,
+                onExit: openingChestExit
+            }
         }
         
     ],
     
+    //call this function when player needs to confirm an action
+    //displays 'messageToDisplay' to player
+    getPlayerConfirmation(messageToDisplay, onYesFunc, onNoFunc, onCancelFunc) {
+        
+        this.confirmation = new confirmation({message: messageToDisplay});
+        this.confirmation.onYesFunc = onYesFunc;
+        this.confirmation.onNoFunc = onNoFunc;
+        this.confirmation.onCancelFunc = onCancelFunc;
+        this.stateManager.changeState("confirmationMessage");
+    },
+    
+    //
+    openChest(chestToOpen) {
+        
+        this.chestBeingOpened = chestToOpen;
+        this.stateManager.changeState("openingChest");
+    },
+    
     create: function() {
         
-        game.add.existing(tilemap.background1);
-        game.add.existing(tilemap.background2);
-        game.add.existing(tilemap.solid);
-        game.add.existing(player.sprite);
-        game.add.existing(tilemap.foreground);
+        addPersistentObjectsToWorld();
         
         //we also want he camera to follow the player
         game.camera.follow(player.sprite);
-        
         
         //this function makes phaser use arrow keys for movement
         //it creates a collection of keys that you can poll for events (look at update function for polling code)
@@ -133,11 +167,6 @@ var overworldState = {
     
     shutdown: function() {
         
-        game.world.remove(tilemap.map);
-        game.world.remove(player.sprite);
-        game.world.remove(tilemap.background1);
-        game.world.remove(tilemap.background2);
-        game.world.remove(tilemap.foreground);
-        game.world.remove(tilemap.solid);
+        removePersistentObjectsFromWorld();
     }
 };

@@ -22,10 +22,14 @@ Rails.application.routes.draw do
   resources :quests
   resources :items, param: :name, only: [:index, :show]
   resources :skills, param: :name, only: [:index, :show]
-  resources :places 
+  resources :places do
+    collection do
+      get 'remove_all'
+    end
+  end
   get 'places/:id/choose' => 'places#choose', as: :places_choose
   get 'quests/:id/accept' => 'quests#accept', as: :quests_accept
-
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

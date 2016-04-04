@@ -12,6 +12,8 @@ class GamesController < ApplicationController
         if request.referer != (hub_url || game_url)
             redirect_to hub_path
         end
+        
+        # FOR USER MARKERS; USER CLICKS ON 'GO HERE' ON PLACES PAGE
         get_chosen_location
         @latitude = @chosen_place[:latitude]
         @longitude = @chosen_place[:longitude]
@@ -22,6 +24,9 @@ class GamesController < ApplicationController
        current_user.player.update_attributes(player_params)
        
        current_user.player.items = params[:items] #permit keeps removing items even though its specified, access items directly from parameters
+       current_user.player.save
+       
+       current_user.player.skills = params[:skills] #permit removes skills for some reason
        current_user.player.save
        
        #save player's quest progress
@@ -39,6 +44,6 @@ class GamesController < ApplicationController
     
     def player_params
        
-       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths, :items) 
+       params.permit(:level, :health, :strength, :defense, :experience, :gold, :experience_to_next_level, :max_health, :deaths, :items, :mana, :max_mana, :magic_power, :magic_defense, :skills) 
     end
 end

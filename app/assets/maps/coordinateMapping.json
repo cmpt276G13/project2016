@@ -6,7 +6,7 @@
         "right": 49.0587,
         "bottom": -122.710553,
         "mapKey": "surrey",
-        "tilesetKeys": ["tileset3"],
+        "tilesetKeys": ["tileset3", "tileset4"],
         "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "surreyMonsters",
         "spawnPoint": {"x": 99, "y": 98}
@@ -19,7 +19,7 @@
         "right": 49.217351,
         "bottom": -122.912563,
         "mapKey": "surrey",
-        "tilesetKeys": ["tileset3"],
+        "tilesetKeys": ["tileset3", "tileset4"],
         "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "surreyMonsters",
         "spawnPoint": {"x": 99, "y": 98}
@@ -32,7 +32,7 @@
         "right": 0,
         "bottom": 0,
         "mapKey": "surrey",
-        "tilesetKeys": ["tileset3"],
+        "tilesetKeys": ["tileset3", "tileset4"],
         "battleBackgroundKeys": ["forestClearing"],
         "monsterListKey": "surreyMonsters",
         "spawnPoint": {"x": 99, "y": 98}
