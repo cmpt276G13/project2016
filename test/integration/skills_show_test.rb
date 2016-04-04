@@ -33,6 +33,7 @@ class SkillsShowTest < ActionDispatch::IntegrationTest
     get skill_path(@player.skills[0])
     assert_template 'skills/show'
     assert_select 'input', count: 0
-    assert_select 'p', "Already Learned"
+    assert_select 'input[type=?]', "hidden", false
+    assert_select 'input[type=?]', "submit", false
   end
 end
