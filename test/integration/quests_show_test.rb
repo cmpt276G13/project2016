@@ -40,6 +40,8 @@ class QuestsShowTest < ActionDispatch::IntegrationTest
     @quest.rewards[:stats].each do |key, value|
       assert_select 'p', value.to_s + " " + key.to_s
     end
+    assert_select 'a[href=?]', edit_quest_path(@quest2), text: 'Edit', count: 0
+    assert_select 'a[href=?]', quest_path(@quest2), text: 'Delete', count: 0
     assert_select 'a[href=?]', quests_accept_path(@quest2), text: 'Accept'
     assert_select 'a[href=?]', quests_path, text: "Back", count: 1
     # Could change decline to actually do something
