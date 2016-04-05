@@ -48,6 +48,12 @@ function exploreUpdate() {
         
     }, null, this);
     
+    if(this.stepTimer.seconds < 0) {
+        
+        this.stepTimer.stop();
+        this.stepTimer.start();
+    }
+    
     if((player.sprite.body.deltaX() != 0 || player.sprite.body.deltaY() != 0) && this.stepTimer.seconds > 1) {
         
         var rand = getRandomInt(1, 5);
