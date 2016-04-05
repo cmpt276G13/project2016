@@ -258,14 +258,14 @@
             
             //normally we'd give the player some stat points that he can use
             //for now just raise his stats
-            this.maxHealth += 20;
+            this.maxHealth += getRandomInt(15, 22);
             this.health = this.maxHealth;
-            this.maxMana += 10;
+            this.maxMana += getRandomInt(7, 12);
             this.mana = this.maxMana;
-            this.magicPower += 5;
-            this.magicDefense += 5;
-            this.strength += 5;
-            this.defense += 5;
+            this.magicPower += getRandomInt(4, 6);
+            this.magicDefense += getRandomInt(4, 6);
+            this.strength += getRandomInt(4, 6);
+            this.defense += getRandomInt(4, 6);
             this.experience -= this.experienceToNextLevel;
             this.experienceToNextLevel += 5 * this.level;
         };
