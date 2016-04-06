@@ -4,6 +4,7 @@
 
 <div class="map-container" style='width: 100%; height: 500px;'>
   <h1><strong>World Map</strong></h1>
+  <%= link_to 'Add a Place', new_place_path %><br><br>
   <button onclick="resetUserLocation()">Use Your Own Location</button>
   <p id="user_reset_confirm"></p>
   <p><strong>Right click</strong> on a spot to place a marker! (up to 10)<br>Page will reload upon marker placement.</p>
