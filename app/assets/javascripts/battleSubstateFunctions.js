@@ -20,17 +20,17 @@ function selectMainActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "run") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Run") {
             
             this.stateManager.changeState("playerRunAway");
         }
         
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "items") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Items") {
             
             this.stateManager.changeState("selectItemAction");
         }
         
-        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "fight") {
+        if(this.mainActionsDisplay.getSelectedActionConfiguration().text == "Fight") {
             
             this.stateManager.changeState("selectFightAction");
         }
@@ -65,20 +65,20 @@ function selectFightActionKeyDown(key) {
     if(key.keyCode == Phaser.Keyboard.ENTER) {
         
         //we would like to return to the main map if player selected run
-        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "cancel") {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "Cancel") {
             
             this.stateManager.changeState("selectMainAction");
             globalSfx.cancel.play();
             return;
         }
         
-        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "attack" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "Attack" && this.monsters.length > 0) {
             
             player.lastUsedAttack = player.basicAttack;
             this.stateManager.changeState("playerSelectTarget");
         }
         
-        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "skills" && this.monsters.length > 0) {
+        if(this.fightActionsDisplay.getSelectedActionConfiguration().text == "Skills" && this.monsters.length > 0) {
             
             this.stateManager.changeState("selectSkill");
         }
@@ -411,8 +411,6 @@ function cullDeadMonstersUpdate() {
 function playerUseItemEnter() {
     
     this.finishedItemUseAnimation = false;
-    
-    document.getElementById("additional").innerHTML = "asdf";
     
     //apply item effect to player and show some kind of animation and message
     var nameOfItemUsed = this.itemsDisplay.getSelectedActionConfiguration().attributeName;

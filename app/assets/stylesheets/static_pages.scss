@@ -146,7 +146,7 @@ footer {
 .ranking_table{
   
   margin: 20px;
-  float: left;
+  float: center;
   //             Animation for the table
   -moz-animation-name: RankTableFromright;
   -webkit-animation-name: RankTableFromright;
@@ -247,12 +247,16 @@ footer {
 #GR {animation-delay: 1.1s;  -webkit-animation-delay: 1.1s; -moz-animation-delay: 1.1s;}
 
 
-
+#WelcomeHeader{
+  display: inline;
+  text-align: center;
+}
 
 #WelcomeHeader{
-  text-align: center;
+  // text-align: center;
   margin: 20px;
   font-size: 2em;
+  
   #Welcome,#To,#GeoHunter{
   margin: 20px;
   padding: 0;
@@ -260,7 +264,7 @@ footer {
 }
 // CSS animation is only appliable to "block level" element
 span{
-  display: inline-block
+  display: inline-block;
 }
 
 

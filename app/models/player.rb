@@ -1,6 +1,6 @@
 class Player < ActiveRecord::Base
   belongs_to :user
-  has_many :quest_acceptances
+  has_many :quest_acceptances, dependent: :destroy
   has_many :quests, through: :quest_acceptances
   
   validates :user_id, presence: true
@@ -18,29 +18,20 @@ class Player < ActiveRecord::Base
   serialize :items, Hash
   serialize :skills, Array
   
-  # Run this method to update the items. You can add additional options for gold.
-  # If gold is not put in, it will update items without the need for price.
-  # params should be like this {item_name:amount, item_name:amount,...}
-  def update_items!(params, options = {})
+  # This will update any seralizations in the players model. Current additional options:
+  # { price: amount }
+  def update_serializations!(params, options = {})
     price = options[:price].to_i || nil
     
-    params.each do |key, value|
-      if price # Update gold, if necessary
-        if self.gold >= price * value.to_i
-          self.gold = self.gold - price * value.to_i
-        else
-          return false
-        end
-      end
-      
-      if self.items[key]
-        self.items[key] = self.items[key].to_i + value.to_i
+    if params[:items]
+      update_items!(params[:items], price: price)
+    else
+      if params[:skills].is_a?(Array)
+        update_arrays!(params[:skills], price: price)
       else
-        self.items[key] = value
+        update_arrays!([params[:skills]], price: price)
       end
     end
-    
-    self.save
   end
   
   # Handles level ups.
@@ -50,6 +41,10 @@ class Player < ActiveRecord::Base
       
       self.max_health += 20
       self.health = self.max_health
+      self.max_mana += 10
+      self.mana = self.max_mana
+      self.magic_power += 5;
+      self.magic_defense += 5;
       self.strength += 5
       self.defense += 5
       self.experience -= self.experience_to_next_level
@@ -89,14 +84,17 @@ class Player < ActiveRecord::Base
     end
   end
   
+  # Returns true if the quest is completed.
   def completed?(quest)
     accepted?(quest).completed? if accepted?(quest)
   end
   
+  # Returns true if the quest is turned in.
   def turned_in?(quest)
     accepted?(quest).turned_in? if accepted?(quest)
   end
   
+  # Initializes the progress field of the quest_acceptance.
   def init_progress(quest)
     q_acceptance = accepted?(quest)
     quest.target.each_key do |target|
@@ -105,10 +103,68 @@ class Player < ActiveRecord::Base
     q_acceptance.save
   end
   
+  # Give player with default skills and items.
   def initialize(attributes=nil)
     attr_with_defaults = {skills: [ "Slash", "Fireball" ], items: 
                           { "Small Potion" => 2, "Medium Potion" => 2 }
     }.merge(attributes)
     super(attr_with_defaults)
   end
+  
+  # Returns the basic skills from skills.json that no player should have.
+  def BASIC_SKILLS
+    ["Basic Attack"]
+  end
+  
+  private
+  
+    # Run this method to update the items. You can add additional options for gold.
+    # If gold is not put in, it will update items without the need for price.
+    # params should be like this {item_name:amount, item_name:amount,...}
+    def update_items!(params, options = {})
+      price = options[:price].to_i
+      
+      params.each do |key, value|
+        if price # Update gold, if necessary
+          if self.gold >= price * value.to_i
+            self.gold = self.gold - price * value.to_i
+          else
+            # Not enough gold
+            return false
+          end
+        end
+        
+        if self.items[key]
+          self.items[key] = self.items[key].to_i + value.to_i
+        else
+          self.items[key] = value
+        end
+      end
+      
+      self.save
+    end
+    
+    # Updates all arrays in the players model. Additional options:
+    # { price: amount }
+    # Currently is hard coded to update skills
+    def update_arrays!(params, options = {})
+      price = options[:price].to_i
+      
+      params.each do |value|
+        if price # Update gold, if necessary
+          if self.gold >= price
+            self.gold -= price
+          else
+            # Not enough gold
+            return false
+          end
+        end
+        
+        if self.skills.exclude? value
+          self.skills << value
+        end
+        
+        self.save
+      end
+    end
 end

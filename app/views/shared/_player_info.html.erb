@@ -12,7 +12,11 @@
     <td>Defense: <%= player.defense %></td>
   </tr>
   <tr>
-    <td>Gold: <%= player.gold %></td>
+    <td>Magic Power: <%= player.magic_power %></td>
+    <td>Magic Defense: <%= player.magic_defense %></td>
+  </tr>
+  <tr>
+    <td>Gold: <%= number_with_delimiter player.gold %></td>
     <td>Deaths: <%= player.deaths %></td>
   </tr>
 </table>

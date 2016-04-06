@@ -5,6 +5,7 @@
     <%= link_to 'GeoHunter', root_path, id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
+        <li><%= link_to "Game Info", gameinfo_path %> </li>
         <% if logged_in? %>
           <li><%= link_to "Hub", hub_path, method: :get %></li>
           <li><%= link_to "Rankings", users_path %></li>

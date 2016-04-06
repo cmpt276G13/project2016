@@ -47,7 +47,7 @@ class PlayerTest < ActiveSupport::TestCase
     price = 10
     assert_difference '@player.reload.items["Small Potion"].to_i', 5 do
       assert_difference '@player.reload.gold', -amount * price do
-        assert @player.update_items!({ "Small Potion" => amount }, price: price)
+        assert @player.update_serializations!({ items: { "Small Potion" => amount } }, price: price)
       end
     end
   end

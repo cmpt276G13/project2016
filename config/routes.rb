@@ -17,10 +17,12 @@ Rails.application.routes.draw do
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
   get 'hub' => 'static_pages#hub'
+  get 'gameinfo' => 'static_pages#gameinfo'
   resources :users
   resources :players, only: [:update]
   resources :quests
   resources :items, param: :name, only: [:index, :show]
+  resources :skills, param: :name, only: [:index, :show]
   resources :places do
     collection do
       get 'remove_all'

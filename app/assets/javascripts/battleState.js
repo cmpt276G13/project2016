@@ -334,7 +334,7 @@ var battleState = {
             jQuery.extend(monster.rewards, monsterDatabase[monsterName].rewards);
             
             //now scale monster to player's level
-            scaleMonsterToPlayer(monster, player.level);
+            scaleMonsterToPlayer(monster, player.level + this.isFightingBoss + (player.level < 5) * this.isFightingBoss, !this.isFightingBoss);
             scaleMonsterRewardsToLevel(monster, monsterDatabase[monsterName].rewards );
             
             var num = Math.max(Math.floor(monstersToSpawn / 2), 2);
@@ -745,9 +745,6 @@ var battleState = {
         
         globalBgm.activeBgm.play('', 0, globalBgm.volume);
         
-        //misc instructions, ignore
-        document.getElementById("additional").innerHTML = "select an action";
-        
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle"};
 		this.text = game.add.text(0, 0, "BATTLe", style);
 		
@@ -791,16 +788,16 @@ var battleState = {
         this.playerStatDisplay = this.generatePlayerStatDisplay(actionBoxWidth, game.scale.height - actionBoxHeight, game.scale.width - actionBoxWidth, actionBoxHeight);
         
         this.mainActionsDisplay = new actionDisplay({x: 0, y: game.scale.height - actionBoxHeight, width: actionBoxWidth, height: actionBoxHeight, viewableObjects: 4}, [
-                                        {text: 'fight'}, {text: 'items'}, {text: 'run'}, {text: 'option4'}, {text: 'option5'}, {text: 'option6'}]);
+                                        {text: 'Fight'}, {text: 'Items'}, {text: 'Run'}]);
         this.fightActionsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2 - 20, 
-                                        width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'attack'}, {text: 'skills'}, {text: 'cancel'}]);
+                                        width: game.scale.width / 3, height: actionBoxHeight}, [{text: 'Attack'}, {text: 'Skills'}, {text: 'Cancel'}]);
                                         
         //action list when user selects items
         this.itemsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
-                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
         
         this.skillsDisplay = new actionDisplay({x: game.scale.width / 3, y: game.scale.height - actionBoxHeight * 2.2 - 30, width: game.scale.width / 3, height: actionBoxHeight * 1.4,
-                                viewableObjects: 6, objectCreationFunction: attributeDisplayText}, []);
+                                viewableObjects: 6, objectCreationFunction: attributeDisplayText, displayScrollBar: true}, []);
         
         //add all of the player's skills to the display
         for(var i = 0; i < player.skills.length; ++i) {
