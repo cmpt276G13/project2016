@@ -3,6 +3,7 @@ class PlacesController < ApplicationController
   before_action :logged_in_user, only: [:show, :edit, :update, :destroy]
   before_action :req_check, only: :accept
   before_action :set_place, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /places
   # GET /places.json
