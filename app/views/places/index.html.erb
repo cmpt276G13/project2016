@@ -4,6 +4,7 @@
 
 <div class="map-container" style='width: 100%; height: 500px;'>
   <h1><strong>World Map</strong></h1>
+  <%= link_to 'Add a Place', new_place_path %><br><br>
   <button onclick="resetUserLocation()">Use Your Own Location</button>
   <p id="user_reset_confirm"></p>
   <p><strong>Right click</strong> on a spot to place a marker! (up to 10)<br>Page will reload upon marker placement.</p>
@@ -84,13 +85,13 @@ handler.buildMap({ internal: {id: 'geolocation'} }, function(){
     var positionOptions = {
             enableHighAccuracy: true,
             timeout: 10 * 1000 // 10 seconds
-          };
+    };
     navigator.geolocation.getCurrentPosition(displayOnMap, geolocationError, positionOptions);
   }
   
   //handler.map.centerOn([49.19426915204543, -122.7577972412109416778]);
   handler.getMap().setZoom(10);
-
+  
   var user_markers_json = <%=raw @user_markers.to_json %> ;
   var u_markers = handler.addMarkers(user_markers_json);
   for (var i = 0; i <  user_markers_json.length; ++i) {
@@ -119,15 +120,41 @@ function geolocationError(positionError) {
   document.getElementById("error").innerHTML += "Error: " + positionError.message + "<br />";
 }
 
-function displayOnMap(position){
-  var marker = handler.addMarker({
-    lat: position.coords.latitude,
-    lng: position.coords.longitude
+function save_to_db(e) {
+  var place = { 
+        place: {
+          latitude: e.latLng.lat(),
+          longitude: e.latLng.lng(),
+          title: "marker"
+        }
+      } 
+      
+  $.ajax({
+    type: "POST",
+    url: '/places',
+    data: place,
+    success: function(data) {
+      $('#user-created').load('/places #user-created')
+    }
   });
-  var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  setTimeout(executeQuery, 500);
+  $(document).ready(function() {
+    setTimeout(executeQuery, 500);
+  });
+}
+
+function displayOnMap(position){
+  lt = position.coords.latitude;
+  ln = position.coords.longitude;
+  var marker = handler.addMarker({
+    lat: lt,
+    lng: ln
+  });
+  var userLatLng = new google.maps.LatLng(lt, ln);
   // Write the formatted address
   writeAddressName(userLatLng);
   handler.map.centerOn(marker);
+ 
 };
 
 function place_marker() {
@@ -139,32 +166,8 @@ function place_marker() {
         map: handler.getMap(),
         icon: image
       });
-      
-      // https://www.codementor.io/ruby-on-rails/tutorial/tutorial-how-to-debug-ajax-in-rails
-      // To pass to controller:
-      var place = { 
-        place: {
-          latitude: e.latLng.lat(),
-          longitude: e.latLng.lng(),
-          title: "clicked" 
-        }
-      } 
-      
-      // Post data via ajax to a rails controller
-      //$.post('/places', place);
-      $.ajax({
-        type: "POST",
-        url: '/places',
-        data: place,
-        success: function(data) {
-          $('#user-created').load('/places #user-created')
-        }
-      });
-      setTimeout(executeQuery, 500);
-      $(document).ready(function() {
-        setTimeout(executeQuery, 500);
-      });
-      //location.reload();
+
+      save_to_db(e) ;
     }
   });
 }
