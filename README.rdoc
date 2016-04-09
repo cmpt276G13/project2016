@@ -20,6 +20,4 @@ https://geohunter.herokuapp.com/
 ----------------------------
 Some of the code is courtesy of railstutorial.org, and possibly guides.rubyonrails.org/getting_started.html
 
-Uncomment some code in db/seed.rb, and then run
-  rake db:seed
-to create fake sample data
+Courtesy to Cora, one of our group members, for the amazing music.
