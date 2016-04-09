@@ -27,8 +27,8 @@ class PlacesController < ApplicationController
 
   # GET /places/new
   def new
-    @place = Place.new
-    #redirect_to '/places'
+    # @place = Place.new
+    redirect_to places_path
   end
 
   # GET /places/1/edit
